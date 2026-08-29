@@ -788,6 +788,74 @@
   #gate-continue-btn { background: transparent; color: var(--text-faint); border: none; font-weight: 500; }
   #gate-continue-btn:hover { color: #ccc; text-decoration: underline; }
   .auth-gate-note { color: var(--text-faint); font-size: 0.85em; margin-top: 10px; }
+
+  /* ===================== Icons ===================== */
+  .icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: -3px;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  h1 .icon { width: 22px; height: 22px; vertical-align: -4px; margin-right: 2px; }
+  .auth-gate-title .icon { width: 26px; height: 26px; vertical-align: -5px; }
+  .tab-btn .icon { margin-right: 4px; }
+
+  /* ===================== Sidebar dashboard layout ===================== */
+  @media (min-width: 900px) {
+    #app-content {
+      display: grid;
+      grid-template-columns: 216px 1fr;
+      column-gap: 32px;
+      row-gap: 0;
+      align-items: start;
+    }
+    #app-content > h1,
+    #app-content > #exam-countdown,
+    #app-content > .fa-bar {
+      grid-column: 1 / -1;
+    }
+    #app-content > .tabbar {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+      border-radius: var(--radius);
+      position: sticky;
+      top: 20px;
+      align-self: start;
+      gap: 2px;
+    }
+    #app-content > .tabbar .tab-btn {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: left;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+    }
+    #app-content > .tab-panel {
+      min-width: 0;
+    }
+  }
+
+  /* ===================== Typography refinement ===================== */
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .planner-stat .label,
+  .subject-card .stat {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .planner-stat .value {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+  }
+  .subject-card .big {
+    font-variant-numeric: tabular-nums;
+  }
 </style>
 <!-- Firebase (optional: only used if you set up cloud sync — see FIREBASE_CONFIG near the top of the <script> below) -->
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -798,7 +866,7 @@
 
 <div id="auth-gate">
   <div class="auth-gate-box">
-    <div class="auth-gate-title">📚 RNS401 Master Tracker</div>
+    <div class="auth-gate-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> RNS401 Master Tracker</div>
     <div class="auth-gate-sub">Sign in with Google to save your progress to your account and see it on any device.</div>
     <button id="gate-signin-btn" onclick="signInWithGoogle()">Sign in with Google</button>
     <button id="gate-continue-btn" onclick="continueWithoutAccount()">Continue without an account</button>
@@ -808,7 +876,7 @@
 
 <div id="app-content" style="display:none;">
 
-<h1>📚 RNS401 Master Tracker — Respiratory &amp; Nervous System II (MD4)</h1>
+<h1><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> RNS401 Master Tracker — Respiratory &amp; Nervous System II (MD4)</h1>
 <div id="exam-countdown"></div>
 
 <div class="fa-bar">
@@ -824,18 +892,18 @@
   <input type="file" id="pathoma-file-input" accept="application/pdf" style="display:none;">
 </div>
 <div class="fa-bar" id="sync-bar">
-  <span>☁️ Cloud save:</span>
+  <span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h.79a4.5 4.5 0 1 1 0 9Z"/></svg> Cloud save:</span>
   <span id="sync-status">not set up — this file is still saving to your own browser only</span>
   <button id="signin-btn" onclick="signInWithGoogle()">Sign in with Google</button>
   <button id="signout-btn" onclick="signOutGoogle()" style="display:none;">Sign out</button>
 </div>
 
 <div class="tabbar">
-  <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">🏠 Overview</button>
-  <button class="tab-btn" data-tab="planner" onclick="switchTab('planner')">📅 Planner</button>
-  <button class="tab-btn" data-tab="path" onclick="switchTab('path')">🧬 Pathology</button>
-  <button class="tab-btn" data-tab="micro" onclick="switchTab('micro')">🦠 Microbiology</button>
-  <button class="tab-btn" data-tab="pharm" onclick="switchTab('pharm')">💊 Pharmacology</button>
+  <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Overview</button>
+  <button class="tab-btn" data-tab="planner" onclick="switchTab('planner')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Planner</button>
+  <button class="tab-btn" data-tab="path" onclick="switchTab('path')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Pathology</button>
+  <button class="tab-btn" data-tab="micro" onclick="switchTab('micro')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v5.5L4.5 18a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 8.5V3"/></svg> Microbiology</button>
+  <button class="tab-btn" data-tab="pharm" onclick="switchTab('pharm')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 20.5 20.5 10.5a5 5 0 1 0-7-7L3.5 13.5a5 5 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg> Pharmacology</button>
 </div>
 
 <!-- ============================================ OVERVIEW ============================================ -->
