@@ -1,0 +1,2405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RNS401 Master Tracker</title>
+<style>
+  :root {
+    --path: #6fc2c9;
+    --micro: #f2a65a;
+    --pharm: #b78ee0;
+    --planner: #5b9dd9;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #1a1a1a;
+    color: #e8e8e8;
+    padding: 24px;
+    max-width: 1150px;
+    margin: 0 auto;
+  }
+  h1 {
+    color: #e8e8e8;
+    border-bottom: 3px solid #555;
+    padding-bottom: 8px;
+    font-size: 1.6em;
+  }
+  h2 { margin-top: 30px; padding-bottom: 6px; }
+  h2.path { color: var(--path); border-bottom: 3px solid var(--path); }
+  h2.micro { color: var(--micro); border-bottom: 3px solid var(--micro); }
+  h2.pharm { color: var(--pharm); border-bottom: 3px solid var(--pharm); }
+
+  /* Tabs */
+  .tabbar {
+    display: flex;
+    gap: 8px;
+    margin: 20px 0 4px 0;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    padding: 10px 20px;
+    border-radius: 8px 8px 0 0;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.95em;
+    background: #2a2a2a;
+    color: #999;
+    transition: all 0.15s ease;
+  }
+  .tab-btn:hover { background: #333; color: #ccc; }
+  .tab-btn.active[data-tab="overview"] { background: #444; color: #fff; }
+  .tab-btn.active[data-tab="path"] { background: var(--path); color: #1a1a1a; }
+  .tab-btn.active[data-tab="micro"] { background: var(--micro); color: #1a1a1a; }
+  .tab-btn.active[data-tab="pharm"] { background: var(--pharm); color: #1a1a1a; }
+  .tab-btn.active[data-tab="planner"] { background: var(--planner); color: #1a1a1a; }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  h2.planner { color: var(--planner); border-bottom: 3px solid var(--planner); }
+
+  #exam-countdown {
+    font-size: 0.95em;
+    color: #9fbfd8;
+    margin: 2px 0 4px 0;
+  }
+
+  /* Planner settings */
+  .planner-settings {
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    align-items: flex-end;
+  }
+  .planner-settings .field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.8em;
+    color: #ccc;
+  }
+  .planner-settings input[type="date"],
+  .planner-settings input[type="number"] {
+    background: #232323;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #e8e8e8;
+    font-size: 0.9em;
+    width: 130px;
+  }
+  .planner-settings button {
+    background: #333;
+    color: #ccc;
+    border: 1px solid #555;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 0.85em;
+    cursor: pointer;
+    height: 33px;
+  }
+  .planner-settings button:hover { background: #3f3f3f; color: #fff; }
+
+  .planner-warning {
+    background: #3a2a2a;
+    border-left: 4px solid #e07a7a;
+    padding: 10px 16px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    font-size: 0.88em;
+    color: #f0c0c0;
+  }
+  .planner-warning:last-child { margin-bottom: 18px; }
+
+  .planner-dash { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+  .planner-stat {
+    flex: 1;
+    min-width: 190px;
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 14px 16px;
+    border-top: 4px solid var(--planner);
+  }
+  .planner-stat .label { font-size: 0.78em; color: #aaa; }
+  .planner-stat .value { font-size: 1.35em; font-weight: bold; color: #fff; margin-top: 4px; }
+  .planner-stat .sub { font-size: 0.75em; color: #999; margin-top: 2px; }
+  .pace-ahead { color: #7fd88f !important; }
+  .pace-behind { color: #e88888 !important; }
+  .pace-ontrack { color: #e8e8e8 !important; }
+
+  .today-box {
+    background: #232323;
+    border: 2px solid var(--planner);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+  }
+  .today-box h3 { margin-top: 0; margin-bottom: 4px; color: var(--planner); }
+  .today-box .subtext { font-size: 0.8em; color: #999; margin-bottom: 10px; }
+  .plan-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid #333;
+  }
+  .plan-item:last-child { border-bottom: none; }
+  .plan-item input[type="checkbox"] { flex-shrink: 0; }
+  .plan-item .chip {
+    font-size: 0.68em;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+    color: #1a1a1a;
+    white-space: nowrap;
+  }
+  .chip-path { background: var(--path); }
+  .chip-micro { background: var(--micro); }
+  .chip-pharm { background: var(--pharm); }
+  .plan-item .title { flex: 1; font-size: 0.9em; }
+  .plan-item .title .sub-video { color: #999; font-size: 0.85em; }
+  .plan-item .mins { font-size: 0.8em; color: #999; white-space: nowrap; }
+  .plan-item.done .title { text-decoration: line-through; opacity: 0.5; }
+  .supp-tag { font-size: 0.68em; color: #9fbfd8; border: 1px solid #3a5a7a; border-radius: 8px; padding: 1px 6px; }
+
+  .agenda-empty { color: #777; font-style: italic; font-size: 0.85em; }
+  .review-item { font-size: 0.85em; color: #ccc; display: flex; align-items: center; gap: 8px; padding: 4px 0; }
+  .review-item.done { opacity: 0.5; text-decoration: line-through; }
+
+  /* Progress bars */
+  .progress-wrap {
+    background: #2a2a2a;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    margin-bottom: 6px;
+    color: #ccc;
+  }
+  .progress-bar-bg {
+    background: #3a3a3a;
+    border-radius: 6px;
+    height: 14px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.25s ease;
+  }
+  .fill-path { background: var(--path); }
+  .fill-micro { background: var(--micro); }
+  .fill-pharm { background: var(--pharm); }
+  .fill-overall { background: linear-gradient(90deg, var(--path), var(--micro), var(--pharm)); }
+
+  .summary {
+    background: #2a2a2a;
+    border-left: 4px solid #6fc2c9;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-size: 1.05em;
+  }
+  .summary.micro { border-left-color: var(--micro); }
+  .summary.pharm { border-left-color: var(--pharm); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #232323;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  th {
+    padding: 10px 8px;
+    text-align: left;
+    font-size: 0.9em;
+    color: #1a1a1a;
+  }
+  .cards-header {
+    font-size: 0.78em;
+    line-height: 1.25;
+    white-space: nowrap;
+  }
+  td.cards {
+    text-align: center;
+    white-space: nowrap;
+    font-weight: bold;
+  }
+  .path-table th { background: var(--path); }
+  .micro-table th { background: var(--micro); }
+  .pharm-table th { background: var(--pharm); }
+  td {
+    padding: 8px;
+    border-bottom: 1px solid #3a3a3a;
+    font-size: 0.9em;
+    vertical-align: top;
+  }
+  tr:hover td { background: #2f2f2f; }
+  tr.checked td { opacity: 0.55; text-decoration: line-through; }
+  tr.checked td input[type="checkbox"] { opacity: 1; }
+  .section-row td { background: #3a3a3a; font-weight: bold; text-decoration: none !important; opacity: 1 !important; }
+  .path-table .section-row td { color: var(--path); }
+  .micro-table .section-row td { color: var(--micro); }
+  .pharm-table .section-row td { color: var(--pharm); }
+  .missing { color: #e07a7a; font-style: italic; }
+  .chapter { color: #9fbfd8; font-size: 0.85em; }
+  .time { text-align: center; white-space: nowrap; }
+  input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+  tfoot td { font-weight: bold; font-size: 1em; color: #1a1a1a; }
+  .path-table tfoot td { background: var(--path); }
+  .micro-table tfoot td { background: var(--micro); }
+  .pharm-table tfoot td { background: var(--pharm); }
+
+  .grand-total {
+    background: #2a2a2a;
+    border: 2px solid #e8e8e8;
+    padding: 18px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.3em;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .note {
+    color: #9fbfd8;
+    font-size: 0.85em;
+    margin-top: 16px;
+  }
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0 20px 0;
+    flex-wrap: wrap;
+  }
+  .controls button {
+    background: #2a2a2a;
+    color: #ccc;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 0.85em;
+    cursor: pointer;
+  }
+  .controls button:hover { background: #3a3a3a; color: #fff; }
+  .search-box {
+    background: #232323;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: #e8e8e8;
+    font-size: 0.9em;
+    flex: 1;
+    min-width: 180px;
+  }
+  .card-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .subject-card {
+    flex: 1;
+    min-width: 220px;
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 16px 18px;
+    border-top: 4px solid #555;
+  }
+  .subject-card.path { border-top-color: var(--path); }
+  .subject-card.micro { border-top-color: var(--micro); }
+  .subject-card.pharm { border-top-color: var(--pharm); }
+  .subject-card h3 { margin: 0 0 8px 0; font-size: 1.1em; }
+  .subject-card .stat { font-size: 0.85em; color: #aaa; }
+  .subject-card .big { font-size: 1.6em; font-weight: bold; color: #fff; }
+
+  /* ===================== Calendar ===================== */
+  .cal-legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 0.75em;
+    color: #aaa;
+    margin-bottom: 10px;
+    align-items: center;
+  }
+  .legend-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .cal-scroll {
+    max-height: 760px;
+    overflow-y: auto;
+    padding-right: 4px;
+    border-radius: 8px;
+  }
+  .cal-dow-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 4px;
+    position: sticky;
+    top: 0;
+    background: #1a1a1a;
+    z-index: 2;
+    padding-bottom: 4px;
+  }
+  .cal-dow { text-align: center; font-size: 0.75em; color: #888; font-weight: bold; }
+  .cal-week { margin-bottom: 10px; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .cal-day {
+    background: #232323;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 6px 6px 4px 6px;
+    height: 172px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .cal-day:hover { border-color: #666; }
+  .cal-day.today { border-color: var(--planner); box-shadow: 0 0 0 1px var(--planner) inset; }
+  .cal-day.out-of-range { opacity: 0.4; }
+  .cal-day.exam-day { border-color: #e07a7a; }
+  .cal-day.drag-over { border-color: var(--planner); background: #2a3a42; }
+  .cal-day-num { font-size: 0.8em; color: #999; font-weight: bold; flex-shrink: 0; }
+  .cal-mins { position: absolute; top: 6px; right: 8px; font-size: 0.7em; color: #7fd88f; font-weight: bold; }
+  .cal-exam-badge { position: absolute; top: 4px; left: 30px; font-size: 0.95em; }
+  .cal-items {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+  }
+  .cal-item {
+    font-size: 0.74em;
+    line-height: 1.6;
+    padding: 1px 7px;
+    border-radius: 4px;
+    color: #1a1a1a;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: grab;
+    flex-shrink: 0;
+  }
+  .cal-item.behind { outline: 2px solid #e07a7a; outline-offset: -1px; }
+  .cal-item.tight { outline: 1px dashed #e0a860; outline-offset: -1px; }
+  .cal-item.manual { outline: 2px solid var(--planner); outline-offset: -1px; }
+  .cal-item.review-pill { background: #e0a860; }
+  .cal-more {
+    font-size: 0.72em;
+    color: #9fbfd8;
+    padding: 1px 7px;
+    flex-shrink: 0;
+  }
+  .cal-class-tag { font-size: 0.68em; color: #9fbfd8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; margin-top: 2px; }
+  .cal-weekly-total { text-align: right; font-size: 0.7em; color: #888; padding: 2px 4px 0 0; }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .modal-box {
+    background: #232323;
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 20px 24px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+  .manual-form-row select, .manual-form-row input {
+    background: #232323;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #e8e8e8;
+    padding: 6px;
+    font-size: 0.82em;
+  }
+  .manual-form-row button {
+    background: var(--planner);
+    border: none;
+    border-radius: 6px;
+    padding: 7px 14px;
+    color: #1a1a1a;
+    font-weight: bold;
+    font-size: 0.82em;
+    cursor: pointer;
+  }
+  .manual-search-results {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 6px;
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 50;
+    display: none;
+  }
+  .manual-search-item {
+    padding: 6px 8px;
+    font-size: 0.8em;
+    color: #ddd;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid #2a2a2a;
+  }
+  .manual-search-item:last-child { border-bottom: none; }
+  .manual-search-item:hover { background: #2a3a42; }
+  .manual-search-empty { padding: 8px; font-size: 0.8em; color: #888; }
+
+  /* First Aid linking */
+  .fa-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    background: #2a2a2a;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 10px 0 6px 0;
+    font-size: 0.85em;
+  }
+  .fa-bar button {
+    background: #333;
+    color: #ddd;
+    border: 1px solid #555;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.85em;
+    cursor: pointer;
+  }
+  .fa-bar button:hover { background: #3f3f3f; color: #fff; }
+  #fa-status { color: #9fbfd8; }
+  td.fa-cell { text-align: center; white-space: nowrap; }
+  .fa-link {
+    color: #1a1a1a;
+    background: #e0c060;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .fa-link:hover { background: #f0d070; }
+  td.fa-cell.missing { color: #666; font-style: italic; }
+  .pathoma-link {
+    color: #1a1a1a;
+    background: var(--path);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .pathoma-link:hover { background: #8fd2d9; }
+  td.pathoma-cell { text-align: center; white-space: nowrap; }
+  td.pathoma-cell.missing { color: #666; font-style: italic; }
+
+  .qbank-input {
+    width: 100%;
+    min-width: 140px;
+    background: #1e1e1e;
+    border: 1px solid #3a3a3a;
+    border-radius: 5px;
+    padding: 4px 6px;
+    color: #ddd;
+    font-size: 0.8em;
+  }
+  .qbank-input:focus { border-color: var(--planner); outline: none; }
+  .qbank-input::placeholder { color: #666; }
+
+  .digest-box {
+    background: #232323;
+    border: 1px solid #3a3a3a;
+    border-left: 4px solid var(--planner);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 0.9em;
+    color: #ddd;
+  }
+  .digest-box strong { color: #fff; }
+
+  .subject-countdown-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+  .subject-countdown {
+    flex: 1;
+    min-width: 220px;
+    background: #2a2a2a;
+    border-radius: 10px;
+    padding: 12px 16px;
+    border-top: 4px solid #555;
+  }
+  .subject-countdown.path { border-top-color: var(--path); }
+  .subject-countdown.micro { border-top-color: var(--micro); }
+  .subject-countdown.pharm { border-top-color: var(--pharm); }
+  .subject-countdown h4 { margin: 0 0 6px 0; font-size: 0.95em; }
+  .subject-countdown .sc-line { font-size: 0.8em; color: #aaa; margin-top: 3px; }
+  .subject-countdown .sc-line b { color: #e8e8e8; }
+  #auth-gate {
+    position: fixed; inset: 0; z-index: 9999;
+    background: #191919;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .auth-gate-box {
+    max-width: 420px; width: 90%;
+    background: #232323; border: 1px solid #3a3a3a; border-radius: 12px;
+    padding: 40px 32px; text-align: center;
+  }
+  .auth-gate-title { font-size: 1.6em; font-weight: 700; margin-bottom: 10px; }
+  .auth-gate-sub { color: #aaa; margin-bottom: 24px; line-height: 1.4; }
+  .auth-gate-box button {
+    display: block; width: 100%; padding: 12px; margin-bottom: 10px;
+    border-radius: 8px; border: 1px solid #3f3f3f; cursor: pointer;
+    font-size: 1em; background: #2f2f2f; color: #eee;
+  }
+  #gate-signin-btn { background: #4285F4; border-color: #4285F4; color: #fff; font-weight: 600; }
+  #gate-signin-btn:hover { background: #3367d6; }
+  #gate-continue-btn { background: transparent; color: #999; border: none; }
+  #gate-continue-btn:hover { color: #ccc; text-decoration: underline; }
+  .auth-gate-note { color: #777; font-size: 0.85em; margin-top: 10px; }
+</style>
+<!-- Firebase (optional: only used if you set up cloud sync — see FIREBASE_CONFIG near the top of the <script> below) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+<div id="auth-gate">
+  <div class="auth-gate-box">
+    <div class="auth-gate-title">📚 RNS401 Master Tracker</div>
+    <div class="auth-gate-sub">Sign in with Google to save your progress to your account and see it on any device.</div>
+    <button id="gate-signin-btn" onclick="signInWithGoogle()">Sign in with Google</button>
+    <button id="gate-continue-btn" onclick="continueWithoutAccount()">Continue without an account</button>
+    <div class="auth-gate-note" id="gate-note"></div>
+  </div>
+</div>
+
+<div id="app-content" style="display:none;">
+
+<h1>📚 RNS401 Master Tracker — Respiratory &amp; Nervous System II (MD4)</h1>
+<div id="exam-countdown"></div>
+
+<div class="fa-bar">
+  <span>📖 First Aid PDF:</span>
+  <span id="fa-status">not connected — set it once, works for the rest of this file</span>
+  <button onclick="pickFirstAidPdf()">Choose your First Aid PDF…</button>
+  <input type="file" id="fa-file-input" accept="application/pdf" style="display:none;">
+</div>
+<div class="fa-bar">
+  <span>📓 Pathoma PDF:</span>
+  <span id="pathoma-status">not connected — set it once, works for the rest of this file</span>
+  <button onclick="pickPathomaPdf()">Choose your Pathoma PDF…</button>
+  <input type="file" id="pathoma-file-input" accept="application/pdf" style="display:none;">
+</div>
+<div class="fa-bar" id="sync-bar">
+  <span>☁️ Cloud save:</span>
+  <span id="sync-status">not set up — this file is still saving to your own browser only</span>
+  <button id="signin-btn" onclick="signInWithGoogle()">Sign in with Google</button>
+  <button id="signout-btn" onclick="signOutGoogle()" style="display:none;">Sign out</button>
+</div>
+
+<div class="tabbar">
+  <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">🏠 Overview</button>
+  <button class="tab-btn" data-tab="planner" onclick="switchTab('planner')">📅 Planner</button>
+  <button class="tab-btn" data-tab="path" onclick="switchTab('path')">🧬 Pathology</button>
+  <button class="tab-btn" data-tab="micro" onclick="switchTab('micro')">🦠 Microbiology</button>
+  <button class="tab-btn" data-tab="pharm" onclick="switchTab('pharm')">💊 Pharmacology</button>
+</div>
+
+<!-- ============================================ OVERVIEW ============================================ -->
+<div class="tab-panel active" id="panel-overview">
+
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Overall progress</span><span id="overall-pct">0%</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill fill-overall" id="overall-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="card-row">
+    <div class="subject-card path">
+      <h3 style="color:var(--path)">Pathology (Pathoma Ch. 9 &amp; 17)</h3>
+      <div class="big" id="card-path-pct">0%</div>
+      <div class="stat" id="card-path-count">0 / 0 done</div>
+    </div>
+    <div class="subject-card micro">
+      <h3 style="color:var(--micro)">Microbiology (Sketchy)</h3>
+      <div class="big" id="card-micro-pct">0%</div>
+      <div class="stat" id="card-micro-count">0 / 0 done</div>
+    </div>
+    <div class="subject-card pharm">
+      <h3 style="color:var(--pharm)">Pharmacology (Sketchy)</h3>
+      <div class="big" id="card-pharm-pct">0%</div>
+      <div class="stat" id="card-pharm-count">0 / 0 done</div>
+    </div>
+  </div>
+
+  <div class="grand-total">
+    🎯 Combined watch time — Pathology: ~3h 52m &nbsp;|&nbsp; Micro: ~6h 10m &nbsp;|&nbsp; Pharm: ~2h 39m
+    <br><span style="font-size:0.7em; color:#9fbfd8;">Grand total: ~12h 41m (761 min) of unique required video across all three subjects, built from your RNS401 lecture list (path/pharm/micro folders) and real durations read off the Pathoma &amp; Sketchy files themselves.</span>
+  </div>
+
+  <div class="note">
+    ⚠️ <strong>Known content gaps</strong> (no dedicated video in your libraries — supplement with slides/First Aid):
+    <ul>
+      <li><strong>Pathology:</strong> Herniations/Pseudotumor Cerebri (only partially covered by Developmental Anomalies), Neurocutaneous Disorders, Metabolic Disorders of Brain, the two "Extra Assigned Topics in RNS II" lectures.</li>
+      <li><strong>Pharmacology:</strong> Local Anesthetics — Sketchy's Anesthetics &amp; Analgesics chapter only has IV Anesthetics, Inhaled Anesthetics, and Opioids; no dedicated local anesthetics video.</li>
+      <li><strong>Bonus (not tied to a specific lecture title but round out the Pathoma chapter):</strong> Nasopharynx &amp; Larynx (Ch. 9.1–9.2), Spinal Cord Lesions (Ch. 17.2), and Meningitis (Ch. 17.3, pairs well with your MB2 Bacterial Meningitis lecture).</li>
+    </ul>
+  </div>
+
+  <p class="note">💡 Your checkboxes save automatically in this file (per-browser, per-file — this is a separate save slot from your CHS303 tracker). Use the search box on each tab to jump to a topic fast, and "Expand gaps only" to see everything you still need to cover with slides/First Aid.</p>
+  <p class="note">📅 Head to the <strong>Planner</strong> tab — it's pre-loaded assuming your semester starts <strong>Monday, September 7, 2026</strong> (Windsor runs the exact same week-by-week schedule every semester, just shifted, so I moved last semester's RNS401 schedule up to that start date). It tries to keep you ahead of each lecture and lets you drag lectures to any day or schedule your own study sessions — you can get started right now, well ahead of the module.</p>
+  <p class="note">📝 <strong>No Anki card counts this time</strong> — the CHS303 tracker had a "High Yield | Temp High Yield" column pulled from a specific deck; I don't have that deck's per-video card counts for this content, so I left it off rather than guess. Send me the numbers for these Pathoma/Sketchy videos if you want that column added back in.</p>
+  <p class="note">📖 <strong>New: First Aid page links.</strong> Every row now has a "📖 p.NNN" link that jumps straight to the matching page in <em>your own</em> First Aid 2026 PDF — click "Choose your First Aid PDF…" at the top once (Chrome/Edge remember your choice after that; other browsers will ask again each time you reopen this file). Because it reads the PDF from wherever <em>you</em> point it, this file works the same way for a friend who saves First Aid in a totally different folder — nothing is hardcoded to my copy of your files. Pages come from First Aid 2026's own bookmarks, matched topic-by-topic against your Pathology/Micro/Pharm lectures — a handful of rows (mostly gap rows with no video) don't have a clean First Aid match and just show "—".</p>
+  <p class="note">📓 <strong>New: Pathoma textbook page links (Pathology tab only).</strong> Same idea, same "choose your own PDF" mechanism — click "Choose your Pathoma PDF…" once and every Pathology row gets a "📓 p.NNN" link straight to that topic in Pathoma's <em>Fundamentals of Pathology</em> book. I read the actual chapter headings out of your Pathoma PDF (not a guess) to line up pages for Ch. 9 Respiratory and Ch. 17 CNS with each row. Micro and Pharm tabs don't get this link since Pathoma doesn't cover those subjects — First Aid is still the one for those. The three gap rows with no Pathoma video (Neurocutaneous Disorders, Metabolic Disorders of Brain, Extra Assigned Topics) also have no Pathoma textbook section, so those show "—" too.</p>
+  <p class="note">📝 <strong>New: QBank notes column.</strong> Every row on all three tabs now has a small text box — jot the UWorld/Amboss tags you want to revisit after a question block, and it saves automatically the same way your checkboxes do.</p>
+  <p class="note">⏱️ <strong>Changed: % complete is now by minutes of video, not by row count.</strong> A 3-minute Pleura clip and a 50-minute COPD chapter used to count the same toward your percentage — now the Overview cards and progress bar reflect actual minutes watched, so heavier topics carry the weight they should. The count "X / Y rows" is still shown next to it for reference.</p>
+  <p class="note">📅 <strong>New in the Planner:</strong> a "this week" digest at the top (what's scheduled in the next 7 days, by subject and minutes) and a per-subject countdown row — since Micro is a much heavier load this module than Pharm, each subject now gets its own remaining-time, required-pace, and % watched, instead of only one combined number.</p>
+
+</div>
+
+<!-- ============================================ PLANNER ============================================ -->
+<div class="tab-panel" id="panel-planner">
+<h2 class="planner">Study Planner</h2>
+
+<div class="planner-settings">
+  <div class="field">
+    <label for="set-examdate">Exam date</label>
+    <input type="date" id="set-examdate" onchange="onSettingsChange()">
+  </div>
+  <div class="field">
+    <label for="set-reviewdays">Review days (before exam)</label>
+    <input type="number" id="set-reviewdays" min="0" max="20" step="1" oninput="onSettingsChange()">
+  </div>
+  <div class="field">
+    <label for="set-capacity">Study minutes / day</label>
+    <input type="number" id="set-capacity" min="10" max="600" step="5" oninput="onSettingsChange()">
+  </div>
+  <div class="field">
+    <label for="set-buffer">Get-ahead buffer (days)</label>
+    <input type="number" id="set-buffer" min="0" max="14" step="1" oninput="onSettingsChange()">
+  </div>
+  <button onclick="useSuggestedPace()">Use suggested pace</button>
+  <button onclick="resetBaseline()">Reset pace tracking to today</button>
+  <button onclick="clearAllManualOverrides()">Clear manual schedule changes</button>
+</div>
+
+<div id="planner-warnings"></div>
+<div id="planner-digest"></div>
+<div id="planner-dashboard"></div>
+<div id="planner-subject-countdown"></div>
+<div id="planner-today"></div>
+
+<h3 style="margin-bottom:8px; color:#ccc; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+  Calendar — today through exam day
+  <button onclick="jumpToToday()" style="background:#333;color:#ccc;border:1px solid #555;border-radius:6px;padding:4px 10px;font-size:0.75em;cursor:pointer;">📍 Jump to today</button>
+</h3>
+<div class="cal-legend">
+  <span><span class="legend-dot chip-path"></span>Pathology</span>
+  <span><span class="legend-dot chip-micro"></span>Microbiology</span>
+  <span><span class="legend-dot chip-pharm"></span>Pharmacology</span>
+  <span><span class="legend-dot" style="background:#e0a860;"></span>Review</span>
+  <span>🏫 = taught in class that day</span>
+  <span style="color:#e07a7a;">Red outline = behind your get-ahead buffer</span>
+  <span style="color:var(--planner);">Blue outline = manually scheduled/dragged</span>
+</div>
+<div class="cal-scroll" id="planner-calendar"></div>
+
+<div class="today-box" style="margin-top:20px;">
+  <h3 style="margin-bottom:6px;">Plan your own study time</h3>
+  <div class="subtext">Pick any video/lecture, choose a day, and optionally set your own review length in minutes. It locks into place on the calendar — drag it to move it later, or remove it from that day's detail view (click the day).</div>
+  <div id="planner-manual-form"></div>
+</div>
+
+<p class="note">💡 This plan recalculates whenever you check a box anywhere in this file. Videos are ordered to match the actual order topics are taught in your RNS401 schedule (Weeks 1–3, shifted to start Sept 7, 2026) so subjects naturally mix, and the planner tries to keep each video watched at least your buffer setting's worth of days before it's covered in class — items in red are already behind that. Drag any lecture to a different day to lock it there, or use "Plan your own study time" to schedule a specific video with a custom review length. Review days pull from whatever you've already watched, plus anything tagged as a gap topic (no dedicated video) so you don't forget to hit those with slides/First Aid.</p>
+
+<!-- Day detail modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this) closeDayModal()">
+  <div class="modal-box">
+    <button onclick="closeDayModal()" style="float:right; background:none; border:none; color:#999; font-size:1.2em; cursor:pointer;">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+</div>
+
+<!-- ============================================ PATHOLOGY ============================================ -->
+<div class="tab-panel" id="panel-path">
+<h2 class="path">Pathology — Pathoma Tracker</h2>
+
+<div class="summary">
+  Total unique video time: <strong>~232 min = 3h 52m</strong> (durations read directly from your Pathoma Ch. 9 &amp; Ch. 17 video files, so they're exact for your copies — a few lectures reuse a video from an earlier row; those are counted once and marked "already counted").
+</div>
+
+<div class="controls">
+  <input type="text" class="search-box" placeholder="🔍 Search pathology topics..." oninput="filterTable('path-table', this.value)">
+  <button onclick="toggleGapsOnly('path-table')">Show gaps only</button>
+  <button onclick="markAllDone('path-table')">Mark all done</button>
+  <button onclick="clearAllDone('path-table')">Clear all</button>
+</div>
+
+<table class="path-table" id="path-table">
+<thead>
+<tr><th>✓</th><th>WUSOM Lecture</th><th>#</th><th>Pathoma Video</th><th>Chapter</th><th>Length</th><th>First Aid</th><th>Pathoma</th><th>QBank Notes</th></tr>
+</thead>
+<tbody>
+
+<tr class="section-row"><td colspan="9">Respiratory Tract Pathology <span style="font-weight:normal;font-size:0.8em;">(Wk1, Sep 7–11)</span></td></tr>
+<tr data-id="p1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Congenital Lung Diseases, Atelectasis, NRDS</td><td>01</td><td>Pulmonary Hypertension &amp; Respiratory Distress Syndromes</td><td class="chapter">Ch. 9.6–9.7</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(701);">📖 p.701</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(102);">📓 p.102</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p1" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p2"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Pulmonary Edema, ARDS (Mon)</td><td>02</td><td>Pulmonary Hypertension &amp; Respiratory Distress Syndromes (same video as row 01 above)</td><td class="chapter">Ch. 9.6–9.7</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(719);">📖 p.719</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(102);">📓 p.102</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p2" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p2b"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Pneumothorax, Pleural Effusion (Mon)</td><td>02</td><td>Pleura</td><td class="chapter">Ch. 9.9</td><td class="time" data-min="3">3m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(722);">📖 p.722</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(106);">📓 p.106</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p2b" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p3"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Restrictive Lung Disease, IPF, Pneumoconiosis</td><td>03</td><td>Restrictive Diseases</td><td class="chapter">Ch. 9.5</td><td class="time" data-min="22">22m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(716);">📖 p.716</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(100);">📓 p.100</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p3" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p4"><td><input type="checkbox" onchange="onCheck(this)"></td><td>COPD — Emphysema, Chronic Bronchitis</td><td>04</td><td>Chronic Obstructive Pulmonary Disease</td><td class="chapter">Ch. 9.4</td><td class="time" data-min="50">50m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(714);">📖 p.714</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(97);">📓 p.97</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p4" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p5"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Asthma, Bronchiectasis</td><td>05</td><td>Chronic Obstructive Pulmonary Disease (same video as row 04 — Pathoma covers obstructive lung disease as one chapter)</td><td class="chapter">Ch. 9.4</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(715);">📖 p.715</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(97);">📓 p.97</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p5" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="gap-row" data-id="p6" data-reviewonly="1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>TBL: Obstructive &amp; Restrictive Disorder</td><td>06</td><td class="missing">Review session — draws on rows 03 &amp; 04 above, no new video</td><td class="chapter">—</td><td class="time">review only</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(714);">📖 p.714</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(97);">📓 p.97</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p6" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p7"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Pneumonia</td><td>07</td><td>Pulmonary Infections</td><td class="chapter">Ch. 9.3</td><td class="time" data-min="20">20m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(723);">📖 p.723</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(94);">📓 p.94</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p7" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p8"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. TB, Abscess</td><td>08</td><td>Pulmonary Infections (same video as row 07 above)</td><td class="chapter">Ch. 9.3</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(724);">📖 p.724</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(94);">📓 p.94</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p8" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p9"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Tumors of Lung-1</td><td>09</td><td>Lung Cancer</td><td class="chapter">Ch. 9.8</td><td class="time" data-min="18">18m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(725);">📖 p.725</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(103);">📓 p.103</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p9" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bonus — Nasopharynx &amp; Larynx <span class="supp-tag">not on a specific lecture</span></td><td>10</td><td>Nasopharynx &amp; Larynx</td><td class="chapter">Ch. 9.1–9.2</td><td class="time" data-min="8">8m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(712);">📖 p.712</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(93);">📓 p.93</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p10" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="9">Central Nervous System Pathology <span style="font-weight:normal;font-size:0.8em;">(Wk2–3, Sep 14–25)</span></td></tr>
+<tr data-id="p11"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Neural Tube Defect, Hydrocephalus, Herniations, Pseudotumor Cerebri</td><td>11</td><td>Developmental Anomalies</td><td class="chapter">Ch. 17.1</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(558);">📖 p.558</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(190);">📓 p.190</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p11" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="gap-row" data-id="p12" data-suppmin="10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Herniations / Pseudotumor Cerebri (portion)</td><td>12</td><td class="missing">Only partially covered above — supplement with slides/First Aid</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(565);">📖 p.565</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(196);">📓 p.196</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p12" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p13"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Diffuse Axonal Damage, Cerebral Swelling, Concussion, SAH, Epidural/Subdural Hemorrhage</td><td>13</td><td>Trauma &amp; Demyelinating Disorders</td><td class="chapter">Ch. 17.5–17.6</td><td class="time" data-min="13">13m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(551);">📖 p.551</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(195);">📓 p.195</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p13" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p14"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Demyelinating Disorders</td><td>14</td><td>Trauma &amp; Demyelinating Disorders (same video as row 13 above)</td><td class="chapter">Ch. 17.5–17.6</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(559);">📖 p.559</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(196);">📓 p.196</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p14" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p15"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Stroke</td><td>15</td><td>Cerebrovascular Disease</td><td class="chapter">Ch. 17.4</td><td class="time" data-min="16">16m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(547);">📖 p.547</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(193);">📓 p.193</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p15" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p16"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Cerebrovascular Disorders</td><td>16</td><td>Cerebrovascular Disease (same video as row 15 above)</td><td class="chapter">Ch. 17.4</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(547);">📖 p.547</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(193);">📓 p.193</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p16" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p17"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Pseudobulbar Palsy, Intraparenchymal Hemorrhage, Arteriovenous Malformations</td><td>17</td><td>Cerebrovascular Disease (same video as row 15 above)</td><td class="chapter">Ch. 17.4</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(550);">📖 p.550</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(195);">📓 p.195</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p17" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p18"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Alzheimer's, Parkinson's Disease, Huntington's Disease, Dementias</td><td>18</td><td>Dementia and Degenerative Disorders</td><td class="chapter">Ch. 17.7</td><td class="time" data-min="35">35m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(556);">📖 p.556</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(197);">📓 p.197</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p18" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p19"><td><input type="checkbox" onchange="onCheck(this)"></td><td>CNS Tumors 1</td><td>19</td><td>CNS Tumors</td><td class="chapter">Ch. 17.8</td><td class="time" data-min="12">12m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(562);">📖 p.562</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(200);">📓 p.200</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p19" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p20"><td><input type="checkbox" onchange="onCheck(this)"></td><td>CNS Tumors 2</td><td>20</td><td>CNS Tumors (same video as row 19 above)</td><td class="chapter">Ch. 17.8</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(564);">📖 p.564</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(200);">📓 p.200</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p20" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p21"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bonus — Spinal Cord Lesions <span class="supp-tag">not on a specific lecture</span></td><td>21</td><td>Spinal Cord Lesions</td><td class="chapter">Ch. 17.2</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(566);">📖 p.566</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(191);">📓 p.191</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p21" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="p22"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bonus — Meningitis <span class="supp-tag">pairs with MB2: Bacterial Meningitis</span></td><td>22</td><td>Meningitis</td><td class="chapter">Ch. 17.3</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(198);">📖 p.198</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(192);">📓 p.192</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p22" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="gap-row" data-id="p23" data-suppmin="10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Neurocutaneous Disorders</td><td>23</td><td class="missing">No dedicated Pathoma video — supplement with slides/First Aid</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(561);">📖 p.561</a></td><td class="pathoma-cell missing">—</td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p23" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="gap-row" data-id="p24" data-suppmin="10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Metabolic Disorders of Brain</td><td>24</td><td class="missing">No dedicated Pathoma video — supplement with slides/First Aid</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell missing">—</td><td class="pathoma-cell missing">—</td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p24" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="gap-row" data-id="p25" data-suppmin="15"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Extra Assigned Topics in RNS II (x2 lecture files)</td><td>25</td><td class="missing">Instructor-assigned supplemental topics — no dedicated video, use the lecture slides</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell missing">—</td><td class="pathoma-cell missing">—</td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p25" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+</tbody>
+<tfoot>
+<tr><td colspan="4" style="text-align:right;">Total unique video time:</td><td class="time">232m = 3h 52m</td></tr>
+</tfoot>
+</table>
+
+<p class="note">⚠️ Remaining real gaps (no dedicated Pathoma video — supplement with slides/First Aid): Herniations/Pseudotumor Cerebri (partial), Neurocutaneous Disorders, Metabolic Disorders of Brain, and the two "Extra Assigned Topics in RNS II" lectures.</p>
+<p class="note">Source: durations were read directly (via ffprobe) from the Pathoma Ch. 9 and Ch. 17 video files in your Pathoma folder — these are the real lengths of your copies, not an estimate.</p>
+
+</div>
+
+<!-- ============================================ MICRO ============================================ -->
+<div class="tab-panel" id="panel-micro">
+<h2 class="micro">Microbiology — Respiratory &amp; CNS Infections (Sketchy)</h2>
+
+<div class="summary micro">
+  Micro total: <strong>~370 min = 6h 10m</strong> (core videos, excludes "already counted" reuses)
+</div>
+
+<div class="controls">
+  <input type="text" class="search-box" placeholder="🔍 Search organisms/topics..." oninput="filterTable('micro-table', this.value)">
+  <button onclick="toggleGapsOnly('micro-table')">Show gaps only</button>
+  <button onclick="markAllDone('micro-table')">Mark all done</button>
+  <button onclick="clearAllDone('micro-table')">Clear all</button>
+</div>
+
+<table class="micro-table" id="micro-table">
+<thead>
+<tr><th>✓</th><th>Blueprint Topic</th><th>Organism</th><th>Sketchy Video</th><th>Chapter</th><th>Length</th><th>First Aid</th><th>QBank Notes</th></tr>
+</thead>
+<tbody>
+
+<tr class="section-row"><td colspan="8">Lect 1: Fungal Respiratory Infections <span style="font-weight:normal;font-size:0.8em;">(Wk1 Wed Sep 9)</span></td></tr>
+<tr data-id="m1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Fungal Respiratory Infections</td><td>Histoplasma capsulatum</td><td>Histoplasma capsulatum</td><td class="chapter">Fungi — Systemic Mycoses</td><td class="time" data-min="10">10m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(171);">📖 p.171</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m1" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m2"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Fungal Respiratory Infections</td><td>Blastomyces dermatitidis</td><td>Blastomyces dermatitidis</td><td class="chapter">Fungi — Systemic Mycoses</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(171);">📖 p.171</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m2" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m3"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Fungal Respiratory Infections</td><td>Coccidioides immitis</td><td>Coccidioides immitis</td><td class="chapter">Fungi — Systemic Mycoses</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(171);">📖 p.171</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m3" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m4"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Fungal Respiratory Infections</td><td>Paracoccidioides brasiliensis</td><td>Paracoccidioides brasiliensis</td><td class="chapter">Fungi — Systemic Mycoses</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(171);">📖 p.171</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m4" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 2,3: Common Cold, Croup <span style="font-weight:normal;font-size:0.8em;">(Wk1 Tue Sep 8, SGD)</span></td></tr>
+<tr data-id="m5"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Common Cold</td><td>Rhinovirus</td><td>Rhinovirus (Picornaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(187);">📖 p.187</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m5" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m6"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Croup</td><td>Parainfluenza virus</td><td>Measles, Mumps, Parainfluenza Viruses (Paramyxoviridae)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time" data-min="13">13m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(189);">📖 p.189</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m6" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 2,3 (cont.): Viral Pneumonia <span style="font-weight:normal;font-size:0.8em;">(Wk1 Thu Sep 10)</span></td></tr>
+<tr data-id="m7"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pneumonia</td><td>RSV / hMPV</td><td>Respiratory Syncytial Virus &amp; Human Metapneumovirus (Pneumoviridae)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(188);">📖 p.188</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m7" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m8"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pneumonia</td><td>Coronavirus</td><td>Coronavirus (Coronaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="13">13m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(191);">📖 p.191</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m8" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 5,6: Viral Pharyngitis <span style="font-weight:normal;font-size:0.8em;">(Wk1 Wed Sep 9, SGD)</span></td></tr>
+<tr data-id="m9"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pharyngitis</td><td>Coxsackievirus A &amp; B</td><td>Coxsackievirus A &amp; B (Picornaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(187);">📖 p.187</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m9" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pharyngitis</td><td>Adenovirus</td><td>Adenovirus (Adenoviridae)</td><td class="chapter">Viruses — DNA Viruses</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(183);">📖 p.183</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m10" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m11"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pharyngitis</td><td>Epstein-Barr Virus</td><td>Epstein-Barr Virus (Herpesviridae)</td><td class="chapter">Viruses — DNA Viruses</td><td class="time" data-min="11">11m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(184);">📖 p.184</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m11" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 4: Influenza, Smallpox, Mumps, Measles, Rubella <span style="font-weight:normal;font-size:0.8em;">(Wk1 Fri Sep 11)</span></td></tr>
+<tr data-id="m12"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Influenza</td><td>Influenzavirus</td><td>Influenzavirus (Orthomyxoviridae)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time" data-min="18">18m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(188);">📖 p.188</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m12" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m13"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Mumps, Measles</td><td>Mumps / Measles virus</td><td>Measles, Mumps, Parainfluenza Viruses (same video as row above under Croup)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(189);">📖 p.189</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m13" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m14"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Smallpox</td><td>Smallpox / Cowpox virus</td><td>Smallpox Virus, Cowpox Virus, and Molluscum Contagiosum Virus (Poxviridae)</td><td class="chapter">Viruses — DNA Viruses</td><td class="time" data-min="8">8m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(183);">📖 p.183</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m14" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m15"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Rubella</td><td>Rubella virus</td><td>Rubella Virus (Matonaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(188);">📖 p.188</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m15" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 7,8: Otitis Media, Sinusitis, Epiglottitis, Diphtheria, Bacterial Pharyngitis <span style="font-weight:normal;font-size:0.8em;">(Wk2 Mon Sep 14, SGD)</span></td></tr>
+<tr data-id="m16"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Otitis Media, Sinusitis, Epiglottitis</td><td>Haemophilus influenzae</td><td>Haemophilus influenzae</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m16" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m17"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Otitis Media, Sinusitis</td><td>Moraxella catarrhalis</td><td>Moraxella catarrhalis</td><td class="chapter">Bacteria — Gram-Neg Cocci</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m17" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m18"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Diphtheria</td><td>Corynebacterium diphtheriae</td><td>Corynebacterium diphtheriae</td><td class="chapter">Bacteria — Gram-Pos Bacilli</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(159);">📖 p.159</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m18" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m19"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bacterial Pharyngitis</td><td>Streptococcus pyogenes</td><td>Streptococcus pyogenes (Group A Strep)</td><td class="chapter">Bacteria — Gram-Pos Cocci</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(156);">📖 p.156</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m19" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 9: Whooping Cough, Nocardiosis <span style="font-weight:normal;font-size:0.8em;">(Wk2 Wed Sep 16, SGD)</span></td></tr>
+<tr data-id="m20"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Whooping Cough</td><td>Bordetella pertussis</td><td>Bordetella pertussis</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="8">8m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(163);">📖 p.163</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m20" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m21"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Nocardiosis</td><td>Nocardia asteroides</td><td>Nocardia asteroides</td><td class="chapter">Bacteria — Branching Filamentous Rods</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(159);">📖 p.159</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m21" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 10: Mtb, Atypical Mycobacteria <span style="font-weight:normal;font-size:0.8em;">(Wk2 Wed Sep 16)</span></td></tr>
+<tr data-id="m22"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Tuberculosis</td><td>Mycobacterium tuberculosis</td><td>Mycobacterium tuberculosis</td><td class="chapter">Bacteria — Mycobacteria</td><td class="time" data-min="17">17m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(160);">📖 p.160</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m22" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m23"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Atypical Mycobacteria</td><td>M. avium, M. scrofulaceum, M. marinum</td><td>Mycobacterium avium intracellulare, M. scrofulaceum, M. marinum</td><td class="chapter">Bacteria — Mycobacteria</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(160);">📖 p.160</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m23" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 11: Lobar Pneumonia, Pseudomonas <span style="font-weight:normal;font-size:0.8em;">(Wk2 Thu Sep 17)</span></td></tr>
+<tr data-id="m24"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Lobar Pneumonia</td><td>Streptococcus pneumoniae</td><td>Streptococcus pneumoniae &amp; viridans</td><td class="chapter">Bacteria — Gram-Pos Cocci</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(156);">📖 p.156</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m24" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m25"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Pseudomonas</td><td>Pseudomonas aeruginosa</td><td>Pseudomonas aeruginosa</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="10">10m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(163);">📖 p.163</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m25" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m26"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Pseudomonas (related)</td><td>Burkholderia spp.</td><td>Burkholderia pseudomallei &amp; cepacia complex</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m26" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 12: Interstitial Pneumonia <span style="font-weight:normal;font-size:0.8em;">(Wk2 Fri Sep 18)</span></td></tr>
+<tr data-id="m27"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Interstitial (Atypical) Pneumonia</td><td>Mycoplasma pneumoniae</td><td>Mycoplasma pneumoniae</td><td class="chapter">Bacteria — Gram-Indeterminate</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(170);">📖 p.170</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m27" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m28"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Interstitial Pneumonia</td><td>Chlamydia/Chlamydophila spp.</td><td>Chlamydia trachomatis, Chlamydophila pneumoniae, Chlamydophila psittaci</td><td class="chapter">Bacteria — Gram-Indeterminate</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(168);">📖 p.168</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m28" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m29"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Interstitial Pneumonia (Q fever)</td><td>Coxiella burnetii</td><td>Coxiella burnetii</td><td class="chapter">Bacteria — Gram-Indeterminate</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(170);">📖 p.170</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m29" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m30"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Interstitial Pneumonia (Legionnaires')</td><td>Legionella pneumophila</td><td>Legionella pneumophila</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(163);">📖 p.163</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m30" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 13: Cryptococcosis, Polio, Echovirus, Viral Meningitis <span style="font-weight:normal;font-size:0.8em;">(Wk3 Mon Sep 21)</span></td></tr>
+<tr data-id="m31"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Cryptococcosis</td><td>Cryptococcus neoformans</td><td>Cryptococcus neoformans</td><td class="chapter">Fungi — Opportunistic</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(172);">📖 p.172</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m31" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m32"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Echovirus / Viral Meningitis</td><td>Echovirus (Enterovirus)</td><td>Picornaviridae Overview</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="11">11m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(187);">📖 p.187</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m32" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m33"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Polio</td><td>Poliovirus</td><td>Poliovirus (Picornaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(187);">📖 p.187</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m33" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 14: Bacterial Meningitis, Leprosy <span style="font-weight:normal;font-size:0.8em;">(Wk3 Wed Sep 23)</span></td></tr>
+<tr data-id="m34"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bacterial Meningitis</td><td>Neisseria meningitidis</td><td>Neisseria meningitidis</td><td class="chapter">Bacteria — Gram-Neg Cocci</td><td class="time" data-min="14">14m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m34" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m35"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bacterial Meningitis</td><td>Streptococcus pneumoniae</td><td>Streptococcus pneumoniae &amp; viridans (same video as row 24 above)</td><td class="chapter">Bacteria — Gram-Pos Cocci</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(156);">📖 p.156</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m35" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m36"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bacterial Meningitis</td><td>Haemophilus influenzae</td><td>Haemophilus influenzae (same video as row 16 above)</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m36" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m37"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Leprosy</td><td>Mycobacterium leprae</td><td>Mycobacterium leprae</td><td class="chapter">Bacteria — Mycobacteria</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(161);">📖 p.161</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m37" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 15: Rabies, West Nile Virus, Encephalitis <span style="font-weight:normal;font-size:0.8em;">(Wk3 Tue Sep 22)</span></td></tr>
+<tr data-id="m38"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Rabies</td><td>Rabies virus</td><td>Rabies Virus (Rhabdoviridae)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time" data-min="11">11m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(191);">📖 p.191</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m38" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m39"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Encephalitis</td><td>Eq. Encephalitis / Chikungunya virus</td><td>Equine Encephalitis Viruses &amp; Chikungunya Virus (Togaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(190);">📖 p.190</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m39" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m40"><td><input type="checkbox" onchange="onCheck(this)"></td><td>West Nile Virus</td><td>West Nile virus</td><td>Flaviviridae Overview <em>(shared/general)</em></td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(190);">📖 p.190</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m40" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 16,17: Primary Amebic Meningoencephalitis, Toxoplasmosis, African Sleeping Sickness <span style="font-weight:normal;font-size:0.8em;">(Wk3 Wed Sep 23, SGD)</span></td></tr>
+<tr data-id="m41"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Primary Amebic Meningoencephalitis</td><td>Naegleria fowleri</td><td>Naegleria fowleri</td><td class="chapter">Parasites — Protozoa of the CNS</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(175);">📖 p.175</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m41" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m42"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Toxoplasmosis</td><td>Toxoplasma gondii</td><td>Toxoplasma gondii</td><td class="chapter">Parasites — Protozoa of the CNS</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(175);">📖 p.175</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m42" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m43"><td><input type="checkbox" onchange="onCheck(this)"></td><td>African Sleeping Sickness</td><td>Trypanosoma brucei</td><td>Trypanosoma brucei</td><td class="chapter">Parasites — Protozoa of the CNS</td><td class="time" data-min="10">10m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(177);">📖 p.177</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m43" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Lect 18: Tetanus, Botulism <span style="font-weight:normal;font-size:0.8em;">(Wk3 Fri Sep 25, SGD)</span></td></tr>
+<tr data-id="m44"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Tetanus</td><td>Clostridium tetani</td><td>Clostridium tetani</td><td class="chapter">Bacteria — Gram-Pos Bacilli</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(158);">📖 p.158</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m44" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="m45"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Botulism</td><td>Clostridium botulinum</td><td>Clostridium botulinum</td><td class="chapter">Bacteria — Gram-Pos Bacilli</td><td class="time" data-min="8">8m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(158);">📖 p.158</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m45" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">TBL: Meningitis (Differential Diagnosis) <span style="font-weight:normal;font-size:0.8em;">(Wk3 Thu Sep 24)</span></td></tr>
+<tr class="gap-row" data-id="m46" data-reviewonly="1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>TBL: Meningitis (Differential Diagnosis)</td><td>—</td><td class="missing">Review session — draws on rows 34, 24 &amp; 16 above, no new video</td><td class="chapter">—</td><td class="time">review only</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(198);">📖 p.198</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m46" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+</tbody>
+<tfoot>
+<tr><td colspan="5" style="text-align:right;">Micro total (core, excludes "already counted" rows):</td><td class="time">370m = 6h 10m</td></tr>
+</tfoot>
+</table>
+
+<p class="note">📅 Rows are grouped and ordered to match when each topic is actually taught in your RNS401 schedule (earliest lecture date shown next to each section header, shifted to your Sept 7, 2026 start).</p>
+<p class="note">Durations were read directly (via ffprobe) from your Sketchy Microbiology video files.</p>
+
+</div>
+
+<!-- ============================================ PHARM ============================================ -->
+<div class="tab-panel" id="panel-pharm">
+<h2 class="pharm">Pharmacology — Weeks 1–3 (Sketchy)</h2>
+
+<div class="summary pharm">
+  Pharm total: <strong>~159 min = 2h 39m</strong>
+</div>
+
+<div class="controls">
+  <input type="text" class="search-box" placeholder="🔍 Search drugs/topics..." oninput="filterTable('pharm-table', this.value)">
+  <button onclick="toggleGapsOnly('pharm-table')">Show gaps only</button>
+  <button onclick="markAllDone('pharm-table')">Mark all done</button>
+  <button onclick="clearAllDone('pharm-table')">Clear all</button>
+</div>
+
+<table class="pharm-table" id="pharm-table">
+<thead>
+<tr><th>✓</th><th>Schedule Topic</th><th>Week / Day</th><th>Sketchy Video</th><th>Chapter</th><th>Length</th><th>First Aid</th><th>QBank Notes</th></tr>
+</thead>
+<tbody>
+
+<tr class="section-row"><td colspan="8">Pharmacotherapy of Obstructive Lung Disorders — Respiratory Drugs, Asthma</td></tr>
+<tr data-id="ph12"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Respiratory Drugs — Asthma</td><td>Wk1 Thu (Sep 10)</td><td>Asthma Therapy</td><td class="chapter">Smooth Muscle: Allergy &amp; Pulmonary</td><td class="time" data-min="22">22m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(726);">📖 p.726</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph12" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="ph13"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Respiratory Drugs — Asthma (allergy component)</td><td>"</td><td>Antihistamines</td><td class="chapter">Smooth Muscle: Allergy &amp; Pulmonary</td><td class="time" data-min="16">16m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(726);">📖 p.726</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph13" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Opioid Analgesics</td></tr>
+<tr data-id="ph1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Opioid Analgesics</td><td>Wk2 Tue (Sep 15)</td><td>Opioids, Naloxone, Naltrexone</td><td class="chapter">Neuro &amp; Psych: Anesthetics &amp; Analgesics</td><td class="time" data-min="20">20m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(589);">📖 p.589</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph1" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Anti-Seizure Drugs (Antiepileptics)</td></tr>
+<tr data-id="ph2"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Anti-seizure Drugs</td><td>Wk2 Wed–Thu (Sep 16–17)</td><td>Broad-Spectrum Antiepileptics</td><td class="chapter">Neuro &amp; Psych: Mood Stabilizers &amp; AEDs</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph2" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="ph3"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Anti-seizure Drugs</td><td>"</td><td>Carbamazepine, Oxcarbazepine, Phenytoin, Tiagabine, Vigabatrin</td><td class="chapter">Neuro &amp; Psych: Mood Stabilizers &amp; AEDs</td><td class="time" data-min="20">20m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph3" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="ph4"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Anti-seizure Drugs</td><td>"</td><td>Ethosuximide</td><td class="chapter">Neuro &amp; Psych: Mood Stabilizers &amp; AEDs</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph4" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="ph5"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Anti-seizure Drugs</td><td>"</td><td>Gabapentin &amp; Pregabalin</td><td class="chapter">Neuro &amp; Psych: Mood Stabilizers &amp; AEDs</td><td class="time" data-min="3">3m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph5" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="gap-row" data-id="ph6" data-reviewonly="1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>TBL: Anti-epileptics</td><td>Wk2 Thu (Sep 17)</td><td class="missing">Review session — draws on rows above, no new video</td><td class="chapter">—</td><td class="time">review only</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph6" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Local Anesthetics</td></tr>
+<tr class="gap-row" data-id="ph7" data-suppmin="10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Local Anesthetics</td><td>Wk3 Mon (Sep 21)</td><td class="missing">No dedicated video — Sketchy's Anesthetics &amp; Analgesics chapter only covers IV Anesthetics, Inhaled Anesthetics, and Opioids in this course</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(587);">📖 p.587</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph7" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">General Anesthesia</td></tr>
+<tr data-id="ph8"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. General Anesthetics</td><td>Wk3 Tue (Sep 22)</td><td>IV Anesthetics</td><td class="chapter">Neuro &amp; Psych: Anesthetics &amp; Analgesics</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(587);">📖 p.587</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph8" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="ph9"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. General Anesthetics</td><td>"</td><td>Inhaled Anesthetics &amp; Dantrolene</td><td class="chapter">Neuro &amp; Psych: Anesthetics &amp; Analgesics</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(587);">📖 p.587</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph9" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+<tr class="section-row"><td colspan="8">Parkinson's / Alzheimer's Pharmacology</td></tr>
+<tr data-id="ph10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Parkinson's / Alzheimer's Pharmacology</td><td>Wk3 Wed (Sep 23)</td><td>Parkinsonism Drugs</td><td class="chapter">Neuro &amp; Psych: Antipsychotics &amp; Parkinson's</td><td class="time" data-min="20">20m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(585);">📖 p.585</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph10" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr data-id="ph11"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Parkinson's / Alzheimer's Pharmacology</td><td>"</td><td>Alzheimer's Disease Medications</td><td class="chapter">Neuro &amp; Psych: Alzheimer's Medications</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(586);">📖 p.586</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph11" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+
+</tbody>
+<tfoot>
+<tr><td colspan="5" style="text-align:right;">Pharm total unique video time:</td><td class="time">159m = 2h 39m</td></tr>
+</tfoot>
+</table>
+
+<p class="note">⚠️ Pharm gap: Local Anesthetics — no dedicated Sketchy video in this course; check lecture slides / First Aid.</p>
+<p class="note">Durations were read directly (via ffprobe) from your Sketchy Pharmacology video files.</p>
+
+</div>
+
+</div>
+
+<script>
+/* ============================================================
+   CLOUD SYNC (Google sign-in + Firestore)
+   Optional. If you haven't set up a Firebase project, this whole
+   section quietly does nothing and the tracker just saves to your
+   own browser like before. To turn it on:
+     1) Create a free project at https://console.firebase.google.com
+     2) Authentication > Sign-in method > enable "Google"
+     3) Firestore Database > Create database
+     4) Project settings > Your apps > </> (web app) > copy the config
+     5) Paste that config into FIREBASE_CONFIG below
+     6) Firestore rules — only let a signed-in user touch their own doc:
+          rules_version = '2';
+          service cloud.firestore {
+            match /databases/{database}/documents {
+              match /users/{userId} {
+                allow read, write: if request.auth != null && request.auth.uid == userId;
+              }
+            }
+          }
+   ============================================================ */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBTU_EFrR3zgyspIO0ZAFhRKrj9FD429ng",
+  authDomain: "md-trackers.firebaseapp.com",
+  projectId: "md-trackers",
+  storageBucket: "md-trackers.firebasestorage.app",
+  messagingSenderId: "180621606585",
+  appId: "1:180621606585:web:bf060af67f1aeb00bae568"
+};
+
+let fbAuth = null, fbDb = null, fbUser = null, fbSyncTimer = null;
+const CLOUD_SYNC_KEYS = [
+  'rns401_tracker_progress_v1',
+  'rns401_planner_settings_v2',
+  'rns401_planner_meta_v1',
+  'rns401_review_state_v1',
+  'rns401_manual_overrides_v1',
+  'rns401_qbank_notes_v1'
+];
+
+function firebaseReady() {
+  return typeof firebase !== 'undefined' && FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.startsWith('PASTE_');
+}
+
+function setSyncStatus(msg) {
+  const el = document.getElementById('sync-status');
+  if (el) el.textContent = msg;
+}
+
+// ---- Sign-in gate: the tracker stays hidden behind a full-screen sign-in
+// screen until the user either signs in with Google, or explicitly chooses
+// to continue without an account (in which case progress just saves to
+// this one browser, same as before cloud sync existed). ----
+let gatePassed = false;
+function passGate() {
+  if (gatePassed) return;
+  gatePassed = true;
+  const gate = document.getElementById('auth-gate');
+  const content = document.getElementById('app-content');
+  if (gate) gate.style.display = 'none';
+  if (content) content.style.display = '';
+}
+function continueWithoutAccount() {
+  passGate();
+}
+
+function initFirebase() {
+  if (!firebaseReady()) {
+    setSyncStatus('not set up — this file is still saving to your own browser only');
+    const note = document.getElementById('gate-note');
+    if (note) note.textContent = 'Cloud sign-in isn\'t set up in this copy — just continue below.';
+    passGate();
+    return;
+  }
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    fbAuth = firebase.auth();
+    fbDb = firebase.firestore();
+    fbAuth.onAuthStateChanged(onAuthChange);
+    setSyncStatus('signed out — progress is only saving to this browser');
+  } catch (e) {
+    setSyncStatus('cloud sync failed to start (check your Firebase config)');
+    console.error(e);
+    passGate();
+  }
+}
+
+function signInWithGoogle() {
+  if (!firebaseReady()) { alert('Cloud sync is not set up in this file yet — paste your Firebase config into FIREBASE_CONFIG first.'); return; }
+  const provider = new firebase.auth.GoogleAuthProvider();
+  fbAuth.signInWithPopup(provider).catch(e => {
+    console.error(e);
+    setSyncStatus('sign-in failed — try again');
+    const note = document.getElementById('gate-note');
+    if (note) note.textContent = 'Sign-in failed — try again, or continue without an account below.';
+  });
+}
+
+function signOutGoogle() {
+  if (fbAuth) fbAuth.signOut();
+}
+
+async function onAuthChange(user) {
+  fbUser = user;
+  const signinBtn = document.getElementById('signin-btn');
+  const signoutBtn = document.getElementById('signout-btn');
+  if (user) {
+    if (signinBtn) signinBtn.style.display = 'none';
+    if (signoutBtn) signoutBtn.style.display = '';
+    setSyncStatus(`signed in as ${user.displayName || user.email} — pulling your saved progress…`);
+    passGate();
+    await pullFromCloud();
+    setSyncStatus(`signed in as ${user.displayName || user.email} — synced ✓`);
+  } else {
+    if (signinBtn) signinBtn.style.display = '';
+    if (signoutBtn) signoutBtn.style.display = 'none';
+    setSyncStatus('signed out — progress is only saving to this browser');
+  }
+}
+
+async function pullFromCloud() {
+  if (!fbDb || !fbUser) return;
+  try {
+    const doc = await fbDb.collection('users').doc(fbUser.uid).get();
+    if (doc.exists) {
+      const data = doc.data() || {};
+      CLOUD_SYNC_KEYS.forEach(k => {
+        if (data[k] !== undefined) localStorage.setItem(k, data[k]);
+      });
+    }
+  } catch (e) {
+    console.error('pullFromCloud failed', e);
+  }
+  // re-render everything now that localStorage may have changed
+  initState();
+  populateSettingsInputs();
+  updateExamCountdown();
+  renderPlanner();
+}
+
+function pushToCloudDebounced() {
+  if (!fbDb || !fbUser) return;
+  clearTimeout(fbSyncTimer);
+  fbSyncTimer = setTimeout(pushToCloudNow, 800);
+}
+
+async function pushToCloudNow() {
+  if (!fbDb || !fbUser) return;
+  const payload = {};
+  CLOUD_SYNC_KEYS.forEach(k => {
+    const v = localStorage.getItem(k);
+    if (v !== null) payload[k] = v;
+  });
+  payload._updatedAt = new Date().toISOString();
+  try {
+    await fbDb.collection('users').doc(fbUser.uid).set(payload, { merge: true });
+  } catch (e) {
+    console.error('pushToCloudNow failed', e);
+  }
+}
+
+// Hook every localStorage write for our known keys so a signed-in user's
+// changes get pushed to the cloud automatically, without touching every
+// individual save function in the tracker.
+(function patchLocalStorageForSync() {
+  const origSetItem = Storage.prototype.setItem;
+  Storage.prototype.setItem = function(key, value) {
+    origSetItem.call(this, key, value);
+    if (CLOUD_SYNC_KEYS.includes(key)) pushToCloudDebounced();
+  };
+})();
+
+/* ============================================================
+   FIRST AID LINKING
+   Each row's "📖 p.NNN" link opens *your own* First Aid PDF at that
+   page — no hardcoded file path, so this works no matter whose
+   computer opens the tracker. Chrome/Edge remember your choice
+   (via the File System Access API + IndexedDB) so you only pick it
+   once; other browsers fall back to picking it each time you open
+   this file.
+   ============================================================ */
+
+const FA_DB_NAME = 'rns401_fa_db';
+const FA_STORE = 'handles';
+const FA_KEY = 'firstaid_pdf';
+let firstAidFileHandle = null;   // FileSystemFileHandle, persisted (Chrome/Edge)
+let firstAidFileObject = null;   // plain File, this page-load only (fallback browsers)
+let pendingFaPage = null;        // page we were trying to open when we had to ask for the file
+
+function openFaDb() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(FA_DB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(FA_STORE);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function saveFaHandle(handle) {
+  try {
+    const db = await openFaDb();
+    await new Promise((res, rej) => {
+      const tx = db.transaction(FA_STORE, 'readwrite');
+      tx.objectStore(FA_STORE).put(handle, FA_KEY);
+      tx.oncomplete = res;
+      tx.onerror = () => rej(tx.error);
+    });
+  } catch (e) { /* IndexedDB unavailable — picking again next time is fine */ }
+}
+async function loadFaHandle() {
+  try {
+    const db = await openFaDb();
+    return await new Promise((res) => {
+      const tx = db.transaction(FA_STORE, 'readonly');
+      const r = tx.objectStore(FA_STORE).get(FA_KEY);
+      r.onsuccess = () => res(r.result || null);
+      r.onerror = () => res(null);
+    });
+  } catch (e) { return null; }
+}
+
+function setFaStatus(text) {
+  const el = document.getElementById('fa-status');
+  if (el) el.textContent = text;
+}
+
+async function pickFirstAidPdf() {
+  if (window.showOpenFilePicker) {
+    try {
+      const [handle] = await window.showOpenFilePicker({
+        types: [{ description: 'PDF', accept: { 'application/pdf': ['.pdf'] } }]
+      });
+      firstAidFileHandle = handle;
+      firstAidFileObject = null;
+      await saveFaHandle(handle);
+      setFaStatus('📖 ' + handle.name + ' (remembered — won’t ask again on this browser)');
+      if (pendingFaPage) { const p = pendingFaPage; pendingFaPage = null; openFirstAid(p); }
+    } catch (e) { /* user cancelled the picker — do nothing */ }
+  } else {
+    // Safari / Firefox / no File System Access API: fall back to a plain
+    // file input. This can't be remembered across page loads (browser
+    // security), so it'll ask again next time this file is opened.
+    document.getElementById('fa-file-input').click();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('fa-file-input');
+  if (input) {
+    input.addEventListener('change', (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      firstAidFileObject = f;
+      firstAidFileHandle = null;
+      setFaStatus('📖 ' + f.name + ' (this browser session only — you’ll pick it again next time)');
+      if (pendingFaPage) { const p = pendingFaPage; pendingFaPage = null; openFirstAid(p); }
+    });
+  }
+  (async () => {
+    const h = await loadFaHandle();
+    if (h) {
+      firstAidFileHandle = h;
+      setFaStatus('📖 ' + h.name + ' (click any 📖 page link to reconnect)');
+    }
+  })();
+});
+
+async function ensureFaPermission(handle) {
+  const opts = { mode: 'read' };
+  try {
+    if ((await handle.queryPermission(opts)) === 'granted') return true;
+    if ((await handle.requestPermission(opts)) === 'granted') return true;
+  } catch (e) { /* handle may be stale (file moved/renamed) */ }
+  return false;
+}
+
+async function openFirstAid(page) {
+  if (!page) { alert("I don't have a First Aid page mapped for this specific row yet."); return; }
+  if (firstAidFileHandle) {
+    const ok = await ensureFaPermission(firstAidFileHandle);
+    if (!ok) {
+      setFaStatus('Permission needed — choose your First Aid PDF again');
+      pendingFaPage = page;
+      pickFirstAidPdf();
+      return;
+    }
+    const file = await firstAidFileHandle.getFile();
+    const url = URL.createObjectURL(file);
+    window.open(url + '#page=' + page, '_blank');
+    return;
+  }
+  if (firstAidFileObject) {
+    const url = URL.createObjectURL(firstAidFileObject);
+    window.open(url + '#page=' + page, '_blank');
+    return;
+  }
+  pendingFaPage = page;
+  pickFirstAidPdf();
+}
+
+/* ============================================================
+   PATHOMA TEXTBOOK LINKING
+   Same idea as First Aid above, but for the Pathoma "Fundamentals of
+   Pathology" PDF — only the Pathology tab has these links, since
+   Pathoma doesn't cover micro/pharm. Pages come from the book's own
+   chapter headings (I scanned the actual text of Ch. 9 and Ch. 17 in
+   your PDF to find them), matched to the same subchapters as the
+   Pathoma videos already in this tracker.
+   ============================================================ */
+
+const PATHOMA_KEY = 'pathoma_pdf';
+let pathomaFileHandle = null;
+let pathomaFileObject = null;
+let pendingPathomaPage = null;
+
+async function savePathomaHandle(handle) {
+  try {
+    const db = await openFaDb();
+    await new Promise((res, rej) => {
+      const tx = db.transaction(FA_STORE, 'readwrite');
+      tx.objectStore(FA_STORE).put(handle, PATHOMA_KEY);
+      tx.oncomplete = res;
+      tx.onerror = () => rej(tx.error);
+    });
+  } catch (e) { /* IndexedDB unavailable — picking again next time is fine */ }
+}
+async function loadPathomaHandle() {
+  try {
+    const db = await openFaDb();
+    return await new Promise((res) => {
+      const tx = db.transaction(FA_STORE, 'readonly');
+      const r = tx.objectStore(FA_STORE).get(PATHOMA_KEY);
+      r.onsuccess = () => res(r.result || null);
+      r.onerror = () => res(null);
+    });
+  } catch (e) { return null; }
+}
+
+function setPathomaStatus(text) {
+  const el = document.getElementById('pathoma-status');
+  if (el) el.textContent = text;
+}
+
+async function pickPathomaPdf() {
+  if (window.showOpenFilePicker) {
+    try {
+      const [handle] = await window.showOpenFilePicker({
+        types: [{ description: 'PDF', accept: { 'application/pdf': ['.pdf'] } }]
+      });
+      pathomaFileHandle = handle;
+      pathomaFileObject = null;
+      await savePathomaHandle(handle);
+      setPathomaStatus('📓 ' + handle.name + ' (remembered — won’t ask again on this browser)');
+      if (pendingPathomaPage) { const p = pendingPathomaPage; pendingPathomaPage = null; openPathoma(p); }
+    } catch (e) { /* user cancelled the picker — do nothing */ }
+  } else {
+    document.getElementById('pathoma-file-input').click();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('pathoma-file-input');
+  if (input) {
+    input.addEventListener('change', (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      pathomaFileObject = f;
+      pathomaFileHandle = null;
+      setPathomaStatus('📓 ' + f.name + ' (this browser session only — you’ll pick it again next time)');
+      if (pendingPathomaPage) { const p = pendingPathomaPage; pendingPathomaPage = null; openPathoma(p); }
+    });
+  }
+  (async () => {
+    const h = await loadPathomaHandle();
+    if (h) {
+      pathomaFileHandle = h;
+      setPathomaStatus('📓 ' + h.name + ' (click any 📓 page link to reconnect)');
+    }
+  })();
+});
+
+async function openPathoma(page) {
+  if (!page) { alert("Pathoma's textbook doesn't have a dedicated section for this row — check the gap note instead."); return; }
+  if (pathomaFileHandle) {
+    const ok = await ensureFaPermission(pathomaFileHandle);
+    if (!ok) {
+      setPathomaStatus('Permission needed — choose your Pathoma PDF again');
+      pendingPathomaPage = page;
+      pickPathomaPdf();
+      return;
+    }
+    const file = await pathomaFileHandle.getFile();
+    const url = URL.createObjectURL(file);
+    window.open(url + '#page=' + page, '_blank');
+    return;
+  }
+  if (pathomaFileObject) {
+    const url = URL.createObjectURL(pathomaFileObject);
+    window.open(url + '#page=' + page, '_blank');
+    return;
+  }
+  pendingPathomaPage = page;
+  pickPathomaPdf();
+}
+
+const STORAGE_KEY = 'rns401_tracker_progress_v1';
+
+function loadState() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  } catch(e) { return {}; }
+}
+function saveState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  document.querySelector('.tab-btn[data-tab="' + tab + '"]').classList.add('active');
+  if (tab === 'planner') renderPlanner();
+}
+
+function onCheck(cb) {
+  const row = cb.closest('tr');
+  row.classList.toggle('checked', cb.checked);
+  const state = loadState();
+  state[row.dataset.id] = cb.checked;
+  saveState(state);
+  updateProgress();
+  if (document.getElementById('panel-planner')) renderPlanner();
+}
+
+function initState() {
+  const state = loadState();
+  document.querySelectorAll('tr[data-id]').forEach(row => {
+    const cb = row.querySelector('input[type="checkbox"]');
+    if (Object.prototype.hasOwnProperty.call(state, row.dataset.id)) {
+      cb.checked = !!state[row.dataset.id];
+    }
+    if (cb.checked) row.classList.add('checked');
+    state[row.dataset.id] = cb.checked;
+  });
+  saveState(state);
+  updateProgress();
+  initQbankNotes();
+}
+
+/* ============================================================
+   QUESTION-BANK TIE-IN
+   A free-text field per row so you can jot which UWorld/Amboss
+   question tags to revisit after a QBank block — saved the same way
+   as your checkboxes (per-browser, per-file).
+   ============================================================ */
+const QBANK_KEY = 'rns401_qbank_notes_v1';
+function loadQbankNotes() {
+  try { return JSON.parse(localStorage.getItem(QBANK_KEY)) || {}; }
+  catch (e) { return {}; }
+}
+function saveQbankNoteState(notes) { localStorage.setItem(QBANK_KEY, JSON.stringify(notes)); }
+function initQbankNotes() {
+  const notes = loadQbankNotes();
+  document.querySelectorAll('.qbank-input').forEach(input => {
+    const id = input.dataset.id;
+    if (notes[id]) input.value = notes[id];
+  });
+}
+function saveQbankNote(input) {
+  const notes = loadQbankNotes();
+  const id = input.dataset.id;
+  const val = input.value.trim();
+  if (val) notes[id] = val; else delete notes[id];
+  saveQbankNoteState(notes);
+}
+
+function computeStats(tableId) {
+  const table = document.getElementById(tableId);
+  const rows = table.querySelectorAll('tbody tr[data-id]');
+  let total = rows.length, done = 0, totalMin = 0, doneMin = 0;
+  rows.forEach(r => {
+    const checked = r.querySelector('input[type="checkbox"]').checked;
+    if (checked) done++;
+    // Minutes come from data-min only — that's real, unique watch time
+    // (rows that reuse a video, review-only rows, and slide/First-Aid-only
+    // gap rows all carry no data-min, same convention as the "total unique
+    // video time" footers on each tab), so % complete by minutes reflects
+    // actual video watched, not just boxes checked.
+    const timeTd = r.querySelector('td.time');
+    const min = timeTd ? (parseFloat(timeTd.dataset.min) || 0) : 0;
+    totalMin += min;
+    if (checked) doneMin += min;
+  });
+  return { total, done, totalMin, doneMin };
+}
+
+function updateProgress() {
+  const path = computeStats('path-table');
+  const micro = computeStats('micro-table');
+  const pharm = computeStats('pharm-table');
+
+  const setBar = (prefix, stats) => {
+    // % complete is by minutes of unique video watched, not row count —
+    // some rows are a 3-minute Pleura clip and others a 50-minute COPD
+    // chapter, so counting rows equally would be misleading.
+    const pct = stats.totalMin ? Math.round((stats.doneMin / stats.totalMin) * 100) : 0;
+    const pctEl = document.getElementById('card-' + prefix + '-pct');
+    const countEl = document.getElementById('card-' + prefix + '-count');
+    if (pctEl) pctEl.textContent = pct + '%';
+    if (countEl) countEl.textContent = `${stats.done} / ${stats.total} rows · ${stats.doneMin} / ${stats.totalMin} min`;
+  };
+  setBar('path', path);
+  setBar('micro', micro);
+  setBar('pharm', pharm);
+
+  const totalMinAll = path.totalMin + micro.totalMin + pharm.totalMin;
+  const doneMinAll = path.doneMin + micro.doneMin + pharm.doneMin;
+  const overallPct = totalMinAll ? Math.round((doneMinAll / totalMinAll) * 100) : 0;
+  document.getElementById('overall-pct').textContent = overallPct + '%';
+  document.getElementById('overall-fill').style.width = overallPct + '%';
+}
+
+function filterTable(tableId, query) {
+  query = query.trim().toLowerCase();
+  const table = document.getElementById(tableId);
+  const rows = table.querySelectorAll('tbody tr');
+  rows.forEach(row => {
+    if (row.classList.contains('section-row')) {
+      row.style.display = '';
+      return;
+    }
+    const text = row.textContent.toLowerCase();
+    row.style.display = query === '' || text.includes(query) ? '' : 'none';
+  });
+}
+
+function toggleGapsOnly(tableId) {
+  const table = document.getElementById(tableId);
+  const rows = table.querySelectorAll('tbody tr[data-id]');
+  const btn = event.target;
+  const showingGapsOnly = btn.dataset.active === '1';
+  rows.forEach(row => {
+    if (showingGapsOnly) {
+      row.style.display = '';
+    } else {
+      row.style.display = row.classList.contains('gap-row') ? '' : 'none';
+    }
+  });
+  table.querySelectorAll('.section-row').forEach(r => r.style.display = '');
+  btn.dataset.active = showingGapsOnly ? '0' : '1';
+  btn.textContent = showingGapsOnly ? 'Show gaps only' : 'Show all rows';
+}
+
+function markAllDone(tableId) {
+  const table = document.getElementById(tableId);
+  const state = loadState();
+  table.querySelectorAll('tbody tr[data-id]').forEach(row => {
+    const cb = row.querySelector('input[type="checkbox"]');
+    cb.checked = true;
+    row.classList.add('checked');
+    state[row.dataset.id] = true;
+  });
+  saveState(state);
+  updateProgress();
+  if (document.getElementById('panel-planner')) renderPlanner();
+}
+
+function clearAllDone(tableId) {
+  const table = document.getElementById(tableId);
+  const state = loadState();
+  table.querySelectorAll('tbody tr[data-id]').forEach(row => {
+    const cb = row.querySelector('input[type="checkbox"]');
+    cb.checked = false;
+    row.classList.remove('checked');
+    state[row.dataset.id] = false;
+  });
+  saveState(state);
+  updateProgress();
+  if (document.getElementById('panel-planner')) renderPlanner();
+}
+
+/* ============================================================
+   PLANNER
+   ============================================================ */
+
+const PLANNER_SETTINGS_KEY = 'rns401_planner_settings_v2';
+const PLANNER_META_KEY = 'rns401_planner_meta_v1';
+const REVIEW_STATE_KEY = 'rns401_review_state_v1';
+const MANUAL_OVERRIDES_KEY = 'rns401_manual_overrides_v1';
+
+const DEFAULT_SETTINGS = {
+  examDate: '2026-09-29',
+  reviewDays: 3,
+  dailyCapacity: 90,
+  bufferDays: 3
+};
+
+// Best-effort mapping of each tracker row to the date it's actually taught,
+// built from last semester's RNS401 (MD4, Weeks 1-3) class schedule, moved
+// up 18 weeks (126 days) so it starts Monday, Sept 7, 2026 — Windsor runs
+// the same week-by-week schedule every semester, just shifted.
+const CLASS_DATE_MAP = {
+  p1: '2026-09-08', p2: '2026-09-07', p2b: '2026-09-07', p3: '2026-09-10',
+  p4: '2026-09-09', p5: '2026-09-09', p6: '2026-09-11', p7: '2026-09-11',
+  p8: '2026-09-11', p9: '2026-09-14',
+  p11: '2026-09-16', p12: '2026-09-17', p13: '2026-09-18', p14: '2026-09-22',
+  p15: '2026-09-21', p16: '2026-09-21', p17: '2026-09-23', p18: '2026-09-24',
+  p19: '2026-09-24', p20: '2026-09-25', p22: '2026-09-23',
+
+  m1: '2026-09-09', m2: '2026-09-09', m3: '2026-09-09', m4: '2026-09-09',
+  m5: '2026-09-08', m6: '2026-09-08',
+  m7: '2026-09-10', m8: '2026-09-10',
+  m9: '2026-09-09', m10: '2026-09-09', m11: '2026-09-09',
+  m12: '2026-09-11', m13: '2026-09-11', m14: '2026-09-11', m15: '2026-09-11',
+  m16: '2026-09-14', m17: '2026-09-14', m18: '2026-09-14', m19: '2026-09-14',
+  m20: '2026-09-16', m21: '2026-09-16',
+  m22: '2026-09-16', m23: '2026-09-16',
+  m24: '2026-09-17', m25: '2026-09-17', m26: '2026-09-17',
+  m27: '2026-09-18', m28: '2026-09-18', m29: '2026-09-18', m30: '2026-09-18',
+  m31: '2026-09-21', m32: '2026-09-21', m33: '2026-09-21',
+  m34: '2026-09-23', m35: '2026-09-23', m36: '2026-09-23', m37: '2026-09-23',
+  m38: '2026-09-22', m39: '2026-09-22', m40: '2026-09-22',
+  m41: '2026-09-23', m42: '2026-09-23', m43: '2026-09-23',
+  m44: '2026-09-25', m45: '2026-09-25', m46: '2026-09-24',
+
+  ph12: '2026-09-10', ph13: '2026-09-10',
+  ph1: '2026-09-15',
+  ph2: '2026-09-16', ph3: '2026-09-16', ph4: '2026-09-16', ph5: '2026-09-16', ph6: '2026-09-17',
+  ph7: '2026-09-21',
+  ph8: '2026-09-22', ph9: '2026-09-22',
+  ph10: '2026-09-23', ph11: '2026-09-23'
+};
+
+const EXAM_EVENTS = [
+  { date: '2026-09-18', label: 'RNS401 Formative Assessment', icon: '📝' },
+  { date: '2026-09-29', label: 'RNS401 End Module Exam (Summative)', icon: '🎓' },
+  { date: '2026-10-23', label: 'NBME 1 (covers RNS401 + GHS402)', icon: '🧪' }
+];
+
+const CLASS_EVENTS_BY_DATE = {};
+Object.keys(CLASS_DATE_MAP).forEach(id => {
+  const d = CLASS_DATE_MAP[id];
+  if (!CLASS_EVENTS_BY_DATE[d]) CLASS_EVENTS_BY_DATE[d] = [];
+  CLASS_EVENTS_BY_DATE[d].push(id);
+});
+
+let LAST_ITEMS_BY_ID = {};
+
+function loadPlannerSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PLANNER_SETTINGS_KEY));
+    return Object.assign({}, DEFAULT_SETTINGS, saved || {});
+  } catch (e) { return Object.assign({}, DEFAULT_SETTINGS); }
+}
+function savePlannerSettings(s) { localStorage.setItem(PLANNER_SETTINGS_KEY, JSON.stringify(s)); }
+function loadPlannerMeta() {
+  try { return JSON.parse(localStorage.getItem(PLANNER_META_KEY)) || null; }
+  catch (e) { return null; }
+}
+function savePlannerMeta(m) { localStorage.setItem(PLANNER_META_KEY, JSON.stringify(m)); }
+function loadReviewState() {
+  try { return JSON.parse(localStorage.getItem(REVIEW_STATE_KEY)) || {}; }
+  catch (e) { return {}; }
+}
+function saveReviewState(s) { localStorage.setItem(REVIEW_STATE_KEY, JSON.stringify(s)); }
+function loadManualOverrides() {
+  try { return JSON.parse(localStorage.getItem(MANUAL_OVERRIDES_KEY)) || {}; }
+  catch (e) { return {}; }
+}
+function saveManualOverrides(o) { localStorage.setItem(MANUAL_OVERRIDES_KEY, JSON.stringify(o)); }
+
+function fmtDate(d) {
+  const y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, '0'), day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+function parseDateStr(s) {
+  const parts = s.split('-').map(Number);
+  return new Date(parts[0], parts[1] - 1, parts[2]);
+}
+function addDays(d, n) {
+  const nd = new Date(d);
+  nd.setDate(nd.getDate() + n);
+  return nd;
+}
+function startOfDay(d) {
+  const nd = new Date(d);
+  nd.setHours(0, 0, 0, 0);
+  return nd;
+}
+function startOfWeek(d) { const nd = startOfDay(d); nd.setDate(nd.getDate() - nd.getDay()); return nd; }
+function endOfWeek(d) { const nd = startOfDay(d); nd.setDate(nd.getDate() + (6 - nd.getDay())); return nd; }
+function dayLabel(dateStr) {
+  const d = parseDateStr(dateStr);
+  return d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+}
+function escAttr(s) { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;'); }
+
+function populateSettingsInputs() {
+  const s = loadPlannerSettings();
+  const examEl = document.getElementById('set-examdate');
+  const revEl = document.getElementById('set-reviewdays');
+  const capEl = document.getElementById('set-capacity');
+  const bufEl = document.getElementById('set-buffer');
+  if (!examEl) return;
+  examEl.value = s.examDate;
+  revEl.value = s.reviewDays;
+  capEl.value = s.dailyCapacity;
+  bufEl.value = s.bufferDays;
+}
+
+function onSettingsChange() {
+  const s = loadPlannerSettings();
+  s.examDate = document.getElementById('set-examdate').value || DEFAULT_SETTINGS.examDate;
+  s.reviewDays = Math.max(0, parseInt(document.getElementById('set-reviewdays').value) || 0);
+  s.dailyCapacity = Math.max(10, parseInt(document.getElementById('set-capacity').value) || DEFAULT_SETTINGS.dailyCapacity);
+  s.bufferDays = Math.max(0, parseInt(document.getElementById('set-buffer').value) || 0);
+  savePlannerSettings(s);
+  updateExamCountdown();
+  renderPlanner();
+}
+
+function useSuggestedPace() {
+  const plan = computePlan();
+  if (plan.stats.contentDaysCount > 0) {
+    const rawContentMin = plan.autoPool.reduce((sum, i) => sum + i.min, 0) + plan.manualItems.reduce((sum, i) => sum + i.min, 0);
+    const suggested = Math.max(10, Math.ceil(rawContentMin / plan.stats.contentDaysCount / 5) * 5);
+    document.getElementById('set-capacity').value = suggested;
+    onSettingsChange();
+  }
+}
+
+function resetBaseline() {
+  localStorage.removeItem(PLANNER_META_KEY);
+  renderPlanner();
+}
+
+function clearAllManualOverrides() {
+  if (!confirm('Remove all manually scheduled/dragged items and let the planner auto-schedule everything again?')) return;
+  localStorage.removeItem(MANUAL_OVERRIDES_KEY);
+  renderPlanner();
+}
+
+function getItemPool() {
+  const items = [];
+  ['path-table', 'micro-table', 'pharm-table'].forEach(tableId => {
+    const table = document.getElementById(tableId);
+    if (!table) return;
+    const subject = tableId.replace('-table', '');
+    table.querySelectorAll('tbody tr[data-id]').forEach(row => {
+      const cb = row.querySelector('input[type="checkbox"]');
+      const checked = cb ? cb.checked : false;
+      const timeTd = row.querySelector('td.time');
+      const min = timeTd ? (parseFloat(timeTd.dataset.min) || 0) : 0;
+      const suppmin = parseFloat(row.dataset.suppmin) || 0;
+      const reviewOnly = row.dataset.reviewonly === '1';
+      const effMin = min > 0 ? min : suppmin;
+      if (effMin <= 0) return;
+      const cells = row.querySelectorAll('td');
+      const title = cells[1] ? cells[1].textContent.trim() : '';
+      const video = cells[3] ? cells[3].textContent.trim() : '';
+      const id = row.dataset.id;
+      items.push({
+        id, subject, title, video,
+        min: effMin, isSupp: min <= 0 && suppmin > 0,
+        reviewOnly, checked,
+        classDate: CLASS_DATE_MAP[id] || null
+      });
+    });
+  });
+  LAST_ITEMS_BY_ID = {};
+  items.forEach(it => { LAST_ITEMS_BY_ID[it.id] = it; });
+  return items;
+}
+
+function buildDatePlan(settings) {
+  const today = startOfDay(new Date());
+  const examDate = startOfDay(parseDateStr(settings.examDate));
+  const lastStudyDate = addDays(examDate, -1);
+  let allDates = [];
+  if (lastStudyDate >= today) {
+    let d = new Date(today);
+    while (d <= lastStudyDate) {
+      allDates.push(fmtDate(d));
+      d = addDays(d, 1);
+    }
+  }
+  const reviewCount = Math.min(settings.reviewDays, allDates.length);
+  const reviewDates = reviewCount > 0 ? allDates.slice(allDates.length - reviewCount) : [];
+  const contentDates = reviewCount > 0 ? allDates.slice(0, allDates.length - reviewCount) : allDates.slice();
+  return { today, examDate, lastStudyDate, allDates, contentDates, reviewDates };
+}
+
+function bufferStatusFor(classDate, assignedDateStr, bufferDays) {
+  if (!classDate) return null;
+  const cd = parseDateStr(classDate);
+  const ad = parseDateStr(assignedDateStr);
+  const daysAhead = Math.round((cd - ad) / 86400000);
+  if (daysAhead <= 0) return { status: 'behind', daysAhead };
+  if (daysAhead < bufferDays) return { status: 'tight', daysAhead };
+  return { status: 'ok', daysAhead };
+}
+
+function computePlan() {
+  const settings = loadPlannerSettings();
+  const dp = buildDatePlan(settings);
+  const items = getItemPool();
+  const overrides = loadManualOverrides();
+  const bufferDays = settings.bufferDays;
+
+  const manualItems = [];
+  const autoPool = [];
+  const reviewOnlyPool = [];
+
+  items.forEach(it => {
+    const ov = overrides[it.id];
+    if (ov) {
+      manualItems.push(Object.assign({}, it, {
+        min: (ov.min && ov.min > 0) ? ov.min : it.min,
+        manualDate: ov.date
+      }));
+      return;
+    }
+    if (it.reviewOnly) {
+      if (!it.checked) reviewOnlyPool.push(it);
+      return;
+    }
+    if (!it.checked) autoPool.push(it);
+  });
+  const completedPool = items.filter(i => i.checked && !i.reviewOnly);
+
+  autoPool.sort((a, b) => {
+    const da = a.classDate || '9999-12-31';
+    const db = b.classDate || '9999-12-31';
+    return da < db ? -1 : (da > db ? 1 : 0);
+  });
+
+  const assignments = {};
+  const ensureBucket = (d) => {
+    if (!assignments[d]) {
+      assignments[d] = { date: d, type: dp.reviewDates.includes(d) ? 'review' : 'content', items: [], totalMin: 0, outOfPlan: !dp.allDates.includes(d) };
+    }
+    return assignments[d];
+  };
+  dp.contentDates.forEach(d => ensureBucket(d));
+  dp.reviewDates.forEach(d => ensureBucket(d));
+
+  // Manually scheduled / dragged items are locked to their date first.
+  manualItems.forEach(it => {
+    const bucket = ensureBucket(it.manualDate);
+    const bs = bufferStatusFor(it.classDate, it.manualDate, bufferDays);
+    it.bufferStatus = bs ? bs.status : null;
+    it.daysAhead = bs ? bs.daysAhead : null;
+    it.isManual = true;
+    bucket.items.push(it);
+    bucket.totalMin += it.min;
+  });
+
+  const cap = settings.dailyCapacity;
+  const warnings = [];
+  let lastAssignedDate = null;
+
+  const queue = autoPool.slice();
+  dp.contentDates.forEach(d => {
+    const bucket = assignments[d];
+    while (queue.length && bucket.totalMin + queue[0].min <= cap) {
+      const it = queue.shift();
+      const bs = bufferStatusFor(it.classDate, d, bufferDays);
+      it.bufferStatus = bs ? bs.status : null;
+      it.daysAhead = bs ? bs.daysAhead : null;
+      bucket.items.push(it);
+      bucket.totalMin += it.min;
+      lastAssignedDate = d;
+    }
+    if (queue.length && bucket.items.filter(i => !i.isManual).length === 0) {
+      const it = queue.shift();
+      const bs = bufferStatusFor(it.classDate, d, bufferDays);
+      it.bufferStatus = bs ? bs.status : null;
+      it.daysAhead = bs ? bs.daysAhead : null;
+      bucket.items.push(it);
+      bucket.totalMin += it.min;
+      lastAssignedDate = d;
+    }
+  });
+
+  let overflowMin = 0, overflowCount = 0;
+  if (queue.length) {
+    dp.reviewDates.forEach(d => {
+      const bucket = assignments[d];
+      while (queue.length && bucket.totalMin + queue[0].min <= cap * 1.5) {
+        const it = queue.shift();
+        it.overflow = true;
+        const bs = bufferStatusFor(it.classDate, d, bufferDays);
+        it.bufferStatus = bs ? bs.status : null;
+        it.daysAhead = bs ? bs.daysAhead : null;
+        bucket.items.push(it);
+        bucket.totalMin += it.min;
+        lastAssignedDate = d;
+      }
+    });
+  }
+  if (queue.length) {
+    const lastDate = dp.allDates[dp.allDates.length - 1];
+    if (lastDate) {
+      const bucket = ensureBucket(lastDate);
+      queue.forEach(it => {
+        it.overflow = true;
+        const bs = bufferStatusFor(it.classDate, lastDate, bufferDays);
+        it.bufferStatus = bs ? bs.status : null;
+        it.daysAhead = bs ? bs.daysAhead : null;
+        bucket.items.push(it);
+        bucket.totalMin += it.min;
+      });
+      lastAssignedDate = lastDate;
+    }
+    overflowCount = queue.length;
+    overflowMin = queue.reduce((s, it) => s + it.min, 0);
+    queue.length = 0;
+  }
+
+  const reviewQueue = reviewOnlyPool.slice();
+  dp.reviewDates.forEach(d => {
+    const bucket = assignments[d];
+    while (reviewQueue.length && bucket.totalMin + reviewQueue[0].min <= cap) {
+      const it = reviewQueue.shift();
+      bucket.items.push(it);
+      bucket.totalMin += it.min;
+    }
+  });
+
+  const reviewState = loadReviewState();
+  const reviewSessions = {};
+  dp.reviewDates.forEach(d => reviewSessions[d] = []);
+  if (dp.reviewDates.length && completedPool.length) {
+    completedPool.forEach((it, idx) => {
+      const d = dp.reviewDates[idx % dp.reviewDates.length];
+      const reviewMin = Math.max(2, Math.round(it.min * 0.15));
+      const key = d + '::' + it.id;
+      reviewSessions[d].push({ id: it.id, subject: it.subject, title: it.title, video: it.video, reviewMin, done: !!reviewState[key], key });
+    });
+  }
+
+  let behindItemsCount = 0, tightItemsCount = 0;
+  Object.values(assignments).forEach(b => {
+    b.items.forEach(it => {
+      if (it.bufferStatus === 'behind') behindItemsCount++;
+      else if (it.bufferStatus === 'tight') tightItemsCount++;
+    });
+  });
+
+  const totalRemainingMin = autoPool.reduce((s, i) => s + i.min, 0) + manualItems.reduce((s, i) => s + i.min, 0) + reviewOnlyPool.reduce((s, i) => s + i.min, 0);
+  const totalRemainingCount = autoPool.length + manualItems.length + reviewOnlyPool.length;
+  const contentDaysCount = dp.contentDates.length;
+  const rawContentMin = autoPool.reduce((s, i) => s + i.min, 0) + manualItems.reduce((s, i) => s + i.min, 0);
+  const requiredDailyMin = contentDaysCount > 0 ? Math.ceil(rawContentMin / contentDaysCount) : (rawContentMin ? Infinity : 0);
+  const paceSufficient = requiredDailyMin <= cap;
+  const daysUntilExam = Math.max(0, Math.round((dp.examDate - dp.today) / 86400000));
+  const absoluteMinPaceMin = daysUntilExam > 0 ? Math.ceil(totalRemainingMin / daysUntilExam) : (totalRemainingMin ? Infinity : 0);
+  const reviewStartDate = dp.reviewDates.length ? dp.reviewDates[0] : null;
+
+  if (dp.allDates.length === 0 && (autoPool.length || manualItems.length || reviewOnlyPool.length)) {
+    warnings.push("Your exam date has arrived (or passed) but there are still unwatched videos in this plan. Prioritize the highest-yield gaps with whatever time is left.");
+  } else if (!paceSufficient && contentDaysCount > 0) {
+    warnings.push(`At ${cap} min/day you need about ${requiredDailyMin} min/day to finish all new content before your review days start${reviewStartDate ? ' on ' + dayLabel(reviewStartDate) : ''}. Raise your daily capacity, reduce review days, or accept some review time will get used for new content.`);
+  }
+  if (overflowCount > 0 && dp.allDates.length > 0) {
+    warnings.push(`${overflowCount} item(s) (~${overflowMin} min) didn't fit anywhere at your current pace and were piled onto the last day before your exam. Consider raising your daily capacity.`);
+  }
+  if (settings.reviewDays > dp.allDates.length && dp.allDates.length > 0) {
+    warnings.push(`You asked for ${settings.reviewDays} review days but only ${dp.allDates.length} study day(s) remain — using all of them as review days.`);
+  }
+  if (behindItemsCount > 0) {
+    warnings.push(`${behindItemsCount} topic(s) are currently scheduled on or after the day they're taught in class — you're behind your ${bufferDays}-day get-ahead buffer on those. Look for the red-outlined items on the calendar.`);
+  }
+
+  let meta = loadPlannerMeta();
+  const todayStr = fmtDate(dp.today);
+  if (!meta) {
+    meta = { baselineDate: todayStr, baselineRemainingCount: totalRemainingCount, baselineContentDays: Math.max(1, contentDaysCount) };
+    savePlannerMeta(meta);
+  }
+  const daysElapsed = Math.max(0, Math.round((dp.today - parseDateStr(meta.baselineDate)) / 86400000));
+  const expectedRemaining = Math.max(0, meta.baselineRemainingCount * (1 - daysElapsed / meta.baselineContentDays));
+  const paceDiff = expectedRemaining - totalRemainingCount;
+  let paceStatus = 'on track', paceClass = 'pace-ontrack';
+  if (paceDiff >= 1) { paceStatus = `ahead by ~${Math.round(paceDiff)} video(s)`; paceClass = 'pace-ahead'; }
+  else if (paceDiff <= -1) { paceStatus = `behind by ~${Math.round(-paceDiff)} video(s)`; paceClass = 'pace-behind'; }
+
+  // Per-subject breakdown — same exam date for everyone, but each subject
+  // (esp. Micro, which is much heavier this module) needs its own pace
+  // check rather than being averaged away in the combined numbers above.
+  const remainingPool = autoPool.concat(manualItems, reviewOnlyPool);
+  const bySubject = {};
+  ['path', 'micro', 'pharm'].forEach(s => {
+    const remaining = remainingPool.filter(i => i.subject === s);
+    const done = completedPool.filter(i => i.subject === s);
+    const remMin = remaining.reduce((sum, i) => sum + i.min, 0);
+    const doneMin = done.reduce((sum, i) => sum + i.min, 0);
+    const totalMin = remMin + doneMin;
+    const reqDailyMin = contentDaysCount > 0 ? Math.ceil(remMin / contentDaysCount) : (remMin ? Infinity : 0);
+    const absMinPaceMin = daysUntilExam > 0 ? Math.ceil(remMin / daysUntilExam) : (remMin ? Infinity : 0);
+    bySubject[s] = {
+      remCount: remaining.length, doneCount: done.length,
+      remMin, doneMin, totalMin,
+      pct: totalMin ? Math.round((doneMin / totalMin) * 100) : 100,
+      reqDailyMin, absMinPaceMin
+    };
+  });
+
+  return {
+    settings, dp, assignments, reviewSessions, autoPool, manualItems, reviewOnlyPool, completedPool, bySubject,
+    stats: {
+      totalRemainingMin, totalRemainingCount, contentDaysCount, requiredDailyMin, paceSufficient,
+      paceStatus, paceClass, paceDiff, reviewDaysCount: dp.reviewDates.length,
+      daysUntilExam, baselineDate: meta.baselineDate,
+      finishDate: lastAssignedDate, reviewStartDate,
+      absoluteMinPaceMin, behindItemsCount, tightItemsCount
+    },
+    warnings
+  };
+}
+
+function bufferBadge(it) {
+  if (!it.bufferStatus) return '';
+  if (it.bufferStatus === 'behind') return ` <span style="color:#e07a7a; font-size:0.68em;">⚠ behind${it.classDate ? ' (class ' + dayLabel(it.classDate) + ')' : ''}</span>`;
+  if (it.bufferStatus === 'tight') return ' <span style="color:#e0a860; font-size:0.68em;">⏱ cutting it close</span>';
+  return '';
+}
+
+function renderPlanItemRow(it) {
+  const overflowTag = it.overflow ? ' <span style="color:#e07a7a; font-size:0.68em;">⚠ overflow</span>' : '';
+  const manualTag = it.isManual ? ' <span class="supp-tag" style="border-color:var(--planner); color:#9fd0ff;">manually scheduled</span>' : '';
+  return `<div class="plan-item">
+    <input type="checkbox" ${it.checked ? 'checked' : ''} onchange="toggleWatched('${it.id}')">
+    <span class="chip chip-${it.subject}">${it.subject}</span>
+    <span class="title">${it.title}${it.isSupp ? ' <span class="supp-tag">no video — slides/First Aid</span>' : ` <span class="sub-video">— ${it.video}</span>`}${manualTag}${overflowTag}${bufferBadge(it)}</span>
+    <span class="mins">${it.min}m</span>
+    ${it.isManual ? `<button style="background:none;border:none;color:#e07a7a;cursor:pointer;font-size:0.9em;" onclick="removeManualOverride('${it.id}')" title="Remove manual schedule">✕</button>` : ''}
+  </div>`;
+}
+
+function renderReviewItemRow(dateStr, r) {
+  return `<div class="review-item${r.done ? ' done' : ''}">
+    <input type="checkbox" ${r.done ? 'checked' : ''} onchange="toggleReviewed('${dateStr}','${r.id}')">
+    <span class="chip chip-${r.subject}">${r.subject}</span>
+    <span>${r.title}</span>
+    <span style="color:#777; font-size:0.85em;">~${r.reviewMin}m</span>
+  </div>`;
+}
+
+function shortenTitle(t) { return t.length > 28 ? t.slice(0, 26) + '…' : t; }
+
+function renderCalPill(it) {
+  const cls = ['cal-item', 'chip-' + it.subject];
+  if (it.bufferStatus === 'behind') cls.push('behind');
+  else if (it.bufferStatus === 'tight') cls.push('tight');
+  if (it.isManual) cls.push('manual');
+  const draggable = !it.checked;
+  const dragAttrs = draggable ? `draggable="true" ondragstart="event.stopPropagation(); dragStart(event,'${it.id}')"` : '';
+  return `<div class="${cls.join(' ')}" ${dragAttrs} title="${escAttr(it.title)} (${it.min}m)">${escAttr(shortenTitle(it.title))}</div>`;
+}
+
+function renderCalendarDayCell(dateStr, plan) {
+  const { dp, assignments } = plan;
+  const bucket = assignments[dateStr];
+  const d = parseDateStr(dateStr);
+  const isToday = dateStr === fmtDate(dp.today);
+  const inRange = dp.allDates.includes(dateStr);
+  const examEvent = EXAM_EVENTS.find(e => e.date === dateStr);
+  const classIds = CLASS_EVENTS_BY_DATE[dateStr] || [];
+  const cellClasses = ['cal-day'];
+  if (isToday) cellClasses.push('today');
+  if (!inRange) cellClasses.push('out-of-range');
+  if (examEvent) cellClasses.push('exam-day');
+  const items = bucket ? bucket.items : [];
+  const rev = plan.reviewSessions[dateStr] || [];
+
+  const MAX_VISIBLE = 4;
+  const reviewSlot = rev.length ? 1 : 0;
+  const itemBudget = MAX_VISIBLE - reviewSlot;
+  let visibleItems = items;
+  let hiddenCount = 0;
+  if (items.length > itemBudget) {
+    const showCount = Math.max(0, itemBudget - 1);
+    visibleItems = items.slice(0, showCount);
+    hiddenCount = items.length - showCount;
+  }
+
+  return `<div class="${cellClasses.join(' ')}" data-date="${dateStr}"
+      ondragover="event.preventDefault(); this.classList.add('drag-over');"
+      ondragleave="this.classList.remove('drag-over');"
+      ondrop="event.preventDefault(); this.classList.remove('drag-over'); handleDrop(event,'${dateStr}')"
+      onclick="openDayModal('${dateStr}')">
+    <div class="cal-day-num">${d.getDate()}</div>
+    ${examEvent ? `<div class="cal-exam-badge" title="${escAttr(examEvent.label)}">${examEvent.icon}</div>` : ''}
+    ${bucket && bucket.totalMin ? `<div class="cal-mins">${bucket.totalMin}m</div>` : ''}
+    <div class="cal-items">${visibleItems.map(renderCalPill).join('')}${hiddenCount > 0 ? `<div class="cal-more">+${hiddenCount} more — click day</div>` : ''}${rev.length ? `<div class="cal-item review-pill">${rev.length} review</div>` : ''}</div>
+    ${classIds.length ? `<div class="cal-class-tag">🏫 ${classIds.length} in class</div>` : ''}
+  </div>`;
+}
+
+function renderCalendar(plan) {
+  const wrap = document.getElementById('planner-calendar');
+  if (!wrap) return;
+  const { dp } = plan;
+  const rangeStart = startOfWeek(dp.today);
+  const latestKeyDate = EXAM_EVENTS.reduce((max, e) => e.date > max ? e.date : max, fmtDate(dp.examDate));
+  const rangeEndAnchor = parseDateStr(latestKeyDate) > dp.examDate ? parseDateStr(latestKeyDate) : dp.examDate;
+  const rangeEnd = endOfWeek(rangeEndAnchor);
+
+  const dowLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  let html = `<div class="cal-dow-row">${dowLabels.map(l => `<div class="cal-dow">${l}</div>`).join('')}</div>`;
+
+  let cur = new Date(rangeStart);
+  while (cur <= rangeEnd) {
+    const weekDates = [];
+    for (let i = 0; i < 7; i++) { weekDates.push(fmtDate(cur)); cur = addDays(cur, 1); }
+    const weekTotal = weekDates.reduce((s, d) => s + (plan.assignments[d] ? plan.assignments[d].totalMin : 0), 0);
+    html += `<div class="cal-week">
+      <div class="cal-grid">${weekDates.map(d => renderCalendarDayCell(d, plan)).join('')}</div>
+      <div class="cal-weekly-total">Week total: ${weekTotal} min</div>
+    </div>`;
+  }
+  wrap.innerHTML = html;
+}
+
+function jumpToToday() {
+  const el = document.querySelector('.cal-day.today');
+  if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+
+function renderManualForm(prefillDate) {
+  const uid = 'man_' + Math.random().toString(36).slice(2, 8);
+  return `<div class="manual-form-row" style="display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end;">
+    <div style="position:relative; flex:1; min-width:220px; max-width:320px;">
+      <input type="text" id="${uid}-search" placeholder="🔍 search lecture/video by name..." autocomplete="off"
+        oninput="filterManualSearch('${uid}')" onfocus="filterManualSearch('${uid}')"
+        onblur="setTimeout(function(){ hideManualResults('${uid}'); }, 150)"
+        style="width:100%;">
+      <input type="hidden" id="${uid}-item" value="">
+      <div id="${uid}-results" class="manual-search-results"></div>
+    </div>
+    <input type="date" id="${uid}-date" value="${prefillDate || ''}">
+    <input type="number" id="${uid}-min" min="1" placeholder="minutes (default)" style="width:130px;">
+    <button onclick="addManualSessionFrom('${uid}')">Schedule it</button>
+  </div>`;
+}
+
+function filterManualSearch(uid) {
+  const input = document.getElementById(uid + '-search');
+  const resultsEl = document.getElementById(uid + '-results');
+  if (!input || !resultsEl) return;
+  const hiddenEl = document.getElementById(uid + '-item');
+  const q = input.value.trim().toLowerCase();
+  const items = Object.values(LAST_ITEMS_BY_ID);
+  let matches = items;
+  if (q) {
+    matches = items.filter(it => (it.title + ' ' + it.video + ' ' + it.subject).toLowerCase().includes(q));
+  }
+  matches = matches.slice(0, 30);
+  if (!matches.length) {
+    resultsEl.innerHTML = `<div class="manual-search-empty">No matches</div>`;
+  } else {
+    resultsEl.innerHTML = matches.map(it => `<div class="manual-search-item" onclick="selectManualItem('${uid}','${it.id}')">
+      <span class="chip chip-${it.subject}">${it.subject}</span>
+      <span>${escAttr(it.title)}${it.video ? ' — ' + escAttr(it.video) : ''}</span>
+    </div>`).join('');
+  }
+  resultsEl.style.display = 'block';
+  if (hiddenEl.dataset.label !== input.value) hiddenEl.value = '';
+}
+
+function hideManualResults(uid) {
+  const el = document.getElementById(uid + '-results');
+  if (el) el.style.display = 'none';
+}
+
+function selectManualItem(uid, id) {
+  const it = LAST_ITEMS_BY_ID[id];
+  if (!it) return;
+  const label = it.title + (it.video ? ' — ' + it.video : '');
+  const itemEl = document.getElementById(uid + '-item');
+  const searchEl = document.getElementById(uid + '-search');
+  itemEl.value = id;
+  itemEl.dataset.label = label;
+  searchEl.value = label;
+  const minEl = document.getElementById(uid + '-min');
+  if (minEl) minEl.placeholder = it.min + ' (default)';
+  hideManualResults(uid);
+}
+
+function addManualSessionFrom(uid) {
+  const itemEl = document.getElementById(uid + '-item');
+  const dateEl = document.getElementById(uid + '-date');
+  const minEl = document.getElementById(uid + '-min');
+  if (!itemEl.value || !dateEl.value) { alert('Search for a lecture, click it to select it, then pick a date.'); return; }
+  const overrides = loadManualOverrides();
+  const minVal = parseInt(minEl.value) || 0;
+  overrides[itemEl.value] = { date: dateEl.value, min: minVal > 0 ? minVal : undefined };
+  saveManualOverrides(overrides);
+  const modalOpen = document.getElementById('modal-overlay').style.display === 'flex';
+  if (modalOpen) closeDayModal();
+  renderPlanner();
+}
+
+function removeManualOverride(id) {
+  const overrides = loadManualOverrides();
+  delete overrides[id];
+  saveManualOverrides(overrides);
+  renderPlanner();
+  const modalDate = document.getElementById('modal-overlay').dataset.date;
+  if (modalDate) openDayModal(modalDate);
+}
+
+function openDayModal(dateStr) {
+  const plan = computePlan();
+  const bucket = plan.assignments[dateStr] || { items: [], totalMin: 0, type: 'content' };
+  const rev = plan.reviewSessions[dateStr] || [];
+  const classIds = CLASS_EVENTS_BY_DATE[dateStr] || [];
+  const examEvent = EXAM_EVENTS.find(e => e.date === dateStr);
+
+  let classHtml = '';
+  if (classIds.length) {
+    classHtml = `<div style="margin-bottom:10px;"><div style="font-size:0.8em;color:#9fbfd8;font-weight:bold;margin-bottom:4px;">🏫 Taught in class this day:</div>` +
+      classIds.map(id => {
+        const row = document.querySelector('tr[data-id="' + id + '"]');
+        const title = row ? row.querySelectorAll('td')[1].textContent.trim() : id;
+        const subj = id.charAt(0) === 'p' ? 'path' : (id.charAt(0) === 'm' ? 'micro' : 'pharm');
+        return `<div style="font-size:0.85em;color:#ccc;padding:2px 0;"><span class="chip chip-${subj}">${subj}</span> ${title}</div>`;
+      }).join('') + `</div>`;
+  }
+
+  const modalBody = document.getElementById('modal-body');
+  modalBody.innerHTML = `
+    <h3 style="margin-top:0;color:var(--planner);">${dayLabel(dateStr)}${examEvent ? ' — ' + examEvent.icon + ' ' + examEvent.label : ''}</h3>
+    ${classHtml}
+    <div style="font-size:0.8em;color:#aaa;margin-bottom:6px;">${bucket.totalMin} min planned (${bucket.type})</div>
+    ${bucket.items.length ? bucket.items.map(renderPlanItemRow).join('') : '<div class="agenda-empty">Nothing scheduled this day.</div>'}
+    ${rev.length ? '<div style="margin-top:10px;font-size:0.85em;color:#e0a860;font-weight:bold;">Review pass:</div>' + rev.map(r => renderReviewItemRow(dateStr, r)).join('') : ''}
+    <hr style="border-color:#3a3a3a;margin:14px 0;">
+    <div style="font-size:0.85em;color:#ccc;font-weight:bold;margin-bottom:6px;">Schedule a specific lecture for this day</div>
+    ${renderManualForm(dateStr)}
+  `;
+  const overlay = document.getElementById('modal-overlay');
+  overlay.dataset.date = dateStr;
+  overlay.style.display = 'flex';
+}
+function closeDayModal() {
+  document.getElementById('modal-overlay').style.display = 'none';
+}
+
+function dragStart(ev, itemId) {
+  ev.dataTransfer.setData('text/plain', itemId);
+  ev.dataTransfer.effectAllowed = 'move';
+}
+function handleDrop(ev, dateStr) {
+  const itemId = ev.dataTransfer.getData('text/plain');
+  if (!itemId) return;
+  moveItemToDate(itemId, dateStr);
+}
+function moveItemToDate(itemId, dateStr) {
+  const overrides = loadManualOverrides();
+  const existing = overrides[itemId];
+  const fallbackMin = LAST_ITEMS_BY_ID[itemId] ? LAST_ITEMS_BY_ID[itemId].min : undefined;
+  overrides[itemId] = { date: dateStr, min: existing ? existing.min : undefined };
+  if (!overrides[itemId].min) overrides[itemId].min = undefined;
+  saveManualOverrides(overrides);
+  renderPlanner();
+}
+
+function renderWeeklyDigest(plan) {
+  const el = document.getElementById('planner-digest');
+  if (!el) return;
+  const { dp, assignments, reviewSessions } = plan;
+  const days = [];
+  for (let i = 0; i < 7; i++) days.push(fmtDate(addDays(dp.today, i)));
+
+  const bySubject = { path: { count: 0, min: 0 }, micro: { count: 0, min: 0 }, pharm: { count: 0, min: 0 } };
+  let reviewCount = 0;
+  days.forEach(d => {
+    const b = assignments[d];
+    if (b) b.items.forEach(it => { bySubject[it.subject].count++; bySubject[it.subject].min += it.min; });
+    reviewCount += (reviewSessions[d] || []).length;
+  });
+  const totalMin = bySubject.path.min + bySubject.micro.min + bySubject.pharm.min;
+  const totalCount = bySubject.path.count + bySubject.micro.count + bySubject.pharm.count;
+  const rangeLabel = `${dayLabel(days[0])} – ${dayLabel(days[6])}`;
+
+  if (totalCount === 0 && reviewCount === 0) {
+    el.innerHTML = `<div class="digest-box">📆 <strong>This week (${rangeLabel}):</strong> nothing new scheduled — you're either caught up or your exam date/settings need a look.</div>`;
+    return;
+  }
+  const parts = [];
+  if (bySubject.path.count) parts.push(`<span class="chip chip-path">path</span> ${bySubject.path.count} (${bySubject.path.min}m)`);
+  if (bySubject.micro.count) parts.push(`<span class="chip chip-micro">micro</span> ${bySubject.micro.count} (${bySubject.micro.min}m)`);
+  if (bySubject.pharm.count) parts.push(`<span class="chip chip-pharm">pharm</span> ${bySubject.pharm.count} (${bySubject.pharm.min}m)`);
+  const hours = Math.floor(totalMin / 60), mins = totalMin % 60;
+  const reviewPart = reviewCount ? ` &nbsp;·&nbsp; ${reviewCount} review item${reviewCount === 1 ? '' : 's'}` : '';
+  el.innerHTML = `<div class="digest-box">📆 <strong>This week (${rangeLabel}):</strong> ${parts.join(' &nbsp;·&nbsp; ')} — <strong>${totalCount} video${totalCount === 1 ? '' : 's'}, ~${hours}h ${mins}m</strong> total${reviewPart}.</div>`;
+}
+
+function renderSubjectCountdown(plan) {
+  const el = document.getElementById('planner-subject-countdown');
+  if (!el) return;
+  const { stats, bySubject } = plan;
+  const labels = { path: 'Pathology', micro: 'Microbiology', pharm: 'Pharmacology' };
+  const cards = ['path', 'micro', 'pharm'].map(s => {
+    const b = bySubject[s];
+    const reqLabel = b.reqDailyMin === Infinity ? '—' : (b.reqDailyMin + ' min/day');
+    const absLabel = b.absMinPaceMin === Infinity ? '—' : (b.absMinPaceMin + ' min/day');
+    return `<div class="subject-countdown ${s}">
+      <h4 style="color:var(--${s})">${labels[s]}</h4>
+      <div class="sc-line">${stats.daysUntilExam} day${stats.daysUntilExam === 1 ? '' : 's'} until exam · <b>${b.pct}%</b> watched (by minutes)</div>
+      <div class="sc-line">${b.remCount} video(s) left · <b>${b.remMin} min</b> remaining</div>
+      <div class="sc-line">Pace needed: <b>${reqLabel}</b> before review starts</div>
+      <div class="sc-line">Bare-min. pace to exam: <b>${absLabel}</b></div>
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="subject-countdown-row">${cards}</div>`;
+}
+
+function renderPlanner() {
+  const panel = document.getElementById('panel-planner');
+  if (!panel) return;
+  const plan = computePlan();
+  const { stats, dp, assignments, reviewSessions } = plan;
+  const todayStr = fmtDate(dp.today);
+
+  const warnEl = document.getElementById('planner-warnings');
+  warnEl.innerHTML = plan.warnings.map(w => `<div class="planner-warning">⚠️ ${w}</div>`).join('');
+
+  renderWeeklyDigest(plan);
+
+  const dashEl = document.getElementById('planner-dashboard');
+  const finishLabel = stats.totalRemainingCount === 0 ? 'All done! 🎉' : (stats.finishDate ? dayLabel(stats.finishDate) : '—');
+  const reviewStartLabel = stats.reviewStartDate ? dayLabel(stats.reviewStartDate) : 'no review days set';
+  dashEl.innerHTML = `
+    <div class="planner-dash">
+      <div class="planner-stat"><div class="label">Days until exam</div><div class="value">${stats.daysUntilExam}</div><div class="sub">${dayLabel(fmtDate(dp.examDate))}</div></div>
+      <div class="planner-stat"><div class="label">Videos remaining</div><div class="value">${stats.totalRemainingCount}</div><div class="sub">~${stats.totalRemainingMin} min total</div></div>
+      <div class="planner-stat"><div class="label">Projected finish</div><div class="value">${finishLabel}</div><div class="sub">all new content watched, at current pace</div></div>
+      <div class="planner-stat"><div class="label">Pace needed — before review</div><div class="value">${stats.requiredDailyMin === Infinity ? '—' : stats.requiredDailyMin + ' min/day'}</div><div class="sub">to clear everything by ${reviewStartLabel} · you're set to ${plan.settings.dailyCapacity} min/day</div></div>
+      <div class="planner-stat"><div class="label">Pace needed — bare min. to exam</div><div class="value">${stats.absoluteMinPaceMin === Infinity ? '—' : stats.absoluteMinPaceMin + ' min/day'}</div><div class="sub">if every remaining day (incl. review) went to new content, zero cushion</div></div>
+      <div class="planner-stat"><div class="label">On-track status</div><div class="value ${stats.paceClass}">${stats.paceStatus}</div><div class="sub">vs. pace since ${stats.baselineDate}${stats.behindItemsCount ? ' · ' + stats.behindItemsCount + ' behind class buffer' : ''}</div></div>
+    </div>
+  `;
+
+  renderSubjectCountdown(plan);
+
+  const todayEl = document.getElementById('planner-today');
+  const todayBucket = assignments[todayStr];
+  const todayReview = reviewSessions[todayStr];
+  let todayHtml = `<div class="today-box"><h3>Today — ${dayLabel(todayStr)}</h3>`;
+  if (todayBucket) {
+    todayHtml += `<div class="subtext">${todayBucket.type === 'review' ? 'Review day' : 'New content day'} · ${todayBucket.totalMin} min planned</div>`;
+    todayHtml += todayBucket.items.length ? todayBucket.items.map(renderPlanItemRow).join('') : `<div class="agenda-empty">Nothing new scheduled — you're caught up for today.</div>`;
+    if (todayReview && todayReview.length) {
+      todayHtml += `<div style="margin-top:10px; font-size:0.85em; color:#e0a860; font-weight:bold;">Review pass:</div>`;
+      todayHtml += todayReview.map(r => renderReviewItemRow(todayStr, r)).join('');
+    }
+  } else if (dp.today.getTime() === dp.examDate.getTime()) {
+    todayHtml += `<div class="agenda-empty">🎓 Exam day. Good luck!</div>`;
+  } else if (dp.today > dp.examDate) {
+    todayHtml += `<div class="agenda-empty">Your exam date has passed in this plan's settings.</div>`;
+  } else {
+    todayHtml += `<div class="agenda-empty">No study day scheduled for today.</div>`;
+  }
+  todayHtml += `</div>`;
+  todayEl.innerHTML = todayHtml;
+
+  renderCalendar(plan);
+
+  const manualFormEl = document.getElementById('planner-manual-form');
+  if (manualFormEl) manualFormEl.innerHTML = renderManualForm(todayStr);
+}
+
+function toggleWatched(id) {
+  const row = document.querySelector('tr[data-id="' + id + '"]');
+  if (!row) return;
+  const cb = row.querySelector('input[type="checkbox"]');
+  cb.checked = !cb.checked;
+  onCheck(cb);
+}
+
+function toggleReviewed(dateStr, id) {
+  const state = loadReviewState();
+  const key = dateStr + '::' + id;
+  state[key] = !state[key];
+  saveReviewState(state);
+  renderPlanner();
+}
+
+function updateExamCountdown() {
+  const el = document.getElementById('exam-countdown');
+  if (!el) return;
+  const settings = loadPlannerSettings();
+  const today = startOfDay(new Date());
+  const examDate = startOfDay(parseDateStr(settings.examDate));
+  const days = Math.round((examDate - today) / 86400000);
+  if (days > 0) el.textContent = `📅 ${days} day${days === 1 ? '' : 's'} until your exam (${dayLabel(fmtDate(examDate))})`;
+  else if (days === 0) el.textContent = `📅 Exam day is today — good luck!`;
+  else el.textContent = `📅 Exam date has passed in your plan settings.`;
+}
+
+initState();
+populateSettingsInputs();
+updateExamCountdown();
+renderPlanner();
+initFirebase();
+</script>
+
+</body>
+</html>
