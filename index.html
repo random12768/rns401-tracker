@@ -3,73 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <title>RNS401 Master Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --path: #6fc2c9;
-    --micro: #f2a65a;
-    --pharm: #b78ee0;
+    --path: #5fd0d9;
+    --micro: #f5ac5c;
+    --pharm: #c398f0;
     --planner: #5b9dd9;
+    --bg: #101216;
+    --surface: #191c22;
+    --surface-2: #21252d;
+    --surface-3: #2a2f38;
+    --border: #2c313a;
+    --border-soft: #22262e;
+    --text: #edeef2;
+    --text-dim: #a3a9b4;
+    --text-faint: #6b7280;
+    --green: #6fd08a;
+    --red: #ec7b7e;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
   }
   * { box-sizing: border-box; }
+  html { color-scheme: dark; }
   body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: #1a1a1a;
-    color: #e8e8e8;
-    padding: 24px;
-    max-width: 1150px;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    background-image: radial-gradient(circle at 15% 0%, rgba(91,157,217,0.07), transparent 45%), radial-gradient(circle at 85% 15%, rgba(195,152,240,0.06), transparent 45%);
+    background-attachment: fixed;
+    color: var(--text);
+    padding: 32px 24px 60px;
+    max-width: 1180px;
     margin: 0 auto;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
   }
   h1 {
-    color: #e8e8e8;
-    border-bottom: 3px solid #555;
-    padding-bottom: 8px;
-    font-size: 1.6em;
+    color: var(--text);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    padding-bottom: 16px;
+    margin-bottom: 4px;
+    font-size: 1.75em;
+    border-bottom: 1px solid var(--border);
   }
-  h2 { margin-top: 30px; padding-bottom: 6px; }
-  h2.path { color: var(--path); border-bottom: 3px solid var(--path); }
-  h2.micro { color: var(--micro); border-bottom: 3px solid var(--micro); }
-  h2.pharm { color: var(--pharm); border-bottom: 3px solid var(--pharm); }
+  h2 { margin-top: 30px; padding-bottom: 8px; font-weight: 700; letter-spacing: -0.01em; }
+  h2.path { color: var(--path); border-bottom: 2px solid var(--path); }
+  h2.micro { color: var(--micro); border-bottom: 2px solid var(--micro); }
+  h2.pharm { color: var(--pharm); border-bottom: 2px solid var(--pharm); }
 
   /* Tabs */
   .tabbar {
     display: flex;
-    gap: 8px;
-    margin: 20px 0 4px 0;
+    gap: 4px;
+    margin: 24px 0 20px 0;
     flex-wrap: wrap;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 5px;
   }
   .tab-btn {
-    padding: 10px 20px;
-    border-radius: 8px 8px 0 0;
+    padding: 9px 18px;
+    border-radius: var(--radius-sm);
     border: none;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 0.95em;
-    background: #2a2a2a;
-    color: #999;
+    font-weight: 600;
+    font-size: 0.9em;
+    font-family: inherit;
+    background: transparent;
+    color: var(--text-dim);
     transition: all 0.15s ease;
   }
-  .tab-btn:hover { background: #333; color: #ccc; }
-  .tab-btn.active[data-tab="overview"] { background: #444; color: #fff; }
-  .tab-btn.active[data-tab="path"] { background: var(--path); color: #1a1a1a; }
-  .tab-btn.active[data-tab="micro"] { background: var(--micro); color: #1a1a1a; }
-  .tab-btn.active[data-tab="pharm"] { background: var(--pharm); color: #1a1a1a; }
-  .tab-btn.active[data-tab="planner"] { background: var(--planner); color: #1a1a1a; }
+  .tab-btn:hover { background: var(--surface-3); color: var(--text); }
+  .tab-btn.active[data-tab="overview"] { background: var(--surface-3); color: #fff; box-shadow: var(--shadow); }
+  .tab-btn.active[data-tab="path"] { background: var(--path); color: #10151a; box-shadow: var(--shadow); }
+  .tab-btn.active[data-tab="micro"] { background: var(--micro); color: #1a1410; box-shadow: var(--shadow); }
+  .tab-btn.active[data-tab="pharm"] { background: var(--pharm); color: #17101f; box-shadow: var(--shadow); }
+  .tab-btn.active[data-tab="planner"] { background: var(--planner); color: #0f1720; box-shadow: var(--shadow); }
 
-  .tab-panel { display: none; }
+  .tab-panel { display: none; animation: fadeIn 0.2s ease; }
   .tab-panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
 
-  h2.planner { color: var(--planner); border-bottom: 3px solid var(--planner); }
+  h2.planner { color: var(--planner); border-bottom: 2px solid var(--planner); }
 
   #exam-countdown {
     font-size: 0.95em;
-    color: #9fbfd8;
+    color: var(--text-dim);
     margin: 2px 0 4px 0;
+    font-weight: 500;
   }
 
   /* Planner settings */
   .planner-settings {
-    background: #2a2a2a;
-    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
     padding: 16px 18px;
     margin-bottom: 18px;
     display: flex;
@@ -80,37 +113,44 @@
   .planner-settings .field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
     font-size: 0.8em;
-    color: #ccc;
+    color: var(--text-dim);
+    font-weight: 500;
   }
   .planner-settings input[type="date"],
   .planner-settings input[type="number"] {
-    background: #232323;
-    border: 1px solid #444;
-    border-radius: 6px;
-    padding: 6px 10px;
-    color: #e8e8e8;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px;
+    color: var(--text);
     font-size: 0.9em;
     width: 130px;
+    font-family: inherit;
   }
+  .planner-settings input:focus { outline: none; border-color: var(--planner); }
   .planner-settings button {
-    background: #333;
-    color: #ccc;
-    border: 1px solid #555;
-    border-radius: 6px;
+    background: var(--surface-3);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
     padding: 8px 14px;
     font-size: 0.85em;
+    font-weight: 500;
+    font-family: inherit;
     cursor: pointer;
-    height: 33px;
+    height: 35px;
+    transition: all 0.15s ease;
   }
-  .planner-settings button:hover { background: #3f3f3f; color: #fff; }
+  .planner-settings button:hover { background: #343a44; color: #fff; border-color: #454b56; }
 
   .planner-warning {
-    background: #3a2a2a;
-    border-left: 4px solid #e07a7a;
+    background: rgba(236,123,126,0.08);
+    border: 1px solid rgba(236,123,126,0.25);
+    border-left: 3px solid var(--red);
     padding: 10px 16px;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     margin-bottom: 14px;
     font-size: 0.88em;
     color: #f0c0c0;
@@ -121,93 +161,102 @@
   .planner-stat {
     flex: 1;
     min-width: 190px;
-    background: #2a2a2a;
-    border-radius: 10px;
-    padding: 14px 16px;
-    border-top: 4px solid var(--planner);
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 15px 17px;
+    border-top: 3px solid var(--planner);
+    box-shadow: var(--shadow);
   }
-  .planner-stat .label { font-size: 0.78em; color: #aaa; }
-  .planner-stat .value { font-size: 1.35em; font-weight: bold; color: #fff; margin-top: 4px; }
-  .planner-stat .sub { font-size: 0.75em; color: #999; margin-top: 2px; }
-  .pace-ahead { color: #7fd88f !important; }
-  .pace-behind { color: #e88888 !important; }
-  .pace-ontrack { color: #e8e8e8 !important; }
+  .planner-stat .label { font-size: 0.76em; color: var(--text-dim); font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; }
+  .planner-stat .value { font-size: 1.4em; font-weight: 700; color: #fff; margin-top: 5px; letter-spacing: -0.01em; }
+  .planner-stat .sub { font-size: 0.75em; color: var(--text-faint); margin-top: 3px; }
+  .pace-ahead { color: var(--green) !important; }
+  .pace-behind { color: var(--red) !important; }
+  .pace-ontrack { color: var(--text) !important; }
 
   .today-box {
-    background: #232323;
-    border: 2px solid var(--planner);
-    border-radius: 10px;
-    padding: 16px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--planner);
+    border-radius: var(--radius);
+    padding: 17px 19px;
     margin-bottom: 20px;
+    box-shadow: var(--shadow);
   }
-  .today-box h3 { margin-top: 0; margin-bottom: 4px; color: var(--planner); }
-  .today-box .subtext { font-size: 0.8em; color: #999; margin-bottom: 10px; }
+  .today-box h3 { margin-top: 0; margin-bottom: 4px; color: var(--planner); font-weight: 700; }
+  .today-box .subtext { font-size: 0.8em; color: var(--text-faint); margin-bottom: 10px; }
   .plan-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 7px 0;
-    border-bottom: 1px solid #333;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-soft);
   }
   .plan-item:last-child { border-bottom: none; }
   .plan-item input[type="checkbox"] { flex-shrink: 0; }
   .plan-item .chip {
-    font-size: 0.68em;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-weight: bold;
-    color: #1a1a1a;
+    font-size: 0.66em;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #10151a;
     white-space: nowrap;
   }
   .chip-path { background: var(--path); }
   .chip-micro { background: var(--micro); }
   .chip-pharm { background: var(--pharm); }
   .plan-item .title { flex: 1; font-size: 0.9em; }
-  .plan-item .title .sub-video { color: #999; font-size: 0.85em; }
-  .plan-item .mins { font-size: 0.8em; color: #999; white-space: nowrap; }
+  .plan-item .title .sub-video { color: var(--text-faint); font-size: 0.85em; }
+  .plan-item .mins { font-size: 0.8em; color: var(--text-faint); white-space: nowrap; font-variant-numeric: tabular-nums; }
   .plan-item.done .title { text-decoration: line-through; opacity: 0.5; }
   .supp-tag { font-size: 0.68em; color: #9fbfd8; border: 1px solid #3a5a7a; border-radius: 8px; padding: 1px 6px; }
 
-  .agenda-empty { color: #777; font-style: italic; font-size: 0.85em; }
+  .agenda-empty { color: var(--text-faint); font-style: italic; font-size: 0.85em; }
   .review-item { font-size: 0.85em; color: #ccc; display: flex; align-items: center; gap: 8px; padding: 4px 0; }
   .review-item.done { opacity: 0.5; text-decoration: line-through; }
 
   /* Progress bars */
   .progress-wrap {
-    background: #2a2a2a;
-    border-radius: 8px;
-    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 15px 19px;
     margin-bottom: 16px;
+    box-shadow: var(--shadow);
   }
   .progress-label {
     display: flex;
     justify-content: space-between;
     font-size: 0.9em;
-    margin-bottom: 6px;
-    color: #ccc;
+    margin-bottom: 8px;
+    color: var(--text-dim);
+    font-weight: 600;
   }
   .progress-bar-bg {
-    background: #3a3a3a;
-    border-radius: 6px;
-    height: 14px;
+    background: var(--surface-3);
+    border-radius: 20px;
+    height: 12px;
     overflow: hidden;
   }
   .progress-bar-fill {
     height: 100%;
-    border-radius: 6px;
-    transition: width 0.25s ease;
+    border-radius: 20px;
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
   }
-  .fill-path { background: var(--path); }
-  .fill-micro { background: var(--micro); }
-  .fill-pharm { background: var(--pharm); }
+  .fill-path { background: linear-gradient(90deg, var(--path), #7fdde4); }
+  .fill-micro { background: linear-gradient(90deg, var(--micro), #ffc27f); }
+  .fill-pharm { background: linear-gradient(90deg, var(--pharm), #d9b3f7); }
   .fill-overall { background: linear-gradient(90deg, var(--path), var(--micro), var(--pharm)); }
 
   .summary {
-    background: #2a2a2a;
-    border-left: 4px solid #6fc2c9;
-    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-left: 3px solid var(--path);
+    padding: 15px 19px;
     margin-bottom: 20px;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-size: 1.05em;
   }
   .summary.micro { border-left-color: var(--micro); }
@@ -216,16 +265,20 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    background: #232323;
-    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
     overflow: hidden;
     margin-bottom: 8px;
+    box-shadow: var(--shadow);
   }
   th {
-    padding: 10px 8px;
+    padding: 12px 10px;
     text-align: left;
-    font-size: 0.9em;
-    color: #1a1a1a;
+    font-size: 0.86em;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: #10151a;
   }
   .cards-header {
     font-size: 0.78em;
@@ -241,41 +294,47 @@
   .micro-table th { background: var(--micro); }
   .pharm-table th { background: var(--pharm); }
   td {
-    padding: 8px;
-    border-bottom: 1px solid #3a3a3a;
-    font-size: 0.9em;
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 0.89em;
     vertical-align: top;
   }
-  tr:hover td { background: #2f2f2f; }
-  tr.checked td { opacity: 0.55; text-decoration: line-through; }
+  tbody tr { transition: background 0.1s ease; }
+  tr:hover td { background: var(--surface-2); }
+  tr.checked td { opacity: 0.5; text-decoration: line-through; }
   tr.checked td input[type="checkbox"] { opacity: 1; }
-  .section-row td { background: #3a3a3a; font-weight: bold; text-decoration: none !important; opacity: 1 !important; }
+  .section-row td { background: var(--surface-3); font-weight: 700; text-decoration: none !important; opacity: 1 !important; letter-spacing: 0.01em; }
   .path-table .section-row td { color: var(--path); }
   .micro-table .section-row td { color: var(--micro); }
   .pharm-table .section-row td { color: var(--pharm); }
-  .missing { color: #e07a7a; font-style: italic; }
+  .missing { color: var(--red); font-style: italic; }
   .chapter { color: #9fbfd8; font-size: 0.85em; }
-  .time { text-align: center; white-space: nowrap; }
-  input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
-  tfoot td { font-weight: bold; font-size: 1em; color: #1a1a1a; }
+  .time { text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--text-dim); }
+  input[type="checkbox"] {
+    width: 18px; height: 18px; cursor: pointer;
+    accent-color: var(--planner);
+  }
+  tfoot td { font-weight: 700; font-size: 1em; color: #10151a; }
   .path-table tfoot td { background: var(--path); }
   .micro-table tfoot td { background: var(--micro); }
   .pharm-table tfoot td { background: var(--pharm); }
 
   .grand-total {
-    background: #2a2a2a;
-    border: 2px solid #e8e8e8;
-    padding: 18px;
-    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: var(--radius);
     text-align: center;
     font-size: 1.3em;
     margin-top: 10px;
     margin-bottom: 10px;
+    box-shadow: var(--shadow);
   }
   .note {
-    color: #9fbfd8;
+    color: var(--text-dim);
     font-size: 0.85em;
     margin-top: 16px;
+    line-height: 1.55;
   }
   .controls {
     display: flex;
@@ -284,25 +343,30 @@
     flex-wrap: wrap;
   }
   .controls button {
-    background: #2a2a2a;
-    color: #ccc;
-    border: 1px solid #444;
-    border-radius: 6px;
-    padding: 6px 14px;
+    background: var(--surface);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 14px;
     font-size: 0.85em;
+    font-weight: 500;
+    font-family: inherit;
     cursor: pointer;
+    transition: all 0.15s ease;
   }
-  .controls button:hover { background: #3a3a3a; color: #fff; }
+  .controls button:hover { background: var(--surface-3); color: #fff; border-color: #454b56; }
   .search-box {
-    background: #232323;
-    border: 1px solid #444;
-    border-radius: 6px;
-    padding: 6px 12px;
-    color: #e8e8e8;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 12px;
+    color: var(--text);
     font-size: 0.9em;
+    font-family: inherit;
     flex: 1;
     min-width: 180px;
   }
+  .search-box:focus { outline: none; border-color: var(--planner); }
   .card-row {
     display: flex;
     gap: 14px;
@@ -312,17 +376,20 @@
   .subject-card {
     flex: 1;
     min-width: 220px;
-    background: #2a2a2a;
-    border-radius: 10px;
-    padding: 16px 18px;
-    border-top: 4px solid #555;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 17px 19px;
+    border-top: 3px solid #555;
+    box-shadow: var(--shadow);
+    transition: transform 0.15s ease;
   }
   .subject-card.path { border-top-color: var(--path); }
   .subject-card.micro { border-top-color: var(--micro); }
   .subject-card.pharm { border-top-color: var(--pharm); }
-  .subject-card h3 { margin: 0 0 8px 0; font-size: 1.1em; }
-  .subject-card .stat { font-size: 0.85em; color: #aaa; }
-  .subject-card .big { font-size: 1.6em; font-weight: bold; color: #fff; }
+  .subject-card h3 { margin: 0 0 8px 0; font-size: 1.1em; font-weight: 700; }
+  .subject-card .stat { font-size: 0.85em; color: var(--text-dim); }
+  .subject-card .big { font-size: 1.7em; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
 
   /* ===================== Calendar ===================== */
   .cal-legend {
@@ -330,7 +397,7 @@
     gap: 14px;
     flex-wrap: wrap;
     font-size: 0.75em;
-    color: #aaa;
+    color: var(--text-dim);
     margin-bottom: 10px;
     align-items: center;
   }
@@ -346,7 +413,7 @@
     max-height: 760px;
     overflow-y: auto;
     padding-right: 4px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
   }
   .cal-dow-row {
     display: grid;
@@ -355,17 +422,17 @@
     margin-bottom: 4px;
     position: sticky;
     top: 0;
-    background: #1a1a1a;
+    background: var(--bg);
     z-index: 2;
     padding-bottom: 4px;
   }
-  .cal-dow { text-align: center; font-size: 0.75em; color: #888; font-weight: bold; }
+  .cal-dow { text-align: center; font-size: 0.75em; color: var(--text-faint); font-weight: 700; }
   .cal-week { margin-bottom: 10px; }
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
   .cal-day {
-    background: #232323;
-    border: 1px solid #333;
-    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-sm);
     padding: 6px 6px 4px 6px;
     height: 172px;
     display: flex;
@@ -376,12 +443,12 @@
     overflow: hidden;
     transition: border-color 0.15s, background 0.15s;
   }
-  .cal-day:hover { border-color: #666; }
+  .cal-day:hover { border-color: #454b56; }
   .cal-day.today { border-color: var(--planner); box-shadow: 0 0 0 1px var(--planner) inset; }
   .cal-day.out-of-range { opacity: 0.4; }
-  .cal-day.exam-day { border-color: #e07a7a; }
-  .cal-day.drag-over { border-color: var(--planner); background: #2a3a42; }
-  .cal-day-num { font-size: 0.8em; color: #999; font-weight: bold; flex-shrink: 0; }
+  .cal-day.exam-day { border-color: var(--red); }
+  .cal-day.drag-over { border-color: var(--planner); background: #223440; }
+  .cal-day-num { font-size: 0.8em; color: var(--text-dim); font-weight: 700; flex-shrink: 0; }
   .cal-mins { position: absolute; top: 6px; right: 8px; font-size: 0.7em; color: #7fd88f; font-weight: bold; }
   .cal-exam-badge { position: absolute; top: 4px; left: 30px; font-size: 0.95em; }
   .cal-items {
@@ -421,7 +488,8 @@
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.65);
+    background: rgba(8,9,12,0.72);
+    backdrop-filter: blur(2px);
     display: none;
     align-items: center;
     justify-content: center;
@@ -429,31 +497,34 @@
     padding: 20px;
   }
   .modal-box {
-    background: #232323;
-    border: 1px solid #444;
-    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
     padding: 20px 24px;
     max-width: 560px;
     width: 100%;
     max-height: 85vh;
     overflow-y: auto;
+    box-shadow: 0 20px 60px -12px rgba(0,0,0,0.6);
   }
   .manual-form-row select, .manual-form-row input {
-    background: #232323;
-    border: 1px solid #444;
-    border-radius: 6px;
-    color: #e8e8e8;
-    padding: 6px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 7px;
     font-size: 0.82em;
+    font-family: inherit;
   }
   .manual-form-row button {
     background: var(--planner);
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     padding: 7px 14px;
-    color: #1a1a1a;
-    font-weight: bold;
+    color: #0f1720;
+    font-weight: 700;
     font-size: 0.82em;
+    font-family: inherit;
     cursor: pointer;
   }
   .manual-search-results {
@@ -461,27 +532,28 @@
     top: calc(100% + 4px);
     left: 0;
     right: 0;
-    background: #1e1e1e;
-    border: 1px solid #444;
-    border-radius: 6px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
     max-height: 220px;
     overflow-y: auto;
     z-index: 50;
     display: none;
+    box-shadow: var(--shadow);
   }
   .manual-search-item {
-    padding: 6px 8px;
+    padding: 7px 9px;
     font-size: 0.8em;
     color: #ddd;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 6px;
-    border-bottom: 1px solid #2a2a2a;
+    border-bottom: 1px solid var(--border-soft);
   }
   .manual-search-item:last-child { border-bottom: none; }
-  .manual-search-item:hover { background: #2a3a42; }
-  .manual-search-empty { padding: 8px; font-size: 0.8em; color: #888; }
+  .manual-search-item:hover { background: #223440; }
+  .manual-search-empty { padding: 8px; font-size: 0.8em; color: var(--text-faint); }
 
   /* First Aid linking */
   .fa-bar {
@@ -489,72 +561,93 @@
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
-    background: #2a2a2a;
-    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-sm);
     padding: 10px 14px;
     margin: 10px 0 6px 0;
     font-size: 0.85em;
   }
   .fa-bar button {
-    background: #333;
+    background: var(--surface-3);
     color: #ddd;
-    border: 1px solid #555;
-    border-radius: 6px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
     padding: 6px 12px;
     font-size: 0.85em;
+    font-family: inherit;
     cursor: pointer;
+    transition: all 0.15s ease;
   }
-  .fa-bar button:hover { background: #3f3f3f; color: #fff; }
-  #fa-status { color: #9fbfd8; }
+  .fa-bar button:hover { background: #343a44; color: #fff; }
+  #fa-status { color: var(--text-dim); }
   td.fa-cell { text-align: center; white-space: nowrap; }
   .fa-link {
-    color: #1a1a1a;
+    color: #221a05;
     background: #e0c060;
-    border-radius: 6px;
-    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    padding: 3px 9px;
     font-size: 0.85em;
-    font-weight: bold;
+    font-weight: 700;
     text-decoration: none;
     white-space: nowrap;
+    transition: background 0.15s ease;
   }
   .fa-link:hover { background: #f0d070; }
-  td.fa-cell.missing { color: #666; font-style: italic; }
+  td.fa-cell.missing { color: var(--text-faint); font-style: italic; }
   .pathoma-link {
-    color: #1a1a1a;
+    color: #10151a;
     background: var(--path);
-    border-radius: 6px;
-    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    padding: 3px 9px;
     font-size: 0.85em;
-    font-weight: bold;
+    font-weight: 700;
     text-decoration: none;
     white-space: nowrap;
+    transition: background 0.15s ease;
   }
-  .pathoma-link:hover { background: #8fd2d9; }
+  .pathoma-link:hover { background: #8fdee4; }
   td.pathoma-cell { text-align: center; white-space: nowrap; }
-  td.pathoma-cell.missing { color: #666; font-style: italic; }
+  td.pathoma-cell.missing { color: var(--text-faint); font-style: italic; }
+  .video-link {
+    color: #10151a;
+    background: #7fd88f;
+    border-radius: var(--radius-sm);
+    padding: 3px 9px;
+    font-size: 0.85em;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+  .video-link:hover { background: #97e2a4; }
+  td.video-cell { text-align: center; white-space: nowrap; }
+  td.video-cell.missing { color: var(--text-faint); font-style: italic; }
 
   .qbank-input {
     width: 100%;
     min-width: 140px;
-    background: #1e1e1e;
-    border: 1px solid #3a3a3a;
-    border-radius: 5px;
-    padding: 4px 6px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 5px 7px;
     color: #ddd;
     font-size: 0.8em;
+    font-family: inherit;
   }
   .qbank-input:focus { border-color: var(--planner); outline: none; }
-  .qbank-input::placeholder { color: #666; }
+  .qbank-input::placeholder { color: var(--text-faint); }
 
   .digest-box {
-    background: #232323;
-    border: 1px solid #3a3a3a;
-    border-left: 4px solid var(--planner);
-    border-radius: 8px;
-    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-left: 3px solid var(--planner);
+    border-radius: var(--radius-sm);
+    padding: 13px 17px;
     margin-bottom: 16px;
     font-size: 0.9em;
     color: #ddd;
+    box-shadow: var(--shadow);
   }
   .digest-box strong { color: #fff; }
 
@@ -562,39 +655,44 @@
   .subject-countdown {
     flex: 1;
     min-width: 220px;
-    background: #2a2a2a;
-    border-radius: 10px;
-    padding: 12px 16px;
-    border-top: 4px solid #555;
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 13px 17px;
+    border-top: 3px solid #555;
+    box-shadow: var(--shadow);
   }
   .subject-countdown.path { border-top-color: var(--path); }
   .subject-countdown.micro { border-top-color: var(--micro); }
   .subject-countdown.pharm { border-top-color: var(--pharm); }
-  .subject-countdown h4 { margin: 0 0 6px 0; font-size: 0.95em; }
-  .subject-countdown .sc-line { font-size: 0.8em; color: #aaa; margin-top: 3px; }
-  .subject-countdown .sc-line b { color: #e8e8e8; }
+  .subject-countdown h4 { margin: 0 0 6px 0; font-size: 0.95em; font-weight: 700; }
+  .subject-countdown .sc-line { font-size: 0.8em; color: var(--text-dim); margin-top: 3px; }
+  .subject-countdown .sc-line b { color: var(--text); }
   #auth-gate {
     position: fixed; inset: 0; z-index: 9999;
-    background: #191919;
+    background: var(--bg);
+    background-image: radial-gradient(circle at 20% 20%, rgba(91,157,217,0.08), transparent 45%), radial-gradient(circle at 80% 80%, rgba(195,152,240,0.07), transparent 45%);
     display: flex; align-items: center; justify-content: center;
   }
   .auth-gate-box {
     max-width: 420px; width: 90%;
-    background: #232323; border: 1px solid #3a3a3a; border-radius: 12px;
-    padding: 40px 32px; text-align: center;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 44px 34px; text-align: center;
+    box-shadow: 0 24px 70px -16px rgba(0,0,0,0.65);
   }
-  .auth-gate-title { font-size: 1.6em; font-weight: 700; margin-bottom: 10px; }
-  .auth-gate-sub { color: #aaa; margin-bottom: 24px; line-height: 1.4; }
+  .auth-gate-title { font-size: 1.6em; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.02em; }
+  .auth-gate-sub { color: var(--text-dim); margin-bottom: 26px; line-height: 1.5; }
   .auth-gate-box button {
-    display: block; width: 100%; padding: 12px; margin-bottom: 10px;
-    border-radius: 8px; border: 1px solid #3f3f3f; cursor: pointer;
-    font-size: 1em; background: #2f2f2f; color: #eee;
+    display: block; width: 100%; padding: 13px; margin-bottom: 10px;
+    border-radius: var(--radius-sm); border: 1px solid var(--border); cursor: pointer;
+    font-size: 1em; font-weight: 600; font-family: inherit; background: var(--surface-3); color: #eee;
+    transition: all 0.15s ease;
   }
-  #gate-signin-btn { background: #4285F4; border-color: #4285F4; color: #fff; font-weight: 600; }
+  #gate-signin-btn { background: #4285F4; border-color: #4285F4; color: #fff; font-weight: 700; }
   #gate-signin-btn:hover { background: #3367d6; }
-  #gate-continue-btn { background: transparent; color: #999; border: none; }
+  #gate-continue-btn { background: transparent; color: var(--text-faint); border: none; font-weight: 500; }
   #gate-continue-btn:hover { color: #ccc; text-decoration: underline; }
-  .auth-gate-note { color: #777; font-size: 0.85em; margin-top: 10px; }
+  .auth-gate-note { color: var(--text-faint); font-size: 0.85em; margin-top: 10px; }
 </style>
 <!-- Firebase (optional: only used if you set up cloud sync — see FIREBASE_CONFIG near the top of the <script> below) -->
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -778,39 +876,39 @@
 
 <table class="path-table" id="path-table">
 <thead>
-<tr><th>✓</th><th>WUSOM Lecture</th><th>#</th><th>Pathoma Video</th><th>Chapter</th><th>Length</th><th>First Aid</th><th>Pathoma</th><th>QBank Notes</th></tr>
+<tr><th>✓</th><th>WUSOM Lecture</th><th>#</th><th>Pathoma Video</th><th>Chapter</th><th>Length</th><th>First Aid</th><th>Pathoma</th><th>QBank Notes</th><th>Watch</th></tr>
 </thead>
 <tbody>
 
-<tr class="section-row"><td colspan="9">Respiratory Tract Pathology <span style="font-weight:normal;font-size:0.8em;">(Wk1, Sep 7–11)</span></td></tr>
-<tr data-id="p1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Congenital Lung Diseases, Atelectasis, NRDS</td><td>01</td><td>Pulmonary Hypertension &amp; Respiratory Distress Syndromes</td><td class="chapter">Ch. 9.6–9.7</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(701);">📖 p.701</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(102);">📓 p.102</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p1" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p2"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Pulmonary Edema, ARDS (Mon)</td><td>02</td><td>Pulmonary Hypertension &amp; Respiratory Distress Syndromes (same video as row 01 above)</td><td class="chapter">Ch. 9.6–9.7</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(719);">📖 p.719</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(102);">📓 p.102</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p2" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p2b"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Pneumothorax, Pleural Effusion (Mon)</td><td>02</td><td>Pleura</td><td class="chapter">Ch. 9.9</td><td class="time" data-min="3">3m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(722);">📖 p.722</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(106);">📓 p.106</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p2b" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p3"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Restrictive Lung Disease, IPF, Pneumoconiosis</td><td>03</td><td>Restrictive Diseases</td><td class="chapter">Ch. 9.5</td><td class="time" data-min="22">22m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(716);">📖 p.716</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(100);">📓 p.100</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p3" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p4"><td><input type="checkbox" onchange="onCheck(this)"></td><td>COPD — Emphysema, Chronic Bronchitis</td><td>04</td><td>Chronic Obstructive Pulmonary Disease</td><td class="chapter">Ch. 9.4</td><td class="time" data-min="50">50m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(714);">📖 p.714</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(97);">📓 p.97</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p4" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p5"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Asthma, Bronchiectasis</td><td>05</td><td>Chronic Obstructive Pulmonary Disease (same video as row 04 — Pathoma covers obstructive lung disease as one chapter)</td><td class="chapter">Ch. 9.4</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(715);">📖 p.715</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(97);">📓 p.97</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p5" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr class="gap-row" data-id="p6" data-reviewonly="1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>TBL: Obstructive &amp; Restrictive Disorder</td><td>06</td><td class="missing">Review session — draws on rows 03 &amp; 04 above, no new video</td><td class="chapter">—</td><td class="time">review only</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(714);">📖 p.714</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(97);">📓 p.97</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p6" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p7"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Pneumonia</td><td>07</td><td>Pulmonary Infections</td><td class="chapter">Ch. 9.3</td><td class="time" data-min="20">20m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(723);">📖 p.723</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(94);">📓 p.94</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p7" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p8"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. TB, Abscess</td><td>08</td><td>Pulmonary Infections (same video as row 07 above)</td><td class="chapter">Ch. 9.3</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(724);">📖 p.724</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(94);">📓 p.94</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p8" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p9"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Tumors of Lung-1</td><td>09</td><td>Lung Cancer</td><td class="chapter">Ch. 9.8</td><td class="time" data-min="18">18m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(725);">📖 p.725</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(103);">📓 p.103</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p9" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bonus — Nasopharynx &amp; Larynx <span class="supp-tag">not on a specific lecture</span></td><td>10</td><td>Nasopharynx &amp; Larynx</td><td class="chapter">Ch. 9.1–9.2</td><td class="time" data-min="8">8m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(712);">📖 p.712</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(93);">📓 p.93</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p10" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="10">Respiratory Tract Pathology <span style="font-weight:normal;font-size:0.8em;">(Wk1, Sep 7–11)</span></td></tr>
+<tr data-id="p1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Congenital Lung Diseases, Atelectasis, NRDS</td><td>01</td><td>Pulmonary Hypertension &amp; Respiratory Distress Syndromes</td><td class="chapter">Ch. 9.6–9.7</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(701);">📖 p.701</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(102);">📓 p.102</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p1" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Pulmonary%20Hypertension%20%26%20Respiratory%20Distress%20Syndromes" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p2"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Pulmonary Edema, ARDS (Mon)</td><td>02</td><td>Pulmonary Hypertension &amp; Respiratory Distress Syndromes (same video as row 01 above)</td><td class="chapter">Ch. 9.6–9.7</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(719);">📖 p.719</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(102);">📓 p.102</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p2" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Pulmonary%20Hypertension%20%26%20Respiratory%20Distress%20Syndromes%20%28same%20video%20as%20row%2001%20above%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p2b"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Pneumothorax, Pleural Effusion (Mon)</td><td>02</td><td>Pleura</td><td class="chapter">Ch. 9.9</td><td class="time" data-min="3">3m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(722);">📖 p.722</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(106);">📓 p.106</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p2b" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Pleura" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p3"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Restrictive Lung Disease, IPF, Pneumoconiosis</td><td>03</td><td>Restrictive Diseases</td><td class="chapter">Ch. 9.5</td><td class="time" data-min="22">22m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(716);">📖 p.716</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(100);">📓 p.100</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p3" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Restrictive%20Diseases" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p4"><td><input type="checkbox" onchange="onCheck(this)"></td><td>COPD — Emphysema, Chronic Bronchitis</td><td>04</td><td>Chronic Obstructive Pulmonary Disease</td><td class="chapter">Ch. 9.4</td><td class="time" data-min="50">50m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(714);">📖 p.714</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(97);">📓 p.97</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p4" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Chronic%20Obstructive%20Pulmonary%20Disease" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p5"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Asthma, Bronchiectasis</td><td>05</td><td>Chronic Obstructive Pulmonary Disease (same video as row 04 — Pathoma covers obstructive lung disease as one chapter)</td><td class="chapter">Ch. 9.4</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(715);">📖 p.715</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(97);">📓 p.97</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p5" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Chronic%20Obstructive%20Pulmonary%20Disease%20%28same%20video%20as%20row%2004%20%E2%80%94%20Pathoma%20covers%20obstructive%20lung%20disease%20as%20one%20chapter%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr class="gap-row" data-id="p6" data-reviewonly="1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>TBL: Obstructive &amp; Restrictive Disorder</td><td>06</td><td class="missing">Review session — draws on rows 03 &amp; 04 above, no new video</td><td class="chapter">—</td><td class="time">review only</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(714);">📖 p.714</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(97);">📓 p.97</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p6" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Review%20session%20%E2%80%94%20draws%20on%20rows%2003%20%26%2004%20above%2C%20no%20new%20video" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p7"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Pneumonia</td><td>07</td><td>Pulmonary Infections</td><td class="chapter">Ch. 9.3</td><td class="time" data-min="20">20m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(723);">📖 p.723</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(94);">📓 p.94</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p7" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Pulmonary%20Infections" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p8"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. TB, Abscess</td><td>08</td><td>Pulmonary Infections (same video as row 07 above)</td><td class="chapter">Ch. 9.3</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(724);">📖 p.724</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(94);">📓 p.94</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p8" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Pulmonary%20Infections%20%28same%20video%20as%20row%2007%20above%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p9"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Tumors of Lung-1</td><td>09</td><td>Lung Cancer</td><td class="chapter">Ch. 9.8</td><td class="time" data-min="18">18m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(725);">📖 p.725</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(103);">📓 p.103</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p9" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Lung%20Cancer" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bonus — Nasopharynx &amp; Larynx <span class="supp-tag">not on a specific lecture</span></td><td>10</td><td>Nasopharynx &amp; Larynx</td><td class="chapter">Ch. 9.1–9.2</td><td class="time" data-min="8">8m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(712);">📖 p.712</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(93);">📓 p.93</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p10" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Nasopharynx%20%26%20Larynx" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="9">Central Nervous System Pathology <span style="font-weight:normal;font-size:0.8em;">(Wk2–3, Sep 14–25)</span></td></tr>
-<tr data-id="p11"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Neural Tube Defect, Hydrocephalus, Herniations, Pseudotumor Cerebri</td><td>11</td><td>Developmental Anomalies</td><td class="chapter">Ch. 17.1</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(558);">📖 p.558</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(190);">📓 p.190</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p11" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr class="gap-row" data-id="p12" data-suppmin="10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Herniations / Pseudotumor Cerebri (portion)</td><td>12</td><td class="missing">Only partially covered above — supplement with slides/First Aid</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(565);">📖 p.565</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(196);">📓 p.196</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p12" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p13"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Diffuse Axonal Damage, Cerebral Swelling, Concussion, SAH, Epidural/Subdural Hemorrhage</td><td>13</td><td>Trauma &amp; Demyelinating Disorders</td><td class="chapter">Ch. 17.5–17.6</td><td class="time" data-min="13">13m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(551);">📖 p.551</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(195);">📓 p.195</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p13" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p14"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Demyelinating Disorders</td><td>14</td><td>Trauma &amp; Demyelinating Disorders (same video as row 13 above)</td><td class="chapter">Ch. 17.5–17.6</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(559);">📖 p.559</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(196);">📓 p.196</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p14" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p15"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Stroke</td><td>15</td><td>Cerebrovascular Disease</td><td class="chapter">Ch. 17.4</td><td class="time" data-min="16">16m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(547);">📖 p.547</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(193);">📓 p.193</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p15" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p16"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Cerebrovascular Disorders</td><td>16</td><td>Cerebrovascular Disease (same video as row 15 above)</td><td class="chapter">Ch. 17.4</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(547);">📖 p.547</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(193);">📓 p.193</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p16" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p17"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Pseudobulbar Palsy, Intraparenchymal Hemorrhage, Arteriovenous Malformations</td><td>17</td><td>Cerebrovascular Disease (same video as row 15 above)</td><td class="chapter">Ch. 17.4</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(550);">📖 p.550</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(195);">📓 p.195</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p17" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p18"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Alzheimer's, Parkinson's Disease, Huntington's Disease, Dementias</td><td>18</td><td>Dementia and Degenerative Disorders</td><td class="chapter">Ch. 17.7</td><td class="time" data-min="35">35m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(556);">📖 p.556</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(197);">📓 p.197</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p18" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p19"><td><input type="checkbox" onchange="onCheck(this)"></td><td>CNS Tumors 1</td><td>19</td><td>CNS Tumors</td><td class="chapter">Ch. 17.8</td><td class="time" data-min="12">12m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(562);">📖 p.562</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(200);">📓 p.200</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p19" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p20"><td><input type="checkbox" onchange="onCheck(this)"></td><td>CNS Tumors 2</td><td>20</td><td>CNS Tumors (same video as row 19 above)</td><td class="chapter">Ch. 17.8</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(564);">📖 p.564</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(200);">📓 p.200</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p20" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p21"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bonus — Spinal Cord Lesions <span class="supp-tag">not on a specific lecture</span></td><td>21</td><td>Spinal Cord Lesions</td><td class="chapter">Ch. 17.2</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(566);">📖 p.566</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(191);">📓 p.191</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p21" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="p22"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bonus — Meningitis <span class="supp-tag">pairs with MB2: Bacterial Meningitis</span></td><td>22</td><td>Meningitis</td><td class="chapter">Ch. 17.3</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(198);">📖 p.198</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(192);">📓 p.192</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p22" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr class="gap-row" data-id="p23" data-suppmin="10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Neurocutaneous Disorders</td><td>23</td><td class="missing">No dedicated Pathoma video — supplement with slides/First Aid</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(561);">📖 p.561</a></td><td class="pathoma-cell missing">—</td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p23" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr class="gap-row" data-id="p24" data-suppmin="10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Metabolic Disorders of Brain</td><td>24</td><td class="missing">No dedicated Pathoma video — supplement with slides/First Aid</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell missing">—</td><td class="pathoma-cell missing">—</td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p24" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr class="gap-row" data-id="p25" data-suppmin="15"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Extra Assigned Topics in RNS II (x2 lecture files)</td><td>25</td><td class="missing">Instructor-assigned supplemental topics — no dedicated video, use the lecture slides</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell missing">—</td><td class="pathoma-cell missing">—</td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p25" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="10">Central Nervous System Pathology <span style="font-weight:normal;font-size:0.8em;">(Wk2–3, Sep 14–25)</span></td></tr>
+<tr data-id="p11"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Neural Tube Defect, Hydrocephalus, Herniations, Pseudotumor Cerebri</td><td>11</td><td>Developmental Anomalies</td><td class="chapter">Ch. 17.1</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(558);">📖 p.558</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(190);">📓 p.190</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p11" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Developmental%20Anomalies" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr class="gap-row" data-id="p12" data-suppmin="10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Herniations / Pseudotumor Cerebri (portion)</td><td>12</td><td class="missing">Only partially covered above — supplement with slides/First Aid</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(565);">📖 p.565</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(196);">📓 p.196</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p12" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Only%20partially%20covered%20above%20%E2%80%94%20supplement%20with%20slides/First%20Aid" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p13"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Diffuse Axonal Damage, Cerebral Swelling, Concussion, SAH, Epidural/Subdural Hemorrhage</td><td>13</td><td>Trauma &amp; Demyelinating Disorders</td><td class="chapter">Ch. 17.5–17.6</td><td class="time" data-min="13">13m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(551);">📖 p.551</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(195);">📓 p.195</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p13" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Trauma%20%26%20Demyelinating%20Disorders" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p14"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Demyelinating Disorders</td><td>14</td><td>Trauma &amp; Demyelinating Disorders (same video as row 13 above)</td><td class="chapter">Ch. 17.5–17.6</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(559);">📖 p.559</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(196);">📓 p.196</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p14" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Trauma%20%26%20Demyelinating%20Disorders%20%28same%20video%20as%20row%2013%20above%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p15"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Stroke</td><td>15</td><td>Cerebrovascular Disease</td><td class="chapter">Ch. 17.4</td><td class="time" data-min="16">16m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(547);">📖 p.547</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(193);">📓 p.193</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p15" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Cerebrovascular%20Disease" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p16"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Cerebrovascular Disorders</td><td>16</td><td>Cerebrovascular Disease (same video as row 15 above)</td><td class="chapter">Ch. 17.4</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(547);">📖 p.547</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(193);">📓 p.193</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p16" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Cerebrovascular%20Disease%20%28same%20video%20as%20row%2015%20above%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p17"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Pseudobulbar Palsy, Intraparenchymal Hemorrhage, Arteriovenous Malformations</td><td>17</td><td>Cerebrovascular Disease (same video as row 15 above)</td><td class="chapter">Ch. 17.4</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(550);">📖 p.550</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(195);">📓 p.195</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p17" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Cerebrovascular%20Disease%20%28same%20video%20as%20row%2015%20above%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p18"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Alzheimer's, Parkinson's Disease, Huntington's Disease, Dementias</td><td>18</td><td>Dementia and Degenerative Disorders</td><td class="chapter">Ch. 17.7</td><td class="time" data-min="35">35m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(556);">📖 p.556</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(197);">📓 p.197</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p18" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Dementia%20and%20Degenerative%20Disorders" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p19"><td><input type="checkbox" onchange="onCheck(this)"></td><td>CNS Tumors 1</td><td>19</td><td>CNS Tumors</td><td class="chapter">Ch. 17.8</td><td class="time" data-min="12">12m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(562);">📖 p.562</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(200);">📓 p.200</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p19" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=CNS%20Tumors" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p20"><td><input type="checkbox" onchange="onCheck(this)"></td><td>CNS Tumors 2</td><td>20</td><td>CNS Tumors (same video as row 19 above)</td><td class="chapter">Ch. 17.8</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(564);">📖 p.564</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(200);">📓 p.200</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p20" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=CNS%20Tumors%20%28same%20video%20as%20row%2019%20above%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p21"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bonus — Spinal Cord Lesions <span class="supp-tag">not on a specific lecture</span></td><td>21</td><td>Spinal Cord Lesions</td><td class="chapter">Ch. 17.2</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(566);">📖 p.566</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(191);">📓 p.191</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p21" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Spinal%20Cord%20Lesions" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="p22"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bonus — Meningitis <span class="supp-tag">pairs with MB2: Bacterial Meningitis</span></td><td>22</td><td>Meningitis</td><td class="chapter">Ch. 17.3</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(198);">📖 p.198</a></td><td class="pathoma-cell"><a href="#" class="pathoma-link" onclick="event.preventDefault(); openPathoma(192);">📓 p.192</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p22" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Meningitis" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr class="gap-row" data-id="p23" data-suppmin="10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Neurocutaneous Disorders</td><td>23</td><td class="missing">No dedicated Pathoma video — supplement with slides/First Aid</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(561);">📖 p.561</a></td><td class="pathoma-cell missing">—</td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p23" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=No%20dedicated%20Pathoma%20video%20%E2%80%94%20supplement%20with%20slides/First%20Aid" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr class="gap-row" data-id="p24" data-suppmin="10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Metabolic Disorders of Brain</td><td>24</td><td class="missing">No dedicated Pathoma video — supplement with slides/First Aid</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell missing">—</td><td class="pathoma-cell missing">—</td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p24" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=No%20dedicated%20Pathoma%20video%20%E2%80%94%20supplement%20with%20slides/First%20Aid" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr class="gap-row" data-id="p25" data-suppmin="15"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Extra Assigned Topics in RNS II (x2 lecture files)</td><td>25</td><td class="missing">Instructor-assigned supplemental topics — no dedicated video, use the lecture slides</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell missing">—</td><td class="pathoma-cell missing">—</td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="p25" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Instructor-assigned%20supplemental%20topics%20%E2%80%94%20no%20dedicated%20video%2C%20use%20the%20lecture%20slides" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
 </tbody>
 <tfoot>
@@ -840,87 +938,87 @@
 
 <table class="micro-table" id="micro-table">
 <thead>
-<tr><th>✓</th><th>Blueprint Topic</th><th>Organism</th><th>Sketchy Video</th><th>Chapter</th><th>Length</th><th>First Aid</th><th>QBank Notes</th></tr>
+<tr><th>✓</th><th>Blueprint Topic</th><th>Organism</th><th>Sketchy Video</th><th>Chapter</th><th>Length</th><th>First Aid</th><th>QBank Notes</th><th>Watch</th></tr>
 </thead>
 <tbody>
 
-<tr class="section-row"><td colspan="8">Lect 1: Fungal Respiratory Infections <span style="font-weight:normal;font-size:0.8em;">(Wk1 Wed Sep 9)</span></td></tr>
-<tr data-id="m1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Fungal Respiratory Infections</td><td>Histoplasma capsulatum</td><td>Histoplasma capsulatum</td><td class="chapter">Fungi — Systemic Mycoses</td><td class="time" data-min="10">10m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(171);">📖 p.171</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m1" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m2"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Fungal Respiratory Infections</td><td>Blastomyces dermatitidis</td><td>Blastomyces dermatitidis</td><td class="chapter">Fungi — Systemic Mycoses</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(171);">📖 p.171</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m2" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m3"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Fungal Respiratory Infections</td><td>Coccidioides immitis</td><td>Coccidioides immitis</td><td class="chapter">Fungi — Systemic Mycoses</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(171);">📖 p.171</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m3" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m4"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Fungal Respiratory Infections</td><td>Paracoccidioides brasiliensis</td><td>Paracoccidioides brasiliensis</td><td class="chapter">Fungi — Systemic Mycoses</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(171);">📖 p.171</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m4" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 1: Fungal Respiratory Infections <span style="font-weight:normal;font-size:0.8em;">(Wk1 Wed Sep 9)</span></td></tr>
+<tr data-id="m1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Fungal Respiratory Infections</td><td>Histoplasma capsulatum</td><td>Histoplasma capsulatum</td><td class="chapter">Fungi — Systemic Mycoses</td><td class="time" data-min="10">10m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(171);">📖 p.171</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m1" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Histoplasma%20capsulatum" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m2"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Fungal Respiratory Infections</td><td>Blastomyces dermatitidis</td><td>Blastomyces dermatitidis</td><td class="chapter">Fungi — Systemic Mycoses</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(171);">📖 p.171</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m2" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Blastomyces%20dermatitidis" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m3"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Fungal Respiratory Infections</td><td>Coccidioides immitis</td><td>Coccidioides immitis</td><td class="chapter">Fungi — Systemic Mycoses</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(171);">📖 p.171</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m3" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Coccidioides%20immitis" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m4"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Fungal Respiratory Infections</td><td>Paracoccidioides brasiliensis</td><td>Paracoccidioides brasiliensis</td><td class="chapter">Fungi — Systemic Mycoses</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(171);">📖 p.171</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m4" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Paracoccidioides%20brasiliensis" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 2,3: Common Cold, Croup <span style="font-weight:normal;font-size:0.8em;">(Wk1 Tue Sep 8, SGD)</span></td></tr>
-<tr data-id="m5"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Common Cold</td><td>Rhinovirus</td><td>Rhinovirus (Picornaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(187);">📖 p.187</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m5" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m6"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Croup</td><td>Parainfluenza virus</td><td>Measles, Mumps, Parainfluenza Viruses (Paramyxoviridae)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time" data-min="13">13m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(189);">📖 p.189</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m6" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 2,3: Common Cold, Croup <span style="font-weight:normal;font-size:0.8em;">(Wk1 Tue Sep 8, SGD)</span></td></tr>
+<tr data-id="m5"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Common Cold</td><td>Rhinovirus</td><td>Rhinovirus (Picornaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(187);">📖 p.187</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m5" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Rhinovirus%20%28Picornaviridae%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m6"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Croup</td><td>Parainfluenza virus</td><td>Measles, Mumps, Parainfluenza Viruses (Paramyxoviridae)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time" data-min="13">13m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(189);">📖 p.189</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m6" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Measles%2C%20Mumps%2C%20Parainfluenza%20Viruses%20%28Paramyxoviridae%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 2,3 (cont.): Viral Pneumonia <span style="font-weight:normal;font-size:0.8em;">(Wk1 Thu Sep 10)</span></td></tr>
-<tr data-id="m7"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pneumonia</td><td>RSV / hMPV</td><td>Respiratory Syncytial Virus &amp; Human Metapneumovirus (Pneumoviridae)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(188);">📖 p.188</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m7" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m8"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pneumonia</td><td>Coronavirus</td><td>Coronavirus (Coronaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="13">13m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(191);">📖 p.191</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m8" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 2,3 (cont.): Viral Pneumonia <span style="font-weight:normal;font-size:0.8em;">(Wk1 Thu Sep 10)</span></td></tr>
+<tr data-id="m7"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pneumonia</td><td>RSV / hMPV</td><td>Respiratory Syncytial Virus &amp; Human Metapneumovirus (Pneumoviridae)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(188);">📖 p.188</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m7" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Respiratory%20Syncytial%20Virus%20%26%20Human%20Metapneumovirus%20%28Pneumoviridae%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m8"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pneumonia</td><td>Coronavirus</td><td>Coronavirus (Coronaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="13">13m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(191);">📖 p.191</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m8" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Coronavirus%20%28Coronaviridae%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 5,6: Viral Pharyngitis <span style="font-weight:normal;font-size:0.8em;">(Wk1 Wed Sep 9, SGD)</span></td></tr>
-<tr data-id="m9"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pharyngitis</td><td>Coxsackievirus A &amp; B</td><td>Coxsackievirus A &amp; B (Picornaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(187);">📖 p.187</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m9" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pharyngitis</td><td>Adenovirus</td><td>Adenovirus (Adenoviridae)</td><td class="chapter">Viruses — DNA Viruses</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(183);">📖 p.183</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m10" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m11"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pharyngitis</td><td>Epstein-Barr Virus</td><td>Epstein-Barr Virus (Herpesviridae)</td><td class="chapter">Viruses — DNA Viruses</td><td class="time" data-min="11">11m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(184);">📖 p.184</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m11" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 5,6: Viral Pharyngitis <span style="font-weight:normal;font-size:0.8em;">(Wk1 Wed Sep 9, SGD)</span></td></tr>
+<tr data-id="m9"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pharyngitis</td><td>Coxsackievirus A &amp; B</td><td>Coxsackievirus A &amp; B (Picornaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(187);">📖 p.187</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m9" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Coxsackievirus%20A%20%26%20B%20%28Picornaviridae%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pharyngitis</td><td>Adenovirus</td><td>Adenovirus (Adenoviridae)</td><td class="chapter">Viruses — DNA Viruses</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(183);">📖 p.183</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m10" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Adenovirus%20%28Adenoviridae%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m11"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Viral Pharyngitis</td><td>Epstein-Barr Virus</td><td>Epstein-Barr Virus (Herpesviridae)</td><td class="chapter">Viruses — DNA Viruses</td><td class="time" data-min="11">11m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(184);">📖 p.184</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m11" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Epstein-Barr%20Virus%20%28Herpesviridae%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 4: Influenza, Smallpox, Mumps, Measles, Rubella <span style="font-weight:normal;font-size:0.8em;">(Wk1 Fri Sep 11)</span></td></tr>
-<tr data-id="m12"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Influenza</td><td>Influenzavirus</td><td>Influenzavirus (Orthomyxoviridae)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time" data-min="18">18m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(188);">📖 p.188</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m12" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m13"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Mumps, Measles</td><td>Mumps / Measles virus</td><td>Measles, Mumps, Parainfluenza Viruses (same video as row above under Croup)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(189);">📖 p.189</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m13" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m14"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Smallpox</td><td>Smallpox / Cowpox virus</td><td>Smallpox Virus, Cowpox Virus, and Molluscum Contagiosum Virus (Poxviridae)</td><td class="chapter">Viruses — DNA Viruses</td><td class="time" data-min="8">8m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(183);">📖 p.183</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m14" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m15"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Rubella</td><td>Rubella virus</td><td>Rubella Virus (Matonaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(188);">📖 p.188</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m15" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 4: Influenza, Smallpox, Mumps, Measles, Rubella <span style="font-weight:normal;font-size:0.8em;">(Wk1 Fri Sep 11)</span></td></tr>
+<tr data-id="m12"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Influenza</td><td>Influenzavirus</td><td>Influenzavirus (Orthomyxoviridae)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time" data-min="18">18m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(188);">📖 p.188</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m12" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Influenzavirus%20%28Orthomyxoviridae%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m13"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Mumps, Measles</td><td>Mumps / Measles virus</td><td>Measles, Mumps, Parainfluenza Viruses (same video as row above under Croup)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(189);">📖 p.189</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m13" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Measles%2C%20Mumps%2C%20Parainfluenza%20Viruses%20%28same%20video%20as%20row%20above%20under%20Croup%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m14"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Smallpox</td><td>Smallpox / Cowpox virus</td><td>Smallpox Virus, Cowpox Virus, and Molluscum Contagiosum Virus (Poxviridae)</td><td class="chapter">Viruses — DNA Viruses</td><td class="time" data-min="8">8m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(183);">📖 p.183</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m14" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Smallpox%20Virus%2C%20Cowpox%20Virus%2C%20and%20Molluscum%20Contagiosum%20Virus%20%28Poxviridae%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m15"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Rubella</td><td>Rubella virus</td><td>Rubella Virus (Matonaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(188);">📖 p.188</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m15" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Rubella%20Virus%20%28Matonaviridae%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 7,8: Otitis Media, Sinusitis, Epiglottitis, Diphtheria, Bacterial Pharyngitis <span style="font-weight:normal;font-size:0.8em;">(Wk2 Mon Sep 14, SGD)</span></td></tr>
-<tr data-id="m16"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Otitis Media, Sinusitis, Epiglottitis</td><td>Haemophilus influenzae</td><td>Haemophilus influenzae</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m16" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m17"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Otitis Media, Sinusitis</td><td>Moraxella catarrhalis</td><td>Moraxella catarrhalis</td><td class="chapter">Bacteria — Gram-Neg Cocci</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m17" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m18"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Diphtheria</td><td>Corynebacterium diphtheriae</td><td>Corynebacterium diphtheriae</td><td class="chapter">Bacteria — Gram-Pos Bacilli</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(159);">📖 p.159</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m18" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m19"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bacterial Pharyngitis</td><td>Streptococcus pyogenes</td><td>Streptococcus pyogenes (Group A Strep)</td><td class="chapter">Bacteria — Gram-Pos Cocci</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(156);">📖 p.156</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m19" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 7,8: Otitis Media, Sinusitis, Epiglottitis, Diphtheria, Bacterial Pharyngitis <span style="font-weight:normal;font-size:0.8em;">(Wk2 Mon Sep 14, SGD)</span></td></tr>
+<tr data-id="m16"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Otitis Media, Sinusitis, Epiglottitis</td><td>Haemophilus influenzae</td><td>Haemophilus influenzae</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m16" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Haemophilus%20influenzae" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m17"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Otitis Media, Sinusitis</td><td>Moraxella catarrhalis</td><td>Moraxella catarrhalis</td><td class="chapter">Bacteria — Gram-Neg Cocci</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m17" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Moraxella%20catarrhalis" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m18"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Diphtheria</td><td>Corynebacterium diphtheriae</td><td>Corynebacterium diphtheriae</td><td class="chapter">Bacteria — Gram-Pos Bacilli</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(159);">📖 p.159</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m18" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Corynebacterium%20diphtheriae" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m19"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bacterial Pharyngitis</td><td>Streptococcus pyogenes</td><td>Streptococcus pyogenes (Group A Strep)</td><td class="chapter">Bacteria — Gram-Pos Cocci</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(156);">📖 p.156</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m19" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Streptococcus%20pyogenes%20%28Group%20A%20Strep%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 9: Whooping Cough, Nocardiosis <span style="font-weight:normal;font-size:0.8em;">(Wk2 Wed Sep 16, SGD)</span></td></tr>
-<tr data-id="m20"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Whooping Cough</td><td>Bordetella pertussis</td><td>Bordetella pertussis</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="8">8m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(163);">📖 p.163</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m20" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m21"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Nocardiosis</td><td>Nocardia asteroides</td><td>Nocardia asteroides</td><td class="chapter">Bacteria — Branching Filamentous Rods</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(159);">📖 p.159</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m21" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 9: Whooping Cough, Nocardiosis <span style="font-weight:normal;font-size:0.8em;">(Wk2 Wed Sep 16, SGD)</span></td></tr>
+<tr data-id="m20"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Whooping Cough</td><td>Bordetella pertussis</td><td>Bordetella pertussis</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="8">8m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(163);">📖 p.163</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m20" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Bordetella%20pertussis" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m21"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Nocardiosis</td><td>Nocardia asteroides</td><td>Nocardia asteroides</td><td class="chapter">Bacteria — Branching Filamentous Rods</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(159);">📖 p.159</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m21" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Nocardia%20asteroides" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 10: Mtb, Atypical Mycobacteria <span style="font-weight:normal;font-size:0.8em;">(Wk2 Wed Sep 16)</span></td></tr>
-<tr data-id="m22"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Tuberculosis</td><td>Mycobacterium tuberculosis</td><td>Mycobacterium tuberculosis</td><td class="chapter">Bacteria — Mycobacteria</td><td class="time" data-min="17">17m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(160);">📖 p.160</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m22" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m23"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Atypical Mycobacteria</td><td>M. avium, M. scrofulaceum, M. marinum</td><td>Mycobacterium avium intracellulare, M. scrofulaceum, M. marinum</td><td class="chapter">Bacteria — Mycobacteria</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(160);">📖 p.160</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m23" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 10: Mtb, Atypical Mycobacteria <span style="font-weight:normal;font-size:0.8em;">(Wk2 Wed Sep 16)</span></td></tr>
+<tr data-id="m22"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Tuberculosis</td><td>Mycobacterium tuberculosis</td><td>Mycobacterium tuberculosis</td><td class="chapter">Bacteria — Mycobacteria</td><td class="time" data-min="17">17m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(160);">📖 p.160</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m22" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Mycobacterium%20tuberculosis" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m23"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Atypical Mycobacteria</td><td>M. avium, M. scrofulaceum, M. marinum</td><td>Mycobacterium avium intracellulare, M. scrofulaceum, M. marinum</td><td class="chapter">Bacteria — Mycobacteria</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(160);">📖 p.160</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m23" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Mycobacterium%20avium%20intracellulare%2C%20M.%20scrofulaceum%2C%20M.%20marinum" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 11: Lobar Pneumonia, Pseudomonas <span style="font-weight:normal;font-size:0.8em;">(Wk2 Thu Sep 17)</span></td></tr>
-<tr data-id="m24"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Lobar Pneumonia</td><td>Streptococcus pneumoniae</td><td>Streptococcus pneumoniae &amp; viridans</td><td class="chapter">Bacteria — Gram-Pos Cocci</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(156);">📖 p.156</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m24" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m25"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Pseudomonas</td><td>Pseudomonas aeruginosa</td><td>Pseudomonas aeruginosa</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="10">10m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(163);">📖 p.163</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m25" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m26"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Pseudomonas (related)</td><td>Burkholderia spp.</td><td>Burkholderia pseudomallei &amp; cepacia complex</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m26" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 11: Lobar Pneumonia, Pseudomonas <span style="font-weight:normal;font-size:0.8em;">(Wk2 Thu Sep 17)</span></td></tr>
+<tr data-id="m24"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Lobar Pneumonia</td><td>Streptococcus pneumoniae</td><td>Streptococcus pneumoniae &amp; viridans</td><td class="chapter">Bacteria — Gram-Pos Cocci</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(156);">📖 p.156</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m24" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Streptococcus%20pneumoniae%20%26%20viridans" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m25"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Pseudomonas</td><td>Pseudomonas aeruginosa</td><td>Pseudomonas aeruginosa</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="10">10m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(163);">📖 p.163</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m25" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Pseudomonas%20aeruginosa" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m26"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Pseudomonas (related)</td><td>Burkholderia spp.</td><td>Burkholderia pseudomallei &amp; cepacia complex</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m26" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Burkholderia%20pseudomallei%20%26%20cepacia%20complex" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 12: Interstitial Pneumonia <span style="font-weight:normal;font-size:0.8em;">(Wk2 Fri Sep 18)</span></td></tr>
-<tr data-id="m27"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Interstitial (Atypical) Pneumonia</td><td>Mycoplasma pneumoniae</td><td>Mycoplasma pneumoniae</td><td class="chapter">Bacteria — Gram-Indeterminate</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(170);">📖 p.170</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m27" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m28"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Interstitial Pneumonia</td><td>Chlamydia/Chlamydophila spp.</td><td>Chlamydia trachomatis, Chlamydophila pneumoniae, Chlamydophila psittaci</td><td class="chapter">Bacteria — Gram-Indeterminate</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(168);">📖 p.168</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m28" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m29"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Interstitial Pneumonia (Q fever)</td><td>Coxiella burnetii</td><td>Coxiella burnetii</td><td class="chapter">Bacteria — Gram-Indeterminate</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(170);">📖 p.170</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m29" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m30"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Interstitial Pneumonia (Legionnaires')</td><td>Legionella pneumophila</td><td>Legionella pneumophila</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(163);">📖 p.163</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m30" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 12: Interstitial Pneumonia <span style="font-weight:normal;font-size:0.8em;">(Wk2 Fri Sep 18)</span></td></tr>
+<tr data-id="m27"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Interstitial (Atypical) Pneumonia</td><td>Mycoplasma pneumoniae</td><td>Mycoplasma pneumoniae</td><td class="chapter">Bacteria — Gram-Indeterminate</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(170);">📖 p.170</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m27" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Mycoplasma%20pneumoniae" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m28"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Interstitial Pneumonia</td><td>Chlamydia/Chlamydophila spp.</td><td>Chlamydia trachomatis, Chlamydophila pneumoniae, Chlamydophila psittaci</td><td class="chapter">Bacteria — Gram-Indeterminate</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(168);">📖 p.168</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m28" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Chlamydia%20trachomatis%2C%20Chlamydophila%20pneumoniae%2C%20Chlamydophila%20psittaci" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m29"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Interstitial Pneumonia (Q fever)</td><td>Coxiella burnetii</td><td>Coxiella burnetii</td><td class="chapter">Bacteria — Gram-Indeterminate</td><td class="time" data-min="5">5m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(170);">📖 p.170</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m29" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Coxiella%20burnetii" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m30"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Interstitial Pneumonia (Legionnaires')</td><td>Legionella pneumophila</td><td>Legionella pneumophila</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(163);">📖 p.163</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m30" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Legionella%20pneumophila" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 13: Cryptococcosis, Polio, Echovirus, Viral Meningitis <span style="font-weight:normal;font-size:0.8em;">(Wk3 Mon Sep 21)</span></td></tr>
-<tr data-id="m31"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Cryptococcosis</td><td>Cryptococcus neoformans</td><td>Cryptococcus neoformans</td><td class="chapter">Fungi — Opportunistic</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(172);">📖 p.172</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m31" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m32"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Echovirus / Viral Meningitis</td><td>Echovirus (Enterovirus)</td><td>Picornaviridae Overview</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="11">11m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(187);">📖 p.187</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m32" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m33"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Polio</td><td>Poliovirus</td><td>Poliovirus (Picornaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(187);">📖 p.187</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m33" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 13: Cryptococcosis, Polio, Echovirus, Viral Meningitis <span style="font-weight:normal;font-size:0.8em;">(Wk3 Mon Sep 21)</span></td></tr>
+<tr data-id="m31"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Cryptococcosis</td><td>Cryptococcus neoformans</td><td>Cryptococcus neoformans</td><td class="chapter">Fungi — Opportunistic</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(172);">📖 p.172</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m31" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Cryptococcus%20neoformans" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m32"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Echovirus / Viral Meningitis</td><td>Echovirus (Enterovirus)</td><td>Picornaviridae Overview</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="11">11m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(187);">📖 p.187</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m32" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Picornaviridae%20Overview" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m33"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Polio</td><td>Poliovirus</td><td>Poliovirus (Picornaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(187);">📖 p.187</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m33" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Poliovirus%20%28Picornaviridae%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 14: Bacterial Meningitis, Leprosy <span style="font-weight:normal;font-size:0.8em;">(Wk3 Wed Sep 23)</span></td></tr>
-<tr data-id="m34"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bacterial Meningitis</td><td>Neisseria meningitidis</td><td>Neisseria meningitidis</td><td class="chapter">Bacteria — Gram-Neg Cocci</td><td class="time" data-min="14">14m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m34" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m35"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bacterial Meningitis</td><td>Streptococcus pneumoniae</td><td>Streptococcus pneumoniae &amp; viridans (same video as row 24 above)</td><td class="chapter">Bacteria — Gram-Pos Cocci</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(156);">📖 p.156</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m35" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m36"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bacterial Meningitis</td><td>Haemophilus influenzae</td><td>Haemophilus influenzae (same video as row 16 above)</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m36" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m37"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Leprosy</td><td>Mycobacterium leprae</td><td>Mycobacterium leprae</td><td class="chapter">Bacteria — Mycobacteria</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(161);">📖 p.161</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m37" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 14: Bacterial Meningitis, Leprosy <span style="font-weight:normal;font-size:0.8em;">(Wk3 Wed Sep 23)</span></td></tr>
+<tr data-id="m34"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bacterial Meningitis</td><td>Neisseria meningitidis</td><td>Neisseria meningitidis</td><td class="chapter">Bacteria — Gram-Neg Cocci</td><td class="time" data-min="14">14m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m34" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Neisseria%20meningitidis" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m35"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bacterial Meningitis</td><td>Streptococcus pneumoniae</td><td>Streptococcus pneumoniae &amp; viridans (same video as row 24 above)</td><td class="chapter">Bacteria — Gram-Pos Cocci</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(156);">📖 p.156</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m35" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Streptococcus%20pneumoniae%20%26%20viridans%20%28same%20video%20as%20row%2024%20above%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m36"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Bacterial Meningitis</td><td>Haemophilus influenzae</td><td>Haemophilus influenzae (same video as row 16 above)</td><td class="chapter">Bacteria — Gram-Neg Bacilli, Respiratory</td><td class="time">already counted</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(162);">📖 p.162</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m36" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Haemophilus%20influenzae%20%28same%20video%20as%20row%2016%20above%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m37"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Leprosy</td><td>Mycobacterium leprae</td><td>Mycobacterium leprae</td><td class="chapter">Bacteria — Mycobacteria</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(161);">📖 p.161</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m37" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Mycobacterium%20leprae" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 15: Rabies, West Nile Virus, Encephalitis <span style="font-weight:normal;font-size:0.8em;">(Wk3 Tue Sep 22)</span></td></tr>
-<tr data-id="m38"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Rabies</td><td>Rabies virus</td><td>Rabies Virus (Rhabdoviridae)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time" data-min="11">11m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(191);">📖 p.191</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m38" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m39"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Encephalitis</td><td>Eq. Encephalitis / Chikungunya virus</td><td>Equine Encephalitis Viruses &amp; Chikungunya Virus (Togaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(190);">📖 p.190</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m39" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m40"><td><input type="checkbox" onchange="onCheck(this)"></td><td>West Nile Virus</td><td>West Nile virus</td><td>Flaviviridae Overview <em>(shared/general)</em></td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(190);">📖 p.190</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m40" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 15: Rabies, West Nile Virus, Encephalitis <span style="font-weight:normal;font-size:0.8em;">(Wk3 Tue Sep 22)</span></td></tr>
+<tr data-id="m38"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Rabies</td><td>Rabies virus</td><td>Rabies Virus (Rhabdoviridae)</td><td class="chapter">Viruses — RNA Negative Sense</td><td class="time" data-min="11">11m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(191);">📖 p.191</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m38" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Rabies%20Virus%20%28Rhabdoviridae%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m39"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Encephalitis</td><td>Eq. Encephalitis / Chikungunya virus</td><td>Equine Encephalitis Viruses &amp; Chikungunya Virus (Togaviridae)</td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(190);">📖 p.190</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m39" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Equine%20Encephalitis%20Viruses%20%26%20Chikungunya%20Virus%20%28Togaviridae%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m40"><td><input type="checkbox" onchange="onCheck(this)"></td><td>West Nile Virus</td><td>West Nile virus</td><td>Flaviviridae Overview <em>(shared/general)</em></td><td class="chapter">Viruses — RNA Positive Sense</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(190);">📖 p.190</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m40" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Flaviviridae%20Overview%20%28shared/general%29" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 16,17: Primary Amebic Meningoencephalitis, Toxoplasmosis, African Sleeping Sickness <span style="font-weight:normal;font-size:0.8em;">(Wk3 Wed Sep 23, SGD)</span></td></tr>
-<tr data-id="m41"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Primary Amebic Meningoencephalitis</td><td>Naegleria fowleri</td><td>Naegleria fowleri</td><td class="chapter">Parasites — Protozoa of the CNS</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(175);">📖 p.175</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m41" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m42"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Toxoplasmosis</td><td>Toxoplasma gondii</td><td>Toxoplasma gondii</td><td class="chapter">Parasites — Protozoa of the CNS</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(175);">📖 p.175</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m42" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m43"><td><input type="checkbox" onchange="onCheck(this)"></td><td>African Sleeping Sickness</td><td>Trypanosoma brucei</td><td>Trypanosoma brucei</td><td class="chapter">Parasites — Protozoa of the CNS</td><td class="time" data-min="10">10m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(177);">📖 p.177</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m43" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 16,17: Primary Amebic Meningoencephalitis, Toxoplasmosis, African Sleeping Sickness <span style="font-weight:normal;font-size:0.8em;">(Wk3 Wed Sep 23, SGD)</span></td></tr>
+<tr data-id="m41"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Primary Amebic Meningoencephalitis</td><td>Naegleria fowleri</td><td>Naegleria fowleri</td><td class="chapter">Parasites — Protozoa of the CNS</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(175);">📖 p.175</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m41" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Naegleria%20fowleri" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m42"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Toxoplasmosis</td><td>Toxoplasma gondii</td><td>Toxoplasma gondii</td><td class="chapter">Parasites — Protozoa of the CNS</td><td class="time" data-min="9">9m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(175);">📖 p.175</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m42" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Toxoplasma%20gondii" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m43"><td><input type="checkbox" onchange="onCheck(this)"></td><td>African Sleeping Sickness</td><td>Trypanosoma brucei</td><td>Trypanosoma brucei</td><td class="chapter">Parasites — Protozoa of the CNS</td><td class="time" data-min="10">10m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(177);">📖 p.177</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m43" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Trypanosoma%20brucei" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Lect 18: Tetanus, Botulism <span style="font-weight:normal;font-size:0.8em;">(Wk3 Fri Sep 25, SGD)</span></td></tr>
-<tr data-id="m44"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Tetanus</td><td>Clostridium tetani</td><td>Clostridium tetani</td><td class="chapter">Bacteria — Gram-Pos Bacilli</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(158);">📖 p.158</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m44" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="m45"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Botulism</td><td>Clostridium botulinum</td><td>Clostridium botulinum</td><td class="chapter">Bacteria — Gram-Pos Bacilli</td><td class="time" data-min="8">8m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(158);">📖 p.158</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m45" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Lect 18: Tetanus, Botulism <span style="font-weight:normal;font-size:0.8em;">(Wk3 Fri Sep 25, SGD)</span></td></tr>
+<tr data-id="m44"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Tetanus</td><td>Clostridium tetani</td><td>Clostridium tetani</td><td class="chapter">Bacteria — Gram-Pos Bacilli</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(158);">📖 p.158</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m44" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Clostridium%20tetani" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="m45"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Botulism</td><td>Clostridium botulinum</td><td>Clostridium botulinum</td><td class="chapter">Bacteria — Gram-Pos Bacilli</td><td class="time" data-min="8">8m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(158);">📖 p.158</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m45" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Clostridium%20botulinum" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">TBL: Meningitis (Differential Diagnosis) <span style="font-weight:normal;font-size:0.8em;">(Wk3 Thu Sep 24)</span></td></tr>
-<tr class="gap-row" data-id="m46" data-reviewonly="1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>TBL: Meningitis (Differential Diagnosis)</td><td>—</td><td class="missing">Review session — draws on rows 34, 24 &amp; 16 above, no new video</td><td class="chapter">—</td><td class="time">review only</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(198);">📖 p.198</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m46" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">TBL: Meningitis (Differential Diagnosis) <span style="font-weight:normal;font-size:0.8em;">(Wk3 Thu Sep 24)</span></td></tr>
+<tr class="gap-row" data-id="m46" data-reviewonly="1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>TBL: Meningitis (Differential Diagnosis)</td><td>—</td><td class="missing">Review session — draws on rows 34, 24 &amp; 16 above, no new video</td><td class="chapter">—</td><td class="time">review only</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(198);">📖 p.198</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="m46" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Review%20session%20%E2%80%94%20draws%20on%20rows%2034%2C%2024%20%26%2016%20above%2C%20no%20new%20video" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
 </tbody>
 <tfoot>
@@ -950,34 +1048,34 @@
 
 <table class="pharm-table" id="pharm-table">
 <thead>
-<tr><th>✓</th><th>Schedule Topic</th><th>Week / Day</th><th>Sketchy Video</th><th>Chapter</th><th>Length</th><th>First Aid</th><th>QBank Notes</th></tr>
+<tr><th>✓</th><th>Schedule Topic</th><th>Week / Day</th><th>Sketchy Video</th><th>Chapter</th><th>Length</th><th>First Aid</th><th>QBank Notes</th><th>Watch</th></tr>
 </thead>
 <tbody>
 
-<tr class="section-row"><td colspan="8">Pharmacotherapy of Obstructive Lung Disorders — Respiratory Drugs, Asthma</td></tr>
-<tr data-id="ph12"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Respiratory Drugs — Asthma</td><td>Wk1 Thu (Sep 10)</td><td>Asthma Therapy</td><td class="chapter">Smooth Muscle: Allergy &amp; Pulmonary</td><td class="time" data-min="22">22m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(726);">📖 p.726</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph12" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="ph13"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Respiratory Drugs — Asthma (allergy component)</td><td>"</td><td>Antihistamines</td><td class="chapter">Smooth Muscle: Allergy &amp; Pulmonary</td><td class="time" data-min="16">16m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(726);">📖 p.726</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph13" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Pharmacotherapy of Obstructive Lung Disorders — Respiratory Drugs, Asthma</td></tr>
+<tr data-id="ph12"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Respiratory Drugs — Asthma</td><td>Wk1 Thu (Sep 10)</td><td>Asthma Therapy</td><td class="chapter">Smooth Muscle: Allergy &amp; Pulmonary</td><td class="time" data-min="22">22m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(726);">📖 p.726</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph12" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Asthma%20Therapy" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="ph13"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Respiratory Drugs — Asthma (allergy component)</td><td>"</td><td>Antihistamines</td><td class="chapter">Smooth Muscle: Allergy &amp; Pulmonary</td><td class="time" data-min="16">16m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(726);">📖 p.726</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph13" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Antihistamines" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Opioid Analgesics</td></tr>
-<tr data-id="ph1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Opioid Analgesics</td><td>Wk2 Tue (Sep 15)</td><td>Opioids, Naloxone, Naltrexone</td><td class="chapter">Neuro &amp; Psych: Anesthetics &amp; Analgesics</td><td class="time" data-min="20">20m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(589);">📖 p.589</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph1" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Opioid Analgesics</td></tr>
+<tr data-id="ph1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Opioid Analgesics</td><td>Wk2 Tue (Sep 15)</td><td>Opioids, Naloxone, Naltrexone</td><td class="chapter">Neuro &amp; Psych: Anesthetics &amp; Analgesics</td><td class="time" data-min="20">20m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(589);">📖 p.589</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph1" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Opioids%2C%20Naloxone%2C%20Naltrexone" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Anti-Seizure Drugs (Antiepileptics)</td></tr>
-<tr data-id="ph2"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Anti-seizure Drugs</td><td>Wk2 Wed–Thu (Sep 16–17)</td><td>Broad-Spectrum Antiepileptics</td><td class="chapter">Neuro &amp; Psych: Mood Stabilizers &amp; AEDs</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph2" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="ph3"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Anti-seizure Drugs</td><td>"</td><td>Carbamazepine, Oxcarbazepine, Phenytoin, Tiagabine, Vigabatrin</td><td class="chapter">Neuro &amp; Psych: Mood Stabilizers &amp; AEDs</td><td class="time" data-min="20">20m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph3" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="ph4"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Anti-seizure Drugs</td><td>"</td><td>Ethosuximide</td><td class="chapter">Neuro &amp; Psych: Mood Stabilizers &amp; AEDs</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph4" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="ph5"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Anti-seizure Drugs</td><td>"</td><td>Gabapentin &amp; Pregabalin</td><td class="chapter">Neuro &amp; Psych: Mood Stabilizers &amp; AEDs</td><td class="time" data-min="3">3m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph5" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr class="gap-row" data-id="ph6" data-reviewonly="1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>TBL: Anti-epileptics</td><td>Wk2 Thu (Sep 17)</td><td class="missing">Review session — draws on rows above, no new video</td><td class="chapter">—</td><td class="time">review only</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph6" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Anti-Seizure Drugs (Antiepileptics)</td></tr>
+<tr data-id="ph2"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Anti-seizure Drugs</td><td>Wk2 Wed–Thu (Sep 16–17)</td><td>Broad-Spectrum Antiepileptics</td><td class="chapter">Neuro &amp; Psych: Mood Stabilizers &amp; AEDs</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph2" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Broad-Spectrum%20Antiepileptics" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="ph3"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Anti-seizure Drugs</td><td>"</td><td>Carbamazepine, Oxcarbazepine, Phenytoin, Tiagabine, Vigabatrin</td><td class="chapter">Neuro &amp; Psych: Mood Stabilizers &amp; AEDs</td><td class="time" data-min="20">20m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph3" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Carbamazepine%2C%20Oxcarbazepine%2C%20Phenytoin%2C%20Tiagabine%2C%20Vigabatrin" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="ph4"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Anti-seizure Drugs</td><td>"</td><td>Ethosuximide</td><td class="chapter">Neuro &amp; Psych: Mood Stabilizers &amp; AEDs</td><td class="time" data-min="6">6m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph4" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Ethosuximide" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="ph5"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Anti-seizure Drugs</td><td>"</td><td>Gabapentin &amp; Pregabalin</td><td class="chapter">Neuro &amp; Psych: Mood Stabilizers &amp; AEDs</td><td class="time" data-min="3">3m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph5" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Gabapentin%20%26%20Pregabalin" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr class="gap-row" data-id="ph6" data-reviewonly="1"><td><input type="checkbox" onchange="onCheck(this)"></td><td>TBL: Anti-epileptics</td><td>Wk2 Thu (Sep 17)</td><td class="missing">Review session — draws on rows above, no new video</td><td class="chapter">—</td><td class="time">review only</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(582);">📖 p.582</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph6" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Review%20session%20%E2%80%94%20draws%20on%20rows%20above%2C%20no%20new%20video" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Local Anesthetics</td></tr>
-<tr class="gap-row" data-id="ph7" data-suppmin="10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Local Anesthetics</td><td>Wk3 Mon (Sep 21)</td><td class="missing">No dedicated video — Sketchy's Anesthetics &amp; Analgesics chapter only covers IV Anesthetics, Inhaled Anesthetics, and Opioids in this course</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(587);">📖 p.587</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph7" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Local Anesthetics</td></tr>
+<tr class="gap-row" data-id="ph7" data-suppmin="10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. Local Anesthetics</td><td>Wk3 Mon (Sep 21)</td><td class="missing">No dedicated video — Sketchy's Anesthetics &amp; Analgesics chapter only covers IV Anesthetics, Inhaled Anesthetics, and Opioids in this course</td><td class="chapter">—</td><td class="time">—</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(587);">📖 p.587</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph7" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=No%20dedicated%20video%20%E2%80%94%20Sketchy%27s%20Anesthetics%20%26%20Analgesics%20chapter%20only%20covers%20IV%20Anesthetics%2C%20Inhaled%20Anesthetics%2C%20and%20Opioids%20in%20this%20course" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">General Anesthesia</td></tr>
-<tr data-id="ph8"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. General Anesthetics</td><td>Wk3 Tue (Sep 22)</td><td>IV Anesthetics</td><td class="chapter">Neuro &amp; Psych: Anesthetics &amp; Analgesics</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(587);">📖 p.587</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph8" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="ph9"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. General Anesthetics</td><td>"</td><td>Inhaled Anesthetics &amp; Dantrolene</td><td class="chapter">Neuro &amp; Psych: Anesthetics &amp; Analgesics</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(587);">📖 p.587</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph9" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">General Anesthesia</td></tr>
+<tr data-id="ph8"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. General Anesthetics</td><td>Wk3 Tue (Sep 22)</td><td>IV Anesthetics</td><td class="chapter">Neuro &amp; Psych: Anesthetics &amp; Analgesics</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(587);">📖 p.587</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph8" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=IV%20Anesthetics" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="ph9"><td><input type="checkbox" onchange="onCheck(this)"></td><td>SGD. General Anesthetics</td><td>"</td><td>Inhaled Anesthetics &amp; Dantrolene</td><td class="chapter">Neuro &amp; Psych: Anesthetics &amp; Analgesics</td><td class="time" data-min="15">15m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(587);">📖 p.587</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph9" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Inhaled%20Anesthetics%20%26%20Dantrolene" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
-<tr class="section-row"><td colspan="8">Parkinson's / Alzheimer's Pharmacology</td></tr>
-<tr data-id="ph10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Parkinson's / Alzheimer's Pharmacology</td><td>Wk3 Wed (Sep 23)</td><td>Parkinsonism Drugs</td><td class="chapter">Neuro &amp; Psych: Antipsychotics &amp; Parkinson's</td><td class="time" data-min="20">20m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(585);">📖 p.585</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph10" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
-<tr data-id="ph11"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Parkinson's / Alzheimer's Pharmacology</td><td>"</td><td>Alzheimer's Disease Medications</td><td class="chapter">Neuro &amp; Psych: Alzheimer's Medications</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(586);">📖 p.586</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph11" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td></tr>
+<tr class="section-row"><td colspan="9">Parkinson's / Alzheimer's Pharmacology</td></tr>
+<tr data-id="ph10"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Parkinson's / Alzheimer's Pharmacology</td><td>Wk3 Wed (Sep 23)</td><td>Parkinsonism Drugs</td><td class="chapter">Neuro &amp; Psych: Antipsychotics &amp; Parkinson's</td><td class="time" data-min="20">20m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(585);">📖 p.585</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph10" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Parkinsonism%20Drugs" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
+<tr data-id="ph11"><td><input type="checkbox" onchange="onCheck(this)"></td><td>Parkinson's / Alzheimer's Pharmacology</td><td>"</td><td>Alzheimer's Disease Medications</td><td class="chapter">Neuro &amp; Psych: Alzheimer's Medications</td><td class="time" data-min="7">7m</td><td class="fa-cell"><a href="#" class="fa-link" onclick="event.preventDefault(); openFirstAid(586);">📖 p.586</a></td><td class="qbank-cell"><input type="text" class="qbank-input" data-id="ph11" placeholder="UWorld/Amboss tags…" onchange="saveQbankNote(this)"></td><td class="video-cell"><a href="https://drive.google.com/drive/search?q=Alzheimer%27s%20Disease%20Medications" target="_blank" rel="noopener" class="video-link">🎬 Watch</a></td></tr>
 
 </tbody>
 <tfoot>
