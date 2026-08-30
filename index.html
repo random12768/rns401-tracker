@@ -918,13 +918,14 @@
 #qbank-root *{box-sizing:border-box;margin:0;padding:0}
 #qbank-root{color:var(--text);font-family:var(--sans);display:flex;flex-direction:column;gap:14px}
 #qbank-root .nav-note{font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--dim);max-width:900px}
+#qbank-root #qbank-topbar{position:sticky;top:14px;z-index:20;display:flex;flex-direction:column;gap:8px}
 #qbank-root #nav{display:flex;flex-wrap:wrap;gap:6px;background:var(--surface);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:14px;padding:8px;}
 #qbank-root .ch-btn{display:flex;align-items:center;gap:8px;padding:8px 16px;border:1.5px solid var(--border);border-radius:999px;background:transparent;color:var(--muted);font-family:var(--sans);font-size:12.5px;font-weight:500;text-align:left;cursor:pointer;transition:.15s}
 #qbank-root .ch-btn:hover{border-color:var(--accent);color:var(--text)}
 #qbank-root .ch-btn.on{background:var(--accent-dim);color:var(--accent);border-color:var(--accent);font-weight:600}
 #qbank-root .ch-num{font-family:var(--mono);font-size:10px;background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:3px;min-width:22px;text-align:center;flex-shrink:0}
 #qbank-root .ch-btn.on .ch-num{background:rgba(0,0,0,0.18);color:var(--accent)}
-#qbank-root #track{background:var(--surface);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:14px;padding:10px}
+#qbank-root #track{background:var(--surface);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:14px;padding:10px;max-height:112px;overflow-y:auto}
 #qbank-root #dots{display:flex;flex-wrap:wrap;gap:5px}
 #qbank-root .dot{position:relative;width:38px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
 #qbank-root .dot:hover{border-color:var(--accent);color:var(--accent)}
@@ -1440,10 +1441,12 @@
 <div id="qbank-root">
 
 <div class="nav-note">Robbins &amp; Cotran Review of Pathology &mdash; Chapter 15 (The Lung) and Chapter 28 (CNS), 156 questions. Answers, highlights, flags &amp; notes save automatically. Reset Chapter never erases highlights, flags or notes. Explanations end with a First Aid 2026 page link (attach it up top &uarr; and it works here automatically).</div>
+<div id="qbank-topbar">
 <nav id="nav">
   <div id="chList"></div>
 </nav>
 <div id="track"><div id="dots"></div></div>
+</div>
 <div id="main"><div id="ch-hdr" class="ch-header"></div><div id="qarea"></div></div>
 <div id="lb" onclick="this.classList.remove('open')"><img id="lb-img" src="" alt=""></div>
 
@@ -2952,6 +2955,8 @@ function renderDots(){
 function goQ(i){
   QI=i;hlMode=null;
   renderDots();
+  var activeDot=document.getElementById('d'+i);
+  if(activeDot&&activeDot.scrollIntoView)activeDot.scrollIntoView({block:'nearest',inline:'nearest'});
   var ch=CHAPTERS[CUR],q=ch.questions[i],n=ch.questions.length;
   var k=CUR+'_'+i;
   var isAnswered=ANS[k]&&ANS[k].done;
