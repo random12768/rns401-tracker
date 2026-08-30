@@ -97,6 +97,9 @@
   .tab-btn.active[data-tab="micro"] { background: var(--micro); color: #2b1405; box-shadow: 0 0 22px -4px rgba(251,146,60,0.65); }
   .tab-btn.active[data-tab="pharm"] { background: var(--pharm); color: #23093a; box-shadow: 0 0 22px -4px rgba(192,132,252,0.65); }
   .tab-btn.active[data-tab="planner"] { background: var(--planner); color: #062133; box-shadow: 0 0 22px -4px rgba(56,189,248,0.65); }
+  .tab-btn.active[data-tab="qbank"] { background: #38bdf8; color: #04212f; box-shadow: 0 0 22px -4px rgba(56,189,248,0.65); }
+  .qbank-frame-wrap { width: 100%; height: calc(100vh - 160px); min-height: 520px; border-radius: var(--radius, 14px); overflow: hidden; border: 1px solid rgba(255,255,255,0.10); background: #0b0f19; }
+  .qbank-frame-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
 
   .tab-panel { display: none; animation: fadeIn 0.25s ease; }
   .tab-panel.active { display: block; }
@@ -904,6 +907,7 @@
   <button class="tab-btn" data-tab="path" onclick="switchTab('path')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Pathology</button>
   <button class="tab-btn" data-tab="micro" onclick="switchTab('micro')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v5.5L4.5 18a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 8.5V3"/></svg> Microbiology</button>
   <button class="tab-btn" data-tab="pharm" onclick="switchTab('pharm')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 20.5 20.5 10.5a5 5 0 1 0-7-7L3.5 13.5a5 5 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg> Pharmacology</button>
+  <button class="tab-btn" data-tab="qbank" onclick="switchTab('qbank')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.5.5.75 1 .75 1.75V16h6.5v-.75c0-.75.25-1.25.75-1.75A6 6 0 0 0 12 3Z"/></svg> Alan's Q Bank</button>
 </div>
 
 <!-- ============================================ OVERVIEW ============================================ -->
@@ -1249,6 +1253,12 @@
 <p class="note">⚠️ Pharm gap: Local Anesthetics — no dedicated Sketchy video in this course; check lecture slides / First Aid.</p>
 <p class="note">Durations were read directly (via ffprobe) from your Sketchy Pharmacology video files.</p>
 
+</div>
+
+<div class="tab-panel" id="panel-qbank">
+<div class="qbank-frame-wrap">
+<iframe src="qbank.html" title="Alan's Q Bank" loading="lazy"></iframe>
+</div>
 </div>
 
 </div>
