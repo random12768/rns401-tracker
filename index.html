@@ -945,6 +945,7 @@
 #qbank-root .qf-btn:hover{border-color:var(--muted);color:var(--text)}
 #qbank-root .qf-btn.qf-wrong.on{border-color:var(--err);background:var(--err-bg);color:var(--err)}
 #qbank-root .qf-btn.qf-flag.on{border-color:var(--flag);background:var(--flag-bg);color:var(--flag)}
+#qbank-root .qf-count{font-family:var(--mono);font-size:8.5px;color:var(--dim);margin-bottom:6px;min-height:10px;text-align:center}
 #qbank-root .dot.filtered-out{display:none}
 #qbank-root .dot{position:relative;width:44px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
 #qbank-root .dot:hover{border-color:var(--accent);color:var(--accent)}
@@ -1471,7 +1472,7 @@
   <div id="chList"></div>
   <div class="nav-note">Robbins &amp; Cotran Review of Pathology &mdash; Chapter 15 (The Lung) and Chapter 28 (CNS), 156 questions. Answers, highlights, flags &amp; notes save automatically. Reset Chapter never erases highlights, flags or notes. Explanations end with a First Aid 2026 page link (attach it up top &uarr; and it works here automatically).</div>
 </nav>
-<div id="track"><div class="qf-toggles"><button id="qf-wrong" class="qf-btn qf-wrong" onclick="qbSetFilter('wrong')" title="Show only wrong questions">✗</button><button id="qf-flag" class="qf-btn qf-flag" onclick="qbSetFilter('flagged')" title="Show only flagged questions">⚑</button></div><div class="tk-lbl">Qs</div><div id="dots"></div></div>
+<div id="track"><div class="qf-toggles"><button id="qf-wrong" class="qf-btn qf-wrong" onclick="qbSetFilter('wrong')" title="Show only wrong questions">✗</button><button id="qf-flag" class="qf-btn qf-flag" onclick="qbSetFilter('flagged')" title="Show only flagged questions">⚑</button></div><div class="qf-count" id="qf-count" title="Use ← / → to move between questions"></div><div class="tk-lbl">Qs</div><div id="dots"></div></div>
 <div id="main"><div id="ch-hdr" class="ch-header"></div><div id="qarea"></div></div>
 <div id="lb" onclick="this.classList.remove('open')"><img id="lb-img" src="" alt=""></div>
 
@@ -1531,7 +1532,10 @@ function setSyncStatus(msg, ok) {
   const el = document.getElementById('sync-status');
   if (el) el.textContent = msg;
   const dot = document.getElementById('sync-dot');
-  if (dot) dot.dataset.state = ok ? 'on' : 'off';
+  if (dot) {
+    dot.dataset.state = ok ? 'on' : 'off';
+    dot.title = ok ? 'Backed up to your Google account' : 'Not backed up — saving to this browser only';
+  }
 }
 
 // ---- Sign-in gate: the tracker stays hidden behind a full-screen sign-in
@@ -2973,6 +2977,23 @@ document.addEventListener('fullscreenchange',syncFsBtn);
 document.addEventListener('webkitfullscreenchange',syncFsBtn);
 document.addEventListener('keydown',function(e){
   if(e.key==='F11'){e.preventDefault();toggleFullscreen();}
+  if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
+    var panel=document.getElementById('panel-qbank');
+    if(!panel||!panel.classList.contains('active'))return;
+    var tag=(document.activeElement&&document.activeElement.tagName||'').toLowerCase();
+    if(tag==='input'||tag==='textarea'||(document.activeElement&&document.activeElement.isContentEditable))return;
+    var n=CHAPTERS[CUR].questions.length;
+    var dir=e.key==='ArrowRight'?1:-1;
+    var next=QI;
+    for(var step=0;step<n;step++){
+      next=(next+dir+n)%n;
+      var k=CUR+'_'+next,a=ANS[k],isW=a&&a.done&&!a.ok,isF=!!FLAGS[k];
+      if(QFILTER==='wrong'&&!isW)continue;
+      if(QFILTER==='flagged'&&!isF)continue;
+      break;
+    }
+    if(next!==QI){e.preventDefault();goQ(next);}
+  }
 });
 
 /* -- Scramble answer choices -- */
@@ -3028,6 +3049,7 @@ function qbSetFilter(mode){
 function renderDots(){
   var ch=CHAPTERS[CUR],n=ch.questions.length;
   var h='<div class="tk-lbl">Qs</div>';
+  var shown=0;
   for(var i=0;i<n;i++){
     var k=CUR+'_'+i,a=ANS[k],cls='dot';
     if(i===QI)cls+=' active';
@@ -3037,9 +3059,12 @@ function renderDots(){
     if(FLAGS[k])cls+=' flagged';
     if(NOTES[k])cls+=' hasnote';
     if((QFILTER==='wrong'&&!isWrong)||(QFILTER==='flagged'&&!isFlagged))cls+=' filtered-out';
+    else shown++;
     h+='<div class="'+cls+'" id="d'+i+'" onclick="goQ('+i+')">'+esc(ch.questions[i].id)+'</div>';
   }
   document.getElementById('dots').innerHTML=h;
+  var cntEl=document.getElementById('qf-count');
+  if(cntEl)cntEl.textContent=(QFILTER==='all')?'':(shown+' of '+n);
 }
 
 /* -- Render a question -- */
