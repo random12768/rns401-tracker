@@ -13,6 +13,7 @@
     --micro: #fb923c;
     --pharm: #c084fc;
     --planner: #38bdf8;
+    --qbank: #f472b6;
     --bg: #0b0f19;
     --bg-2: #0d1220;
     --surface: rgba(255,255,255,0.03);
@@ -98,7 +99,7 @@
   .tab-btn.active[data-tab="micro"] { background: var(--micro); color: #2b1405; box-shadow: 0 0 22px -4px rgba(251,146,60,0.65); }
   .tab-btn.active[data-tab="pharm"] { background: var(--pharm); color: #23093a; box-shadow: 0 0 22px -4px rgba(192,132,252,0.65); }
   .tab-btn.active[data-tab="planner"] { background: var(--planner); color: #062133; box-shadow: 0 0 22px -4px rgba(56,189,248,0.65); }
-  .tab-btn.active[data-tab="qbank"] { background: #38bdf8; color: #04212f; box-shadow: 0 0 22px -4px rgba(56,189,248,0.65); }
+  .tab-btn.active[data-tab="qbank"] { background: var(--qbank); color: #3a0621; box-shadow: 0 0 22px -4px rgba(244,114,182,0.65); }
 
   .tab-panel { display: none; animation: fadeIn 0.25s ease; }
   .tab-panel.active { display: block; }
@@ -447,6 +448,7 @@
   .subject-card.path { border-top-color: var(--path); }
   .subject-card.micro { border-top-color: var(--micro); }
   .subject-card.pharm { border-top-color: var(--pharm); }
+  .subject-card.qbank { border-top-color: var(--qbank); }
   .subject-card h3 { margin: 0 0 8px 0; font-size: 1.1em; font-weight: 700; letter-spacing: -0.01em; }
   .subject-card .stat { font-size: 0.85em; color: var(--text-dim); }
   .subject-card .big { font-size: 1.7em; font-weight: 800; color: #fff; letter-spacing: -0.03em; }
@@ -1207,8 +1209,8 @@
       <div class="big" id="card-pharm-pct">0%</div>
       <div class="stat" id="card-pharm-count">0 / 0 done</div>
     </div>
-    <div class="subject-card qbank" style="border-top-color:#a78bfa">
-      <h3 style="color:#a78bfa">Alan's Q Bank (Robbins)</h3>
+    <div class="subject-card qbank">
+      <h3 style="color:var(--qbank)">Alan's Q Bank (Robbins &amp; Rubins)</h3>
       <div class="big" id="card-qbank-pct">—</div>
       <div class="stat" id="card-qbank-count">0 / 0 answered</div>
     </div>
@@ -1882,10 +1884,13 @@ function saveState(state) {
 }
 
 function switchTab(tab) {
+  const panel = document.getElementById('panel-' + tab);
+  const btn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
+  if (!panel || !btn) { console.warn('switchTab: unknown tab id "' + tab + '"'); return; }
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-' + tab).classList.add('active');
-  document.querySelector('.tab-btn[data-tab="' + tab + '"]').classList.add('active');
+  panel.classList.add('active');
+  btn.classList.add('active');
   if (tab === 'planner') renderPlanner();
 }
 
@@ -3204,7 +3209,7 @@ function qbSetFilter(mode){
 }
 function renderDots(){
   var ch=CHAPTERS[CUR],n=ch.questions.length;
-  var h='<div class="tk-lbl">Qs</div>';
+  var h='';
   var shown=0;
   for(var i=0;i<n;i++){
     var k=CUR+'_'+i,a=ANS[k],cls='dot';
