@@ -453,6 +453,38 @@
   .subject-card .stat { font-size: 0.85em; color: var(--text-dim); }
   .subject-card .big { font-size: 1.7em; font-weight: 800; color: #fff; letter-spacing: -0.03em; }
 
+  /* ===================== How-to-use guide (Overview tab) ===================== */
+  .guide-heading { margin: 28px 0 4px; font-size: 1.15em; font-weight: 800; letter-spacing: -0.01em; color: #fff; }
+  .guide-sub { margin: 0 0 16px; font-size: 0.88em; color: var(--text-dim); }
+  .guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .guide-card {
+    background: var(--surface);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1px solid var(--border-soft);
+    border-top: 2px solid #555;
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+    transition: all 0.2s ease;
+  }
+  .guide-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.16); }
+  .guide-card.path { border-top-color: var(--path); }
+  .guide-card.planner { border-top-color: var(--planner); }
+  .guide-card.qbank { border-top-color: var(--qbank); }
+  .guide-card.sync { border-top-color: var(--green); }
+  .guide-card h3 { margin: 0 0 9px; font-size: 1.02em; font-weight: 700; letter-spacing: -0.01em; display: flex; align-items: center; gap: 7px; }
+  .guide-card p { margin: 0 0 8px; font-size: 0.88em; line-height: 1.6; color: var(--text-dim); }
+  .guide-card p:last-child { margin-bottom: 0; }
+  .guide-card ul { margin: 6px 0 8px 18px; padding: 0; font-size: 0.88em; line-height: 1.6; color: var(--text-dim); }
+  .guide-card ul:last-child { margin-bottom: 0; }
+  .guide-card code, .guide-card strong { color: var(--text); }
+
   /* ===================== Calendar ===================== */
   .cal-legend {
     display: flex;
@@ -1221,6 +1253,52 @@
     <br><span style="font-size:0.7em; color:#9fbfd8;">Grand total: ~12h 41m (761 min) of unique required video across all three subjects, built from your RNS401 lecture list (path/pharm/micro folders) and real durations read off the Pathoma &amp; Sketchy files themselves.</span>
   </div>
 
+  <h2 class="guide-heading">How to use this tracker</h2>
+  <p class="guide-sub">Everything below saves automatically as you go — checkboxes, Q Bank answers, notes, and planner changes all persist in this browser (and across devices once you sign in — see "Cloud save" below). Here's what each tab does.</p>
+
+  <div class="guide-grid">
+
+    <div class="guide-card path">
+      <h3>📚 Pathology / Microbiology / Pharmacology</h3>
+      <p>Each tab is a full table of lectures for that subject. Check a box when you've watched something — the Overview cards and progress bar above update instantly, weighted by each video's actual length in minutes (not just how many rows you've checked).</p>
+      <ul>
+        <li>Search box at the top jumps to a topic fast.</li>
+        <li><strong>Show gaps only</strong> filters to topics with no dedicated video — these need slides/First Aid instead (see the list below).</li>
+        <li><strong>Mark all done</strong> / <strong>Clear all</strong> for bulk changes.</li>
+        <li>Every row links out: 🎬 <strong>Watch</strong> opens the actual video, 📖 jumps to that topic's page in <em>your</em> First Aid PDF, and (Pathology only) 📓 jumps to the matching page in <em>your</em> Pathoma textbook. Click the <strong>First Aid</strong> / <strong>Pathoma</strong> pills at the very top of the page once to attach your own PDF files — after that, every page link across the whole site works automatically.</li>
+        <li>The small text box on the right of each row ("QBank Notes") is a free spot to jot UWorld/Amboss tags you want to revisit later.</li>
+      </ul>
+    </div>
+
+    <div class="guide-card planner">
+      <h3>📅 Planner</h3>
+      <p>A pre-built calendar assuming your semester starts <strong>Monday, September 7, 2026</strong>, spacing lectures out so you stay ahead of what's taught in class by your buffer setting. A "this week" digest and a per-subject countdown (time remaining, required pace, % watched) sit above the calendar.</p>
+      <ul>
+        <li>Adjust exam date, review days, daily study minutes, and get-ahead buffer at the top — <strong>Use suggested pace</strong> auto-fills a sane default.</li>
+        <li>Drag any lecture to a different day to lock it there, or use <strong>Plan your own study time</strong> below the calendar to schedule a custom session.</li>
+        <li>Colored dots = subject, 🏫 = taught in class that day, red outline = behind your buffer, blue outline = manually scheduled.</li>
+      </ul>
+    </div>
+
+    <div class="guide-card qbank">
+      <h3>🧠 Alan's Q Bank</h3>
+      <p>290 practice questions across Robbins (Ch. 15 Lung, Ch. 28 CNS) and Rubins (Respiratory, Nervous System) — expand <strong>Robbins</strong> / <strong>Rubins</strong> in the left nav to pick a chapter.</p>
+      <ul>
+        <li>Answer a question to see the explanation, bottom line, and why each wrong choice is wrong.</li>
+        <li>✗ / ⚑ buttons above the question grid filter to only wrong or only flagged questions; <strong>← / →</strong> arrow keys move between questions, respecting whichever filter is on.</li>
+        <li>Highlight text, flag a question, or leave a note (📝) — notes and flags survive <strong>Reset Chapter</strong>, which only clears your answers.</li>
+        <li><strong>↓ Export to Anki</strong> pulls every wrong, flagged, or noted question from every chapter into one downloadable text file, ready to import straight into Anki.</li>
+      </ul>
+    </div>
+
+    <div class="guide-card sync">
+      <h3>☁️ Cloud save</h3>
+      <p>Look for the dot next to "Cloud save:" near the top of the page. <span style="color:var(--red)">Red</span> means you're signed out and progress is only saved to this one browser — clearing browser data or switching devices loses it. <span style="color:var(--green)">Green</span> means it's syncing to your Google account.</p>
+      <p>Click <strong>Sign in with Google</strong> once to turn it green — after that, your checkboxes, Q Bank progress, notes, and planner all follow you to any device where you sign in and open this link.</p>
+    </div>
+
+  </div>
+
   <div class="note">
     ⚠️ <strong>Known content gaps</strong> (no dedicated video in your libraries — supplement with slides/First Aid):
     <ul>
@@ -1229,15 +1307,6 @@
       <li><strong>Bonus (not tied to a specific lecture title but round out the Pathoma chapter):</strong> Nasopharynx &amp; Larynx (Ch. 9.1–9.2), Spinal Cord Lesions (Ch. 17.2), and Meningitis (Ch. 17.3, pairs well with your MB2 Bacterial Meningitis lecture).</li>
     </ul>
   </div>
-
-  <p class="note">💡 Your checkboxes save automatically in this file (per-browser, per-file — this is a separate save slot from your CHS303 tracker). Use the search box on each tab to jump to a topic fast, and "Expand gaps only" to see everything you still need to cover with slides/First Aid.</p>
-  <p class="note">📅 Head to the <strong>Planner</strong> tab — it's pre-loaded assuming your semester starts <strong>Monday, September 7, 2026</strong> (Windsor runs the exact same week-by-week schedule every semester, just shifted, so I moved last semester's RNS401 schedule up to that start date). It tries to keep you ahead of each lecture and lets you drag lectures to any day or schedule your own study sessions — you can get started right now, well ahead of the module.</p>
-  <p class="note">📝 <strong>No Anki card counts this time</strong> — the CHS303 tracker had a "High Yield | Temp High Yield" column pulled from a specific deck; I don't have that deck's per-video card counts for this content, so I left it off rather than guess. Send me the numbers for these Pathoma/Sketchy videos if you want that column added back in.</p>
-  <p class="note">📖 <strong>New: First Aid page links.</strong> Every row now has a "📖 p.NNN" link that jumps straight to the matching page in <em>your own</em> First Aid 2026 PDF — click "Choose your First Aid PDF…" at the top once (Chrome/Edge remember your choice after that; other browsers will ask again each time you reopen this file). Because it reads the PDF from wherever <em>you</em> point it, this file works the same way for a friend who saves First Aid in a totally different folder — nothing is hardcoded to my copy of your files. Pages come from First Aid 2026's own bookmarks, matched topic-by-topic against your Pathology/Micro/Pharm lectures — a handful of rows (mostly gap rows with no video) don't have a clean First Aid match and just show "—".</p>
-  <p class="note">📓 <strong>New: Pathoma textbook page links (Pathology tab only).</strong> Same idea, same "choose your own PDF" mechanism — click "Choose your Pathoma PDF…" once and every Pathology row gets a "📓 p.NNN" link straight to that topic in Pathoma's <em>Fundamentals of Pathology</em> book. I read the actual chapter headings out of your Pathoma PDF (not a guess) to line up pages for Ch. 9 Respiratory and Ch. 17 CNS with each row. Micro and Pharm tabs don't get this link since Pathoma doesn't cover those subjects — First Aid is still the one for those. The three gap rows with no Pathoma video (Neurocutaneous Disorders, Metabolic Disorders of Brain, Extra Assigned Topics) also have no Pathoma textbook section, so those show "—" too.</p>
-  <p class="note">📝 <strong>New: QBank notes column.</strong> Every row on all three tabs now has a small text box — jot the UWorld/Amboss tags you want to revisit after a question block, and it saves automatically the same way your checkboxes do.</p>
-  <p class="note">⏱️ <strong>Changed: % complete is now by minutes of video, not by row count.</strong> A 3-minute Pleura clip and a 50-minute COPD chapter used to count the same toward your percentage — now the Overview cards and progress bar reflect actual minutes watched, so heavier topics carry the weight they should. The count "X / Y rows" is still shown next to it for reference.</p>
-  <p class="note">📅 <strong>New in the Planner:</strong> a "this week" digest at the top (what's scheduled in the next 7 days, by subject and minutes) and a per-subject countdown row — since Micro is a much heavier load this module than Pharm, each subject now gets its own remaining-time, required-pace, and % watched, instead of only one combined number.</p>
 
 </div>
 
