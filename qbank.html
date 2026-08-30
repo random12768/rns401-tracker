@@ -139,10 +139,8 @@ mark.hl:hover{background:#ffd700}
 .fa-link:hover{background:var(--accent);color:#fff}
 .fa-attach{margin-top:auto;padding:12px 14px;border-top:1px solid var(--border)}
 .fa-attach-hdr{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-.fa-attach-status{font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:8px;word-break:break-all}
+.fa-attach-status{font-family:var(--mono);font-size:10px;color:var(--dim);word-break:break-all}
 .fa-attach-status.on{color:var(--ok)}
-.fa-attach-btn{width:100%;padding:7px 8px;border:1px solid var(--accent-dim);background:var(--accent-dim);color:var(--accent);font-family:var(--sans);font-size:11.5px;border-radius:999px;cursor:pointer;transition:.15s}
-.fa-attach-btn:hover{background:var(--accent);color:#fff}
 .nav-note{margin-top:0}
 </style>
 </head>
@@ -153,11 +151,9 @@ mark.hl:hover{background:#ffd700}
   <div id="chList"></div>
   <div class="fa-attach" id="faAttach">
     <div class="fa-attach-hdr">First Aid PDF</div>
-    <div class="fa-attach-status" id="faStatus">Not attached</div>
-    <button class="fa-attach-btn" onclick="document.getElementById('faFile').click()" id="faBtn">&#128206; Attach First Aid PDF</button>
-    <input type="file" id="faFile" accept="application/pdf,.pdf" style="display:none" onchange="faAttach(this.files[0])">
+    <div class="fa-attach-status" id="faStatus">&#9679; Not attached</div>
   </div>
-  <div class="nav-note">Robbins &amp; Cotran Review of Pathology &mdash; Chapter 15 (The Lung) and Chapter 28 (CNS), 156 questions. Your answers, highlights, flags &amp; notes are saved automatically in this browser. Reset Chapter never erases highlights, flags or notes. Each explanation ends with a First Aid 2026 page link. Attach your copy of the First Aid PDF above (once) and the links open straight to the page; the PDF stays on your own computer and is never uploaded anywhere.</div>
+  <div class="nav-note">Robbins &amp; Cotran Review of Pathology &mdash; Chapter 15 (The Lung) and Chapter 28 (CNS), 156 questions. Your answers, highlights, flags &amp; notes are saved automatically in this browser. Reset Chapter never erases highlights, flags or notes. Each explanation ends with a First Aid 2026 page link. Attach your First Aid PDF once from the "Reference PDFs" bar at the top of the tracker &mdash; it's shared here automatically; the file stays on your own computer and is never uploaded anywhere.</div>
 </nav>
 <div id="track"><div class="tk-lbl">Qs</div><div id="dots"></div></div>
 <div id="main"><div id="ch-hdr" class="ch-header"></div><div id="qarea"></div></div>
@@ -182,23 +178,21 @@ var FA_FILE=null, FA_URL=null;
 /* -- First Aid PDF attachment (kept in this browser via IndexedDB; never uploaded) -- */
 function faDb(cb){
   try{
-    var r=indexedDB.open('rnsii_fa',1);
+    var r=indexedDB.open('rns401_pdfs',1);
     r.onupgradeneeded=function(){r.result.createObjectStore('files');};
     r.onsuccess=function(){cb(r.result);};
     r.onerror=function(){cb(null);};
   }catch(e){cb(null);}
 }
 function faSetStatus(){
-  var st=document.getElementById('faStatus'),b=document.getElementById('faBtn');
+  var st=document.getElementById('faStatus');
   if(!st) return;
   if(FA_FILE){
-    st.innerHTML='&#10003; '+esc(FA_FILE.name.length>34?FA_FILE.name.slice(0,31)+'\u2026':FA_FILE.name);
+    st.innerHTML='&#9679; '+esc(FA_FILE.name.length>34?FA_FILE.name.slice(0,31)+'\u2026':FA_FILE.name);
     st.className='fa-attach-status on';
-    if(b) b.innerHTML='&#128206; Change PDF';
   }else{
-    st.textContent='Not attached';
+    st.innerHTML='&#9679; Not attached';
     st.className='fa-attach-status';
-    if(b) b.innerHTML='&#128206; Attach First Aid PDF';
   }
 }
 function faUse(file){
@@ -229,10 +223,7 @@ function faRestore(){
 }
 function faOpen(pdfPage){
   if(!FA_URL){
-    if(confirm('The First Aid PDF is not attached yet.\n\nPick your copy of the First Aid 2026 PDF and the links will open straight to the page. The file stays on your computer.')){
-      var inp=document.getElementById('faFile');
-      if(inp) inp.click();
-    }
+    alert('The First Aid PDF is not attached yet.\n\nAttach it once from the "Reference PDFs" bar at the top of the tracker (above the tabs) — it will work here automatically after that.');
     return false;
   }
   window.open(FA_URL+'#page='+pdfPage,'_blank');

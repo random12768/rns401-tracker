@@ -98,8 +98,9 @@
   .tab-btn.active[data-tab="pharm"] { background: var(--pharm); color: #23093a; box-shadow: 0 0 22px -4px rgba(192,132,252,0.65); }
   .tab-btn.active[data-tab="planner"] { background: var(--planner); color: #062133; box-shadow: 0 0 22px -4px rgba(56,189,248,0.65); }
   .tab-btn.active[data-tab="qbank"] { background: #38bdf8; color: #04212f; box-shadow: 0 0 22px -4px rgba(56,189,248,0.65); }
-  .qbank-frame-wrap { width: 100%; height: calc(100vh - 160px); min-height: 520px; border-radius: var(--radius, 14px); overflow: hidden; border: 1px solid rgba(255,255,255,0.10); background: #0b0f19; }
-  .qbank-frame-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .qbank-frame-wrap { width: 100%; height: calc(100vh - 96px); min-height: 560px; background: var(--bg); margin: -8px -8px 0; }
+  .qbank-frame-wrap iframe { width: 100%; height: 100%; border: 0; display: block; background: var(--bg); }
+  #panel-qbank { background: var(--bg); }
 
   .tab-panel { display: none; animation: fadeIn 0.25s ease; }
   .tab-panel.active { display: block; }
@@ -659,12 +660,43 @@
     transition: all 0.2s ease;
   }
   .fa-bar button:hover { background: rgba(255,255,255,0.14); color: #fff; transform: translateY(-1px); }
-  #fa-status, #pathoma-status, #sync-status {
+  #sync-status {
     color: var(--text-dim);
     background: rgba(255,255,255,0.04);
     border-radius: 999px;
     padding: 3px 10px;
     font-size: 0.92em;
+  }
+  .pdf-bar-lbl { font-weight: 600; color: var(--text); }
+  .pdf-bar-sub { font-weight: 400; color: var(--text-faint); font-size: 0.88em; }
+  .pdf-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 4px 12px 4px 10px;
+    border-radius: 999px;
+    font-size: 0.92em;
+    border: 1px solid var(--border-soft);
+    background: rgba(255,255,255,0.04);
+    color: var(--text-dim);
+    transition: all 0.2s ease;
+  }
+  .pdf-chip-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #565f73;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+  .pdf-chip[data-state="on"] {
+    color: #7be8b0;
+    border-color: rgba(52,211,153,0.45);
+    background: rgba(52,211,153,0.10);
+  }
+  .pdf-chip[data-state="on"] .pdf-chip-dot {
+    background: #34d399;
+    box-shadow: 0 0 8px 1px rgba(52,211,153,0.65);
   }
   td.fa-cell { text-align: center; white-space: nowrap; }
   .fa-link {
@@ -882,16 +914,19 @@
 <h1><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> RNS401 Master Tracker — Respiratory &amp; Nervous System II (MD4)</h1>
 <div id="exam-countdown"></div>
 
-<div class="fa-bar">
-  <span>📖 First Aid PDF:</span>
-  <span id="fa-status">not connected — set it once, works for the rest of this file</span>
-  <button onclick="pickFirstAidPdf()">Choose your First Aid PDF…</button>
+<div class="fa-bar" id="pdf-bar">
+  <span class="pdf-bar-lbl">📚 Reference PDFs <span class="pdf-bar-sub">— attach once, used everywhere (including Alan's Q Bank)</span></span>
+  <span class="pdf-chip" id="fa-chip" data-state="off">
+    <span class="pdf-chip-dot"></span>
+    <span id="fa-status">First Aid — not attached</span>
+  </span>
+  <button onclick="pickFirstAidPdf()">Attach First Aid…</button>
   <input type="file" id="fa-file-input" accept="application/pdf" style="display:none;">
-</div>
-<div class="fa-bar">
-  <span>📓 Pathoma PDF:</span>
-  <span id="pathoma-status">not connected — set it once, works for the rest of this file</span>
-  <button onclick="pickPathomaPdf()">Choose your Pathoma PDF…</button>
+  <span class="pdf-chip" id="pathoma-chip" data-state="off">
+    <span class="pdf-chip-dot"></span>
+    <span id="pathoma-status">Pathoma — not attached</span>
+  </span>
+  <button onclick="pickPathomaPdf()">Attach Pathoma…</button>
   <input type="file" id="pathoma-file-input" accept="application/pdf" style="display:none;">
 </div>
 <div class="fa-bar" id="sync-bar">
@@ -1436,233 +1471,102 @@ async function pushToCloudNow() {
 })();
 
 /* ============================================================
-   FIRST AID LINKING
-   Each row's "📖 p.NNN" link opens *your own* First Aid PDF at that
-   page — no hardcoded file path, so this works no matter whose
-   computer opens the tracker. Chrome/Edge remember your choice
-   (via the File System Access API + IndexedDB) so you only pick it
-   once; other browsers fall back to picking it each time you open
-   this file.
+   REFERENCE PDFs — ONE central attach point for both First Aid and
+   Pathoma, shared (via a same-origin IndexedDB blob store) with the
+   Alan's Q Bank tab below, so attaching a PDF here also makes it
+   available inside the Q Bank — no second "attach" anywhere else.
    ============================================================ */
 
-const FA_DB_NAME = 'rns401_fa_db';
-const FA_STORE = 'handles';
-const FA_KEY = 'firstaid_pdf';
-let firstAidFileHandle = null;   // FileSystemFileHandle, persisted (Chrome/Edge)
-let firstAidFileObject = null;   // plain File, this page-load only (fallback browsers)
-let pendingFaPage = null;        // page we were trying to open when we had to ask for the file
+const PDF_DB_NAME = 'rns401_pdfs';
+const PDF_STORE = 'files';
+let firstAidBlobUrl = null, pathomaBlobUrl = null;
+let pendingFaPage = null, pendingPathomaPage = null;
 
-function openFaDb() {
+function openPdfDb() {
   return new Promise((resolve, reject) => {
-    const req = indexedDB.open(FA_DB_NAME, 1);
-    req.onupgradeneeded = () => req.result.createObjectStore(FA_STORE);
+    const req = indexedDB.open(PDF_DB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(PDF_STORE);
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
   });
 }
-async function saveFaHandle(handle) {
+async function savePdfBlob(key, file) {
   try {
-    const db = await openFaDb();
+    const db = await openPdfDb();
     await new Promise((res, rej) => {
-      const tx = db.transaction(FA_STORE, 'readwrite');
-      tx.objectStore(FA_STORE).put(handle, FA_KEY);
+      const tx = db.transaction(PDF_STORE, 'readwrite');
+      tx.objectStore(PDF_STORE).put(file, key);
       tx.oncomplete = res;
       tx.onerror = () => rej(tx.error);
     });
-  } catch (e) { /* IndexedDB unavailable — picking again next time is fine */ }
+  } catch (e) { /* IndexedDB unavailable — this browser will ask again next time */ }
 }
-async function loadFaHandle() {
+async function loadPdfBlob(key) {
   try {
-    const db = await openFaDb();
+    const db = await openPdfDb();
     return await new Promise((res) => {
-      const tx = db.transaction(FA_STORE, 'readonly');
-      const r = tx.objectStore(FA_STORE).get(FA_KEY);
+      const tx = db.transaction(PDF_STORE, 'readonly');
+      const r = tx.objectStore(PDF_STORE).get(key);
       r.onsuccess = () => res(r.result || null);
       r.onerror = () => res(null);
     });
   } catch (e) { return null; }
 }
 
-function setFaStatus(text) {
-  const el = document.getElementById('fa-status');
-  if (el) el.textContent = text;
-}
-
-async function pickFirstAidPdf() {
-  if (window.showOpenFilePicker) {
-    try {
-      const [handle] = await window.showOpenFilePicker({
-        types: [{ description: 'PDF', accept: { 'application/pdf': ['.pdf'] } }]
-      });
-      firstAidFileHandle = handle;
-      firstAidFileObject = null;
-      await saveFaHandle(handle);
-      setFaStatus('📖 ' + handle.name + ' (remembered — won’t ask again on this browser)');
-      if (pendingFaPage) { const p = pendingFaPage; pendingFaPage = null; openFirstAid(p); }
-    } catch (e) { /* user cancelled the picker — do nothing */ }
+function setPdfChip(kind, name) {
+  const chip = document.getElementById(kind + '-chip');
+  const txt = document.getElementById(kind + '-status');
+  if (!chip || !txt) return;
+  const label = kind === 'fa' ? 'First Aid' : 'Pathoma';
+  if (name) {
+    chip.dataset.state = 'on';
+    txt.textContent = label + ' — ' + (name.length > 28 ? name.slice(0, 25) + '…' : name);
   } else {
-    // Safari / Firefox / no File System Access API: fall back to a plain
-    // file input. This can't be remembered across page loads (browser
-    // security), so it'll ask again next time this file is opened.
-    document.getElementById('fa-file-input').click();
+    chip.dataset.state = 'off';
+    txt.textContent = label + ' — not attached';
   }
 }
+
+function pickFirstAidPdf() { document.getElementById('fa-file-input').click(); }
+function pickPathomaPdf() { document.getElementById('pathoma-file-input').click(); }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('fa-file-input');
-  if (input) {
-    input.addEventListener('change', (e) => {
-      const f = e.target.files[0];
-      if (!f) return;
-      firstAidFileObject = f;
-      firstAidFileHandle = null;
-      setFaStatus('📖 ' + f.name + ' (this browser session only — you’ll pick it again next time)');
-      if (pendingFaPage) { const p = pendingFaPage; pendingFaPage = null; openFirstAid(p); }
-    });
-  }
+  const faInput = document.getElementById('fa-file-input');
+  if (faInput) faInput.addEventListener('change', async (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    await savePdfBlob('firstaid', f);
+    firstAidBlobUrl = URL.createObjectURL(f);
+    setPdfChip('fa', f.name);
+    if (pendingFaPage) { const p = pendingFaPage; pendingFaPage = null; openFirstAid(p); }
+  });
+  const pathomaInput = document.getElementById('pathoma-file-input');
+  if (pathomaInput) pathomaInput.addEventListener('change', async (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    await savePdfBlob('pathoma', f);
+    pathomaBlobUrl = URL.createObjectURL(f);
+    setPdfChip('pathoma', f.name);
+    if (pendingPathomaPage) { const p = pendingPathomaPage; pendingPathomaPage = null; openPathoma(p); }
+  });
   (async () => {
-    const h = await loadFaHandle();
-    if (h) {
-      firstAidFileHandle = h;
-      setFaStatus('📖 ' + h.name + ' (click any 📖 page link to reconnect)');
-    }
+    const fFile = await loadPdfBlob('firstaid');
+    if (fFile) { firstAidBlobUrl = URL.createObjectURL(fFile); setPdfChip('fa', fFile.name); }
+    const pFile = await loadPdfBlob('pathoma');
+    if (pFile) { pathomaBlobUrl = URL.createObjectURL(pFile); setPdfChip('pathoma', pFile.name); }
   })();
 });
 
-async function ensureFaPermission(handle) {
-  const opts = { mode: 'read' };
-  try {
-    if ((await handle.queryPermission(opts)) === 'granted') return true;
-    if ((await handle.requestPermission(opts)) === 'granted') return true;
-  } catch (e) { /* handle may be stale (file moved/renamed) */ }
-  return false;
-}
-
-async function openFirstAid(page) {
+function openFirstAid(page) {
   if (!page) { alert("I don't have a First Aid page mapped for this specific row yet."); return; }
-  if (firstAidFileHandle) {
-    const ok = await ensureFaPermission(firstAidFileHandle);
-    if (!ok) {
-      setFaStatus('Permission needed — choose your First Aid PDF again');
-      pendingFaPage = page;
-      pickFirstAidPdf();
-      return;
-    }
-    const file = await firstAidFileHandle.getFile();
-    const url = URL.createObjectURL(file);
-    window.open(url + '#page=' + page, '_blank');
-    return;
-  }
-  if (firstAidFileObject) {
-    const url = URL.createObjectURL(firstAidFileObject);
-    window.open(url + '#page=' + page, '_blank');
-    return;
-  }
+  if (firstAidBlobUrl) { window.open(firstAidBlobUrl + '#page=' + page, '_blank'); return; }
   pendingFaPage = page;
   pickFirstAidPdf();
 }
 
-/* ============================================================
-   PATHOMA TEXTBOOK LINKING
-   Same idea as First Aid above, but for the Pathoma "Fundamentals of
-   Pathology" PDF — only the Pathology tab has these links, since
-   Pathoma doesn't cover micro/pharm. Pages come from the book's own
-   chapter headings (I scanned the actual text of Ch. 9 and Ch. 17 in
-   your PDF to find them), matched to the same subchapters as the
-   Pathoma videos already in this tracker.
-   ============================================================ */
-
-const PATHOMA_KEY = 'pathoma_pdf';
-let pathomaFileHandle = null;
-let pathomaFileObject = null;
-let pendingPathomaPage = null;
-
-async function savePathomaHandle(handle) {
-  try {
-    const db = await openFaDb();
-    await new Promise((res, rej) => {
-      const tx = db.transaction(FA_STORE, 'readwrite');
-      tx.objectStore(FA_STORE).put(handle, PATHOMA_KEY);
-      tx.oncomplete = res;
-      tx.onerror = () => rej(tx.error);
-    });
-  } catch (e) { /* IndexedDB unavailable — picking again next time is fine */ }
-}
-async function loadPathomaHandle() {
-  try {
-    const db = await openFaDb();
-    return await new Promise((res) => {
-      const tx = db.transaction(FA_STORE, 'readonly');
-      const r = tx.objectStore(FA_STORE).get(PATHOMA_KEY);
-      r.onsuccess = () => res(r.result || null);
-      r.onerror = () => res(null);
-    });
-  } catch (e) { return null; }
-}
-
-function setPathomaStatus(text) {
-  const el = document.getElementById('pathoma-status');
-  if (el) el.textContent = text;
-}
-
-async function pickPathomaPdf() {
-  if (window.showOpenFilePicker) {
-    try {
-      const [handle] = await window.showOpenFilePicker({
-        types: [{ description: 'PDF', accept: { 'application/pdf': ['.pdf'] } }]
-      });
-      pathomaFileHandle = handle;
-      pathomaFileObject = null;
-      await savePathomaHandle(handle);
-      setPathomaStatus('📓 ' + handle.name + ' (remembered — won’t ask again on this browser)');
-      if (pendingPathomaPage) { const p = pendingPathomaPage; pendingPathomaPage = null; openPathoma(p); }
-    } catch (e) { /* user cancelled the picker — do nothing */ }
-  } else {
-    document.getElementById('pathoma-file-input').click();
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('pathoma-file-input');
-  if (input) {
-    input.addEventListener('change', (e) => {
-      const f = e.target.files[0];
-      if (!f) return;
-      pathomaFileObject = f;
-      pathomaFileHandle = null;
-      setPathomaStatus('📓 ' + f.name + ' (this browser session only — you’ll pick it again next time)');
-      if (pendingPathomaPage) { const p = pendingPathomaPage; pendingPathomaPage = null; openPathoma(p); }
-    });
-  }
-  (async () => {
-    const h = await loadPathomaHandle();
-    if (h) {
-      pathomaFileHandle = h;
-      setPathomaStatus('📓 ' + h.name + ' (click any 📓 page link to reconnect)');
-    }
-  })();
-});
-
-async function openPathoma(page) {
+function openPathoma(page) {
   if (!page) { alert("Pathoma's textbook doesn't have a dedicated section for this row — check the gap note instead."); return; }
-  if (pathomaFileHandle) {
-    const ok = await ensureFaPermission(pathomaFileHandle);
-    if (!ok) {
-      setPathomaStatus('Permission needed — choose your Pathoma PDF again');
-      pendingPathomaPage = page;
-      pickPathomaPdf();
-      return;
-    }
-    const file = await pathomaFileHandle.getFile();
-    const url = URL.createObjectURL(file);
-    window.open(url + '#page=' + page, '_blank');
-    return;
-  }
-  if (pathomaFileObject) {
-    const url = URL.createObjectURL(pathomaFileObject);
-    window.open(url + '#page=' + page, '_blank');
-    return;
-  }
+  if (pathomaBlobUrl) { window.open(pathomaBlobUrl + '#page=' + page, '_blank'); return; }
   pendingPathomaPage = page;
   pickPathomaPdf();
 }
