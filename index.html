@@ -704,6 +704,18 @@
     border-color: rgba(52,211,153,0.45);
     background: rgba(52,211,153,0.12);
   }
+  #sync-dot[data-state="on"] {
+    background: #34d399;
+    box-shadow: 0 0 8px 1px rgba(52,211,153,0.65);
+  }
+  #sync-dot[data-state="off"] {
+    background: #f87171;
+  }
+  .pdf-pill-size { font-size: 0.72em; opacity: 0.7; margin-left: 2px; display: none; }
+  .pdf-pill[data-state="on"] .pdf-pill-size { display: inline; }
+  .pdf-pill-x { display: none; margin-left: 4px; font-size: 1.1em; line-height: 1; opacity: 0.6; padding: 0 3px; border-radius: 3px; }
+  .pdf-pill-x:hover { opacity: 1; background: rgba(255,255,255,0.14); }
+  .pdf-pill[data-state="on"] .pdf-pill-x { display: inline-block; }
   .pdf-pill[data-state="on"] .pdf-pill-dot {
     background: #34d399;
     box-shadow: 0 0 8px 1px rgba(52,211,153,0.65);
@@ -916,26 +928,33 @@
   --sans:"Inter",sans-serif;--mono:"JetBrains Mono",monospace;
 }
 #qbank-root *{box-sizing:border-box;margin:0;padding:0}
-#qbank-root{color:var(--text);font-family:var(--sans);display:flex;flex-direction:column;gap:14px}
-#qbank-root .nav-note{font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--dim);max-width:900px}
-#qbank-root #qbank-topbar{position:sticky;top:14px;z-index:20;display:flex;flex-direction:column;gap:8px}
-#qbank-root #nav{display:flex;flex-wrap:wrap;gap:6px;background:var(--surface);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:14px;padding:8px;}
-#qbank-root .ch-btn{display:flex;align-items:center;gap:8px;padding:8px 16px;border:1.5px solid var(--border);border-radius:999px;background:transparent;color:var(--muted);font-family:var(--sans);font-size:12.5px;font-weight:500;text-align:left;cursor:pointer;transition:.15s}
-#qbank-root .ch-btn:hover{border-color:var(--accent);color:var(--text)}
-#qbank-root .ch-btn.on{background:var(--accent-dim);color:var(--accent);border-color:var(--accent);font-weight:600}
-#qbank-root .ch-num{font-family:var(--mono);font-size:10px;background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:3px;min-width:22px;text-align:center;flex-shrink:0}
-#qbank-root .ch-btn.on .ch-num{background:rgba(0,0,0,0.18);color:var(--accent)}
-#qbank-root #track{background:var(--surface);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:14px;padding:10px;max-height:112px;overflow-y:auto}
-#qbank-root #dots{display:flex;flex-wrap:wrap;gap:5px}
-#qbank-root .dot{position:relative;width:38px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+#qbank-root{color:var(--text);font-family:var(--sans);display:flex;align-items:flex-start;gap:24px}
+#qbank-root #nav{width:210px;min-width:210px;background:rgba(18,24,38,0.5);border-radius:14px;border:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:20px;align-self:flex-start}
+#qbank-root .nav-hdr{padding:18px 14px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
+#qbank-root .nav-ttl{padding:12px 14px 4px;font-size:12px;font-weight:600;color:var(--text)}
+#qbank-root .ch-btn{display:flex;align-items:center;gap:8px;padding:9px 14px;border:none;border-left:3px solid transparent;background:transparent;color:var(--muted);font-family:var(--sans);font-size:12px;text-align:left;width:100%;cursor:pointer;transition:.15s}
+#qbank-root .ch-btn:hover{background:var(--surface2);color:var(--text)}
+#qbank-root .ch-btn.on{background:var(--accent-dim);color:var(--accent);border-left-color:var(--accent);font-weight:500}
+#qbank-root .ch-num{font-family:var(--mono);font-size:10px;background:var(--surface2);padding:2px 5px;border-radius:3px;min-width:24px;text-align:center;flex-shrink:0}
+#qbank-root .ch-btn.on .ch-num{background:var(--accent-dim);color:var(--accent)}
+#qbank-root .nav-note{margin-top:auto;padding:14px;font-family:var(--mono);font-size:9.5px;line-height:1.6;color:var(--dim);border-top:1px solid var(--border)}
+#qbank-root #track{width:70px;min-width:70px;background:rgba(18,24,38,0.5);border-radius:14px;border:1px solid var(--border);max-height:calc(100vh - 40px);overflow-y:auto;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;position:sticky;top:20px;align-self:flex-start}
+#qbank-root .tk-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+#qbank-root .qf-toggles{display:flex;gap:5px;margin-bottom:8px}
+#qbank-root .qf-btn{width:26px;height:24px;border-radius:6px;border:1.5px solid var(--border);background:transparent;color:var(--dim);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+#qbank-root .qf-btn:hover{border-color:var(--muted);color:var(--text)}
+#qbank-root .qf-btn.qf-wrong.on{border-color:var(--err);background:var(--err-bg);color:var(--err)}
+#qbank-root .qf-btn.qf-flag.on{border-color:var(--flag);background:var(--flag-bg);color:var(--flag)}
+#qbank-root .dot.filtered-out{display:none}
+#qbank-root .dot{position:relative;width:44px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:var(--mono);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
 #qbank-root .dot:hover{border-color:var(--accent);color:var(--accent)}
 #qbank-root .dot.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
 #qbank-root .dot.correct{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
 #qbank-root .dot.wrong{border-color:var(--err);background:var(--err-bg);color:var(--err)}
 #qbank-root .dot.flagged{border-color:var(--flag);background:var(--flag-bg);color:var(--flag)}
 #qbank-root .dot.hasnote::before{content:"";position:absolute;bottom:-3px;left:-3px;width:7px;height:7px;border-radius:2px;background:var(--accent);border:1.5px solid var(--surface)}
-#qbank-root #main{min-width:0;display:flex;flex-direction:column;align-items:center}
-#qbank-root .ch-header{width:100%;max-width:760px;margin-bottom:12px}
+#qbank-root #main{flex:1;min-width:0;padding:4px 0 80px;display:flex;flex-direction:column;align-items:flex-start}
+#qbank-root .ch-header{width:100%;max-width:760px;margin-bottom:28px}
 #qbank-root .ch-title{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
 #qbank-root .ch-head-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--border);padding-bottom:14px}
 #qbank-root .ch-head{font-size:20px;font-weight:600}
@@ -1068,15 +1087,16 @@
 
 <div class="pdf-widget" id="pdf-widget">
   <button class="pdf-pill" id="fa-chip" data-state="off" onclick="pickFirstAidPdf()" title="First Aid PDF — not attached. Click to attach.">
-    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">First Aid</span>
+    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">First Aid</span><span class="pdf-pill-size" id="fa-size"></span><span class="pdf-pill-x" id="fa-x" onclick="event.stopPropagation();clearPdfBlob('fa')" title="Remove First Aid PDF">×</span>
   </button>
   <button class="pdf-pill" id="pathoma-chip" data-state="off" onclick="pickPathomaPdf()" title="Pathoma PDF — not attached. Click to attach.">
-    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">Pathoma</span>
+    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">Pathoma</span><span class="pdf-pill-size" id="pathoma-size"></span><span class="pdf-pill-x" id="pathoma-x" onclick="event.stopPropagation();clearPdfBlob('pathoma')" title="Remove Pathoma PDF">×</span>
   </button>
   <input type="file" id="fa-file-input" accept="application/pdf" style="display:none;">
   <input type="file" id="pathoma-file-input" accept="application/pdf" style="display:none;">
 </div>
 <div class="fa-bar" id="sync-bar">
+  <span class="pdf-pill-dot" id="sync-dot" data-state="off" style="margin-right:2px;flex-shrink:0"></span>
   <span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h.79a4.5 4.5 0 1 1 0 9Z"/></svg> Cloud save:</span>
   <span id="sync-status">not set up — this file is still saving to your own browser only</span>
   <button id="signin-btn" onclick="signInWithGoogle()">Sign in with Google</button>
@@ -1115,6 +1135,11 @@
       <h3 style="color:var(--pharm)">Pharmacology (Sketchy)</h3>
       <div class="big" id="card-pharm-pct">0%</div>
       <div class="stat" id="card-pharm-count">0 / 0 done</div>
+    </div>
+    <div class="subject-card qbank" style="border-top-color:#a78bfa">
+      <h3 style="color:#a78bfa">Alan's Q Bank (Robbins)</h3>
+      <div class="big" id="card-qbank-pct">—</div>
+      <div class="stat" id="card-qbank-count">0 / 0 answered</div>
     </div>
   </div>
 
@@ -1440,13 +1465,13 @@
 <div class="tab-panel" id="panel-qbank">
 <div id="qbank-root">
 
-<div class="nav-note">Robbins &amp; Cotran Review of Pathology &mdash; Chapter 15 (The Lung) and Chapter 28 (CNS), 156 questions. Answers, highlights, flags &amp; notes save automatically. Reset Chapter never erases highlights, flags or notes. Explanations end with a First Aid 2026 page link (attach it up top &uarr; and it works here automatically).</div>
-<div id="qbank-topbar">
 <nav id="nav">
+  <div class="nav-hdr">RNSII Robbins Q Bank</div>
+  <div class="nav-ttl">Chapters</div>
   <div id="chList"></div>
+  <div class="nav-note">Robbins &amp; Cotran Review of Pathology &mdash; Chapter 15 (The Lung) and Chapter 28 (CNS), 156 questions. Answers, highlights, flags &amp; notes save automatically. Reset Chapter never erases highlights, flags or notes. Explanations end with a First Aid 2026 page link (attach it up top &uarr; and it works here automatically).</div>
 </nav>
-<div id="track"><div id="dots"></div></div>
-</div>
+<div id="track"><div class="qf-toggles"><button id="qf-wrong" class="qf-btn qf-wrong" onclick="qbSetFilter('wrong')" title="Show only wrong questions">✗</button><button id="qf-flag" class="qf-btn qf-flag" onclick="qbSetFilter('flagged')" title="Show only flagged questions">⚑</button></div><div class="tk-lbl">Qs</div><div id="dots"></div></div>
 <div id="main"><div id="ch-hdr" class="ch-header"></div><div id="qarea"></div></div>
 <div id="lb" onclick="this.classList.remove('open')"><img id="lb-img" src="" alt=""></div>
 
@@ -1502,9 +1527,11 @@ function firebaseReady() {
   return typeof firebase !== 'undefined' && FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.startsWith('PASTE_');
 }
 
-function setSyncStatus(msg) {
+function setSyncStatus(msg, ok) {
   const el = document.getElementById('sync-status');
   if (el) el.textContent = msg;
+  const dot = document.getElementById('sync-dot');
+  if (dot) dot.dataset.state = ok ? 'on' : 'off';
 }
 
 // ---- Sign-in gate: the tracker stays hidden behind a full-screen sign-in
@@ -1570,7 +1597,7 @@ async function onAuthChange(user) {
     setSyncStatus(`signed in as ${user.displayName || user.email} — pulling your saved progress…`);
     passGate();
     await pullFromCloud();
-    setSyncStatus(`signed in as ${user.displayName || user.email} — synced ✓`);
+    setSyncStatus(`signed in as ${user.displayName || user.email} — synced ✓`, true);
   } else {
     if (signinBtn) signinBtn.style.display = '';
     if (signoutBtn) signoutBtn.style.display = 'none';
@@ -1673,17 +1700,55 @@ async function loadPdfBlob(key) {
   } catch (e) { return null; }
 }
 
-function setPdfChip(kind, name) {
+function formatFileSize(bytes) {
+  if (!bytes) return '';
+  if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function setPdfChip(kind, name, size) {
   const chip = document.getElementById(kind + '-chip');
   if (!chip) return;
   const label = kind === 'fa' ? 'First Aid' : 'Pathoma';
+  const sizeEl = document.getElementById(kind + '-size');
   if (name) {
     chip.dataset.state = 'on';
-    chip.title = label + ' PDF — attached: ' + name + ' (click to change)';
+    chip.title = label + ' PDF — attached: ' + name + (size ? ' (' + formatFileSize(size) + ')' : '') + '. Click to change, or use × to remove.';
+    if (sizeEl) sizeEl.textContent = size ? formatFileSize(size) : '';
   } else {
     chip.dataset.state = 'off';
     chip.title = label + ' PDF — not attached. Click to attach.';
+    if (sizeEl) sizeEl.textContent = '';
   }
+}
+
+async function deletePdfBlob(key) {
+  try {
+    const db = await openPdfDb();
+    await new Promise((res, rej) => {
+      const tx = db.transaction(PDF_STORE, 'readwrite');
+      tx.objectStore(PDF_STORE).delete(key);
+      tx.oncomplete = res;
+      tx.onerror = () => rej(tx.error);
+    });
+  } catch (e) { /* IndexedDB unavailable */ }
+}
+
+async function clearPdfBlob(kind) {
+  const key = kind === 'fa' ? 'firstaid' : 'pathoma';
+  const label = kind === 'fa' ? 'First Aid' : 'Pathoma';
+  if (!confirm('Remove the attached ' + label + ' PDF? You can re-attach it anytime — this only clears the file, your answers/progress are untouched.')) return;
+  await deletePdfBlob(key);
+  if (kind === 'fa') {
+    if (firstAidBlobUrl) URL.revokeObjectURL(firstAidBlobUrl);
+    firstAidBlobUrl = null;
+  } else {
+    if (pathomaBlobUrl) URL.revokeObjectURL(pathomaBlobUrl);
+    pathomaBlobUrl = null;
+  }
+  setPdfChip(kind, null);
+  const input = document.getElementById(key === 'firstaid' ? 'fa-file-input' : 'pathoma-file-input');
+  if (input) input.value = '';
 }
 
 function pickFirstAidPdf() { document.getElementById('fa-file-input').click(); }
@@ -1696,7 +1761,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!f) return;
     await savePdfBlob('firstaid', f);
     firstAidBlobUrl = URL.createObjectURL(f);
-    setPdfChip('fa', f.name);
+    setPdfChip('fa', f.name, f.size);
     if (pendingFaPage) { const p = pendingFaPage; pendingFaPage = null; openFirstAid(p); }
   });
   const pathomaInput = document.getElementById('pathoma-file-input');
@@ -1705,14 +1770,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!f) return;
     await savePdfBlob('pathoma', f);
     pathomaBlobUrl = URL.createObjectURL(f);
-    setPdfChip('pathoma', f.name);
+    setPdfChip('pathoma', f.name, f.size);
     if (pendingPathomaPage) { const p = pendingPathomaPage; pendingPathomaPage = null; openPathoma(p); }
   });
   (async () => {
     const fFile = await loadPdfBlob('firstaid');
-    if (fFile) { firstAidBlobUrl = URL.createObjectURL(fFile); setPdfChip('fa', fFile.name); }
+    if (fFile) { firstAidBlobUrl = URL.createObjectURL(fFile); setPdfChip('fa', fFile.name, fFile.size); }
     const pFile = await loadPdfBlob('pathoma');
-    if (pFile) { pathomaBlobUrl = URL.createObjectURL(pFile); setPdfChip('pathoma', pFile.name); }
+    if (pFile) { pathomaBlobUrl = URL.createObjectURL(pFile); setPdfChip('pathoma', pFile.name, pFile.size); }
   })();
 });
 
@@ -2823,6 +2888,18 @@ function qbLoadState(){
 }
 function qbSaveState(){
   try{localStorage.setItem('rnsii_state',JSON.stringify({ANS:ANS,XO:XO,FLAGS:FLAGS,SHUF:SHUF}));}catch(e){}
+  updateQBankCard();
+}
+function updateQBankCard(){
+  var totalQ=0;
+  for(var ck in CHAPTERS){ if(CHAPTERS.hasOwnProperty(ck)) totalQ+=CHAPTERS[ck].questions.length; }
+  var answered=0,correct=0;
+  for(var k in ANS){ if(ANS[k]&&ANS[k].done){ answered++; if(ANS[k].ok) correct++; } }
+  var pctCorrect=answered?Math.round((correct/answered)*100):0;
+  var pctEl=document.getElementById('card-qbank-pct');
+  var countEl=document.getElementById('card-qbank-count');
+  if(pctEl) pctEl.textContent=answered?(pctCorrect+'%'):'—';
+  if(countEl) countEl.textContent=answered+' / '+totalQ+' answered · '+pctCorrect+'% correct';
 }
 function saveHl(){
   try{localStorage.setItem('rnsii_hl',JSON.stringify(HL));}catch(e){}
@@ -2940,15 +3017,26 @@ function clearHighlights(){
   goQ(QI);
 }
 
+var QFILTER='all';
+function qbSetFilter(mode){
+  QFILTER=(QFILTER===mode)?'all':mode;
+  var wBtn=document.getElementById('qf-wrong'),fBtn=document.getElementById('qf-flag');
+  if(wBtn)wBtn.classList.toggle('on',QFILTER==='wrong');
+  if(fBtn)fBtn.classList.toggle('on',QFILTER==='flagged');
+  renderDots();
+}
 function renderDots(){
   var ch=CHAPTERS[CUR],n=ch.questions.length;
   var h='<div class="tk-lbl">Qs</div>';
   for(var i=0;i<n;i++){
     var k=CUR+'_'+i,a=ANS[k],cls='dot';
     if(i===QI)cls+=' active';
+    var isWrong=a&&a.done&&!a.ok;
+    var isFlagged=!!FLAGS[k];
     if(a&&a.done)cls+=a.ok?' correct':' wrong';
     if(FLAGS[k])cls+=' flagged';
     if(NOTES[k])cls+=' hasnote';
+    if((QFILTER==='wrong'&&!isWrong)||(QFILTER==='flagged'&&!isFlagged))cls+=' filtered-out';
     h+='<div class="'+cls+'" id="d'+i+'" onclick="goQ('+i+')">'+esc(ch.questions[i].id)+'</div>';
   }
   document.getElementById('dots').innerHTML=h;
@@ -3252,6 +3340,7 @@ function resetChapter(){
 qbLoadState();faRestore();
 buildNav();
 showCh(CHAPTER_KEYS[0]);
+updateQBankCard();
 
 
 </script>
