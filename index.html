@@ -1121,17 +1121,20 @@
     max-width: 100%;
     line-height: 1.35;
     transition: all 0.2s ease;
-    display: inline-block;
+    display: table;
+    width: -moz-fit-content;
+    width: fit-content;
     vertical-align: top;
+    margin: 5px auto;
   }
   .video-link:hover { background: #6ee7b7; box-shadow: 0 0 14px -2px rgba(52,211,153,0.7); transform: translateY(-1px); }
   td.video-cell {
     text-align: center; white-space: normal; overflow: hidden;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 8px; padding-top: 10px; padding-bottom: 10px;
+    display: table-cell;
+    padding-top: 10px; padding-bottom: 10px;
   }
   td.video-cell.missing { color: var(--text-faint); font-style: italic; display: table-cell; }
-  .video-link.sketchy-path-link { margin: 0; }
+  .video-link.sketchy-path-link { margin: 5px auto; }
   td.video-cell span.missing { color: var(--text-faint); font-style: italic; font-size: 0.82em; }
 
   .qbank-input {
