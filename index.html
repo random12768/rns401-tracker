@@ -371,6 +371,63 @@
   }
   table th:first-child, table td:first-child { width: 30px; }
   th, td { overflow-wrap: break-word; word-break: break-word; overflow: hidden; }
+
+  /* ---- Admin tab ---- */
+  .admin-status { min-height: 1.2em; color: #f59e0b; font-size: 0.85em; font-weight: 600; margin: 2px 0 16px 0; }
+  .admin-add-row {
+    display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: center;
+    background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 12px; padding: 12px 14px;
+  }
+  .admin-add-row input[type="email"] {
+    flex: 1; min-width: 220px; padding: 9px 14px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06);
+    color: var(--text); font-size: 0.9em;
+  }
+  .admin-add-row select {
+    padding: 9px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06); color: var(--text); font-size: 0.9em;
+  }
+  .admin-grant-btn {
+    padding: 9px 16px; border-radius: 8px; border: 1px solid #f59e0b; background: rgba(245,158,11,0.15);
+    color: #fbbf24; font-weight: 700; font-size: 0.88em; cursor: pointer; white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .admin-grant-btn:hover { background: #f59e0b; color: #1a1300; }
+  .admin-card {
+    background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px; overflow: hidden;
+  }
+  .admin-table-scroll { overflow-x: auto; }
+  table.admin-table {
+    width: 100%; min-width: 620px; border-collapse: collapse; table-layout: auto;
+  }
+  table.admin-table th:first-child, table.admin-table td:first-child { width: auto; }
+  table.admin-table th, table.admin-table td { word-break: normal; overflow-wrap: normal; overflow: visible; }
+  table.admin-table thead th {
+    position: sticky; top: 0; z-index: 1; text-align: left; white-space: nowrap;
+    background: #14181f; color: var(--text-faint); font-size: 0.76em; text-transform: uppercase;
+    letter-spacing: 0.05em; font-weight: 700; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.14);
+  }
+  table.admin-table thead th.center { text-align: center; }
+  table.admin-table tbody td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: middle; }
+  table.admin-table tbody tr:hover { background: rgba(255,255,255,0.035); }
+  table.admin-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.015); }
+  table.admin-table tbody tr:last-child td { border-bottom: none; }
+  .admin-account { display: flex; align-items: center; gap: 10px; min-width: 220px; }
+  .admin-avatar {
+    width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.78em; color: #1a1300;
+  }
+  .admin-identity { display: flex; flex-direction: column; min-width: 0; }
+  .admin-email { font-weight: 600; font-size: 0.92em; white-space: nowrap; }
+  .admin-name { color: var(--text-faint); font-size: 0.78em; }
+  .admin-lastseen { color: var(--text-faint); font-size: 0.85em; white-space: nowrap; }
+  .admin-checkbox-cell { text-align: center; }
+  table.admin-table input[type="checkbox"] { width: 20px; height: 20px; accent-color: #f59e0b; }
+  .admin-empty { padding: 20px 16px; color: var(--text-faint); text-align: center; }
   th {
     padding: 12px 10px;
     text-align: left;
@@ -2818,32 +2875,35 @@
 <!-- ============================================ ADMIN ============================================ -->
 <div class="tab-panel" id="panel-admin">
 <h2 style="color:#f59e0b; border-bottom: 2px solid rgba(245,158,11,0.35); padding-bottom: 8px; margin-bottom: 4px;">⚙️ Admin — Feature Access</h2>
-<p class="guide-sub">Control who can see Alan's Q Bank and who can watch videos (Pathoma/Sketchy Watch buttons, across every module). Both are off by default for anyone new — check a box to grant that person access, uncheck to remove it. Changes apply the next time that person loads (or refreshes) the tracker, and someone without video access won't see a Watch button at all — it just looks like there's no video for that row. Only visible to admin accounts.</p>
-<div id="admin-status" style="color: var(--text-faint); font-size: 0.85em; margin: 4px 0 14px 0;"></div>
+<p class="guide-sub">Control who can see Alan's Q Bank and who can watch videos, across every module. Both are off by default for anyone new. Someone without video access won't see a greyed-out button — the row just looks like it never had a video.</p>
+<div id="admin-status" class="admin-status"></div>
 
-<div class="admin-add-row" style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; align-items:center;">
-  <input type="email" id="admin-add-email" placeholder="add an email not listed below (e.g. before they've signed in)" style="flex:1; min-width:240px; padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); color:var(--text);">
-  <select id="admin-add-feature" style="padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); color:var(--text);">
+<div class="admin-add-row">
+  <input type="email" id="admin-add-email" placeholder="Add an email not listed below (e.g. before they've signed in)">
+  <select id="admin-add-feature">
     <option value="qbank">Alan's Q Bank</option>
     <option value="video">Video access</option>
   </select>
-  <button class="module-status-btn" style="border-color:#f59e0b; color:#f59e0b;" onclick="adminAddManualEmail()">Grant access</button>
+  <button class="admin-grant-btn" onclick="adminAddManualEmail()">+ Grant access</button>
 </div>
 
-<table class="admin-table" style="width:100%; border-collapse:collapse;">
+<div class="admin-card">
+<div class="admin-table-scroll">
+<table class="admin-table">
   <thead>
-    <tr style="text-align:left; border-bottom:1px solid rgba(255,255,255,0.15);">
-      <th style="padding:8px;">Account</th>
-      <th style="padding:8px;">Name</th>
-      <th style="padding:8px;">Last seen</th>
-      <th style="padding:8px; text-align:center;">Alan's Q Bank</th>
-      <th style="padding:8px; text-align:center;">Video access</th>
+    <tr>
+      <th>Account</th>
+      <th>Last seen</th>
+      <th class="center">🧠 Alan's Q Bank</th>
+      <th class="center">🎬 Video access</th>
     </tr>
   </thead>
   <tbody id="admin-user-rows">
-    <tr><td colspan="5" style="padding:12px; color:var(--text-faint);">Loading…</td></tr>
+    <tr><td colspan="4" class="admin-empty">Loading…</td></tr>
   </tbody>
 </table>
+</div>
+</div>
 </div>
 
 <script>
@@ -3059,10 +3119,19 @@ async function saveVideoAllowedEmails(list) {
     if (statusEl) statusEl.textContent = 'Save failed — check console.';
   }
 }
+function adminInitials(name, email) {
+  const src = (name || '').trim();
+  if (src) {
+    const parts = src.split(/\s+/).filter(Boolean);
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    return src.slice(0, 2).toUpperCase();
+  }
+  return (email || '?').slice(0, 2).toUpperCase();
+}
 async function renderAdminPanel() {
   const rowsEl = document.getElementById('admin-user-rows');
   if (!rowsEl || !fbDb) return;
-  rowsEl.innerHTML = '<tr><td colspan="5" style="padding:12px; color:var(--text-faint);">Loading…</td></tr>';
+  rowsEl.innerHTML = '<tr><td colspan="4" class="admin-empty">Loading…</td></tr>';
   let people = [];
   try {
     const snap = await fbDb.collection('directory').get();
@@ -3072,12 +3141,12 @@ async function renderAdminPanel() {
     });
   } catch (e) {
     console.error('renderAdminPanel: could not load directory', e);
-    rowsEl.innerHTML = '<tr><td colspan="5" style="padding:12px; color:var(--text-faint);">Could not load the account list — check console.</td></tr>';
+    rowsEl.innerHTML = '<tr><td colspan="4" class="admin-empty">Could not load the account list — check console.</td></tr>';
     return;
   }
   const qbankList = Array.isArray(remoteAccessControl.qbank) ? remoteAccessControl.qbank : QBANK_ALLOWED_EMAILS;
   const videoConfigured = Array.isArray(remoteAccessControl.video);
-  const videoList = videoConfigured ? remoteAccessControl.video : null; // null = everyone allowed
+  const videoList = videoConfigured ? remoteAccessControl.video : null; // null = everyone allowed (pre-seed transient state)
   // Make sure anyone manually granted (but not yet signed in) still shows up.
   qbankList.forEach(e => {
     if (!people.some(p => p.email.toLowerCase() === e.toLowerCase())) people.push({ email: e, name: '', lastSeen: 0 });
@@ -3087,22 +3156,30 @@ async function renderAdminPanel() {
       if (!people.some(p => p.email.toLowerCase() === e.toLowerCase())) people.push({ email: e, name: '', lastSeen: 0 });
     });
   }
-  people.sort((a, b) => b.lastSeen - a.lastSeen);
+  people.sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0));
   if (!people.length) {
-    rowsEl.innerHTML = '<tr><td colspan="5" style="padding:12px; color:var(--text-faint);">No accounts yet.</td></tr>';
+    rowsEl.innerHTML = '<tr><td colspan="4" class="admin-empty">No accounts yet.</td></tr>';
     return;
   }
   rowsEl.innerHTML = people.map(p => {
     const qChecked = qbankList.some(e => e.toLowerCase() === p.email.toLowerCase());
     const vChecked = videoList ? videoList.some(e => e.toLowerCase() === p.email.toLowerCase()) : true;
-    const lastSeenStr = p.lastSeen ? new Date(p.lastSeen).toLocaleDateString() : '—';
+    const lastSeenStr = p.lastSeen ? new Date(p.lastSeen).toLocaleDateString() : 'never';
     const emailEsc = p.email.replace(/'/g, "\\'");
-    return `<tr data-email="${p.email.replace(/"/g, '&quot;')}" style="border-bottom:1px solid rgba(255,255,255,0.08);">
-      <td style="padding:8px;">${p.email}</td>
-      <td style="padding:8px;">${p.name || '—'}</td>
-      <td style="padding:8px;">${lastSeenStr}</td>
-      <td style="padding:8px; text-align:center;"><input type="checkbox" ${qChecked ? 'checked' : ''} onchange="adminToggleQBank('${emailEsc}', this.checked)"></td>
-      <td style="padding:8px; text-align:center;"><input type="checkbox" ${vChecked ? 'checked' : ''} onchange="adminToggleVideo('${emailEsc}', this.checked)"></td>
+    const initials = adminInitials(p.name, p.email);
+    return `<tr data-email="${p.email.replace(/"/g, '&quot;')}">
+      <td>
+        <div class="admin-account">
+          <div class="admin-avatar">${initials}</div>
+          <div class="admin-identity">
+            <span class="admin-email">${p.email}</span>
+            ${p.name ? `<span class="admin-name">${p.name}</span>` : ''}
+          </div>
+        </div>
+      </td>
+      <td class="admin-lastseen">${lastSeenStr}</td>
+      <td class="admin-checkbox-cell"><input type="checkbox" ${qChecked ? 'checked' : ''} onchange="adminToggleQBank('${emailEsc}', this.checked)"></td>
+      <td class="admin-checkbox-cell"><input type="checkbox" ${vChecked ? 'checked' : ''} onchange="adminToggleVideo('${emailEsc}', this.checked)"></td>
     </tr>`;
   }).join('');
 }
