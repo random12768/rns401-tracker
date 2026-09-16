@@ -1780,7 +1780,7 @@
   <button class="module-subtab-btn active" data-sub="rns-path" onclick="switchSubTab('rns-path')">Pathology</button>
   <button class="module-subtab-btn" data-sub="rns-micro" onclick="switchSubTab('rns-micro')">Microbiology</button>
   <button class="module-subtab-btn" data-sub="rns-pharm" onclick="switchSubTab('rns-pharm')">Pharmacology</button>
-  <button class="module-subtab-btn" data-sub="rns-qbank" onclick="switchSubTab('rns-qbank')">Alan's Q Bank</button>
+  <button class="module-subtab-btn" data-sub="rns-qbank" onclick="switchSubTab('rns-qbank')" style="display:none;">Alan's Q Bank</button>
 </div>
 
 <div class="module-sub-panel active" id="sub-rns-path">
@@ -2845,6 +2845,29 @@ const FIREBASE_CONFIG = {
 };
 
 let fbAuth = null, fbDb = null, fbUser = null, fbSyncTimer = null;
+
+// ---- Alan's Q Bank access list ----
+// Only the Google-account emails listed here can see the "Alan's Q Bank"
+// sub-tab (and its Overview card). To add or remove someone, just edit
+// this list — nothing else needs to change.
+const QBANK_ALLOWED_EMAILS = [
+  'mjassal4@gmail.com'
+];
+function qbankAllowedForCurrentUser() {
+  if (!fbUser || !fbUser.email) return false;
+  return QBANK_ALLOWED_EMAILS.some(e => e.toLowerCase() === fbUser.email.toLowerCase());
+}
+function applyQBankVisibility() {
+  const allowed = qbankAllowedForCurrentUser();
+  const btn = document.querySelector('.module-subtab-btn[data-sub="rns-qbank"]');
+  if (btn) btn.style.display = allowed ? '' : 'none';
+  const panel = document.getElementById('sub-rns-qbank');
+  if (panel) panel.style.display = allowed ? '' : 'none';
+  if (!allowed && panel && panel.classList.contains('active')) {
+    switchSubTab('rns-path');
+  }
+  if (typeof renderOverviewDynamic === 'function') renderOverviewDynamic();
+}
 const CLOUD_SYNC_KEYS = [
   'rns401_tracker_progress_v1',
   'rns401_planner_settings_v2',
@@ -2934,6 +2957,7 @@ async function onAuthChange(user) {
     if (signoutBtn) signoutBtn.style.display = '';
     setSyncStatus(`signed in as ${user.displayName || user.email} — pulling your saved progress…`);
     passGate();
+    applyQBankVisibility();
     await pullFromCloud();
     setSyncStatus(`signed in as ${user.displayName || user.email} — synced ✓`, true);
     maybeShowOnboarding();
@@ -3874,7 +3898,7 @@ function renderOverviewDynamic() {
   const today = startOfDay(new Date());
   const mod = getCurrentModule(fmtDate(today));
   const accent = `var(${mod.color})`;
-  const cards = MODULE_CARDS[mod.id] || [];
+  const cards = (MODULE_CARDS[mod.id] || []).filter(c => c.kind !== 'qbank' || qbankAllowedForCurrentUser());
 
   if (overallLabelEl) overallLabelEl.textContent = `${mod.short} progress`;
 
