@@ -1713,7 +1713,7 @@
   <div class="grand-total" id="grand-total-box"></div>
 
   <h2 class="guide-heading">How to use this tracker</h2>
-  <p class="guide-sub">Everything saves automatically — checkboxes, Q Bank answers, notes, planner changes (and across devices once you sign in). Quick hits below:</p>
+  <p class="guide-sub">Everything saves automatically — checkboxes, notes, planner changes (and across devices once you sign in). Quick hits below:</p>
 
   <div class="guide-grid">
 
@@ -1739,7 +1739,7 @@
       </ul>
     </div>
 
-    <div class="guide-card qbank">
+    <div class="guide-card qbank" id="guide-card-qbank" style="display:none;">
       <h3>🧠 Alan's Q Bank (RNS401 sub-tab)</h3>
       <ul>
         <li>290 questions (Robbins + Rubins), answer to see explanations for every choice</li>
@@ -1755,7 +1755,7 @@
         <li>Switch between MD3 and MD4 anytime from the <strong>gear icon</strong> (top right) — only that semester's tabs show up</li>
         <li><span style="color:var(--red)">Red</span> dot next to "Cloud save" = signed out, saved to this browser only</li>
         <li><span style="color:var(--green)">Green</span> dot = synced to your Google account</li>
-        <li><strong>Sign in with Google</strong> once — checkboxes, notes, Q Bank, and planner then follow you to any device</li>
+        <li><strong>Sign in with Google</strong> once — checkboxes, notes, and planner then follow you to any device</li>
       </ul>
     </div>
 
@@ -3011,6 +3011,8 @@ function applyQBankVisibility() {
   if (!allowed && panel && panel.classList.contains('active')) {
     switchSubTab('rns-path');
   }
+  const guideCard = document.getElementById('guide-card-qbank');
+  if (guideCard) guideCard.style.display = allowed ? '' : 'none';
   if (typeof renderOverviewDynamic === 'function') renderOverviewDynamic();
 }
 // Every clickable video button anywhere in the tracker (Pathoma "Watch",
