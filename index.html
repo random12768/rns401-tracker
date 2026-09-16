@@ -1629,6 +1629,7 @@
   <button class="tab-btn" data-tab="nis302" data-sem="MD3" style="display:none" onclick="switchTab('nis302')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg> NIS302</button>
   <button class="tab-btn" data-tab="chs303" data-sem="MD3" style="display:none" onclick="switchTab('chs303')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg> CHS303</button>
   <button class="tab-btn" data-tab="schedule" data-sem="all" onclick="switchTab('schedule')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg> Schedule</button>
+  <button class="tab-btn" id="admin-tab-btn" data-tab="admin" data-sem="all" onclick="switchTab('admin')" style="display:none;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/><path d="M20 21a8 8 0 1 0-16 0"/><path d="M18 8l1.5 1.5L22 7"/></svg> Admin</button>
 </div>
 
 <!-- ============================================ OVERVIEW ============================================ -->
@@ -2814,6 +2815,32 @@
 <div id="schedule-weeks"></div>
 </div>
 
+<!-- ============================================ ADMIN ============================================ -->
+<div class="tab-panel" id="panel-admin">
+<h2 style="color:#f59e0b; border-bottom: 2px solid rgba(245,158,11,0.35); padding-bottom: 8px; margin-bottom: 4px;">⚙️ Admin — Feature Access</h2>
+<p class="guide-sub">Control who can see Alan's Q Bank. Check an account to grant access, uncheck to remove it — changes apply the next time that person loads (or refreshes) the tracker. Only visible to admin accounts.</p>
+<div id="admin-status" style="color: var(--text-faint); font-size: 0.85em; margin: 4px 0 14px 0;"></div>
+
+<div class="admin-add-row" style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+  <input type="email" id="admin-add-email" placeholder="add an email not listed below (e.g. before they've signed in)" style="flex:1; min-width:240px; padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); color:var(--text);">
+  <button class="module-status-btn" style="border-color:#f59e0b; color:#f59e0b;" onclick="adminAddManualEmail()">Grant Q Bank access</button>
+</div>
+
+<table class="admin-table" style="width:100%; border-collapse:collapse;">
+  <thead>
+    <tr style="text-align:left; border-bottom:1px solid rgba(255,255,255,0.15);">
+      <th style="padding:8px;">Account</th>
+      <th style="padding:8px;">Name</th>
+      <th style="padding:8px;">Last seen</th>
+      <th style="padding:8px; text-align:center;">Alan's Q Bank</th>
+    </tr>
+  </thead>
+  <tbody id="admin-user-rows">
+    <tr><td colspan="4" style="padding:12px; color:var(--text-faint);">Loading…</td></tr>
+  </tbody>
+</table>
+</div>
+
 <script>
 /* ============================================================
    CLOUD SYNC (Google sign-in + Firestore)
@@ -2850,6 +2877,9 @@ let fbAuth = null, fbDb = null, fbUser = null, fbSyncTimer = null;
 // Only the Google-account emails listed here can see the "Alan's Q Bank"
 // sub-tab (and its Overview card). To add or remove someone, just edit
 // this list — nothing else needs to change.
+// Fallback list — used until the live list loads from Firestore (or if
+// cloud sync isn't set up at all). Once signed in, the Admin tab's toggles
+// are the real source of truth; edit this array only as a backup default.
 const QBANK_ALLOWED_EMAILS = [
   'mjassal4@gmail.com',
   'ericajon1993@gmail.com',
@@ -2862,9 +2892,23 @@ const QBANK_ALLOWED_EMAILS = [
   'maninder.jassal@student.windsor.edu',
   'kyle.nneji@student.windsor.edu'
 ];
+// Accounts that can open the Admin tab and toggle who sees Alan's Q Bank.
+const ADMIN_EMAILS = [
+  'mjassal4@gmail.com',
+  'maninder.jassal@student.windsor.edu'
+];
+function isAdminUser() {
+  if (!fbUser || !fbUser.email) return false;
+  return ADMIN_EMAILS.some(e => e.toLowerCase() === fbUser.email.toLowerCase());
+}
+// remoteAccessControl.qbank is null until the Firestore doc loads; once it's
+// an array (even empty), it fully replaces the hardcoded fallback above.
+let remoteAccessControl = { qbank: null };
 function qbankAllowedForCurrentUser() {
   if (!fbUser || !fbUser.email) return false;
-  return QBANK_ALLOWED_EMAILS.some(e => e.toLowerCase() === fbUser.email.toLowerCase());
+  const email = fbUser.email.toLowerCase();
+  const list = Array.isArray(remoteAccessControl.qbank) ? remoteAccessControl.qbank : QBANK_ALLOWED_EMAILS;
+  return list.some(e => e.toLowerCase() === email);
 }
 function applyQBankVisibility() {
   const allowed = qbankAllowedForCurrentUser();
@@ -2876,6 +2920,115 @@ function applyQBankVisibility() {
     switchSubTab('rns-path');
   }
   if (typeof renderOverviewDynamic === 'function') renderOverviewDynamic();
+}
+function applyAdminVisibility() {
+  const btn = document.getElementById('admin-tab-btn');
+  const admin = isAdminUser();
+  if (btn) btn.style.display = admin ? '' : 'none';
+  if (!admin) {
+    const panel = document.getElementById('panel-admin');
+    if (panel && panel.classList.contains('active')) switchTab('overview');
+  }
+}
+// Every signed-in user writes a small entry about themselves so the Admin
+// tab has something to list. Just email/name/last-seen — no progress data.
+async function upsertDirectoryEntry() {
+  if (!fbDb || !fbUser) return;
+  try {
+    await fbDb.collection('directory').doc(fbUser.uid).set({
+      email: fbUser.email || '',
+      displayName: fbUser.displayName || '',
+      lastSeen: Date.now()
+    }, { merge: true });
+  } catch (e) {
+    console.error('upsertDirectoryEntry failed', e);
+  }
+}
+async function loadAccessControl() {
+  if (!fbDb) return;
+  try {
+    const doc = await fbDb.collection('access_control').doc('qbank').get();
+    if (doc.exists && Array.isArray(doc.data().allowedEmails)) {
+      remoteAccessControl.qbank = doc.data().allowedEmails;
+    } else {
+      // Nothing saved yet — seed it from the hardcoded fallback so the
+      // Admin tab has a sensible starting point to edit.
+      remoteAccessControl.qbank = QBANK_ALLOWED_EMAILS.slice();
+    }
+  } catch (e) {
+    console.error('loadAccessControl failed (falling back to hardcoded list)', e);
+  }
+  applyQBankVisibility();
+  if (isAdminUser()) renderAdminPanel();
+}
+async function saveQBankAllowedEmails(list) {
+  const statusEl = document.getElementById('admin-status');
+  if (!fbDb) { if (statusEl) statusEl.textContent = 'Cloud sync is not set up — changes here won\'t save.'; return; }
+  try {
+    if (statusEl) statusEl.textContent = 'Saving…';
+    await fbDb.collection('access_control').doc('qbank').set({ allowedEmails: list }, { merge: false });
+    remoteAccessControl.qbank = list.slice();
+    if (statusEl) statusEl.textContent = 'Saved ✓';
+    setTimeout(() => { if (statusEl && statusEl.textContent === 'Saved ✓') statusEl.textContent = ''; }, 2000);
+  } catch (e) {
+    console.error('saveQBankAllowedEmails failed', e);
+    if (statusEl) statusEl.textContent = 'Save failed — check console.';
+  }
+}
+async function renderAdminPanel() {
+  const rowsEl = document.getElementById('admin-user-rows');
+  if (!rowsEl || !fbDb) return;
+  rowsEl.innerHTML = '<tr><td colspan="4" style="padding:12px; color:var(--text-faint);">Loading…</td></tr>';
+  let people = [];
+  try {
+    const snap = await fbDb.collection('directory').get();
+    snap.forEach(d => {
+      const data = d.data() || {};
+      if (data.email) people.push({ email: data.email, name: data.displayName || '', lastSeen: data.lastSeen || 0 });
+    });
+  } catch (e) {
+    console.error('renderAdminPanel: could not load directory', e);
+    rowsEl.innerHTML = '<tr><td colspan="4" style="padding:12px; color:var(--text-faint);">Could not load the account list — check console.</td></tr>';
+    return;
+  }
+  const allowedList = Array.isArray(remoteAccessControl.qbank) ? remoteAccessControl.qbank : QBANK_ALLOWED_EMAILS;
+  // Include any allowed email that hasn't signed in yet (added manually) too.
+  allowedList.forEach(e => {
+    if (!people.some(p => p.email.toLowerCase() === e.toLowerCase())) {
+      people.push({ email: e, name: '', lastSeen: 0 });
+    }
+  });
+  people.sort((a, b) => b.lastSeen - a.lastSeen);
+  if (!people.length) {
+    rowsEl.innerHTML = '<tr><td colspan="4" style="padding:12px; color:var(--text-faint);">No accounts yet.</td></tr>';
+    return;
+  }
+  rowsEl.innerHTML = people.map(p => {
+    const checked = allowedList.some(e => e.toLowerCase() === p.email.toLowerCase());
+    const lastSeenStr = p.lastSeen ? new Date(p.lastSeen).toLocaleDateString() : '—';
+    return `<tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+      <td style="padding:8px;">${p.email}</td>
+      <td style="padding:8px;">${p.name || '—'}</td>
+      <td style="padding:8px;">${lastSeenStr}</td>
+      <td style="padding:8px; text-align:center;"><input type="checkbox" ${checked ? 'checked' : ''} onchange="adminToggleQBank('${p.email.replace(/'/g, "\\'")}', this.checked)"></td>
+    </tr>`;
+  }).join('');
+}
+function adminToggleQBank(email, checked) {
+  const current = Array.isArray(remoteAccessControl.qbank) ? remoteAccessControl.qbank.slice() : QBANK_ALLOWED_EMAILS.slice();
+  const idx = current.findIndex(e => e.toLowerCase() === email.toLowerCase());
+  if (checked && idx === -1) current.push(email);
+  if (!checked && idx !== -1) current.splice(idx, 1);
+  saveQBankAllowedEmails(current);
+}
+function adminAddManualEmail() {
+  const input = document.getElementById('admin-add-email');
+  if (!input) return;
+  const email = (input.value || '').trim();
+  if (!email || !email.includes('@')) { alert('Enter a valid email address.'); return; }
+  input.value = '';
+  adminToggleQBank(email, true);
+  setTimeout(renderAdminPanel, 400);
 }
 const CLOUD_SYNC_KEYS = [
   'rns401_tracker_progress_v1',
@@ -2967,6 +3120,9 @@ async function onAuthChange(user) {
     setSyncStatus(`signed in as ${user.displayName || user.email} — pulling your saved progress…`);
     passGate();
     applyQBankVisibility();
+    applyAdminVisibility();
+    upsertDirectoryEntry();
+    loadAccessControl();
     await pullFromCloud();
     setSyncStatus(`signed in as ${user.displayName || user.email} — synced ✓`, true);
     maybeShowOnboarding();
@@ -3214,6 +3370,7 @@ function switchTab(tab) {
   const appContent = document.getElementById('app-content');
   if (appContent) appContent.classList.toggle('wide-tab-active', tab === 'planner' || tab === 'schedule');
   if (tab === 'planner') renderPlanner();
+  if (tab === 'admin' && isAdminUser()) renderAdminPanel();
 }
 
 function switchSubTab(sub) {
