@@ -428,6 +428,13 @@
   .admin-checkbox-cell { text-align: center; }
   table.admin-table input[type="checkbox"] { width: 20px; height: 20px; accent-color: #f59e0b; }
   .admin-empty { padding: 20px 16px; color: var(--text-faint); text-align: center; }
+  .admin-save-bar { display: flex; justify-content: flex-end; padding: 14px 16px; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); }
+  .admin-save-btn {
+    padding: 10px 22px; border-radius: 8px; border: 1px solid #f59e0b; background: #f59e0b;
+    color: #1a1300; font-weight: 800; font-size: 0.9em; cursor: pointer; transition: all 0.15s ease;
+  }
+  .admin-save-btn:hover:not(:disabled) { background: #fbbf24; }
+  .admin-save-btn:disabled { opacity: 0.35; cursor: default; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: var(--text-faint); }
   th {
     padding: 12px 10px;
     text-align: left;
@@ -2875,16 +2882,17 @@
 <!-- ============================================ ADMIN ============================================ -->
 <div class="tab-panel" id="panel-admin">
 <h2 style="color:#f59e0b; border-bottom: 2px solid rgba(245,158,11,0.35); padding-bottom: 8px; margin-bottom: 4px;">⚙️ Admin — Feature Access</h2>
-<p class="guide-sub">Control who can see Alan's Q Bank and who can watch videos, across every module. Both are off by default for anyone new. Someone without video access won't see a greyed-out button — the row just looks like it never had a video.</p>
+<p class="guide-sub">Control who can see Alan's Q Bank and who can watch videos, across every module. Both are off by default for anyone new. Someone without video access won't see a greyed-out button — the row just looks like it never had a video. This list only knows about someone once they've opened the tracker at least once, or once you add them manually below — a plain webpage can't read Google's full sign-in list on its own.</p>
 <div id="admin-status" class="admin-status"></div>
 
 <div class="admin-add-row">
   <input type="email" id="admin-add-email" placeholder="Add an email not listed below (e.g. before they've signed in)">
   <select id="admin-add-feature">
+    <option value="none">Just add to list (no access yet)</option>
     <option value="qbank">Alan's Q Bank</option>
     <option value="video">Video access</option>
   </select>
-  <button class="admin-grant-btn" onclick="adminAddManualEmail()">+ Grant access</button>
+  <button class="admin-grant-btn" onclick="adminAddManualEmail()">+ Add</button>
 </div>
 
 <div class="admin-card">
@@ -2902,6 +2910,9 @@
     <tr><td colspan="4" class="admin-empty">Loading…</td></tr>
   </tbody>
 </table>
+</div>
+<div class="admin-save-bar">
+  <button id="admin-save-btn" class="admin-save-btn" onclick="adminSaveAll()" disabled>Save changes</button>
 </div>
 </div>
 </div>
@@ -3086,38 +3097,19 @@ async function loadAccessControl() {
   } catch (e) {
     console.error('loadAccessControl (video) failed — defaulting to disabled', e);
   }
+  try {
+    // known_emails: accounts an admin has manually listed for visibility only
+    // (e.g. someone seen in Firebase Auth who hasn't opened the tracker
+    // since the Admin tab shipped) — no permission attached either way.
+    const kdoc = await fbDb.collection('access_control').doc('known_emails').get();
+    remoteAccessControl.known = (kdoc.exists && Array.isArray(kdoc.data().emails)) ? kdoc.data().emails : [];
+  } catch (e) {
+    console.error('loadAccessControl (known_emails) failed', e);
+    remoteAccessControl.known = [];
+  }
   applyQBankVisibility();
   applyVideoAccessVisibility();
   if (isAdminUser()) renderAdminPanel();
-}
-async function saveQBankAllowedEmails(list) {
-  const statusEl = document.getElementById('admin-status');
-  if (!fbDb) { if (statusEl) statusEl.textContent = 'Cloud sync is not set up — changes here won\'t save.'; return; }
-  try {
-    if (statusEl) statusEl.textContent = 'Saving…';
-    await fbDb.collection('access_control').doc('qbank').set({ allowedEmails: list }, { merge: false });
-    remoteAccessControl.qbank = list.slice();
-    if (statusEl) statusEl.textContent = 'Saved ✓';
-    setTimeout(() => { if (statusEl && statusEl.textContent === 'Saved ✓') statusEl.textContent = ''; }, 2000);
-  } catch (e) {
-    console.error('saveQBankAllowedEmails failed', e);
-    if (statusEl) statusEl.textContent = 'Save failed — check console.';
-  }
-}
-async function saveVideoAllowedEmails(list) {
-  const statusEl = document.getElementById('admin-status');
-  if (!fbDb) { if (statusEl) statusEl.textContent = 'Cloud sync is not set up — changes here won\'t save.'; return; }
-  try {
-    if (statusEl) statusEl.textContent = 'Saving…';
-    await fbDb.collection('access_control').doc('video').set({ allowedEmails: list }, { merge: false });
-    remoteAccessControl.video = list.slice();
-    if (statusEl) statusEl.textContent = 'Saved ✓';
-    setTimeout(() => { if (statusEl && statusEl.textContent === 'Saved ✓') statusEl.textContent = ''; }, 2000);
-    applyVideoAccessVisibility();
-  } catch (e) {
-    console.error('saveVideoAllowedEmails failed', e);
-    if (statusEl) statusEl.textContent = 'Save failed — check console.';
-  }
 }
 function adminInitials(name, email) {
   const src = (name || '').trim();
@@ -3128,16 +3120,20 @@ function adminInitials(name, email) {
   }
   return (email || '?').slice(0, 2).toUpperCase();
 }
+// adminPending holds in-progress edits made in the Admin tab; nothing is
+// written to Firestore until "Save changes" is clicked (adminSaveAll).
+let adminDirectoryPeople = []; // last-fetched directory docs, cached for re-rendering rows without another Firestore read
+let adminPending = { qbank: [], video: [], known: [], dirty: false };
 async function renderAdminPanel() {
   const rowsEl = document.getElementById('admin-user-rows');
   if (!rowsEl || !fbDb) return;
   rowsEl.innerHTML = '<tr><td colspan="4" class="admin-empty">Loading…</td></tr>';
-  let people = [];
+  adminDirectoryPeople = [];
   try {
     const snap = await fbDb.collection('directory').get();
     snap.forEach(d => {
       const data = d.data() || {};
-      if (data.email) people.push({ email: data.email, name: data.displayName || '', lastSeen: data.lastSeen || 0 });
+      if (data.email) adminDirectoryPeople.push({ email: data.email, name: data.displayName || '', lastSeen: data.lastSeen || 0 });
     });
   } catch (e) {
     console.error('renderAdminPanel: could not load directory', e);
@@ -3145,25 +3141,36 @@ async function renderAdminPanel() {
     return;
   }
   const qbankList = Array.isArray(remoteAccessControl.qbank) ? remoteAccessControl.qbank : QBANK_ALLOWED_EMAILS;
-  const videoConfigured = Array.isArray(remoteAccessControl.video);
-  const videoList = videoConfigured ? remoteAccessControl.video : null; // null = everyone allowed (pre-seed transient state)
-  // Make sure anyone manually granted (but not yet signed in) still shows up.
-  qbankList.forEach(e => {
-    if (!people.some(p => p.email.toLowerCase() === e.toLowerCase())) people.push({ email: e, name: '', lastSeen: 0 });
-  });
-  if (videoList) {
-    videoList.forEach(e => {
-      if (!people.some(p => p.email.toLowerCase() === e.toLowerCase())) people.push({ email: e, name: '', lastSeen: 0 });
-    });
-  }
+  const videoList = Array.isArray(remoteAccessControl.video) ? remoteAccessControl.video : [];
+  const knownList = Array.isArray(remoteAccessControl.known) ? remoteAccessControl.known : [];
+  adminPending = { qbank: qbankList.slice(), video: videoList.slice(), known: knownList.slice(), dirty: false };
+  renderAdminRows();
+  updateAdminSaveUI();
+}
+function adminMergedPeople() {
+  const people = adminDirectoryPeople.map(p => ({ ...p }));
+  const ensure = (email) => {
+    if (!people.some(p => p.email.toLowerCase() === email.toLowerCase())) {
+      people.push({ email, name: '', lastSeen: 0 });
+    }
+  };
+  adminPending.qbank.forEach(ensure);
+  adminPending.video.forEach(ensure);
+  adminPending.known.forEach(ensure);
   people.sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0));
+  return people;
+}
+function renderAdminRows() {
+  const rowsEl = document.getElementById('admin-user-rows');
+  if (!rowsEl) return;
+  const people = adminMergedPeople();
   if (!people.length) {
     rowsEl.innerHTML = '<tr><td colspan="4" class="admin-empty">No accounts yet.</td></tr>';
     return;
   }
   rowsEl.innerHTML = people.map(p => {
-    const qChecked = qbankList.some(e => e.toLowerCase() === p.email.toLowerCase());
-    const vChecked = videoList ? videoList.some(e => e.toLowerCase() === p.email.toLowerCase()) : true;
+    const qChecked = adminPending.qbank.some(e => e.toLowerCase() === p.email.toLowerCase());
+    const vChecked = adminPending.video.some(e => e.toLowerCase() === p.email.toLowerCase());
     const lastSeenStr = p.lastSeen ? new Date(p.lastSeen).toLocaleDateString() : 'never';
     const emailEsc = p.email.replace(/'/g, "\\'");
     const initials = adminInitials(p.name, p.email);
@@ -3178,30 +3185,18 @@ async function renderAdminPanel() {
         </div>
       </td>
       <td class="admin-lastseen">${lastSeenStr}</td>
-      <td class="admin-checkbox-cell"><input type="checkbox" ${qChecked ? 'checked' : ''} onchange="adminToggleQBank('${emailEsc}', this.checked)"></td>
-      <td class="admin-checkbox-cell"><input type="checkbox" ${vChecked ? 'checked' : ''} onchange="adminToggleVideo('${emailEsc}', this.checked)"></td>
+      <td class="admin-checkbox-cell"><input type="checkbox" ${qChecked ? 'checked' : ''} onchange="adminTogglePending('qbank', '${emailEsc}', this.checked)"></td>
+      <td class="admin-checkbox-cell"><input type="checkbox" ${vChecked ? 'checked' : ''} onchange="adminTogglePending('video', '${emailEsc}', this.checked)"></td>
     </tr>`;
   }).join('');
 }
-function adminAllKnownEmails() {
-  return Array.from(document.querySelectorAll('#admin-user-rows tr[data-email]')).map(r => r.getAttribute('data-email'));
-}
-function adminToggleQBank(email, checked) {
-  const current = Array.isArray(remoteAccessControl.qbank) ? remoteAccessControl.qbank.slice() : QBANK_ALLOWED_EMAILS.slice();
-  const idx = current.findIndex(e => e.toLowerCase() === email.toLowerCase());
-  if (checked && idx === -1) current.push(email);
-  if (!checked && idx !== -1) current.splice(idx, 1);
-  saveQBankAllowedEmails(current);
-}
-function adminToggleVideo(email, checked) {
-  // By the time an admin can see this panel, loadAccessControl has already
-  // auto-seeded remoteAccessControl.video (see above) — this fallback only
-  // matters if that seed write failed for some reason.
-  const current = Array.isArray(remoteAccessControl.video) ? remoteAccessControl.video.slice() : adminAllKnownEmails();
-  const idx = current.findIndex(e => e.toLowerCase() === email.toLowerCase());
-  if (checked && idx === -1) current.push(email);
-  if (!checked && idx !== -1) current.splice(idx, 1);
-  saveVideoAllowedEmails(current);
+function adminTogglePending(feature, email, checked) {
+  const list = adminPending[feature];
+  const idx = list.findIndex(e => e.toLowerCase() === email.toLowerCase());
+  if (checked && idx === -1) list.push(email);
+  if (!checked && idx !== -1) list.splice(idx, 1);
+  adminPending.dirty = true;
+  updateAdminSaveUI();
 }
 function adminAddManualEmail() {
   const input = document.getElementById('admin-add-email');
@@ -3211,9 +3206,45 @@ function adminAddManualEmail() {
   if (!email || !email.includes('@')) { alert('Enter a valid email address.'); return; }
   const feature = featureSel ? featureSel.value : 'qbank';
   input.value = '';
-  if (feature === 'video') adminToggleVideo(email, true);
-  else adminToggleQBank(email, true);
-  setTimeout(renderAdminPanel, 400);
+  const targetList = feature === 'video' ? adminPending.video : feature === 'none' ? adminPending.known : adminPending.qbank;
+  if (!targetList.some(e => e.toLowerCase() === email.toLowerCase())) targetList.push(email);
+  adminPending.dirty = true;
+  renderAdminRows();
+  updateAdminSaveUI();
+}
+function updateAdminSaveUI() {
+  const statusEl = document.getElementById('admin-status');
+  const saveBtn = document.getElementById('admin-save-btn');
+  if (saveBtn) saveBtn.disabled = !adminPending.dirty;
+  if (statusEl && statusEl.dataset.transient !== '1') {
+    statusEl.textContent = adminPending.dirty ? 'You have unsaved changes.' : '';
+  }
+}
+async function adminSaveAll() {
+  if (!fbDb) return;
+  const statusEl = document.getElementById('admin-status');
+  const saveBtn = document.getElementById('admin-save-btn');
+  if (saveBtn) saveBtn.disabled = true;
+  if (statusEl) { statusEl.dataset.transient = '1'; statusEl.textContent = 'Saving…'; }
+  try {
+    await Promise.all([
+      fbDb.collection('access_control').doc('qbank').set({ allowedEmails: adminPending.qbank }, { merge: false }),
+      fbDb.collection('access_control').doc('video').set({ allowedEmails: adminPending.video }, { merge: false }),
+      fbDb.collection('access_control').doc('known_emails').set({ emails: adminPending.known }, { merge: false })
+    ]);
+    remoteAccessControl.qbank = adminPending.qbank.slice();
+    remoteAccessControl.video = adminPending.video.slice();
+    remoteAccessControl.known = adminPending.known.slice();
+    adminPending.dirty = false;
+    applyQBankVisibility();
+    applyVideoAccessVisibility();
+    if (statusEl) statusEl.textContent = 'Saved ✓';
+    setTimeout(() => { if (statusEl) { statusEl.textContent = ''; delete statusEl.dataset.transient; } }, 2000);
+  } catch (e) {
+    console.error('adminSaveAll failed', e);
+    if (statusEl) { statusEl.textContent = 'Save failed — check console.'; delete statusEl.dataset.transient; }
+    if (saveBtn) saveBtn.disabled = false;
+  }
 }
 const CLOUD_SYNC_KEYS = [
   'rns401_tracker_progress_v1',
