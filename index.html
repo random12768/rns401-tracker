@@ -2818,12 +2818,16 @@
 <!-- ============================================ ADMIN ============================================ -->
 <div class="tab-panel" id="panel-admin">
 <h2 style="color:#f59e0b; border-bottom: 2px solid rgba(245,158,11,0.35); padding-bottom: 8px; margin-bottom: 4px;">⚙️ Admin — Feature Access</h2>
-<p class="guide-sub">Control who can see Alan's Q Bank. Check an account to grant access, uncheck to remove it — changes apply the next time that person loads (or refreshes) the tracker. Only visible to admin accounts.</p>
+<p class="guide-sub">Control who can see Alan's Q Bank and who can watch videos (Pathoma/Sketchy Watch buttons, across every module). Both are off by default for anyone new — check a box to grant that person access, uncheck to remove it. Changes apply the next time that person loads (or refreshes) the tracker, and someone without video access won't see a Watch button at all — it just looks like there's no video for that row. Only visible to admin accounts.</p>
 <div id="admin-status" style="color: var(--text-faint); font-size: 0.85em; margin: 4px 0 14px 0;"></div>
 
-<div class="admin-add-row" style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+<div class="admin-add-row" style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; align-items:center;">
   <input type="email" id="admin-add-email" placeholder="add an email not listed below (e.g. before they've signed in)" style="flex:1; min-width:240px; padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); color:var(--text);">
-  <button class="module-status-btn" style="border-color:#f59e0b; color:#f59e0b;" onclick="adminAddManualEmail()">Grant Q Bank access</button>
+  <select id="admin-add-feature" style="padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); color:var(--text);">
+    <option value="qbank">Alan's Q Bank</option>
+    <option value="video">Video access</option>
+  </select>
+  <button class="module-status-btn" style="border-color:#f59e0b; color:#f59e0b;" onclick="adminAddManualEmail()">Grant access</button>
 </div>
 
 <table class="admin-table" style="width:100%; border-collapse:collapse;">
@@ -2833,10 +2837,11 @@
       <th style="padding:8px;">Name</th>
       <th style="padding:8px;">Last seen</th>
       <th style="padding:8px; text-align:center;">Alan's Q Bank</th>
+      <th style="padding:8px; text-align:center;">Video access</th>
     </tr>
   </thead>
   <tbody id="admin-user-rows">
-    <tr><td colspan="4" style="padding:12px; color:var(--text-faint);">Loading…</td></tr>
+    <tr><td colspan="5" style="padding:12px; color:var(--text-faint);">Loading…</td></tr>
   </tbody>
 </table>
 </div>
@@ -2901,14 +2906,30 @@ function isAdminUser() {
   if (!fbUser || !fbUser.email) return false;
   return ADMIN_EMAILS.some(e => e.toLowerCase() === fbUser.email.toLowerCase());
 }
-// remoteAccessControl.qbank is null until the Firestore doc loads; once it's
-// an array (even empty), it fully replaces the hardcoded fallback above.
-let remoteAccessControl = { qbank: null };
+// remoteAccessControl.qbank/video are null until their Firestore docs load;
+// once a field is an array (even empty), it fully replaces the fallback.
+// Both are opt-in / allowlist-based: an email not on the list has that
+// feature OFF by default. qbank falls back to the hardcoded
+// QBANK_ALLOWED_EMAILS list until Firestore has its own copy. video has no
+// hardcoded fallback — the first time an admin session loads after this
+// shipped, it auto-seeds the video allowlist from everyone already in the
+// directory (so nobody who already had access loses it), and from then on
+// it's a normal allowlist: anyone new starts with video access OFF until
+// an admin turns it on for them.
+let remoteAccessControl = { qbank: null, video: null };
 function qbankAllowedForCurrentUser() {
   if (!fbUser || !fbUser.email) return false;
   const email = fbUser.email.toLowerCase();
   const list = Array.isArray(remoteAccessControl.qbank) ? remoteAccessControl.qbank : QBANK_ALLOWED_EMAILS;
   return list.some(e => e.toLowerCase() === email);
+}
+function videoAccessAllowedForCurrentUser() {
+  if (!fbUser || !fbUser.email) return false;
+  // Disabled by default: until the video allowlist has been created (see
+  // loadAccessControl's one-time seeding), nobody new gets video access.
+  if (!Array.isArray(remoteAccessControl.video)) return false;
+  const email = fbUser.email.toLowerCase();
+  return remoteAccessControl.video.some(e => e.toLowerCase() === email);
 }
 function applyQBankVisibility() {
   const allowed = qbankAllowedForCurrentUser();
@@ -2920,6 +2941,30 @@ function applyQBankVisibility() {
     switchSubTab('rns-path');
   }
   if (typeof renderOverviewDynamic === 'function') renderOverviewDynamic();
+}
+// Every clickable video button anywhere in the tracker (Pathoma "Watch",
+// Sketchy Pathology, Sketchy Video — anything with class="video-link") is
+// tracked here the first time this runs, so a denied user's cells can be
+// blanked to a plain "—" (identical to a row that never had a video) and
+// restored later without needing to re-find the original link in the DOM.
+let videoManagedCells = null;
+function buildVideoManagedCells() {
+  if (videoManagedCells) return;
+  videoManagedCells = [];
+  document.querySelectorAll('a.video-link').forEach(a => {
+    const td = a.closest('td');
+    if (td && !videoManagedCells.some(c => c.el === td)) {
+      videoManagedCells.push({ el: td, html: td.innerHTML });
+    }
+  });
+}
+function applyVideoAccessVisibility() {
+  buildVideoManagedCells();
+  const allowed = videoAccessAllowedForCurrentUser();
+  videoManagedCells.forEach(c => {
+    const wantHtml = allowed ? c.html : '—';
+    if (c.el.innerHTML !== wantHtml) c.el.innerHTML = wantHtml;
+  });
 }
 function applyAdminVisibility() {
   const btn = document.getElementById('admin-tab-btn');
@@ -2958,7 +3003,31 @@ async function loadAccessControl() {
   } catch (e) {
     console.error('loadAccessControl failed (falling back to hardcoded list)', e);
   }
+  try {
+    const vdoc = await fbDb.collection('access_control').doc('video').get();
+    if (vdoc.exists && Array.isArray(vdoc.data().allowedEmails)) {
+      remoteAccessControl.video = vdoc.data().allowedEmails;
+    } else if (isAdminUser()) {
+      // One-time setup: this feature has never been configured. Grandfather
+      // in everyone who has already signed in (so nobody loses access they
+      // already had today), then leave it as an explicit list from here on
+      // — anyone new after this point starts with video access OFF until
+      // an admin turns it on for them.
+      let seedEmails = [];
+      try {
+        const dsnap = await fbDb.collection('directory').get();
+        dsnap.forEach(d => { const de = (d.data() || {}).email; if (de) seedEmails.push(de); });
+      } catch (e2) { console.error('video allowlist seed: could not read directory', e2); }
+      try {
+        await fbDb.collection('access_control').doc('video').set({ allowedEmails: seedEmails }, { merge: false });
+        remoteAccessControl.video = seedEmails;
+      } catch (e3) { console.error('video allowlist seed: could not write', e3); }
+    } // else: not yet seeded and this isn't an admin session — stays disabled (see videoAccessAllowedForCurrentUser)
+  } catch (e) {
+    console.error('loadAccessControl (video) failed — defaulting to disabled', e);
+  }
   applyQBankVisibility();
+  applyVideoAccessVisibility();
   if (isAdminUser()) renderAdminPanel();
 }
 async function saveQBankAllowedEmails(list) {
@@ -2975,10 +3044,25 @@ async function saveQBankAllowedEmails(list) {
     if (statusEl) statusEl.textContent = 'Save failed — check console.';
   }
 }
+async function saveVideoAllowedEmails(list) {
+  const statusEl = document.getElementById('admin-status');
+  if (!fbDb) { if (statusEl) statusEl.textContent = 'Cloud sync is not set up — changes here won\'t save.'; return; }
+  try {
+    if (statusEl) statusEl.textContent = 'Saving…';
+    await fbDb.collection('access_control').doc('video').set({ allowedEmails: list }, { merge: false });
+    remoteAccessControl.video = list.slice();
+    if (statusEl) statusEl.textContent = 'Saved ✓';
+    setTimeout(() => { if (statusEl && statusEl.textContent === 'Saved ✓') statusEl.textContent = ''; }, 2000);
+    applyVideoAccessVisibility();
+  } catch (e) {
+    console.error('saveVideoAllowedEmails failed', e);
+    if (statusEl) statusEl.textContent = 'Save failed — check console.';
+  }
+}
 async function renderAdminPanel() {
   const rowsEl = document.getElementById('admin-user-rows');
   if (!rowsEl || !fbDb) return;
-  rowsEl.innerHTML = '<tr><td colspan="4" style="padding:12px; color:var(--text-faint);">Loading…</td></tr>';
+  rowsEl.innerHTML = '<tr><td colspan="5" style="padding:12px; color:var(--text-faint);">Loading…</td></tr>';
   let people = [];
   try {
     const snap = await fbDb.collection('directory').get();
@@ -2988,31 +3072,42 @@ async function renderAdminPanel() {
     });
   } catch (e) {
     console.error('renderAdminPanel: could not load directory', e);
-    rowsEl.innerHTML = '<tr><td colspan="4" style="padding:12px; color:var(--text-faint);">Could not load the account list — check console.</td></tr>';
+    rowsEl.innerHTML = '<tr><td colspan="5" style="padding:12px; color:var(--text-faint);">Could not load the account list — check console.</td></tr>';
     return;
   }
-  const allowedList = Array.isArray(remoteAccessControl.qbank) ? remoteAccessControl.qbank : QBANK_ALLOWED_EMAILS;
-  // Include any allowed email that hasn't signed in yet (added manually) too.
-  allowedList.forEach(e => {
-    if (!people.some(p => p.email.toLowerCase() === e.toLowerCase())) {
-      people.push({ email: e, name: '', lastSeen: 0 });
-    }
+  const qbankList = Array.isArray(remoteAccessControl.qbank) ? remoteAccessControl.qbank : QBANK_ALLOWED_EMAILS;
+  const videoConfigured = Array.isArray(remoteAccessControl.video);
+  const videoList = videoConfigured ? remoteAccessControl.video : null; // null = everyone allowed
+  // Make sure anyone manually granted (but not yet signed in) still shows up.
+  qbankList.forEach(e => {
+    if (!people.some(p => p.email.toLowerCase() === e.toLowerCase())) people.push({ email: e, name: '', lastSeen: 0 });
   });
+  if (videoList) {
+    videoList.forEach(e => {
+      if (!people.some(p => p.email.toLowerCase() === e.toLowerCase())) people.push({ email: e, name: '', lastSeen: 0 });
+    });
+  }
   people.sort((a, b) => b.lastSeen - a.lastSeen);
   if (!people.length) {
-    rowsEl.innerHTML = '<tr><td colspan="4" style="padding:12px; color:var(--text-faint);">No accounts yet.</td></tr>';
+    rowsEl.innerHTML = '<tr><td colspan="5" style="padding:12px; color:var(--text-faint);">No accounts yet.</td></tr>';
     return;
   }
   rowsEl.innerHTML = people.map(p => {
-    const checked = allowedList.some(e => e.toLowerCase() === p.email.toLowerCase());
+    const qChecked = qbankList.some(e => e.toLowerCase() === p.email.toLowerCase());
+    const vChecked = videoList ? videoList.some(e => e.toLowerCase() === p.email.toLowerCase()) : true;
     const lastSeenStr = p.lastSeen ? new Date(p.lastSeen).toLocaleDateString() : '—';
-    return `<tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+    const emailEsc = p.email.replace(/'/g, "\\'");
+    return `<tr data-email="${p.email.replace(/"/g, '&quot;')}" style="border-bottom:1px solid rgba(255,255,255,0.08);">
       <td style="padding:8px;">${p.email}</td>
       <td style="padding:8px;">${p.name || '—'}</td>
       <td style="padding:8px;">${lastSeenStr}</td>
-      <td style="padding:8px; text-align:center;"><input type="checkbox" ${checked ? 'checked' : ''} onchange="adminToggleQBank('${p.email.replace(/'/g, "\\'")}', this.checked)"></td>
+      <td style="padding:8px; text-align:center;"><input type="checkbox" ${qChecked ? 'checked' : ''} onchange="adminToggleQBank('${emailEsc}', this.checked)"></td>
+      <td style="padding:8px; text-align:center;"><input type="checkbox" ${vChecked ? 'checked' : ''} onchange="adminToggleVideo('${emailEsc}', this.checked)"></td>
     </tr>`;
   }).join('');
+}
+function adminAllKnownEmails() {
+  return Array.from(document.querySelectorAll('#admin-user-rows tr[data-email]')).map(r => r.getAttribute('data-email'));
 }
 function adminToggleQBank(email, checked) {
   const current = Array.isArray(remoteAccessControl.qbank) ? remoteAccessControl.qbank.slice() : QBANK_ALLOWED_EMAILS.slice();
@@ -3021,13 +3116,26 @@ function adminToggleQBank(email, checked) {
   if (!checked && idx !== -1) current.splice(idx, 1);
   saveQBankAllowedEmails(current);
 }
+function adminToggleVideo(email, checked) {
+  // By the time an admin can see this panel, loadAccessControl has already
+  // auto-seeded remoteAccessControl.video (see above) — this fallback only
+  // matters if that seed write failed for some reason.
+  const current = Array.isArray(remoteAccessControl.video) ? remoteAccessControl.video.slice() : adminAllKnownEmails();
+  const idx = current.findIndex(e => e.toLowerCase() === email.toLowerCase());
+  if (checked && idx === -1) current.push(email);
+  if (!checked && idx !== -1) current.splice(idx, 1);
+  saveVideoAllowedEmails(current);
+}
 function adminAddManualEmail() {
   const input = document.getElementById('admin-add-email');
+  const featureSel = document.getElementById('admin-add-feature');
   if (!input) return;
   const email = (input.value || '').trim();
   if (!email || !email.includes('@')) { alert('Enter a valid email address.'); return; }
+  const feature = featureSel ? featureSel.value : 'qbank';
   input.value = '';
-  adminToggleQBank(email, true);
+  if (feature === 'video') adminToggleVideo(email, true);
+  else adminToggleQBank(email, true);
   setTimeout(renderAdminPanel, 400);
 }
 const CLOUD_SYNC_KEYS = [
@@ -3120,6 +3228,7 @@ async function onAuthChange(user) {
     setSyncStatus(`signed in as ${user.displayName || user.email} — pulling your saved progress…`);
     passGate();
     applyQBankVisibility();
+    applyVideoAccessVisibility();
     applyAdminVisibility();
     upsertDirectoryEntry();
     loadAccessControl();
