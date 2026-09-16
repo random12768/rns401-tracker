@@ -3124,22 +3124,40 @@ function adminInitials(name, email) {
 // written to Firestore until "Save changes" is clicked (adminSaveAll).
 let adminDirectoryPeople = []; // last-fetched directory docs, cached for re-rendering rows without another Firestore read
 let adminPending = { qbank: [], video: [], known: [], dirty: false };
+// Firebase's onAuthStateChanged can fire more than once for the same
+// sign-in (cached state, then a live check), which can call this function
+// twice concurrently. This generation counter makes sure a slower, now-
+// stale fetch never overwrites what a newer call already rendered —
+// without it, both calls' directory reads land and every account doubles up.
+let adminRenderGen = 0;
 async function renderAdminPanel() {
   const rowsEl = document.getElementById('admin-user-rows');
   if (!rowsEl || !fbDb) return;
+  const gen = ++adminRenderGen;
   rowsEl.innerHTML = '<tr><td colspan="4" class="admin-empty">Loading…</td></tr>';
-  adminDirectoryPeople = [];
+  let fetched = [];
   try {
     const snap = await fbDb.collection('directory').get();
+    const seen = {};
     snap.forEach(d => {
       const data = d.data() || {};
-      if (data.email) adminDirectoryPeople.push({ email: data.email, name: data.displayName || '', lastSeen: data.lastSeen || 0 });
+      const email = (data.email || '').trim();
+      if (!email) return;
+      const key = email.toLowerCase();
+      // Dedupe defensively in case the same email ever ends up under more
+      // than one Firebase uid — keep whichever record was seen most recently.
+      if (!seen[key] || (data.lastSeen || 0) > seen[key].lastSeen) {
+        seen[key] = { email, name: data.displayName || '', lastSeen: data.lastSeen || 0 };
+      }
     });
+    fetched = Object.values(seen);
   } catch (e) {
     console.error('renderAdminPanel: could not load directory', e);
-    rowsEl.innerHTML = '<tr><td colspan="4" class="admin-empty">Could not load the account list — check console.</td></tr>';
+    if (gen === adminRenderGen) rowsEl.innerHTML = '<tr><td colspan="4" class="admin-empty">Could not load the account list — check console.</td></tr>';
     return;
   }
+  if (gen !== adminRenderGen) return; // a newer call started while this one was fetching — drop this stale result
+  adminDirectoryPeople = fetched;
   const qbankList = Array.isArray(remoteAccessControl.qbank) ? remoteAccessControl.qbank : QBANK_ALLOWED_EMAILS;
   const videoList = Array.isArray(remoteAccessControl.video) ? remoteAccessControl.video : [];
   const knownList = Array.isArray(remoteAccessControl.known) ? remoteAccessControl.known : [];
