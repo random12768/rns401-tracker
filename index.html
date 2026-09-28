@@ -3041,6 +3041,7 @@
 <div class="module-subnav">
   <button class="module-subtab-btn active" data-sub="msk-anat" onclick="switchSubTab('msk-anat')">Anatomy</button>
   <button class="module-subtab-btn" data-sub="msk-phys" onclick="switchSubTab('msk-phys')">Physiology</button>
+  <button class="module-subtab-btn" data-sub="msk-qbank" onclick="switchSubTab('msk-qbank')" style="display:none;">Alan's Q Bank</button>
 </div>
 
 <div class="module-sub-panel active" id="sub-msk-anat">
@@ -3095,6 +3096,10 @@
 <p class="note">Lecture decks are matched to the schedule by topic (the slide files aren't dated), so a deck can appear on more than one session.</p>
 </div>
 
+<div class="module-sub-panel" id="sub-msk-qbank" style="display:none;">
+  <div style="font-size:0.85rem;color:var(--text-dim,#8b949e);margin:4px 0 10px;">231 questions · UWorld MSK (48) · BRS Lower Limb (64) · BRS Upper Limb (73) · Maria MSK Physiology (46). Progress saves in this browser. <a href="msk-qbank.html" target="_blank" rel="noopener">Open full screen ↗</a></div>
+  <iframe data-src="msk-qbank.html" title="MSK101 Alan's Q Bank" style="width:100%;height:calc(100vh - 170px);min-height:600px;border:1px solid var(--border,#30363d);border-radius:10px;background:#0d1117;" loading="lazy"></iframe>
+</div>
 <div class="module-sub-panel" id="sub-msk-phys">
 <h2 class="msk-title" style="font-size:1.15em;">Physiology — Muscle &amp; Neuromuscular (Bootcamp)</h2>
 <div class="summary msk">
@@ -3284,6 +3289,16 @@ function applyQBankVisibility() {
   if (panel) panel.style.display = allowed ? '' : 'none';
   if (!allowed && panel && panel.classList.contains('active')) {
     switchSubTab('rns-path');
+  }
+  const mbtn = document.querySelector('.module-subtab-btn[data-sub="msk-qbank"]');
+  if (mbtn) mbtn.style.display = allowed ? '' : 'none';
+  const mpanel = document.getElementById('sub-msk-qbank');
+  if (mpanel) {
+    mpanel.style.display = allowed ? '' : 'none';
+    const fr = mpanel.querySelector('iframe[data-src]');
+    if (allowed && fr && !fr.getAttribute('src')) fr.setAttribute('src', fr.getAttribute('data-src'));
+    if (!allowed && fr) fr.removeAttribute('src');
+    if (!allowed && mpanel.classList.contains('active')) switchSubTab('msk-anat');
   }
   const guideCard = document.getElementById('guide-card-qbank');
   if (guideCard) guideCard.style.display = allowed ? '' : 'none';
