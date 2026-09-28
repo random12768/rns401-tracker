@@ -1350,6 +1350,15 @@
     background: rgba(5,7,14,0.72);
     backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   }
+
+  .md-modal-box.settings-box { max-width: 560px; max-height: 88vh; overflow-y: auto; }
+  .settings-pdf-section { text-align: left; margin: 22px 0 6px; padding-top: 18px; border-top: 1px solid var(--border-soft); }
+  .settings-pdf-title { font-weight: 800; font-size: 1.02em; margin-bottom: 4px; }
+  .settings-pdf-sub { font-size: 0.8em; color: var(--text-dim); line-height: 1.45; margin-bottom: 12px; }
+  .settings-pdf-group { margin-bottom: 12px; }
+  .settings-pdf-glabel { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-faint); margin-bottom: 6px; }
+  .settings-pdf-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .settings-pdf-list .pdf-pill { font-size: 0.85em; padding: 7px 13px; }
   .md-modal-box {
     max-width: 400px; width: 90%;
     background: rgba(13,18,32,0.92);
@@ -1698,40 +1707,7 @@
 <h1><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Maninder's Master MD Tracker — Fall 2026</h1>
 <div id="exam-countdown"></div>
 
-<div class="pdf-widget" id="pdf-widget">
-  <button class="pdf-pill" id="fa-chip" data-state="off" onclick="pickFirstAidPdf()" title="First Aid PDF — not attached. Click to attach.">
-    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">First Aid</span><span class="pdf-pill-size" id="fa-size"></span><span class="pdf-pill-x" id="fa-x" onclick="event.stopPropagation();clearPdfBlob('fa')" title="Remove First Aid PDF">×</span>
-  </button>
-  <button class="pdf-pill" id="pathoma-chip" data-state="off" onclick="pickPathomaPdf()" title="Pathoma PDF — not attached. Click to attach.">
-    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">Pathoma</span><span class="pdf-pill-size" id="pathoma-size"></span><span class="pdf-pill-x" id="pathoma-x" onclick="event.stopPropagation();clearPdfBlob('pathoma')" title="Remove Pathoma PDF">×</span>
-  </button>
-  <button class="pdf-pill" id="hymicro-chip" data-state="off" style="display:none;" onclick="pickHyMicroPdf()" title="HY Micro PDF — not attached. Click to attach.">
-    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">HY Micro</span><span class="pdf-pill-size" id="hymicro-size"></span><span class="pdf-pill-x" id="hymicro-x" onclick="event.stopPropagation();clearPdfBlob('hymicro')" title="Remove HY Micro PDF">×</span>
-  </button>
-  <button class="pdf-pill" id="hypharm-chip" data-state="off" style="display:none;" onclick="pickHyPharmPdf()" title="HY Pharmacology PDF — not attached. Click to attach.">
-    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">HY Pharm</span><span class="pdf-pill-size" id="hypharm-size"></span><span class="pdf-pill-x" id="hypharm-x" onclick="event.stopPropagation();clearPdfBlob('hypharm')" title="Remove HY Pharmacology PDF">×</span>
-  </button>
-  <button class="pdf-pill" id="lip-chip" data-state="off" onclick="pickLippincottPdf()" title="Lippincott Microcards PDF — not attached. Click to attach.">
-    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">Lippincott</span><span class="pdf-pill-size" id="lip-size"></span><span class="pdf-pill-x" id="lip-x" onclick="event.stopPropagation();clearPdfBlob('lip')" title="Remove Lippincott PDF">×</span>
-  </button>
-  <input type="file" id="lip-file-input" accept="application/pdf" style="display:none;">
-  <button class="pdf-pill md1-chip" id="mehmsk-chip" data-state="off" style="display:none;" onclick="pickExtraPdf('mehmsk')" title="Mehlman MSK PDF — not attached. Click to attach.">
-    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">Mehlman MSK</span><span class="pdf-pill-size" id="mehmsk-size"></span><span class="pdf-pill-x" id="mehmsk-x" onclick="event.stopPropagation();clearPdfBlob('mehmsk')" title="Remove Mehlman MSK PDF">×</span>
-  </button>
-  <input type="file" id="mehmsk-file-input" accept="application/pdf" style="display:none;">
-  <button class="pdf-pill md1-chip" id="c100-chip" data-state="off" style="display:none;" onclick="pickExtraPdf('c100')" title="100 Concepts PDF — not attached. Click to attach.">
-    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">100 Concepts</span><span class="pdf-pill-size" id="c100-size"></span><span class="pdf-pill-x" id="c100-x" onclick="event.stopPropagation();clearPdfBlob('c100')" title="Remove 100 Concepts PDF">×</span>
-  </button>
-  <input type="file" id="c100-file-input" accept="application/pdf" style="display:none;">
-  <button class="pdf-pill md1-chip" id="bcmsk-chip" data-state="off" style="display:none;" onclick="pickExtraPdf('bcmsk')" title="Bootcamp MSK PDF — not attached. Click to attach.">
-    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">Bootcamp MSK</span><span class="pdf-pill-size" id="bcmsk-size"></span><span class="pdf-pill-x" id="bcmsk-x" onclick="event.stopPropagation();clearPdfBlob('bcmsk')" title="Remove Bootcamp MSK PDF">×</span>
-  </button>
-  <input type="file" id="bcmsk-file-input" accept="application/pdf" style="display:none;">
-  <input type="file" id="fa-file-input" accept="application/pdf" style="display:none;">
-  <input type="file" id="pathoma-file-input" accept="application/pdf" style="display:none;">
-  <input type="file" id="hymicro-file-input" accept="application/pdf" style="display:none;">
-  <input type="file" id="hypharm-file-input" accept="application/pdf" style="display:none;">
-</div>
+
 <div class="fa-bar" id="sync-bar">
   <span class="pdf-pill-dot" id="sync-dot" data-state="off" style="margin-right:2px;flex-shrink:0"></span>
   <span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h.79a4.5 4.5 0 1 1 0 9Z"/></svg> Cloud save:</span>
@@ -1761,12 +1737,54 @@
 </div>
 
 <div class="md-modal-overlay" id="settings-modal-overlay">
-  <div class="md-modal-box">
+  <div class="md-modal-box settings-box">
     <div class="md-modal-title">Settings</div>
     <div class="md-modal-sub">Which MD are you in?</div>
     <button class="md-choice-btn settings-sem-btn" data-sem="MD1" onclick="applySemesterChoice('MD1')">MD1</button>
     <button class="md-choice-btn settings-sem-btn" data-sem="MD3" onclick="applySemesterChoice('MD3')">MD3</button>
     <button class="md-choice-btn settings-sem-btn" data-sem="MD4" onclick="applySemesterChoice('MD4')">MD4</button>
+    <div class="settings-pdf-section">
+      <div class="settings-pdf-title">📚 Linked PDFs</div>
+      <div class="settings-pdf-sub">Link each PDF once on this browser and every 📖/🩻/💯/📄 page link in the tracker opens straight to the right page. Click a PDF to browse for it (or swap it), × to unlink. Green = linked.</div>
+      <div class="settings-pdf-group"><div class="settings-pdf-glabel">📖 Textbooks</div><div class="settings-pdf-list">
+      <button class="pdf-pill" id="fa-chip" data-state="off" onclick="pickFirstAidPdf()" title="First Aid PDF — not attached. Click to attach.">
+    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">First Aid</span><span class="pdf-pill-size" id="fa-size"></span><span class="pdf-pill-x" id="fa-x" onclick="event.stopPropagation();clearPdfBlob('fa')" title="Remove First Aid PDF">×</span>
+  </button>
+      <button class="pdf-pill" id="pathoma-chip" data-state="off" onclick="pickPathomaPdf()" title="Pathoma PDF — not attached. Click to attach.">
+    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">Pathoma</span><span class="pdf-pill-size" id="pathoma-size"></span><span class="pdf-pill-x" id="pathoma-x" onclick="event.stopPropagation();clearPdfBlob('pathoma')" title="Remove Pathoma PDF">×</span>
+  </button>
+      <button class="pdf-pill" id="lip-chip" data-state="off" onclick="pickLippincottPdf()" title="Lippincott Microcards PDF — not attached. Click to attach.">
+    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">Lippincott</span><span class="pdf-pill-size" id="lip-size"></span><span class="pdf-pill-x" id="lip-x" onclick="event.stopPropagation();clearPdfBlob('lip')" title="Remove Lippincott PDF">×</span>
+  </button>
+      <button class="pdf-pill" id="c100-chip" data-state="off" style="display:none;" onclick="pickExtraPdf('c100')" title="100 Concepts PDF — not attached. Click to attach.">
+    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">100 Concepts</span><span class="pdf-pill-size" id="c100-size"></span><span class="pdf-pill-x" id="c100-x" onclick="event.stopPropagation();clearPdfBlob('c100')" title="Remove 100 Concepts PDF">×</span>
+  </button>
+      </div></div>
+      <div class="settings-pdf-group"><div class="settings-pdf-glabel">🩻 Mehlman</div><div class="settings-pdf-list">
+      <button class="pdf-pill" id="hymicro-chip" data-state="off" style="display:none;" onclick="pickHyMicroPdf()" title="HY Micro PDF — not attached. Click to attach.">
+    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">HY Micro</span><span class="pdf-pill-size" id="hymicro-size"></span><span class="pdf-pill-x" id="hymicro-x" onclick="event.stopPropagation();clearPdfBlob('hymicro')" title="Remove HY Micro PDF">×</span>
+  </button>
+      <button class="pdf-pill" id="hypharm-chip" data-state="off" style="display:none;" onclick="pickHyPharmPdf()" title="HY Pharmacology PDF — not attached. Click to attach.">
+    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">HY Pharm</span><span class="pdf-pill-size" id="hypharm-size"></span><span class="pdf-pill-x" id="hypharm-x" onclick="event.stopPropagation();clearPdfBlob('hypharm')" title="Remove HY Pharmacology PDF">×</span>
+  </button>
+      <button class="pdf-pill" id="mehmsk-chip" data-state="off" style="display:none;" onclick="pickExtraPdf('mehmsk')" title="Mehlman MSK PDF — not attached. Click to attach.">
+    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">Mehlman MSK</span><span class="pdf-pill-size" id="mehmsk-size"></span><span class="pdf-pill-x" id="mehmsk-x" onclick="event.stopPropagation();clearPdfBlob('mehmsk')" title="Remove Mehlman MSK PDF">×</span>
+  </button>
+      </div></div>
+      <div class="settings-pdf-group"><div class="settings-pdf-glabel">🎓 Bootcamp</div><div class="settings-pdf-list">
+      <button class="pdf-pill" id="bcmsk-chip" data-state="off" style="display:none;" onclick="pickExtraPdf('bcmsk')" title="Bootcamp MSK PDF — not attached. Click to attach.">
+    <span class="pdf-pill-dot"></span><span class="pdf-pill-lbl">Bootcamp MSK</span><span class="pdf-pill-size" id="bcmsk-size"></span><span class="pdf-pill-x" id="bcmsk-x" onclick="event.stopPropagation();clearPdfBlob('bcmsk')" title="Remove Bootcamp MSK PDF">×</span>
+  </button>
+      </div></div>
+      <input type="file" id="lip-file-input" accept="application/pdf" style="display:none;">
+      <input type="file" id="mehmsk-file-input" accept="application/pdf" style="display:none;">
+      <input type="file" id="c100-file-input" accept="application/pdf" style="display:none;">
+      <input type="file" id="bcmsk-file-input" accept="application/pdf" style="display:none;">
+      <input type="file" id="fa-file-input" accept="application/pdf" style="display:none;">
+      <input type="file" id="pathoma-file-input" accept="application/pdf" style="display:none;">
+      <input type="file" id="hymicro-file-input" accept="application/pdf" style="display:none;">
+      <input type="file" id="hypharm-file-input" accept="application/pdf" style="display:none;">
+    </div>
     <button class="md-modal-close" onclick="closeSettingsModal()">Close</button>
   </div>
 </div>
@@ -3942,8 +3960,12 @@ function applyMd1Chips() {
   EXTRA_PDF_KINDS.forEach(k => {
     const c = document.getElementById(k + '-chip');
     if (!c) return;
-    const show = md1 && (k !== 'mehmsk' || hyOk);
+    const show = (k !== 'mehmsk' || hyOk);
     c.style.display = show ? '' : 'none';
+  });
+  document.querySelectorAll('.settings-pdf-group').forEach(g => {
+    const any = Array.from(g.querySelectorAll('.pdf-pill')).some(p => p.style.display !== 'none');
+    g.style.display = any ? '' : 'none';
   });
 }
 document.addEventListener('DOMContentLoaded', () => {
