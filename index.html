@@ -1816,6 +1816,11 @@
   .watch-list a.vid-link:hover { color:var(--accent,#a3e635); border-bottom-style:solid; }
   #sub-msk-anat a.vid-link { color:inherit; text-decoration:none; border-bottom:1px dotted var(--text-dim); }
   #sub-msk-anat a.vid-link:hover { color:var(--accent,#a3e635); border-bottom-style:solid; }
+  .chip-anat, .chip-bio, .chip-phys { background: var(--msk); color: #1a2e05; }
+  .subject-countdown.anat, .subject-countdown.bio, .subject-countdown.phys { border-top-color: var(--msk); }
+  .planner-module-bar { display:flex; align-items:center; gap:12px; flex-wrap:wrap; background: var(--surface); border:1px solid var(--border-soft); border-left:4px solid var(--planner); border-radius:12px; padding:10px 14px; margin:0 0 10px; font-size:0.92em; }
+  .planner-module-bar .pmb-range, .planner-module-bar .pmb-auto { color: var(--text-dim); font-size:0.85em; }
+  .planner-module-bar select { background: var(--surface); color: var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:4px 8px; font-family:inherit; }
 </style>
 <!-- Firebase (optional: only used if you set up cloud sync — see FIREBASE_CONFIG near the top of the <script> below) -->
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -2122,6 +2127,7 @@
 <!-- ============================================ PLANNER ============================================ -->
 <div class="tab-panel" id="panel-planner">
 <h2 class="planner">Study Planner</h2>
+<div id="planner-module-bar"></div>
 
 <div class="planner-settings">
   <div class="field">
@@ -2156,9 +2162,7 @@
   <button onclick="jumpToToday()" style="background:#333;color:#ccc;border:1px solid #555;border-radius:6px;padding:4px 10px;font-size:0.75em;cursor:pointer;">📍 Jump to today</button>
 </h3>
 <div class="cal-legend">
-  <span><span class="legend-dot chip-path"></span>Pathology</span>
-  <span><span class="legend-dot chip-micro"></span>Microbiology</span>
-  <span><span class="legend-dot chip-pharm"></span>Pharmacology</span>
+  <span id="planner-legend-subjects" style="display:contents"></span>
   <span><span class="legend-dot" style="background:#e0a860;"></span>Review</span>
   <span>🏫 = taught in class that day</span>
   <span style="color:#e07a7a;">Red outline = behind your get-ahead buffer</span>
@@ -2172,7 +2176,7 @@
   <div id="planner-manual-form"></div>
 </div>
 
-<p class="note">💡 This plan recalculates whenever you check a box anywhere in this file. Videos are ordered to match the actual order topics are taught in your RNS401 schedule (Weeks 1–3, shifted to start Sept 7, 2026) so subjects naturally mix, and the planner tries to keep each video watched at least your buffer setting's worth of days before it's covered in class — items in red are already behind that. Drag any lecture to a different day to lock it there, or use "Plan your own study time" to schedule a specific video with a custom review length. Review days pull from whatever you've already watched, plus anything tagged as a gap topic (no dedicated video) so you don't forget to hit those with slides/First Aid.</p>
+<p class="note">💡 This plan recalculates whenever you check a box anywhere in this file. Videos are ordered to match the actual order topics are taught in your class schedule for the current module so subjects naturally mix, and the planner tries to keep each video watched at least your buffer setting's worth of days before it's covered in class — items in red are already behind that. Drag any lecture to a different day to lock it there, or use "Plan your own study time" to schedule a specific video with a custom review length. Review days pull from whatever you've already watched, plus anything tagged as a gap topic (no dedicated video) so you don't forget to hit those with slides/First Aid.</p>
 
 <!-- Day detail modal -->
 <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this) closeDayModal()">
@@ -4107,6 +4111,9 @@ const CLOUD_SYNC_KEYS = [
   'rnsii_groups',
   'wusom_semester_v1'
 ];
+['ghs402','ers403','rms406','fbs301','nis302','chs303','msk101'].forEach(function (id) {
+  ['rns401_planner_settings_v2','rns401_planner_meta_v1','rns401_review_state_v1','rns401_manual_overrides_v1'].forEach(function (b) { CLOUD_SYNC_KEYS.push(b + ':' + id); });
+});
 
 function firebaseReady() {
   return typeof firebase !== 'undefined' && FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.startsWith('PASTE_');
@@ -4829,6 +4836,103 @@ function getCurrentModule(todayStr, semester) {
   for (const m of list) { if (todayStr <= m.end) return m; }
   return list[list.length - 1] || MODULES[0];
 }
+
+// ============================================================
+// PLANNER — follows the module you are currently in (per semester)
+// ============================================================
+const PLANNER_TABLES = {
+  rns401: ['path-table', 'micro-table', 'pharm-table'],
+  ghs402: ['ghs-path-table', 'ghs-micro-table', 'ghs-pharm-table'],
+  ers403: ['ers-path-table', 'ers-micro-table', 'ers-pharm-table'],
+  rms406: ['rms-path-table', 'rms-micro-table', 'rms-pharm-table'],
+  fbs301: ['fbs-path-table', 'fbs-micro-table', 'fbs-pharm-table'],
+  nis302: ['nis-path-table', 'nis-micro-table', 'nis-pharm-table'],
+  chs303: ['chs-path-table', 'chs-micro-table', 'chs-pharm-table'],
+  msk101: ['msk-anat-table', 'msk-bio-table', 'msk-phys-table']
+};
+const PLANNER_SUBJECT_INFO = {
+  path: { label: 'Pathology', color: '--path' }, micro: { label: 'Microbiology', color: '--micro' }, pharm: { label: 'Pharmacology', color: '--pharm' },
+  anat: { label: 'Anatomy', color: '--msk' }, bio: { label: 'Biochemistry', color: '--msk' }, phys: { label: 'Physiology', color: '--msk' }
+};
+const PLANNER_MOD_OVERRIDE_KEY = 'planner_module_override_v1';
+function plannerSubjectKeyForTable(t) {
+  if (/path-table$/.test(t) && t.indexOf('msk') !== 0) return 'path';
+  if (/micro-table$/.test(t)) return 'micro';
+  if (/pharm-table$/.test(t)) return 'pharm';
+  if (t === 'msk-anat-table') return 'anat';
+  if (t === 'msk-bio-table') return 'bio';
+  if (t === 'msk-phys-table') return 'phys';
+  return t.replace('-table', '');
+}
+function plannerModule() {
+  const sem = (typeof currentSemester !== 'undefined' && currentSemester) || 'MD4';
+  const list = MODULES.filter(m => m.semester === sem);
+  const todayStr = fmtDate(startOfDay(new Date()));
+  let auto = getCurrentModule(todayStr, sem), note = '';
+  if (!PLANNER_TABLES[auto.id]) {
+    const nxt = list.find(x => x.start > auto.start && PLANNER_TABLES[x.id]);
+    const prv = list.slice().reverse().find(x => x.end < auto.start && PLANNER_TABLES[x.id]);
+    const pick = nxt || prv;
+    if (pick) { note = auto.short + ' has no videos in this tracker, so the planner is showing ' + pick.short + (nxt ? ' (getting ahead).' : '.'); auto = pick; }
+  }
+  let chosen = auto, isAuto = true;
+  try {
+    const o = localStorage.getItem(PLANNER_MOD_OVERRIDE_KEY + ':' + sem);
+    const m = o && list.find(x => x.id === o && PLANNER_TABLES[x.id]);
+    if (m && m.id !== auto.id) { chosen = m; isAuto = false; }
+  } catch (e) {}
+  return { mod: chosen, auto: auto, isAuto: isAuto, note: note, options: list.filter(x => PLANNER_TABLES[x.id]), sem: sem };
+}
+function plannerSubjects() {
+  const mod = plannerModule().mod;
+  return (PLANNER_TABLES[mod.id] || []).map(t => {
+    const key = plannerSubjectKeyForTable(t);
+    const info = PLANNER_SUBJECT_INFO[key] || { label: key, color: '--planner' };
+    return { key: key, label: info.label, color: info.color, table: t };
+  });
+}
+function parseTimeText(t) {
+  t = String(t || '');
+  const hh = /(\d+)\s*h/.exec(t), mm = /(\d+)\s*m/.exec(t);
+  return (hh ? parseInt(hh[1]) * 60 : 0) + (mm ? parseInt(mm[1]) : 0);
+}
+function pkey(base) {
+  const id = plannerModule().mod.id;
+  return id === 'rns401' ? base : base + ':' + id;
+}
+function moduleExamDate(mod) {
+  const ev = EXAM_EVENTS.filter(e => e.modules && e.modules.includes(mod.id)).map(e => e.date).sort();
+  return ev.length ? ev[ev.length - 1] : mod.end;
+}
+function parseRowDate(txt, mod) {
+  const m = /(\d{1,2})\/(\d{1,2})/.exec(txt || '');
+  if (!m) return null;
+  const y = mod.start.slice(0, 4);
+  return y + '-' + String(m[1]).padStart(2, '0') + '-' + String(m[2]).padStart(2, '0');
+}
+let _plannerShownMod = null;
+function setPlannerModule(id) {
+  const sem = plannerModule().sem;
+  try { if (id === 'auto') localStorage.removeItem(PLANNER_MOD_OVERRIDE_KEY + ':' + sem); else localStorage.setItem(PLANNER_MOD_OVERRIDE_KEY + ':' + sem, id); } catch (e) {}
+  populateSettingsInputs();
+  renderPlanner();
+}
+function renderPlannerModuleBar() {
+  const el = document.getElementById('planner-module-bar');
+  if (!el) return;
+  const pm = plannerModule();
+  const exam = moduleExamDate(pm.mod);
+  const opts = ['<option value="auto"' + (pm.isAuto ? ' selected' : '') + '>Automatic — ' + pm.auto.short + '</option>']
+    .concat(pm.options.filter(m => m.id !== pm.auto.id).map(m => '<option value="' + m.id + '"' + (!pm.isAuto && pm.mod.id === m.id ? ' selected' : '') + '>' + m.short + '</option>')).join('');
+  el.innerHTML = '<div class="planner-module-bar"><span class="pmb-pin">📍 Planning for:</span> <strong style="color:var(' + pm.mod.color + ')">' + pm.mod.name + '</strong>' +
+    '<span class="pmb-range">' + shortDate(pm.mod.start) + ' &ndash; ' + shortDate(pm.mod.end) + '</span>' +
+    '<span class="pmb-sel"><label for="planner-module-select">Module:</label> <select id="planner-module-select" onchange="setPlannerModule(this.value)">' + opts + '</select></span>' +
+    (pm.isAuto ? '<span class="pmb-auto">Updates automatically as the semester moves on.</span>' : '<span class="pmb-auto">Manually chosen — pick “Automatic” to follow the calendar.</span>') +
+    '</div>' + (pm.note ? '<div class="planner-warning" style="margin-top:8px">ℹ️ ' + pm.note + '</div>' : '') +
+    '<div class="subtext" style="margin:6px 0 10px;color:var(--text-dim);font-size:0.82em">Default exam date for ' + pm.mod.short + ': ' + shortDate(exam) + ' (change it below if yours differs).</div>';
+  const lg = document.getElementById('planner-legend-subjects');
+  if (lg) lg.innerHTML = plannerSubjects().map(s => '<span><span class="legend-dot chip-' + s.key + '"></span>' + s.label + '</span>').join('');
+}
 function switchSemester(sem) {
   currentSemester = sem;
   document.querySelectorAll('.settings-sem-btn').forEach(b => b.classList.toggle('active', b.dataset.sem === sem));
@@ -4848,6 +4952,7 @@ function switchSemester(sem) {
   renderOverviewDynamic();
   updateExamCountdown();
   applyMd1Chips();
+  try { populateSettingsInputs(); renderPlanner(); } catch (e) { console.warn(e); }
   try { SCHEDULE_DATA = scheduleForSemester(sem); buildSchedDayTags(); renderWeekSchedule(); renderScheduleWeeks(); } catch (e) { console.warn(e); }
   document.querySelectorAll('.sched-legend[data-sem]').forEach(l => { l.style.display = (l.dataset.sem === (sem === 'MD1' ? 'MD1' : 'MD4')) ? '' : 'none'; });
   const sg = document.getElementById('sched-guide-sub');
@@ -5365,26 +5470,26 @@ let LAST_ITEMS_BY_ID = {};
 
 function loadPlannerSettings() {
   try {
-    const saved = JSON.parse(localStorage.getItem(PLANNER_SETTINGS_KEY));
-    return Object.assign({}, DEFAULT_SETTINGS, saved || {});
-  } catch (e) { return Object.assign({}, DEFAULT_SETTINGS); }
+    const saved = JSON.parse(localStorage.getItem(pkey(PLANNER_SETTINGS_KEY)));
+    return Object.assign({}, DEFAULT_SETTINGS, { examDate: moduleExamDate(plannerModule().mod) }, saved || {});
+  } catch (e) { return Object.assign({}, DEFAULT_SETTINGS, { examDate: moduleExamDate(plannerModule().mod) }); }
 }
-function savePlannerSettings(s) { localStorage.setItem(PLANNER_SETTINGS_KEY, JSON.stringify(s)); }
+function savePlannerSettings(s) { localStorage.setItem(pkey(PLANNER_SETTINGS_KEY), JSON.stringify(s)); }
 function loadPlannerMeta() {
-  try { return JSON.parse(localStorage.getItem(PLANNER_META_KEY)) || null; }
+  try { return JSON.parse(localStorage.getItem(pkey(PLANNER_META_KEY))) || null; }
   catch (e) { return null; }
 }
-function savePlannerMeta(m) { localStorage.setItem(PLANNER_META_KEY, JSON.stringify(m)); }
+function savePlannerMeta(m) { localStorage.setItem(pkey(PLANNER_META_KEY), JSON.stringify(m)); }
 function loadReviewState() {
-  try { return JSON.parse(localStorage.getItem(REVIEW_STATE_KEY)) || {}; }
+  try { return JSON.parse(localStorage.getItem(pkey(REVIEW_STATE_KEY))) || {}; }
   catch (e) { return {}; }
 }
-function saveReviewState(s) { localStorage.setItem(REVIEW_STATE_KEY, JSON.stringify(s)); }
+function saveReviewState(s) { localStorage.setItem(pkey(REVIEW_STATE_KEY), JSON.stringify(s)); }
 function loadManualOverrides() {
-  try { return JSON.parse(localStorage.getItem(MANUAL_OVERRIDES_KEY)) || {}; }
+  try { return JSON.parse(localStorage.getItem(pkey(MANUAL_OVERRIDES_KEY))) || {}; }
   catch (e) { return {}; }
 }
-function saveManualOverrides(o) { localStorage.setItem(MANUAL_OVERRIDES_KEY, JSON.stringify(o)); }
+function saveManualOverrides(o) { localStorage.setItem(pkey(MANUAL_OVERRIDES_KEY), JSON.stringify(o)); }
 
 function fmtDate(d) {
   const y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, '0'), day = String(d.getDate()).padStart(2, '0');
@@ -5427,7 +5532,7 @@ function populateSettingsInputs() {
 
 function onSettingsChange() {
   const s = loadPlannerSettings();
-  s.examDate = document.getElementById('set-examdate').value || DEFAULT_SETTINGS.examDate;
+  s.examDate = document.getElementById('set-examdate').value || moduleExamDate(plannerModule().mod);
   s.reviewDays = Math.max(0, parseInt(document.getElementById('set-reviewdays').value) || 0);
   s.dailyCapacity = Math.max(10, parseInt(document.getElementById('set-capacity').value) || DEFAULT_SETTINGS.dailyCapacity);
   s.bufferDays = Math.max(0, parseInt(document.getElementById('set-buffer').value) || 0);
@@ -5447,34 +5552,38 @@ function useSuggestedPace() {
 }
 
 function resetBaseline() {
-  localStorage.removeItem(PLANNER_META_KEY);
+  localStorage.removeItem(pkey(PLANNER_META_KEY));
   renderPlanner();
 }
 
 function clearAllManualOverrides() {
   if (!confirm('Remove all manually scheduled/dragged items and let the planner auto-schedule everything again?')) return;
-  localStorage.removeItem(MANUAL_OVERRIDES_KEY);
+  localStorage.removeItem(pkey(MANUAL_OVERRIDES_KEY));
   renderPlanner();
 }
 
 function getItemPool() {
   const items = [];
-  ['path-table', 'micro-table', 'pharm-table'].forEach(tableId => {
+  const _pm = plannerModule().mod;
+  plannerSubjects().forEach(sj => {
+    const tableId = sj.table;
     const table = document.getElementById(tableId);
     if (!table) return;
-    const subject = tableId.replace('-table', '');
+    const subject = sj.key;
     table.querySelectorAll('tbody tr[data-id]').forEach(row => {
       const cb = row.querySelector('input[type="checkbox"]');
       const checked = cb ? cb.checked : false;
       const timeTd = row.querySelector('td.time');
-      const min = timeTd ? (parseFloat(timeTd.dataset.min) || 0) : 0;
+      const min = timeTd ? (parseFloat(timeTd.dataset.min) || parseTimeText(timeTd.textContent)) : 0;
       const suppmin = parseFloat(row.dataset.suppmin) || 0;
       const reviewOnly = row.dataset.reviewonly === '1';
       const effMin = min > 0 ? min : suppmin;
       if (effMin <= 0) return;
       const cells = row.querySelectorAll('td');
       const title = cells[1] ? cells[1].textContent.trim() : '';
-      let video = cells[3] ? cells[3].textContent.trim() : '';
+      let video = cells[3] ? cells[3].textContent.replace(/\s+/g, ' ').trim() : '';
+      if (video.length > 110) video = video.slice(0, 107) + '…';
+      const dateTd = row.querySelector('td[data-label="Date"]');
       if (tableId === 'path-table') {
         const chapterCell = row.querySelector('td.chapter');
         const chapterNum = chapterCell ? chapterCell.textContent.trim().replace(/^Ch\.\s*/, '') : '';
@@ -5500,12 +5609,14 @@ function getItemPool() {
         id, subject, title, video,
         min: effMin, isSupp: min <= 0 && suppmin > 0,
         reviewOnly, checked,
-        classDate: CLASS_DATE_MAP[id] || null
+        classDate: (_pm.id === 'rns401' ? CLASS_DATE_MAP[id] : null) || (dateTd ? parseRowDate(dateTd.textContent, _pm) : null) || null
       });
     });
   });
   LAST_ITEMS_BY_ID = {};
   items.forEach(it => { LAST_ITEMS_BY_ID[it.id] = it; });
+  Object.keys(CLASS_EVENTS_BY_DATE).forEach(k => { delete CLASS_EVENTS_BY_DATE[k]; });
+  items.forEach(it => { if (it.classDate) { (CLASS_EVENTS_BY_DATE[it.classDate] = CLASS_EVENTS_BY_DATE[it.classDate] || []).push(it.id); } });
   return items;
 }
 
@@ -5727,7 +5838,8 @@ function computePlan() {
   // check rather than being averaged away in the combined numbers above.
   const remainingPool = autoPool.concat(manualItems, reviewOnlyPool);
   const bySubject = {};
-  ['path', 'micro', 'pharm'].forEach(s => {
+  plannerSubjects().forEach(sj => {
+    const s = sj.key;
     const remaining = remainingPool.filter(i => i.subject === s);
     const done = completedPool.filter(i => i.subject === s);
     const remMin = remaining.reduce((sum, i) => sum + i.min, 0);
@@ -5971,7 +6083,7 @@ function openDayModal(dateStr) {
       classIds.map(id => {
         const row = document.querySelector('tr[data-id="' + id + '"]');
         const title = row ? row.querySelectorAll('td')[1].textContent.trim() : id;
-        const subj = id.charAt(0) === 'p' ? 'path' : (id.charAt(0) === 'm' ? 'micro' : 'pharm');
+        const subj = (LAST_ITEMS_BY_ID[id] && LAST_ITEMS_BY_ID[id].subject) || 'path';
         return `<div style="font-size:0.85em;color:#ccc;padding:2px 0;"><span class="chip chip-${subj}">${subj}</span> ${title}</div>`;
       }).join('') + `</div>`;
   }
@@ -6029,25 +6141,23 @@ function renderWeeklyDigest(plan) {
   const days = [];
   for (let i = 0; i < 7; i++) days.push(fmtDate(addDays(dp.today, i)));
 
-  const bySubject = { path: { count: 0, min: 0 }, micro: { count: 0, min: 0 }, pharm: { count: 0, min: 0 } };
+  const bySubject = {};
+  plannerSubjects().forEach(sj => { bySubject[sj.key] = { count: 0, min: 0 }; });
   let reviewCount = 0;
   days.forEach(d => {
     const b = assignments[d];
-    if (b) b.items.forEach(it => { bySubject[it.subject].count++; bySubject[it.subject].min += it.min; });
+    if (b) b.items.forEach(it => { if (bySubject[it.subject]) { bySubject[it.subject].count++; bySubject[it.subject].min += it.min; } });
     reviewCount += (reviewSessions[d] || []).length;
   });
-  const totalMin = bySubject.path.min + bySubject.micro.min + bySubject.pharm.min;
-  const totalCount = bySubject.path.count + bySubject.micro.count + bySubject.pharm.count;
+  const totalMin = Object.keys(bySubject).reduce((s, k) => s + bySubject[k].min, 0);
+  const totalCount = Object.keys(bySubject).reduce((s, k) => s + bySubject[k].count, 0);
   const rangeLabel = `${dayLabel(days[0])} – ${dayLabel(days[6])}`;
 
   if (totalCount === 0 && reviewCount === 0) {
     el.innerHTML = `<div class="digest-box">📆 <strong>This week (${rangeLabel}):</strong> nothing new scheduled — you're either caught up or your exam date/settings need a look.</div>`;
     return;
   }
-  const parts = [];
-  if (bySubject.path.count) parts.push(`<span class="chip chip-path">path</span> ${bySubject.path.count} (${bySubject.path.min}m)`);
-  if (bySubject.micro.count) parts.push(`<span class="chip chip-micro">micro</span> ${bySubject.micro.count} (${bySubject.micro.min}m)`);
-  if (bySubject.pharm.count) parts.push(`<span class="chip chip-pharm">pharm</span> ${bySubject.pharm.count} (${bySubject.pharm.min}m)`);
+  const parts = Object.keys(bySubject).filter(k => bySubject[k].count).map(k => `<span class="chip chip-${k}">${k}</span> ${bySubject[k].count} (${bySubject[k].min}m)`);
   const hours = Math.floor(totalMin / 60), mins = totalMin % 60;
   const reviewPart = reviewCount ? ` &nbsp;·&nbsp; ${reviewCount} review item${reviewCount === 1 ? '' : 's'}` : '';
   el.innerHTML = `<div class="digest-box">📆 <strong>This week (${rangeLabel}):</strong> ${parts.join(' &nbsp;·&nbsp; ')} — <strong>${totalCount} video${totalCount === 1 ? '' : 's'}, ~${hours}h ${mins}m</strong> total${reviewPart}.</div>`;
@@ -6057,13 +6167,13 @@ function renderSubjectCountdown(plan) {
   const el = document.getElementById('planner-subject-countdown');
   if (!el) return;
   const { stats, bySubject } = plan;
-  const labels = { path: 'Pathology', micro: 'Microbiology', pharm: 'Pharmacology' };
-  const cards = ['path', 'micro', 'pharm'].map(s => {
+  const cards = plannerSubjects().map(sj => {
+    const s = sj.key; const labels = { [s]: sj.label };
     const b = bySubject[s];
     const reqLabel = b.reqDailyMin === Infinity ? '—' : (b.reqDailyMin + ' min/day');
     const absLabel = b.absMinPaceMin === Infinity ? '—' : (b.absMinPaceMin + ' min/day');
     return `<div class="subject-countdown ${s}">
-      <h4 style="color:var(--${s})">${labels[s]}</h4>
+      <h4 style="color:var(${sj.color})">${labels[s]}</h4>
       <div class="sc-line">${stats.daysUntilExam} day${stats.daysUntilExam === 1 ? '' : 's'} until exam · <b>${b.pct}%</b> watched (by minutes)</div>
       <div class="sc-line">${b.remCount} video(s) left · <b>${b.remMin} min</b> remaining</div>
       <div class="sc-line">Pace needed: <b>${reqLabel}</b> before review starts</div>
@@ -6076,6 +6186,8 @@ function renderSubjectCountdown(plan) {
 function renderPlanner() {
   const panel = document.getElementById('panel-planner');
   if (!panel) return;
+  if (_plannerShownMod !== plannerModule().mod.id) { _plannerShownMod = plannerModule().mod.id; populateSettingsInputs(); }
+  renderPlannerModuleBar();
   const plan = computePlan();
   const { stats, dp, assignments, reviewSessions } = plan;
   const todayStr = fmtDate(dp.today);
