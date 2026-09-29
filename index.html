@@ -41,6 +41,8 @@
   }
   * { box-sizing: border-box; }
   html { color-scheme: dark; }
+  /* Site zoom: +25% on desktop/tablet-sized screens (phones keep their normal size) */
+  @media (min-width: 900px) { html { zoom: 1.25; } }
   body {
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
     font-weight: 450;
