@@ -4480,6 +4480,7 @@ function switchTab(tab) {
   const panel = document.getElementById('panel-' + tab);
   const btn = document.querySelector('.tab-btn[data-tab="' + tab + '"]');
   if (!panel || !btn) { console.warn('switchTab: unknown tab id "' + tab + '"'); return; }
+  if (tab === 'admin' && !isAdminUser()) { tab = 'overview'; return switchTab('overview'); }
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   panel.classList.add('active');
@@ -4749,7 +4750,8 @@ function switchSemester(sem) {
   let activeTabIsVisible = false;
   document.querySelectorAll('.tab-btn').forEach(b => {
     const s = b.dataset.sem;
-    const visible = (s === 'all' || s === sem);
+    let visible = (s === 'all' || s === sem);
+    if (b.id === 'admin-tab-btn') visible = visible && isAdminUser();
     b.style.display = visible ? '' : 'none';
     if (visible && b.classList.contains('active')) activeTabIsVisible = true;
   });
