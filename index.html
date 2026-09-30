@@ -42,7 +42,8 @@
   * { box-sizing: border-box; }
   html { color-scheme: dark; }
   /* Site zoom: +25% on desktop/tablet-sized screens (phones keep their normal size) */
-  @media (min-width: 900px) { html { zoom: 1.25; } }
+  html { --zf: 1; }
+  @media (min-width: 900px) { html { zoom: 1.1; --zf: 1.1; } }
   body {
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
     font-weight: 450;
@@ -963,7 +964,7 @@
     padding: 20px 24px;
     max-width: 660px;
     width: 100%;
-    max-height: 85vh;
+    max-height: calc(85vh / var(--zf));
     overflow-y: auto;
     box-shadow: 0 24px 70px -16px rgba(0,0,0,0.7);
   }
@@ -999,7 +1000,7 @@
 
   .mastery-box {
     max-width: 920px;
-    max-height: 88vh;
+    max-height: calc(88vh / var(--zf));
   }
   .mastery-content {
     color: var(--text);
@@ -1378,7 +1379,7 @@
     backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
   }
 
-  .md-modal-box.settings-box { max-width: 560px; max-height: 88vh; overflow-y: auto; }
+  .md-modal-box.settings-box { max-width: 560px; max-height: calc(88vh / var(--zf)); overflow-y: auto; }
   .settings-pdf-section { text-align: left; margin: 22px 0 6px; padding-top: 18px; border-top: 1px solid var(--border-soft); }
   .settings-pdf-title { font-weight: 800; font-size: 1.02em; margin-bottom: 4px; }
   .settings-pdf-sub { font-size: 0.8em; color: var(--text-dim); line-height: 1.45; margin-bottom: 12px; }
@@ -1525,7 +1526,7 @@
 #qbank-root .ch-num{font-family:var(--mono);font-size:10px;background:var(--surface2);padding:2px 5px;border-radius:3px;min-width:24px;text-align:center;flex-shrink:0}
 #qbank-root .ch-btn.on .ch-num{background:var(--accent-dim);color:var(--accent)}
 #qbank-root .nav-note{margin-top:auto;padding:14px;font-family:var(--mono);font-size:9.5px;line-height:1.6;color:var(--dim);border-top:1px solid var(--border)}
-#qbank-root #track{width:70px;min-width:70px;background:rgba(18,24,38,0.5);border-radius:14px;border:1px solid var(--border);max-height:calc(100vh - 40px);overflow-y:auto;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;position:sticky;top:20px;align-self:flex-start}
+#qbank-root #track{width:70px;min-width:70px;background:rgba(18,24,38,0.5);border-radius:14px;border:1px solid var(--border);max-height:calc(100vh / var(--zf) - 40px);overflow-y:auto;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;position:sticky;top:20px;align-self:flex-start}
 #qbank-root .tk-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
 #qbank-root .qf-toggles{display:flex;gap:5px;margin-bottom:8px}
 #qbank-root .qf-btn{width:26px;height:24px;border-radius:6px;border:1.5px solid var(--border);background:transparent;color:var(--dim);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
@@ -1636,7 +1637,7 @@
 #qbank-root .note-keep{font-family:var(--mono);font-size:10px;color:var(--dim);margin-left:auto}
 #qbank-root #lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out}
 #qbank-root #lb.open{display:flex}
-#qbank-root #lb img{max-width:92vw;max-height:92vh;border-radius:8px;object-fit:contain}
+#qbank-root #lb img{max-width:calc(92vw / var(--zf));max-height:calc(92vh / var(--zf));border-radius:8px;object-fit:contain}
 #qbank-root ::-webkit-scrollbar{width:6px}
 #qbank-root ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 #qbank-root .fa-box{margin-top:14px;padding:10px 12px;border-top:1px dashed var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -1760,7 +1761,7 @@
   .cp-actions .md-choice-btn { width:auto; margin:0; flex:1 1 auto; }
   .md-choice-btn.cp-primary { background: linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; border-color:transparent; }
   .md-choice-btn.cp-ghost { opacity:0.8; }
-  .anat-order-box { max-width: 860px; width:min(860px,95vw); max-height:92vh; overflow-y:auto; text-align:left; }
+  .anat-order-box { max-width: 860px; width:min(860px,calc(95vw / var(--zf))); max-height:calc(92vh / var(--zf)); overflow-y:auto; text-align:left; }
   .anat-order-cards { display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin:14px 0; }
   @media (max-width: 720px) { .anat-order-cards { grid-template-columns: 1fr; } }
   .anat-order-card { border:1px solid var(--border); border-radius:14px; padding:14px 16px; background:rgba(255,255,255,0.03); display:flex; flex-direction:column; }
@@ -1843,7 +1844,8 @@
   .wu-eyebrow { display:inline-block; font-size: 0.7em; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #1a1300; background: linear-gradient(90deg, #f5c518, #eab308); border-radius: 999px; padding: 2px 10px; margin-bottom: 6px; }
   .wu-head h1 { border: none; padding: 0; flex: none; margin: 0 0 4px; font-size: 1.7em; line-height: 1.15; color: #fff; }
   .wu-sub { margin: 0; color: var(--text-dim); font-size: 0.86em; line-height: 1.45; max-width: 760px; }
-  .wu-sub b { color: #f5d77a; font-weight: 700; }
+  .wu-sub b { color: #f5d77a; font-weight: 700; white-space: nowrap; }
+  #md-onboard-overlay .md-modal-box { max-height: calc(92vh / var(--zf)); overflow-y: auto; }
   @media (max-width: 720px) { .wu-head { flex-wrap: wrap; padding: 14px; gap: 12px; } .wu-seal { width: 60px; height: 60px; } .wu-head h1 { font-size: 1.25em; } }
 </style>
 <!-- Firebase (optional: only used if you set up cloud sync — see FIREBASE_CONFIG near the top of the <script> below) -->
@@ -2069,7 +2071,6 @@
   <button class="tab-btn" data-tab="chs303" data-sem="MD3" style="display:none" onclick="switchTab('chs303')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg> CHS303</button>
   <button class="tab-btn" data-tab="schedule" data-sem="all" onclick="switchTab('schedule')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg> Schedule</button>
   <button class="tab-btn" id="admin-tab-btn" data-tab="admin" data-sem="all" onclick="switchTab('admin')" style="display:none;"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/><path d="M20 21a8 8 0 1 0-16 0"/><path d="M18 8l1.5 1.5L22 7"/></svg> Admin</button>
-  <button class="tab-btn tab-btn-settings" id="settings-tab-btn" data-sem="all" onclick="openSettingsModal()">⚙️ Settings <span class="settings-badge" id="settings-badge-tab" style="display:none;"></span></button>
 </div>
 
 <!-- ============================================ OVERVIEW ============================================ -->
@@ -3601,7 +3602,7 @@ These Bootcamp Gross Anatomy videos are very detailed and cover far more than yo
 </div>
 <div class="module-sub-panel" id="sub-msk-qbank" style="display:none;">
   <div style="font-size:0.85rem;color:var(--text-dim,#8b949e);margin:4px 0 10px;">231 questions · UWorld MSK (48) · BRS Lower Limb (64) · BRS Upper Limb (73) · Maria MSK Physiology (46). Progress saves in this browser. <a href="msk-qbank.html" target="_blank" rel="noopener">Open full screen ↗</a></div>
-  <iframe data-src="msk-qbank.html" title="MSK101 Alan's Q Bank" style="width:100%;height:calc(100vh - 170px);min-height:600px;border:1px solid var(--border,#30363d);border-radius:10px;background:#0d1117;" loading="lazy"></iframe>
+  <iframe data-src="msk-qbank.html" title="MSK101 Alan's Q Bank" style="width:100%;height:calc(100vh / var(--zf) - 170px);min-height:600px;border:1px solid var(--border,#30363d);border-radius:10px;background:#0d1117;" loading="lazy"></iframe>
 </div>
 <div class="module-sub-panel" id="sub-msk-phys">
 <h2 class="msk-title" style="font-size:1.15em;">Physiology — Muscle &amp; Neuromuscular (Bootcamp)</h2>
