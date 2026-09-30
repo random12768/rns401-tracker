@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Maninder's Master MD Tracker</title>
+<title>Tracker for Windsor University School of Medicine</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -1833,6 +1833,18 @@
   table.ghs-table[id$="micro-table"] tfoot td { background: var(--micro); color: #0a0e16; }
   table.ghs-table[id$="pharm-table"] tfoot td { background: var(--pharm); color: #0a0e16; }
   .chip.chip-path, .chip.chip-micro, .chip.chip-pharm, .chip.chip-anat, .chip.chip-bio, .chip.chip-phys { color: #0a0e16; font-weight: 700; }
+  /* Windsor-themed header */
+  .wu-head { position: relative; gap: 18px; align-items: center; padding: 18px 22px; margin-bottom: 14px; border-radius: 18px;
+    background: radial-gradient(120% 160% at 0% 0%, rgba(234,179,8,0.20), rgba(20,26,45,0) 55%), linear-gradient(135deg, #1a2036 0%, #141a2d 55%, #2a1d0c 130%);
+    border: 1px solid rgba(234,179,8,0.38); box-shadow: 0 8px 30px -14px rgba(234,179,8,0.45), inset 0 1px 0 rgba(255,255,255,0.05); flex-wrap: nowrap; }
+  .wu-head::before { content:""; position:absolute; left:0; right:0; top:0; height:3px; border-radius:18px 18px 0 0; background: linear-gradient(90deg, #b8860b, #f5c518 45%, #b8860b); }
+  .wu-seal { flex: 0 0 auto; width: 88px; height: 88px; border-radius: 50%; filter: drop-shadow(0 4px 14px rgba(234,179,8,0.45)); }
+  .wu-titles { flex: 1 1 auto; min-width: 0; }
+  .wu-eyebrow { display:inline-block; font-size: 0.7em; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #1a1300; background: linear-gradient(90deg, #f5c518, #eab308); border-radius: 999px; padding: 2px 10px; margin-bottom: 6px; }
+  .wu-head h1 { border: none; padding: 0; flex: none; margin: 0 0 4px; font-size: 1.7em; line-height: 1.15; color: #fff; }
+  .wu-sub { margin: 0; color: var(--text-dim); font-size: 0.86em; line-height: 1.45; max-width: 760px; }
+  .wu-sub b { color: #f5d77a; font-weight: 700; }
+  @media (max-width: 720px) { .wu-head { flex-wrap: wrap; padding: 14px; gap: 12px; } .wu-seal { width: 60px; height: 60px; } .wu-head h1 { font-size: 1.25em; } }
 </style>
 <!-- Firebase (optional: only used if you set up cloud sync — see FIREBASE_CONFIG near the top of the <script> below) -->
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -1852,7 +1864,7 @@
 
 <div id="app-content" style="display:none;">
 
-<div class="page-head"><h1><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Maninder's Master MD Tracker — Fall 2026</h1><button class="settings-hero" onclick="(document.getElementById('settings-badge-hero').style.display==='none')?openSettingsModal():openSettingsTo('set-pdf')" title="Connect your PDFs, choose your study style, and read how everything works"><span class="sh-ico">⚙️</span><span class="sh-txt"><b>Settings</b><small id="settings-hero-sub">PDFs · study style · how-to guide</small></span><span class="settings-badge" id="settings-badge-hero" style="display:none;"></span></button></div>
+<div class="page-head wu-head"><img class="wu-seal" src="windsor-seal.png" width="88" height="88" alt="Windsor University School of Medicine seal"><div class="wu-titles"><div class="wu-eyebrow">Fall 2026</div><h1>Tracker for Windsor University School of Medicine</h1><p class="wu-sub">This tracker, created by Maninder, is designed for Windsor University School of Medicine classes but is <b>not affiliated with the school in any way</b>. If you have any questions, just ask.</p></div><button class="settings-hero" onclick="(document.getElementById('settings-badge-hero').style.display==='none')?openSettingsModal():openSettingsTo('set-pdf')" title="Connect your PDFs, choose your study style, and read how everything works"><span class="sh-ico">⚙️</span><span class="sh-txt"><b>Settings</b><small id="settings-hero-sub">PDFs · study style · how-to guide</small></span><span class="settings-badge" id="settings-badge-hero" style="display:none;"></span></button></div>
 <div id="exam-countdown"></div>
 
 
