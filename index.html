@@ -1272,9 +1272,12 @@
     font-weight: 700;
     text-decoration: none;
     white-space: normal;
-    overflow-wrap: break-word;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
     max-width: 100%;
-    line-height: 1.35;
+    line-height: 1.3;
+    border-radius: 16px;
     transition: all 0.2s ease;
     display: table;
     width: -moz-fit-content;
@@ -1283,8 +1286,13 @@
     margin: 5px auto;
   }
   .video-link:hover { background: #6ee7b7; box-shadow: 0 0 14px -2px rgba(52,211,153,0.7); transform: translateY(-1px); }
+  table:has(td.video-cell) { table-layout: auto; min-width: 1000px; }
+  table:has(td.video-cell) th, table:has(td.video-cell) td:not(.video-cell) { min-width: 84px; overflow-wrap: normal; word-break: normal; }
+  table:has(td.video-cell) th:first-child, table:has(td.video-cell) td:first-child { min-width: 44px; }
+  td.video-cell { min-width: 84px; }
+  td.video-cell:has(a.video-link) { min-width: 170px; }
   td.video-cell {
-    text-align: center; white-space: normal; overflow: hidden;
+    text-align: center; white-space: normal; overflow: visible;
     display: table-cell;
     padding-top: 10px; padding-bottom: 10px;
   }
@@ -2004,7 +2012,7 @@
       <details class="guide-det"><summary>🔖 The little page badges (📖 🩻 💯 📄 🃏 📓)</summary><div>Each badge is a shortcut to a page in one of your PDFs: <b>📖 First Aid</b>, <b>🩻 Mehlman</b> (high-yield notes, approved users only), <b>💯 100 Anatomy Concepts</b>, <b>📄 Bootcamp notes</b>, <b>🃏 Lippincott Microcards</b>, <b>📓 Pathoma</b>. If the PDF isn't connected yet, clicking one shows a short prompt that lets you connect it and then opens that exact page.</div></details>
       <details class="guide-det"><summary>🎬 Bootcamp videos (MSK101)</summary><div>Videos aren't linked — you watch them in your own Bootcamp account. Each row tells you exactly which one: <b>course › chapter › video number</b> (e.g. <i>MSK › Ch.9 › 9.3 Clavicle Fractures</i>) plus its length in minutes. Numbers match Bootcamp's own chapter.video numbering. Use the <b>🦴 Gross Anatomy / 💪 MSK</b> switch to pick which Bootcamp course you're watching, and <b>Lecture order / Bootcamp order</b> to pick how it's listed.</div></details>
       <details class="guide-det"><summary>🗓️ Schedule tab &amp; colours</summary><div>The full class timetable, week by week. Each subject has its own colour strip. Special sessions stand out: <b>🚨 exams / quizzes / OSCEs / NBME</b> (red), <b>👥 SGDs</b> (teal), <b>🧩 TBLs</b> (amber), <b>🔬 dissection labs</b> (blue) and <b>⭐ events / orientations</b> (dashed gold). Multi-hour sessions span their full length. The legend at the top of the tab explains every colour.</div></details>
-      <details class="guide-det"><summary>❓ Alan's Q Bank</summary><div>Practice questions with per-question answers, highlights, flags and notes. It's only visible to approved users. Your answers are saved in this browser.</div></details>
+      <details class="guide-det" id="guide-det-qbank"><summary>❓ Alan's Q Bank</summary><div>Alan's Q Bank is a practice-question bank with detailed explanations for every answer. The explanations combine material from UWorld, Robbins and Rubin's, and other trusted sources, so you learn why each option is right or wrong, not only which one to pick. You can highlight text, flag questions and keep notes on each one. Your answers are saved in this browser.</div></details>
       <details class="guide-det"><summary>☁️ Saving your progress</summary><div>Everything you tick or type saves automatically in <b>this browser</b>. To keep progress across devices, use <b>Sign in with Google</b> (top of the page) — then it syncs to the cloud. Clearing your browser data without signing in erases local progress.</div></details>
       <details class="guide-det"><summary>💡 Quick tips</summary><div><ul class="settings-mini"><li>New here? Do <b>2 · Connect PDFs</b> first — it makes every page badge work.</li><li>Not sure what to study today? Open <b>Overview</b> → this week's schedule, then jump into your module tab.</li><li>If something looks out of date, use <b>4 · Check for updates now</b>.</li></ul></div></details>
     </div>
@@ -3822,6 +3830,8 @@ function applyQBankVisibility() {
     if (!allowed && fr) fr.removeAttribute('src');
     if (!allowed && mpanel.classList.contains('active')) switchSubTab('msk-anat');
   }
+  const guideDet = document.getElementById('guide-det-qbank');
+  if (guideDet) guideDet.style.display = allowed ? '' : 'none';
   const guideCard = document.getElementById('guide-card-qbank');
   if (guideCard) guideCard.style.display = allowed ? '' : 'none';
   if (typeof renderOverviewDynamic === 'function') renderOverviewDynamic();
@@ -4977,6 +4987,7 @@ function switchSemester(sem) {
   renderOverviewDynamic();
   updateExamCountdown();
   applyMd1Chips();
+  { const sa = document.getElementById('set-anat'); if (sa) sa.style.display = (sem === 'MD1') ? '' : 'none'; }
   try { populateSettingsInputs(); renderPlanner(); } catch (e) { console.warn(e); }
   try { SCHEDULE_DATA = scheduleForSemester(sem); buildSchedDayTags(); renderWeekSchedule(); renderScheduleWeeks(); } catch (e) { console.warn(e); }
   document.querySelectorAll('.sched-legend[data-sem]').forEach(l => { l.style.display = (l.dataset.sem === (sem === 'MD1' ? 'MD1' : 'MD4')) ? '' : 'none'; });
