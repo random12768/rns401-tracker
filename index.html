@@ -31,7 +31,7 @@
     --border-soft: rgba(255,255,255,0.06);
     --text: #f4f6fb;
     --text-dim: #9aa4b8;
-    --text-faint: #626d82;
+    --text-faint: #8b96ad;
     --green: #34d399;
     --red: #f87171;
     --radius: 16px;
@@ -1509,7 +1509,7 @@
 #qbank-root{
   --bg:#0b0f19;--surface:#121826;--surface2:#182033;--border:rgba(255,255,255,0.10);
   --accent:#38bdf8;--accent-dim:rgba(56,189,248,0.14);--text:#f4f6fb;--muted:#9aa4b8;
-  --dim:#626d82;--ok:#34d399;--ok-bg:rgba(52,211,153,0.10);--ok-br:#34d399;
+  --dim:#8b96ad;--ok:#34d399;--ok-bg:rgba(52,211,153,0.10);--ok-br:#34d399;
   --err:#f87171;--err-bg:rgba(248,113,113,0.10);--err-br:#f87171;
   --flag:#facc15;--flag-bg:rgba(250,204,21,0.10);
   --sans:"Inter",sans-serif;--mono:"JetBrains Mono",monospace;
@@ -1725,7 +1725,7 @@
   .settings-hero .sh-txt { display:flex; flex-direction:column; text-align:left; line-height:1.15; }
   .settings-hero .sh-txt b { font-size:1.02em; }
   .settings-hero .sh-txt small { font-size:0.72em; opacity:0.85; }
-  .settings-badge { background:#ef4444; color:#fff; font-size:0.72em; font-weight:800; min-width:19px; height:19px; padding:0 5px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; }
+  .settings-badge { background:#dc2626; color:#fff; font-size:0.72em; font-weight:800; min-width:19px; height:19px; padding:0 5px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; }
   .settings-hero .settings-badge { position:absolute; top:-7px; right:-7px; box-shadow:0 0 0 3px var(--bg, #0b0f19); animation: sbpulse 1.8s ease-in-out infinite; }
   @keyframes sbpulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.18); } }
   .tab-btn-settings { background: rgba(99,102,241,0.18) !important; color:#c7d2fe !important; border:1px solid rgba(129,140,248,0.5) !important; margin-left:6px; }
@@ -1806,7 +1806,7 @@
   #msk-bio-table th:nth-child(3), #msk-bio-table td:nth-child(3) { width: 7%; }
   #msk-bio-table th:nth-child(4), #msk-bio-table td:nth-child(4) { width: 34%; }
   #msk-bio-table .pxpdf-link { display:inline-block; border-radius:999px; padding:3px 10px; font-size:.82em; font-weight:700; text-decoration:none; background:#f0abfc; color:#3b0a45; margin:2px 4px 2px 0; }
-  #msk-bio-table .dm-btn { display:inline-block; background:#ef4444; color:#fff; font-weight:700; text-decoration:none; padding:8px 14px; border-radius:10px; font-size:.9em; }
+  #msk-bio-table .dm-btn { display:inline-block; background:#dc2626; color:#fff; font-weight:700; text-decoration:none; padding:8px 14px; border-radius:10px; font-size:.9em; }
   #msk-bio-table .dm-btn:hover { filter:brightness(1.1); }
   #msk-bio-table .vid-link { color:inherit; text-decoration:none; border-bottom:1px dotted var(--text-dim); }
   #msk-bio-table .vid-link:hover { color:var(--accent,#a3e635); border-bottom-style:solid; }
@@ -1823,6 +1823,16 @@
   .planner-module-bar { display:flex; align-items:center; gap:12px; flex-wrap:wrap; background: var(--surface); border:1px solid var(--border-soft); border-left:4px solid var(--planner); border-radius:12px; padding:10px 14px; margin:0 0 10px; font-size:0.92em; }
   .planner-module-bar .pmb-range, .planner-module-bar .pmb-auto { color: var(--text-dim); font-size:0.85em; }
   .planner-module-bar select { background: var(--surface); color: var(--text); border:1px solid var(--border-soft); border-radius:8px; padding:4px 8px; font-family:inherit; }
+  /* Header colours for the module tables (GHS/ERS/RMS/FBS/NIS/CHS) — they had dark text on no background */
+  table.ghs-table[id$="path-table"] th { background: var(--path); color: #0a0e16; box-shadow: 0 1px 0 rgba(34,211,238,0.5); }
+  table.ghs-table[id$="micro-table"] th { background: var(--micro); color: #0a0e16; box-shadow: 0 1px 0 rgba(251,146,60,0.5); }
+  table.ghs-table[id$="pharm-table"] th { background: var(--pharm); color: #0a0e16; box-shadow: 0 1px 0 rgba(192,132,252,0.5); }
+  table.admin-table thead th { color: var(--text-dim); }
+  tfoot td.time { color: #0a0e16; }
+  table.ghs-table[id$="path-table"] tfoot td { background: var(--path); color: #0a0e16; }
+  table.ghs-table[id$="micro-table"] tfoot td { background: var(--micro); color: #0a0e16; }
+  table.ghs-table[id$="pharm-table"] tfoot td { background: var(--pharm); color: #0a0e16; }
+  .chip.chip-path, .chip.chip-micro, .chip.chip-pharm, .chip.chip-anat, .chip.chip-bio, .chip.chip-phys { color: #0a0e16; font-weight: 700; }
 </style>
 <!-- Firebase (optional: only used if you set up cloud sync — see FIREBASE_CONFIG near the top of the <script> below) -->
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
