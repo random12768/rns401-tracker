@@ -1422,6 +1422,26 @@
   .auth-welcome-more summary::marker { color: #f5d77a; }
   .auth-welcome-used { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 2px 0 4px; font-size: 0.85em; color: var(--text-dim); }
   .auth-welcome-used .dot { width: 7px; height: 7px; border-radius: 50%; background: #34d399; box-shadow: 0 0 8px rgba(52,211,153,0.7); }
+  /* wide two-column welcome (desktop) */
+  @media (min-width: 1000px) {
+    #auth-gate { align-items: center; padding: 16px 0; }
+    #auth-gate .auth-gate-box.auth-welcome { max-width: 1180px; width: 94%; padding: 24px 30px 24px; }
+    .auth-welcome-notice { margin: 0 0 18px; }
+    .aw-cols { display: grid; grid-template-columns: 5fr 7fr; gap: 34px; align-items: start; text-align: left; }
+    .aw-brand { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .aw-brand .auth-welcome-seal { width: 64px; height: 64px; margin: 0; }
+    .aw-brand .auth-welcome-eyebrow { margin: 0; }
+    .aw-left .auth-welcome-title { font-size: 1.75em; }
+    .aw-left .auth-welcome-tag { margin-bottom: 18px; }
+    .aw-left .auth-welcome-used { justify-content: flex-start; }
+    .aw-left .auth-welcome-start { margin-top: 16px; }
+    .aw-right .auth-welcome-shot { margin: 0 0 14px; }
+    .aw-right .auth-welcome-shot figcaption { text-align: left; }
+    .aw-right .auth-welcome-list { grid-template-columns: 1fr 1fr; margin-bottom: 12px; gap: 10px; }
+    .aw-right .auth-welcome-list li { font-size: 0.86em; padding: 10px 12px; align-items: flex-start; }
+    .aw-right .auth-welcome-list li .wl-ico { width: 30px; height: 30px; }
+    .aw-right .auth-welcome-more { margin-top: 0; }
+  }
   .auth-welcome-fine { color: var(--text-faint); font-size: 0.8em; line-height: 1.5; margin-top: 14px; }
   .auth-welcome-fine b { color: #e5c07b; font-weight: 600; }
   @media (max-width: 560px) { #auth-gate .auth-gate-box { padding: 24px 18px 20px; } .auth-welcome-title { font-size: 1.3em; } .auth-welcome-seal { width: 80px; height: 80px; } }
@@ -1913,20 +1933,32 @@
 <div id="auth-gate">
   <div class="auth-gate-box auth-welcome">
     <div class="auth-welcome-notice"><b>Independent study tool.</b> Created by Maninder for Windsor University School of Medicine students. <b>Not affiliated with or endorsed by the school in any way.</b></div>
-    <img class="auth-welcome-seal" src="windsor-seal.png" width="96" height="96" alt="Windsor University School of Medicine seal">
-    <div class="auth-welcome-eyebrow">Fall 2026</div>
-    <h1 class="auth-welcome-title">Welcome to the Tracker for Windsor University School of Medicine</h1>
-    <p class="auth-welcome-tag">Your whole module in one place, so you always know what to study next.</p>
-    <figure class="auth-welcome-shot"><div class="shot-frame"><div class="shot-bar"><i></i><i></i><i></i><span>FBS301 &middot; Pathology</span></div><img src="tracker-preview.jpg" width="1200" height="358" alt="Preview of a module page in the tracker" loading="lazy"></div><figcaption>Each lecture with its date, video, and First Aid and Pathoma pages.</figcaption></figure>
-    <ul class="auth-welcome-list">
+    <div class="aw-cols">
+      <div class="aw-left">
+        <div class="aw-brand"><img class="auth-welcome-seal" src="windsor-seal.png" width="96" height="96" alt="Windsor University School of Medicine seal"><div class="auth-welcome-eyebrow">Fall 2026</div></div>
+        <h1 class="auth-welcome-title">Welcome to the Tracker for Windsor University School of Medicine</h1>
+        <p class="auth-welcome-tag">Your whole module in one place, so you always know what to study next.</p>
+        <button id="gate-signin-btn" onclick="signInWithGoogle()">Sign in with Google to get started</button>
+        <div class="auth-welcome-used"><span class="dot"></span>Used by 20+ Windsor students</div>
+        <div class="auth-gate-note" id="gate-note"></div>
+        <div class="auth-welcome-start">
+      <h2>New here? Here's how to start</h2>
+      <ol>
+        <li>Sign in with Google (it only takes a second).</li>
+        <li>Pick your semester in <b>Settings</b>, top right of the page.</li>
+        <li>Open your module, then tick things off as you study. The <b>Planner</b> does the rest.</li>
+      </ol>
+    </div>
+      </div>
+      <div class="aw-right">
+        <figure class="auth-welcome-shot"><div class="shot-frame"><div class="shot-bar"><i></i><i></i><i></i><span>FBS301 &middot; Pathology</span></div><img src="tracker-preview.jpg" width="1200" height="358" alt="Preview of a module page in the tracker" loading="lazy"></div><figcaption>Each lecture with its date, video, and First Aid and Pathoma pages.</figcaption></figure>
+        <ul class="auth-welcome-list">
       <li><span class="wl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="14" height="14" rx="2"/><path d="M17 10l4-2v8l-4-2"/></svg></span><span><b>Videos for every lecture.</b> Pathoma, Sketchy and Bootcamp videos matched to each lecture, with the First Aid page beside it.</span></li>
       <li><span class="wl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12l3 3 5-6"/></svg></span><span><b>Check off what you watch.</b> Your progress bar shows how much is left before the exam.</span></li>
       <li><span class="wl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></span><span><b>A daily study plan.</b> It tells you what to watch each day to finish on time, and switches to the next module on its own.</span></li>
       <li><span class="wl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="12" height="9" rx="1.5"/><rect x="15" y="9" width="6" height="11" rx="1.5"/><path d="M6 17h6"/></svg></span><span><b>Works on your phone and laptop.</b> Sign in once and your checkmarks sync everywhere.</span></li>
     </ul>
-    <button id="gate-signin-btn" onclick="signInWithGoogle()">Sign in with Google to get started</button>
-    <div class="auth-welcome-used"><span class="dot"></span>Used by 20+ Windsor students</div>
-    <details class="auth-welcome-more"><summary>What's inside</summary>
+        <details class="auth-welcome-more"><summary>What's inside</summary>
       <ul>
         <li><b>Modules:</b> MD1 (MSK101), MD3 (FBS301, NIS302, CHS303) and MD4 (RNS401, GHS402, ERS403, RMS406).</li>
         <li><b>Videos:</b> Pathoma, Sketchy Path, Micro and Pharm, Bootcamp, Pixorize and Dirty Medicine, matched to each lecture.</li>
@@ -1935,16 +1967,8 @@
         <li><b>Planning:</b> exam countdowns, the class schedule and a daily plan that adjusts as you check things off.</li>
       </ul>
     </details>
-    <div class="auth-gate-note" id="gate-note"></div>
-    <div class="auth-welcome-start">
-      <h2>New here? Here's how to start</h2>
-      <ol>
-        <li>Sign in with Google (it only takes a second).</li>
-        <li>Pick your semester in <b>Settings</b>, top right of the page.</li>
-        <li>Open your module, then tick things off as you study. The <b>Planner</b> does the rest.</li>
-      </ol>
+      </div>
     </div>
-
   </div>
 </div>
 
