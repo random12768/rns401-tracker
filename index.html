@@ -1420,6 +1420,8 @@
   .auth-welcome-start, .auth-welcome-more { background: rgba(255,255,255,0.03) !important; border-color: rgba(255,255,255,0.10) !important; }
   .auth-welcome-start h2 { color: #fff !important; }
   .auth-welcome-more summary::marker { color: #f5d77a; }
+  .auth-welcome-used { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 2px 0 4px; font-size: 0.85em; color: var(--text-dim); }
+  .auth-welcome-used .dot { width: 7px; height: 7px; border-radius: 50%; background: #34d399; box-shadow: 0 0 8px rgba(52,211,153,0.7); }
   .auth-welcome-fine { color: var(--text-faint); font-size: 0.8em; line-height: 1.5; margin-top: 14px; }
   .auth-welcome-fine b { color: #e5c07b; font-weight: 600; }
   @media (max-width: 560px) { #auth-gate .auth-gate-box { padding: 24px 18px 20px; } .auth-welcome-title { font-size: 1.3em; } .auth-welcome-seal { width: 80px; height: 80px; } }
@@ -1923,6 +1925,7 @@
       <li><span class="wl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="12" height="9" rx="1.5"/><rect x="15" y="9" width="6" height="11" rx="1.5"/><path d="M6 17h6"/></svg></span><span><b>Works on your phone and laptop.</b> Sign in once and your checkmarks sync everywhere.</span></li>
     </ul>
     <button id="gate-signin-btn" onclick="signInWithGoogle()">Sign in with Google to get started</button>
+    <div class="auth-welcome-used"><span class="dot"></span>Used by 20+ Windsor students</div>
     <details class="auth-welcome-more"><summary>What's inside</summary>
       <ul>
         <li><b>Modules:</b> MD1 (MSK101), MD3 (FBS301, NIS302, CHS303) and MD4 (RNS401, GHS402, ERS403, RMS406).</li>
