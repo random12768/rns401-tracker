@@ -2898,6 +2898,7 @@
   <button class="module-subtab-btn active" data-sub="fbs-path" onclick="switchSubTab('fbs-path')">Pathology</button>
   <button class="module-subtab-btn" data-sub="fbs-micro" onclick="switchSubTab('fbs-micro')">Microbiology</button>
   <button class="module-subtab-btn" data-sub="fbs-pharm" onclick="switchSubTab('fbs-pharm')">Pharmacology</button>
+  <button class="module-subtab-btn" data-sub="fbs-qbank" onclick="switchSubTab('fbs-qbank')" style="display:none;">Alan's Q Bank</button>
 </div>
 
 <div class="module-sub-panel active" id="sub-fbs-path">
@@ -2943,6 +2944,10 @@
 <p class="note">⚠️ Sketchy Pathology is missing across this module &mdash; the user's Sketchy Drive library only has an organ-system "Pathophysiology" collection, not general-principles pathology (cell injury, inflammation, genetics, environmental/nutritional disease), so there is no legitimate match for these topics.</p>
 </div>
 
+<div class="module-sub-panel" id="sub-fbs-qbank" style="display:none;">
+  <div style="font-size:0.85rem;color:var(--text-dim,#8b949e);margin:4px 0 10px;">183 questions &middot; Robbins Pathology: The Cell (15) &middot; Cellular Pathology (40) &middot; Inflammation &amp; Repair (47) &middot; Hemodynamic Disorders (38) &middot; Genetic Disorders (43). Progress saves in this browser. <a href="fbs-qbank.html" target="_blank" rel="noopener">Open full screen &#8599;</a></div>
+  <iframe data-src="fbs-qbank.html" title="FBS301 Alan's Q Bank" style="width:100%;height:calc(100vh / var(--zf) - 170px);min-height:600px;border:1px solid var(--border,#30363d);border-radius:10px;background:#0d1117;" loading="lazy"></iframe>
+</div>
 <div class="module-sub-panel" id="sub-fbs-micro">
 <div class="controls">
   <input type="text" class="search-box" placeholder="🔍 Search organisms/topics..." oninput="filterTable('fbs-micro-table', this.value)">
@@ -3139,6 +3144,7 @@
   <button class="module-subtab-btn active" data-sub="chs-path" onclick="switchSubTab('chs-path')">Pathology</button>
   <button class="module-subtab-btn" data-sub="chs-micro" onclick="switchSubTab('chs-micro')">Microbiology</button>
   <button class="module-subtab-btn" data-sub="chs-pharm" onclick="switchSubTab('chs-pharm')">Pharmacology</button>
+  <button class="module-subtab-btn" data-sub="chs-qbank" onclick="switchSubTab('chs-qbank')" style="display:none;">Alan's Q Bank</button>
 </div>
 
 <div class="module-sub-panel active" id="sub-chs-path">
@@ -3190,6 +3196,10 @@
 </table></div>
 </div>
 
+<div class="module-sub-panel" id="sub-chs-qbank" style="display:none;">
+  <div style="font-size:0.85rem;color:var(--text-dim,#8b949e);margin:4px 0 10px;">269 questions &middot; Robbins Pathology: Hemodynamic Disorders (38) &middot; Blood Vessels (51) &middot; The Heart (62) &middot; White Blood Cell Hematopathology (56) &middot; Red Blood Cell &amp; Bleeding Disorders (62). Progress saves in this browser. <a href="chs-qbank.html" target="_blank" rel="noopener">Open full screen &#8599;</a></div>
+  <iframe data-src="chs-qbank.html" title="CHS303 Alan's Q Bank" style="width:100%;height:calc(100vh / var(--zf) - 170px);min-height:600px;border:1px solid var(--border,#30363d);border-radius:10px;background:#0d1117;" loading="lazy"></iframe>
+</div>
 <div class="module-sub-panel" id="sub-chs-micro">
 <div class="controls">
   <input type="text" class="search-box" placeholder="🔍 Search organisms/topics..." oninput="filterTable('chs-micro-table', this.value)">
@@ -3828,6 +3838,18 @@ function applyQBankVisibility() {
     if (!allowed && fr) fr.removeAttribute('src');
     if (!allowed && mpanel.classList.contains('active')) switchSubTab('msk-anat');
   }
+  [['fbs','fbs-path'],['chs','chs-path']].forEach(([k, home]) => {
+    const kb = document.querySelector('.module-subtab-btn[data-sub="' + k + '-qbank"]');
+    if (kb) kb.style.display = allowed ? '' : 'none';
+    const kp = document.getElementById('sub-' + k + '-qbank');
+    if (kp) {
+      kp.style.display = allowed ? '' : 'none';
+      const kf = kp.querySelector('iframe[data-src]');
+      if (allowed && kf && !kf.getAttribute('src')) kf.setAttribute('src', kf.getAttribute('data-src'));
+      if (!allowed && kf) kf.removeAttribute('src');
+      if (!allowed && kp.classList.contains('active')) switchSubTab(home);
+    }
+  });
   const guideDet = document.getElementById('guide-det-qbank');
   if (guideDet) guideDet.style.display = allowed ? '' : 'none';
   const guideCard = document.getElementById('guide-card-qbank');
