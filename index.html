@@ -4551,12 +4551,12 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {n: 127, built: '2026-10-01T22:08:02Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 1, built: '2026-10-01T22:08:55Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
-    return 'v' + v.n + ' \u00b7 ' + d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) + ', ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
-  } catch (e) { return 'v' + v.n; }
+    return 'v' + v.major + '.' + v.minor + ' \u00b7 ' + d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) + ', ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  } catch (e) { return 'v' + v.major + '.' + v.minor; }
 }
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 function splitMultiVideoRows(onlyRow) {
