@@ -2358,6 +2358,10 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .px-chip { display: inline-flex; align-items: center; gap: 6px; margin: 2px 10px 2px 0; }
   .px-chip-lbl { font-size: 0.78em; color: var(--text-dim); }
   .vid-sub { position: relative; }
+  .pa-trigger::after { color: #ef4444 !important; }
+  .pa-menu { border-color: color-mix(in srgb, #ef4444 45%, var(--border-soft)); }
+  .pa-menu .px-opt { background: color-mix(in srgb, #ef4444 9%, var(--surface-3)); border-color: color-mix(in srgb, #ef4444 35%, transparent); }
+  .pa-read { font: inherit; font-size: 0.85em; cursor: pointer; color: var(--text); background: color-mix(in srgb, #ef4444 12%, transparent); border: 1px solid color-mix(in srgb, #ef4444 40%, transparent); border-radius: 999px; padding: 2px 10px; margin-top: 4px; }
   .px-trigger::after { content: " ▾"; font-size: 0.85em; color: #d946ef; }
   .px-menu { position: absolute; z-index: 40; left: 36px; top: 100%; margin-top: 4px; width: min(420px, calc(100vw - 60px)); padding: 8px; border: 1px solid color-mix(in srgb, #d946ef 45%, var(--border-soft)); border-radius: 12px; background: var(--surface-2, #fff); box-shadow: 0 10px 30px rgba(0,0,0,0.28); display: flex; flex-direction: column; gap: 6px; }
   .px-menu-hd { font-size: 0.74em; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-dim); padding: 2px 4px; }
@@ -4295,6 +4299,60 @@ function bioPxpChip(p, withLabel) {
   if (withLabel && p.label) { const l = document.createElement('span'); l.className = 'px-chip-lbl'; l.textContent = p.label; s.appendChild(l); }
   return s;
 }
+function paCollect() {
+  document.querySelectorAll('table').forEach(tbl => {
+    const ths = Array.from(tbl.querySelectorAll('thead th'));
+    const pi = ths.findIndex(t => /^Pathoma$/i.test(t.textContent.trim()));
+    if (pi < 0 || !ths.some(t => /^Watch$/i.test(t.textContent.trim()))) return;
+    ths[pi].remove();
+    tbl.querySelectorAll('tbody tr').forEach(tr => {
+      if (tr.classList.contains('section-row')) { const c = tr.firstElementChild; if (c && c.colSpan > 1) c.colSpan = c.colSpan - 1; return; }
+      const td = tr.querySelector('td.pathoma-cell');
+      if (!td) return;
+      const m = (td.innerHTML.match(/openPathoma\((\d+)\)/) || [])[1];
+      td.remove();
+      if (!m) return;
+      const w = tr.querySelector('td.video-cell[data-label="Watch"]');
+      if (!w) return;
+      const links = w.querySelectorAll('a.video-link');
+      if (links.length) {
+        links.forEach(a => { a.dataset.paPage = m; a.classList.add('px-trigger', 'pa-trigger'); a.setAttribute('onclick', 'return paMenu(event, this)'); a.title = 'Click: watch the video or read the Pathoma notes'; });
+      } else {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'pa-read';
+        b.textContent = '\ud83d\udcd5 Read Pathoma p.' + m;
+        b.onclick = () => openPathoma(parseInt(m, 10));
+        w.appendChild(document.createElement('br')); w.appendChild(b);
+      }
+    });
+  });
+}
+function paMenu(ev, a) {
+  if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button === 1) return true;
+  ev.preventDefault();
+  const unit = a.closest('.vid-sub') || a.closest('td');
+  if (!unit) return true;
+  const old = document.querySelector('.px-menu');
+  if (old) { const same = old.parentNode === unit; old.remove(); if (same) return false; }
+  unit.style.position = 'relative';
+  const mn = a.dataset.min || ((unit.querySelector('.sv-min') || {}).textContent || '').replace(/\D/g, '');
+  const title = a.textContent.replace(/\s+/g, ' ').trim().replace(/^\S+\s/, '');
+  const page = a.dataset.paPage;
+  const m = document.createElement('div');
+  m.className = 'px-menu pa-menu';
+  m.innerHTML = '<div class="px-menu-hd">Pathoma \u2014 ' + title.replace(/</g, '&lt;') + '</div>';
+  const v = document.createElement('a');
+  v.className = 'px-opt'; v.href = a.getAttribute('href'); v.target = '_blank'; v.rel = 'noopener';
+  v.innerHTML = '<b>\ud83c\udfac Watch the video' + (mn ? ' (' + mn + ' min)' : '') + '</b><span>Dr. Sattar explains the topic step by step. Best for learning it the first time.</span>';
+  m.appendChild(v);
+  const n = document.createElement('button');
+  n.type = 'button'; n.className = 'px-opt';
+  n.innerHTML = '<b>\ud83d\udcd5 Read the notes \u2014 Pathoma p.' + page + '</b><span>The same material as the Pathoma textbook page. Best for quick review, or when you can\u2019t watch a video.</span>';
+  n.onclick = () => { m.remove(); openPathoma(parseInt(page, 10)); };
+  m.appendChild(n);
+  unit.appendChild(m);
+  return false;
+}
 function pxMenu(ev, a) {
   if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button === 1) return true;
   ev.preventDefault();
@@ -4395,6 +4453,7 @@ function splitMultiVideoRows(onlyRow) {
     if (window.__svSplitDone) return;
     window.__svSplitDone = true;
     try { bioCollectPxp(); } catch (e) { console.warn('bioCollectPxp', e); }
+    try { paCollect(); } catch (e) { console.warn('paCollect', e); }
   }
   (onlyRow ? [onlyRow] : Array.from(document.querySelectorAll('table tbody tr[data-id]'))).forEach(row => {
     const tbl = row.closest('table');
@@ -4481,6 +4540,11 @@ function splitMultiVideoRows(onlyRow) {
         link.dataset.labels = it.notes.map(n => n.label || '').join('|');
         link.setAttribute('onclick', 'return pxMenu(event, this)');
         link.title = 'Click: watch the video or read its notes';
+      }
+      if (link.dataset && link.dataset.paPage && link.tagName === 'A') {
+        link.classList.add('px-trigger', 'pa-trigger');
+        link.setAttribute('onclick', 'return paMenu(event, this)');
+        link.title = 'Click: watch the video or read the Pathoma notes';
       }
       const line = document.createElement('div');
       line.className = 'sv-line';
