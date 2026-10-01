@@ -1890,6 +1890,22 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   #msk-anat-bc-ga-table th:nth-child(1), #msk-anat-bc-ga-table td:nth-child(1), #msk-anat-bc-msk-table th:nth-child(1), #msk-anat-bc-msk-table td:nth-child(1) { width:34px; }
   .bc-table td { vertical-align: top; }
   .bc-table .fa-link, .bc-table .mehmsk-link { white-space: normal; }
+  #wn-overlay { position:fixed; inset:0; z-index:10000; background:rgba(5,8,15,0.72); display:flex; align-items:center; justify-content:center; padding:16px; }
+  #wn-card { background:var(--surface-solid, #121826); color:var(--text, #f4f6fb); border:1px solid var(--border, rgba(255,255,255,0.12)); border-radius:18px; width:min(640px,100%); max-height:86vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(0,0,0,0.55); }
+  html[data-theme="light"] #wn-card { background:#fff; }
+  #wn-card .wn-hd { padding:18px 22px 10px; }
+  #wn-card .wn-hd h2 { margin:0; font-size:1.3em; }
+  #wn-card .wn-hd p { margin:4px 0 0; opacity:.75; font-size:.9em; }
+  #wn-card .wn-body { padding:4px 22px 8px; overflow-y:auto; }
+  #wn-card .wn-ver { margin:14px 0 6px; padding-top:12px; border-top:1px solid var(--border, rgba(255,255,255,0.12)); }
+  #wn-card .wn-ver:first-child { border-top:0; margin-top:6px; padding-top:0; }
+  #wn-card .wn-vh { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
+  #wn-card .wn-tag { background:#38bdf8; color:#06263a; font-weight:800; font-size:.75em; border-radius:999px; padding:2px 9px; }
+  #wn-card .wn-vt { font-weight:700; font-size:1.02em; }
+  #wn-card ul { margin:6px 0 0; padding-left:20px; }
+  #wn-card li { margin:5px 0; line-height:1.45; font-size:.93em; }
+  #wn-card .wn-ft { padding:12px 22px 18px; display:flex; justify-content:flex-end; }
+  #wn-card .wn-ft button { background:#38bdf8; color:#06263a; border:none; border-radius:10px; padding:10px 20px; font-weight:800; font-size:.95em; cursor:pointer; font-family:inherit; }
   #update-bar { position:fixed; left:50%; bottom:18px; transform:translateX(-50%); z-index:9997; background:#312e81; color:#fff; border:1px solid #818cf8; border-radius:14px; padding:10px 16px; box-shadow:0 10px 30px rgba(0,0,0,0.5); font-size:0.9em; display:flex; align-items:center; gap:10px; flex-wrap:wrap; max-width:94vw; }
   #update-bar button { background:#818cf8; color:#1e1b4b; border:none; border-radius:8px; padding:6px 12px; font-weight:800; cursor:pointer; font-family:inherit; }
   #update-bar button.ub-later { background:transparent; color:#c7d2fe; border:1px solid #6366f1; }
@@ -2621,6 +2637,7 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
       <div class="settings-sec-title">4 · 🔄 Updates</div>
       <div class="settings-sec-sub">This tracker is updated often. It <b>checks for a new version every hour</b> while it's open. When one is ready you'll see a "New version available" bar; if you've been idle for about 10 minutes it refreshes itself (your progress is saved automatically, so nothing is lost).</div>
       <div class="settings-sec-sub" style="margin:8px 0;"><b>You are on version:</b> <span id="app-version-line">—</span></div>
+      <button class="md-choice-btn" style="margin-bottom:8px;" onclick="showWhatsNew(null,true)">✨ See what’s new</button>
       <button class="md-choice-btn" onclick="checkForUpdate(true)">🔄 Check for updates now</button> <span id="update-status" class="settings-sec-sub"></span>
     </div>
 
@@ -4597,7 +4614,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 7, built: '2026-10-01T22:34:47Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 8, built: '2026-10-01T22:38:28Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -4605,6 +4622,48 @@ function verLabel(v) {
   } catch (e) { return 'v' + v.major + '.' + v.minor; }
 }
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
+/* ===== What's new (shown once after an update; newest first) ===== */
+const WHATS_NEW = [
+  { v: [2, 8], title: "What's new pop-up", items: ["After you update, a pop-up now explains everything that was added since the version you were on. You can re-open it any time from Settings, Updates."] },
+  { v: [2, 7], title: "Anki card counts, fixed", items: ["The Anki tab in GHS402 now counts Pathoma cards only for pathology, and shows one combined total with no double counting (2,513 cards for the whole GI block)."] },
+  { v: [2, 6], title: "Sketchy Pharm notes for GHS", items: ["New Sketchy Pharm notes page: the scene picture for all 17 GHS pharmacology videos, with every numbered icon explained and a short exam summary for each drug class.", "Every GHS pharmacology video now has a Video button and a Notes button side by side."] },
+  { v: [2, 5], title: "Cleaner GHS microbiology rows", items: ["Videos that were a single button (like Cestodes) now sit underneath the lecture, exactly like the multi-video rows, with the same tick box, Video and Notes buttons.", "Each lecture now has a coloured bar on the left, a heavier divider and a bold title, so it is easy to tell where one lecture ends and the next begins."] },
+  { v: [2, 4], title: "Refresh button in Settings", items: ["When you check for updates and a new version is found, a Refresh now button appears right there."] },
+  { v: [2, 3], title: "Table edges fixed", items: ["Tables no longer show a cut-off or empty strip on the right side. Everything lines up and the corners are rounded properly."] },
+  { v: [2, 2], title: "Anki tab in GHS402", items: ["New Anki tab next to Pathology, Microbiology and Pharmacology. It shows how many AnKing cards match each GHS topic, plus totals for pathology, microbiology and pharmacology."] },
+  { v: [2, 1], title: "Big round of improvements", items: ["Version numbers: Settings, Updates now shows which version you are on.", "No more sign-in screen flash for people who are already signed in.", "Pathoma: the Pathoma video and the Pathoma book page are now one button. Click it to choose between watching the video or reading the notes. The column is called Pathoma and sits before First Aid.", "Sketchy Pathology is clearly marked optional (dashed outline and an OPTIONAL tag).", "Sketchy Micro: a Video button and a Notes button on every row, with one tick per video.", "New Sketchy Micro notes page for GHS: scene pictures for all 28 GI micro videos, with corrected and expanded explanations for every numbered icon.", "Lower limb lectures re-linked to the new videos."] }
+];
+function wnCmp(a, b) { return a[0] !== b[0] ? a[0] - b[0] : a[1] - b[1]; }
+function wnClose(){ const o = document.getElementById('wn-overlay'); if (o) o.remove(); try { localStorage.setItem('md_last_seen_ver', APP_VERSION.major + '.' + APP_VERSION.minor); } catch (e) {} }
+function showWhatsNew(sinceArr, all) {
+  const cur = [APP_VERSION.major, APP_VERSION.minor];
+  const list = WHATS_NEW.filter(e => all || (wnCmp(e.v, sinceArr) > 0 && wnCmp(e.v, cur) <= 0));
+  if (!list.length) return false;
+  if (document.getElementById('wn-overlay')) return true;
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const o = document.createElement('div'); o.id = 'wn-overlay';
+  const prev = sinceArr && !all ? 'v' + sinceArr[0] + '.' + sinceArr[1] : '';
+  o.innerHTML = '<div id="wn-card" role="dialog" aria-modal="true" aria-label="What\'s new"><div class="wn-hd"><h2>\u2728 ' + (all ? 'Everything that\'s been added' : 'What\'s new') + '</h2><p>' + (all ? 'Newest first.' : 'You updated from ' + prev + ' to v' + cur[0] + '.' + cur[1] + '. Here is everything that is new, newest first.') + '</p></div><div class="wn-body">' +
+    list.map(e => '<div class="wn-ver"><div class="wn-vh"><span class="wn-tag">v' + e.v[0] + '.' + e.v[1] + '</span><span class="wn-vt">' + esc(e.title) + '</span></div><ul>' + e.items.map(i => '<li>' + esc(i) + '</li>').join('') + '</ul></div>').join('') +
+    '</div><div class="wn-ft"><button type="button" onclick="wnClose()">Got it</button></div></div>';
+  o.addEventListener('click', ev => { if (ev.target === o) wnClose(); });
+  document.body.appendChild(o);
+  return true;
+}
+function maybeShowWhatsNew() {
+  try {
+    const cur = APP_VERSION.major + '.' + APP_VERSION.minor;
+    let seen = localStorage.getItem('md_last_seen_ver');
+    if (!seen) {
+      if (localStorage.getItem('md_was_signed_in') === '1') seen = '2.0'; // existing user from before this feature
+      else { localStorage.setItem('md_last_seen_ver', cur); return; }
+    }
+    const sa = seen.split('.').map(Number);
+    if (wnCmp(sa, [APP_VERSION.major, APP_VERSION.minor]) >= 0) return;
+    if (!showWhatsNew(sa, false)) localStorage.setItem('md_last_seen_ver', cur);
+  } catch (e) {}
+}
+
 function splitMultiVideoRows(onlyRow) {
   if (!onlyRow) {
     if (window.__svSplitDone) return;
@@ -5429,6 +5488,7 @@ function passGate() {
   const content = document.getElementById('app-content');
   if (gate) gate.style.display = 'none';
   if (content) content.style.display = '';
+  setTimeout(maybeShowWhatsNew, 700);
 }
 
 function initFirebase() {
