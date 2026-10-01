@@ -4596,7 +4596,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 3, built: '2026-10-01T22:20:16Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 4, built: '2026-10-01T22:20:51Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -8499,7 +8499,7 @@ function checkForUpdate(manual) {
   return fetch(_updUrl(), { method: 'HEAD', cache: 'no-store' }).then(function (res) {
     var sig = _updSig(res);
     if (_updBase === null) { _updBase = sig; if (manual && st) st.textContent = '✅ You\'re on the latest version.'; return; }
-    if (sig !== _updBase && sig !== '|') { _updPending = true; if (!_barDismissed || manual) showUpdateBar(); if (manual && st) st.textContent = '✨ New version found — refresh to get it.'; }
+    if (sig !== _updBase && sig !== '|') { _updPending = true; if (!_barDismissed || manual) showUpdateBar(); if (manual && st) st.innerHTML = '✨ New version found. <button class="md-choice-btn" style="margin-top:8px;" onclick="location.reload()">🔄 Refresh now to get it</button>'; }
     else if (manual && st) st.textContent = '✅ You\'re on the latest version.';
   }).catch(function () { if (manual && st) st.textContent = 'Couldn\'t check right now (offline?).'; });
 }
