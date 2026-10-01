@@ -2364,7 +2364,20 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .px-chip { display: inline-flex; align-items: center; gap: 6px; margin: 2px 10px 2px 0; }
   .px-chip-lbl { font-size: 0.78em; color: var(--text-dim); }
   .vid-sub { position: relative; }
+  @media (max-width: 720px) { table.pa-merged tbody td.video-cell[data-label="Watch"]::before { content: "Pathoma"; } }
   .pa-trigger::after { color: #ef4444 !important; }
+  .px-menu { background: #161c2c !important; background-clip: padding-box; z-index: 1000 !important; box-shadow: 0 14px 40px rgba(0,0,0,0.55) !important; opacity: 1 !important; backdrop-filter: none !important; }
+  .px-menu .px-opt { background: #232b40 !important; color: #e8ecf5 !important; }
+  .px-menu .px-opt span { color: #aab4cc; }
+  .px-menu .px-menu-hd { color: #aab4cc; }
+  .px-menu .px-opt:hover { background: #2d3752 !important; }
+  html[data-theme="light"] .px-menu { background: #fff !important; box-shadow: 0 14px 40px rgba(15,23,42,0.28) !important; }
+  html[data-theme="light"] .px-menu .px-opt { background: #f1f4fa !important; color: #0f172a !important; }
+  html[data-theme="light"] .px-menu .px-opt span, html[data-theme="light"] .px-menu .px-menu-hd { color: #475569; }
+  html[data-theme="light"] .px-menu .px-opt:hover { background: #e4e9f4 !important; }
+  .pa-menu .px-opt { border-color: color-mix(in srgb, #ef4444 55%, transparent) !important; }
+  .pa-menu { border: 1.5px solid #ef4444 !important; }
+  .px-menu { border-color: #d946ef; }
   .pa-menu { border-color: color-mix(in srgb, #ef4444 45%, var(--border-soft)); }
   .pa-menu .px-opt { background: color-mix(in srgb, #ef4444 9%, var(--surface-3)); border-color: color-mix(in srgb, #ef4444 35%, transparent); }
   .pa-read { font: inherit; font-size: 0.85em; cursor: pointer; color: var(--text); background: color-mix(in srgb, #ef4444 12%, transparent); border: 1px solid color-mix(in srgb, #ef4444 40%, transparent); border-radius: 999px; padding: 2px 10px; margin-top: 4px; }
@@ -4305,21 +4318,34 @@ function bioPxpChip(p, withLabel) {
   if (withLabel && p.label) { const l = document.createElement('span'); l.className = 'px-chip-lbl'; l.textContent = p.label; s.appendChild(l); }
   return s;
 }
+function pxPlace(m) {
+  m.style.left = '0px'; m.style.right = 'auto';
+  const r = m.getBoundingClientRect(), vw = document.documentElement.clientWidth;
+  const z = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
+  const over = (r.right / z) - (vw / z) + 12;
+  if (over > 0) m.style.left = (-over) + 'px';
+  const r2 = m.getBoundingClientRect();
+  if (r2.left < 8) m.style.left = (parseFloat(m.style.left) + (8 - r2.left) / z) + 'px';
+  if (r2.bottom > window.innerHeight - 8) { m.style.top = 'auto'; m.style.bottom = '100%'; m.style.marginTop = '0'; m.style.marginBottom = '4px'; }
+}
 function paCollect() {
   document.querySelectorAll('table').forEach(tbl => {
     const ths = Array.from(tbl.querySelectorAll('thead th'));
     const pi = ths.findIndex(t => /^Pathoma$/i.test(t.textContent.trim()));
     if (pi < 0 || !ths.some(t => /^Watch$/i.test(t.textContent.trim()))) return;
     ths[pi].remove();
+    const wth = ths.find(t => /^Watch$/i.test(t.textContent.trim())); if (wth) { wth.textContent = 'Pathoma'; const fth = ths.find(t => /^First Aid$/i.test(t.textContent.trim())); if (fth) fth.parentNode.insertBefore(wth, fth); }
+    tbl.classList.add('pa-merged');
     tbl.querySelectorAll('tbody tr').forEach(tr => {
       if (tr.classList.contains('section-row')) { const c = tr.firstElementChild; if (c && c.colSpan > 1) c.colSpan = c.colSpan - 1; return; }
       const td = tr.querySelector('td.pathoma-cell');
       if (!td) return;
       const m = (td.innerHTML.match(/openPathoma\((\d+)\)/) || [])[1];
       td.remove();
-      if (!m) return;
       const w = tr.querySelector('td.video-cell[data-label="Watch"]');
       if (!w) return;
+      const fa = tr.querySelector('td.fa-cell'); if (fa) fa.parentNode.insertBefore(w, fa);
+      if (!m) return;
       const links = w.querySelectorAll('a.video-link');
       if (links.length) {
         links.forEach(a => { a.dataset.paPage = m; a.classList.add('px-trigger', 'pa-trigger'); a.setAttribute('onclick', 'return paMenu(event, this)'); a.title = 'Click: watch the video or read the Pathoma notes'; });
@@ -4357,6 +4383,7 @@ function paMenu(ev, a) {
   n.onclick = () => { m.remove(); openPathoma(parseInt(page, 10)); };
   m.appendChild(n);
   unit.appendChild(m);
+  pxPlace(m);
   return false;
 }
 function pxMenu(ev, a) {
@@ -4385,6 +4412,7 @@ function pxMenu(ev, a) {
     m.appendChild(n);
   });
   unit.appendChild(m);
+  pxPlace(m);
   return false;
 }
 document.addEventListener('click', e => { const m = document.querySelector('.px-menu'); if (m && !m.contains(e.target) && !(e.target.closest && e.target.closest('.px-trigger'))) m.remove(); });
