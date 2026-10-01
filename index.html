@@ -1315,6 +1315,12 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   }
   td.video-cell.missing { color: var(--text-faint); font-style: italic; display: table-cell; }
   .video-link.sketchy-path-link { margin: 5px auto; }
+  /* Sketchy Pathology is optional: make that obvious next to the required Pathoma video */
+  .video-link.sketchy-path-link { background: transparent !important; color: var(--text-dim) !important; border: 1.5px dashed color-mix(in srgb, var(--text-dim) 55%, transparent) !important; box-shadow: none !important; font-weight: 600; }
+  .video-link.sketchy-path-link:hover { color: var(--text) !important; border-style: solid !important; }
+  .video-link.sketchy-path-link::before { content: "OPTIONAL"; display: inline-block; margin-right: 7px; padding: 1px 6px; border-radius: 999px; font-size: 0.62em; font-weight: 800; letter-spacing: 0.06em; vertical-align: 2px; color: #fff; background: color-mix(in srgb, var(--text-dim) 80%, #000 0%); }
+  td.video-cell[data-label="Sketchy Pathology"] { background: color-mix(in srgb, var(--text-dim) 6%, transparent); border-left: 2px dashed color-mix(in srgb, var(--text-dim) 40%, transparent); }
+  @media (max-width: 720px) { table tbody td.video-cell[data-label="Sketchy Pathology"]::before { content: "Sketchy Pathology \2014  optional"; color: var(--text-dim); } }
   td.video-cell span.missing { color: var(--text-faint); font-style: italic; font-size: 0.82em; }
 
   .qbank-input {
