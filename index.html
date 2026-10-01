@@ -3170,6 +3170,7 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   <button class="module-subtab-btn active" data-sub="ghs-path" onclick="switchSubTab('ghs-path')">Pathology</button>
   <button class="module-subtab-btn" data-sub="ghs-micro" onclick="switchSubTab('ghs-micro')">Microbiology</button>
   <button class="module-subtab-btn" data-sub="ghs-pharm" onclick="switchSubTab('ghs-pharm')">Pharmacology</button>
+  <button class="module-subtab-btn" data-sub="ghs-anki" onclick="switchSubTab('ghs-anki')">Anki</button>
 </div>
 
 <div class="module-sub-panel active" id="sub-ghs-path">
@@ -3250,6 +3251,29 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
 </tfoot>
 </table></div>
 </div>
+
+<div class="module-sub-panel" id="sub-ghs-anki">
+<style>
+.ank-wrap{max-width:900px;margin:0 auto;}
+.ank-top{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0;}
+.ank-card{border:1px solid var(--border,#ccc);border-radius:12px;padding:14px;text-align:center;background:var(--card,rgba(127,127,127,.08));}
+.ank-card .n{font-size:2rem;font-weight:800;line-height:1.1;}
+.ank-card .l{font-weight:700;margin-top:4px;}
+.ank-card .s{font-size:.78rem;opacity:.7;margin-top:2px;}
+.ank-sec{margin:22px 0 6px;font-weight:800;font-size:1.05rem;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.ank-row{display:grid;grid-template-columns:minmax(120px,2fr) 3fr 56px;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid rgba(127,127,127,.18);font-size:.92rem;}
+.ank-bar{height:10px;border-radius:6px;background:rgba(127,127,127,.18);overflow:hidden;}
+.ank-bar i{display:block;height:100%;border-radius:6px;background:#4f8cff;}
+.ank-row b{text-align:right;}
+.ank-note{font-size:.8rem;opacity:.75;margin-top:16px;line-height:1.5;}
+@media(max-width:560px){.ank-top{grid-template-columns:1fr}.ank-row{grid-template-columns:1fr 56px}.ank-bar{grid-column:1/-1;order:3}}
+</style>
+<div class="ank-wrap">
+<div class="settings-sec-sub" style="margin:8px 0;">How many AnKing Step Deck cards line up with the GHS GI block. Total: <strong>3,002 cards</strong>. Counted from your own Anki collection on Oct 1, 2026.</div>
+<div class="ank-top"><div class="ank-card"><div class="n">1,551</div><div class="l">Pathology</div><div class="s">Pathoma + Sketchy Path cards</div></div><div class="ank-card"><div class="n">870</div><div class="l">Microbiology</div><div class="s">Sketchy Micro cards</div></div><div class="ank-card"><div class="n">581</div><div class="l">Pharmacology</div><div class="s">Sketchy Pharm cards</div></div></div>
+<div class="ank-sec"><span>Pathology</span><span>1,551 cards</span></div><div class="ank-row"><span>Oral Cavity &amp; Salivary Glands</span><span class="ank-bar"><i style="width:16%"></i></span><b>56</b></div><div class="ank-row"><span>Esophagus</span><span class="ank-bar"><i style="width:41%"></i></span><b>143</b></div><div class="ank-row"><span>Stomach</span><span class="ank-bar"><i style="width:48%"></i></span><b>167</b></div><div class="ank-row"><span>Small Bowel</span><span class="ank-bar"><i style="width:87%"></i></span><b>302</b></div><div class="ank-row"><span>Appendix &amp; Inflammatory Bowel Disease</span><span class="ank-bar"><i style="width:24%"></i></span><b>85</b></div><div class="ank-row"><span>Colon (diverticular, ischemic)</span><span class="ank-bar"><i style="width:42%"></i></span><b>147</b></div><div class="ank-row"><span>Colorectal Cancer &amp; Anal Disorders</span><span class="ank-bar"><i style="width:47%"></i></span><b>164</b></div><div class="ank-row"><span>Exocrine Pancreas</span><span class="ank-bar"><i style="width:23%"></i></span><b>80</b></div><div class="ank-row"><span>Gallbladder &amp; Biliary Tract</span><span class="ank-bar"><i style="width:42%"></i></span><b>148</b></div><div class="ank-row"><span>Liver (jaundice, hepatitis, cirrhosis, tumors)</span><span class="ank-bar"><i style="width:100%"></i></span><b>349</b></div><div class="ank-sec"><span>Microbiology</span><span>870 cards</span></div><div class="ank-row"><span>GI Viruses (HSV, Norovirus, Rotavirus)</span><span class="ank-bar"><i style="width:56%"></i></span><b>115</b></div><div class="ank-row"><span>Intestinal Protozoa (Giardia, Entamoeba, Crypto)</span><span class="ank-bar"><i style="width:50%"></i></span><b>104</b></div><div class="ank-row"><span>Cestodes</span><span class="ank-bar"><i style="width:19%"></i></span><b>39</b></div><div class="ank-row"><span>Trematodes</span><span class="ank-bar"><i style="width:20%"></i></span><b>41</b></div><div class="ank-row"><span>Intestinal Nematodes</span><span class="ank-bar"><i style="width:24%"></i></span><b>50</b></div><div class="ank-row"><span>Hepatitis Viruses &amp; Yellow Fever</span><span class="ank-bar"><i style="width:63%"></i></span><b>129</b></div><div class="ank-row"><span>Actinomyces &amp; H. pylori</span><span class="ank-bar"><i style="width:27%"></i></span><b>55</b></div><div class="ank-row"><span>Non-inflammatory Diarrhea (S. aureus, B. cereus, C. perf, ETEC/EHEC, Vibrio, Brucella)</span><span class="ank-bar"><i style="width:100%"></i></span><b>206</b></div><div class="ank-row"><span>Inflammatory Diarrhea (Campylobacter, Yersinia, C. diff, Salmonella, Shigella)</span><span class="ank-bar"><i style="width:67%"></i></span><b>139</b></div><div class="ank-sec"><span>Pharmacology</span><span>581 cards</span></div><div class="ank-row"><span>Antiemetics &amp; Prokinetics</span><span class="ank-bar"><i style="width:31%"></i></span><b>48</b></div><div class="ank-row"><span>Acid-Peptic Drugs (H2 blockers, PPIs)</span><span class="ank-bar"><i style="width:19%"></i></span><b>30</b></div><div class="ank-row"><span>Laxatives &amp; Antidiarrheals</span><span class="ank-bar"><i style="width:26%"></i></span><b>40</b></div><div class="ank-row"><span>IBD Drugs (TNF inhibitors, sulfasalazine)</span><span class="ank-bar"><i style="width:17%"></i></span><b>26</b></div><div class="ank-row"><span>Antipsychotics</span><span class="ank-bar"><i style="width:47%"></i></span><b>74</b></div><div class="ank-row"><span>Antidepressants</span><span class="ank-bar"><i style="width:100%"></i></span><b>156</b></div><div class="ank-row"><span>Sedatives &amp; Hypnotics</span><span class="ank-bar"><i style="width:73%"></i></span><b>114</b></div><div class="ank-row"><span>Substance Use (opioids, naltrexone, varenicline, amphetamines)</span><span class="ank-bar"><i style="width:62%"></i></span><b>96</b></div>
+<div class="ank-note">Only cards tagged to the topics covered in GHS are counted. Pathology uses the Pathoma GI and Liver/Pancreas/Gallbladder chapters plus Sketchy Path GI and Hepatobiliary. Microbiology and Pharmacology use the Sketchy Micro organisms and Sketchy Pharm lessons from the GHS lectures. A card tagged to more than one topic shows up in each, so the topic numbers can add up to slightly more than the section total, which counts every card once. Bootcamp and other resource tags are not included.</div>
+</div></div>
 
 <div class="module-sub-panel" id="sub-ghs-pharm">
 <div class="controls">
@@ -4551,7 +4575,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 1, built: '2026-10-01T22:08:55Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 2, built: '2026-10-01T22:18:38Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
