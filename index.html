@@ -4396,17 +4396,12 @@ function skCollect() {
     if (vids.length !== 1) return;
     const v = vids[0];
     const tr = w.closest('tr'); const t = tr && tr.querySelector('td.time');
+    const org = tr && tr.querySelector('td[data-label="Organism"]');
     const mn = t && t.dataset.min ? t.dataset.min : '';
     v.dataset.min = mn;
-    v.className = 'video-link sk-btn';
-    v.textContent = '\ud83c\udfac Video' + (mn ? ' (' + mn + 'm)' : '');
-    notes.className = 'video-link sketchy-link sk-btn sk-btn-notes';
-    if (tr) tr.setAttribute('data-nosplit', '1');
-    notes.textContent = '\ud83d\udcdd Notes';
-    notes.title = 'Open the Sketchy scene + notes page';
-    const lab = document.createElement('span'); lab.className = 'sk-lbl'; lab.textContent = 'Sketchy';
-    w.insertBefore(lab, w.firstChild);
-    w.classList.add('sk-cell');
+    v.dataset.gnotes = notes.getAttribute('href');
+    v.textContent = '\ud83c\udfac ' + (org ? org.textContent.trim() : 'Video');
+    notes.remove();
   });
 }
 function gkCollect() {
@@ -4614,7 +4609,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 8, built: '2026-10-01T22:38:28Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 9, built: '2026-10-01T22:46:55Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -4624,6 +4619,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 9], title: "Videos are always underneath the lecture", items: ["Every lecture on every tab now shows its video(s) the same way: tucked underneath the lecture with a tick box, even when there is only one video. Before, single videos sat inside the row and multi-video lectures sat below, which looked inconsistent.", "Your existing ticks and progress carry over untouched."] },
   { v: [2, 8], title: "What's new pop-up", items: ["After you update, a pop-up now explains everything that was added since the version you were on. You can re-open it any time from Settings, Updates."] },
   { v: [2, 7], title: "Anki card counts, fixed", items: ["The Anki tab in GHS402 now counts Pathoma cards only for pathology, and shows one combined total with no double counting (2,513 cards for the whole GI block)."] },
   { v: [2, 6], title: "Sketchy Pharm notes for GHS", items: ["New Sketchy Pharm notes page: the scene picture for all 17 GHS pharmacology videos, with every numbered icon explained and a short exam summary for each drug class.", "Every GHS pharmacology video now has a Video button and a Notes button side by side."] },
@@ -4711,8 +4707,9 @@ function splitMultiVideoRows(onlyRow) {
         const pv = row.querySelector('td[data-label="Pathoma Video"]');
         const sv = row.querySelector('td[data-label="Sketchy Video"]');
         if (pv) src = 'Pathoma'; else if (sv) src = 'Sketchy';
-        if (/^\W*watch\W*$/i.test(t) && pv) { label = pv.textContent.replace(/\s*\(same video[^)]*\)/i, '').replace(/\s+/g, ' ').trim(); a.dataset.svLabel = '🎬 ' + label; }
+        if (/^\W*watch\W*$/i.test(t) && (pv || sv)) { label = (pv || sv).textContent.replace(/\s*\(same video[^)]*\)/i, '').replace(/\s+/g, ' ').trim(); a.dataset.svLabel = '🎬 ' + label; }
       }
+      if (mm && col === 'Watch' && !a.dataset.svLabel) { label = t.replace(/\s*\(\d+m\)\s*$/, ''); a.dataset.svLabel = label; }
       items.push({ a, label, view: '', src, min: mm ? mm[1] + ' min' : (a.dataset.min ? a.dataset.min + ' min' : ''), button: true });
     });
     // de-duplicate by link
@@ -4720,7 +4717,7 @@ function splitMultiVideoRows(onlyRow) {
     const uniq = items.filter(it => { const k = (it.a && it.a.getAttribute('href')) || it.label; if (seen.has(k + it.view)) return false; seen.add(k + it.view); return true; });
     const views = {};
     uniq.forEach(it => { views[it.view] = (views[it.view] || 0) + 1; });
-    if (!Object.values(views).some(n => n >= 2) && !(row.hasAttribute('data-split1') && uniq.length === 1)) return;
+    if (uniq.length < 1) return;
     // build ONE compact block under the lecture (grid of per-video checkboxes)
     const ncols = row.children.length;
     const usedKeys = new Set();
