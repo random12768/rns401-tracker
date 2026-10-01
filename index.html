@@ -4328,6 +4328,48 @@ function pxPlace(m) {
   if (r2.left < 8) m.style.left = (parseFloat(m.style.left) + (8 - r2.left) / z) + 'px';
   if (r2.bottom > window.innerHeight - 8) { m.style.top = 'auto'; m.style.bottom = '100%'; m.style.marginTop = '0'; m.style.marginBottom = '4px'; }
 }
+function skCollect() {
+  document.querySelectorAll('td.video-cell[data-label="Watch"]').forEach(w => {
+    const notes = w.querySelector('a.sketchy-link');
+    if (!notes) return;
+    const vids = Array.from(w.querySelectorAll('a.video-link:not(.sketchy-link)'));
+    if (vids.length !== 1) return;
+    const v = vids[0];
+    v.dataset.notesHref = notes.getAttribute('href');
+    v.textContent = '\ud83c\udfac Sketchy';
+    v.classList.add('px-trigger', 'sk-trigger');
+    v.setAttribute('onclick', 'return skMenu(event, this)');
+    v.title = 'Click: watch the Sketchy video or read its notes';
+    const tr = w.closest('tr'); const t = tr && tr.querySelector('td.time');
+    if (t && t.dataset.min) v.dataset.min = t.dataset.min;
+    notes.remove();
+  });
+}
+function skMenu(ev, a) {
+  if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button === 1) return true;
+  ev.preventDefault();
+  const unit = a.closest('.vid-sub') || a.closest('td');
+  if (!unit) return true;
+  const old = document.querySelector('.px-menu');
+  if (old) { const same = old.parentNode === unit; old.remove(); if (same) return false; }
+  unit.style.position = 'relative';
+  const tr = a.closest('tr'); const org = tr && tr.querySelector('td[data-label="Organism"]');
+  const mn = a.dataset.min;
+  const m = document.createElement('div');
+  m.className = 'px-menu sk-menu';
+  m.innerHTML = '<div class="px-menu-hd">Sketchy \u2014 ' + (org ? org.textContent.trim().replace(/</g, '&lt;') : 'this topic') + '</div>';
+  const v = document.createElement('a');
+  v.className = 'px-opt'; v.href = a.getAttribute('href'); v.target = '_blank'; v.rel = 'noopener';
+  v.innerHTML = '<b>\ud83c\udfac Watch the video' + (mn ? ' (' + mn + ' min)' : '') + '</b><span>Sketchy tells the bug as a picture story. Best for learning it the first time.</span>';
+  m.appendChild(v);
+  const n = document.createElement('a');
+  n.className = 'px-opt'; n.href = a.dataset.notesHref; n.target = '_blank'; n.rel = 'noopener';
+  n.innerHTML = '<b>\ud83d\udcdd Read the notes</b><span>The scene and key facts written out on one page. Best for quick review, or when you can\u2019t watch a video.</span>';
+  m.appendChild(n);
+  unit.appendChild(m);
+  pxPlace(m);
+  return false;
+}
 function paCollect() {
   document.querySelectorAll('table').forEach(tbl => {
     const ths = Array.from(tbl.querySelectorAll('thead th'));
@@ -4488,6 +4530,7 @@ function splitMultiVideoRows(onlyRow) {
     window.__svSplitDone = true;
     try { bioCollectPxp(); } catch (e) { console.warn('bioCollectPxp', e); }
     try { paCollect(); } catch (e) { console.warn('paCollect', e); }
+    try { skCollect(); } catch (e) { console.warn('skCollect', e); }
   }
   (onlyRow ? [onlyRow] : Array.from(document.querySelectorAll('table tbody tr[data-id]'))).forEach(row => {
     const tbl = row.closest('table');
@@ -4574,6 +4617,10 @@ function splitMultiVideoRows(onlyRow) {
         link.dataset.labels = it.notes.map(n => n.label || '').join('|');
         link.setAttribute('onclick', 'return pxMenu(event, this)');
         link.title = 'Click: watch the video or read its notes';
+      }
+      if (link.dataset && link.dataset.notesHref && link.tagName === 'A') {
+        link.classList.add('px-trigger', 'sk-trigger');
+        link.setAttribute('onclick', 'return skMenu(event, this)');
       }
       if (link.dataset && link.dataset.paPage && link.tagName === 'A') {
         link.classList.add('px-trigger', 'pa-trigger');
