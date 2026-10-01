@@ -107,6 +107,8 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .rms-title { color: var(--pharm-ink, var(--pharm)); border-bottom: 2px solid rgba(192,132,252,0.35); padding-bottom: 8px; margin-bottom: 4px; }
   .module-sub-panel { display: none; }
   .module-sub-panel.active { display: block; }
+  @media (max-width: 720px) { td.pad-fill { display: none !important; } }
+  td.pad-fill { padding: 0 !important; border: 0 !important; }
   table.ghs-table { width: 100%; min-width: 0; border-collapse: separate; border-spacing: 0; }
 
   /* Tabs — floating segmented control */
@@ -4421,6 +4423,25 @@ function skMenu(ev, a) {
   pxPlace(m);
   return false;
 }
+function fixColspans() {
+  document.querySelectorAll('table').forEach(t => {
+    const hr = t.querySelector('thead tr'); if (!hr) return;
+    const n = Array.from(hr.children).reduce((a, c) => a + c.colSpan, 0);
+    t.querySelectorAll('tbody > tr, tfoot > tr').forEach(r => {
+      const cells = Array.from(r.children);
+      if (!cells.length) return;
+      const s = cells.reduce((a, c) => a + c.colSpan, 0);
+      if (s === n) return;
+      if (cells.length === 1) { cells[0].colSpan = n; return; }
+      if (s > n) {
+        const big = cells.reduce((m, c) => c.colSpan > m.colSpan ? c : m, cells[0]);
+        big.colSpan = Math.max(1, big.colSpan - (s - n));
+      } else {
+        const pad = document.createElement('td'); pad.className = 'pad-fill'; pad.colSpan = n - s; r.appendChild(pad);
+      }
+    });
+  });
+}
 function paCollect() {
   document.querySelectorAll('table').forEach(tbl => {
     const ths = Array.from(tbl.querySelectorAll('thead th'));
@@ -4431,7 +4452,7 @@ function paCollect() {
     tbl.classList.add('pa-merged');
     tbl.querySelectorAll('tbody tr').forEach(tr => {
       if (tr.classList.contains('section-row')) { const c = tr.firstElementChild; if (c && c.colSpan > 1) c.colSpan = c.colSpan - 1; return; }
-      const td = tr.querySelector('td.pathoma-cell');
+      const td = tr.querySelector('td.pathoma-cell') || tr.querySelector('td[data-label="Pathoma"]');
       if (!td) return;
       const m = (td.innerHTML.match(/openPathoma\((\d+)\)/) || [])[1];
       td.remove();
@@ -4575,7 +4596,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 2, built: '2026-10-01T22:18:38Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 3, built: '2026-10-01T22:20:16Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5884,6 +5905,7 @@ function onCheck(cb) {
 
 function initState() {
   try { splitMultiVideoRows(); } catch (e) { console.warn('splitMultiVideoRows', e); }
+  try { fixColspans(); } catch (e) { console.warn('fixColspans', e); }
   const state = loadState();
   document.querySelectorAll('tr[data-id]').forEach(row => {
     const cb = row.querySelector('input[type="checkbox"]');
