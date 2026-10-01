@@ -2365,6 +2365,10 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .px-chip-lbl { font-size: 0.78em; color: var(--text-dim); }
   .vid-sub { position: relative; }
   @media (max-width: 720px) { table.pa-merged tbody td.video-cell[data-label="Watch"]::before { content: "Pathoma"; } }
+  td.sk-cell { white-space: normal; }
+  .sk-lbl { display: block; font-size: 0.7em; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
+  a.sk-btn { display: inline-block; margin: 2px 3px; }
+  a.sk-btn-notes { background: color-mix(in srgb, var(--text-dim) 14%, transparent) !important; color: var(--text) !important; border: 1px solid color-mix(in srgb, var(--text-dim) 40%, transparent) !important; }
   .pa-trigger::after { color: #ef4444 !important; }
   .px-menu { background: #161c2c !important; background-clip: padding-box; z-index: 1000 !important; box-shadow: 0 14px 40px rgba(0,0,0,0.55) !important; opacity: 1 !important; backdrop-filter: none !important; }
   .px-menu .px-opt { background: #232b40 !important; color: #e8ecf5 !important; }
@@ -4335,14 +4339,18 @@ function skCollect() {
     const vids = Array.from(w.querySelectorAll('a.video-link:not(.sketchy-link)'));
     if (vids.length !== 1) return;
     const v = vids[0];
-    v.dataset.notesHref = notes.getAttribute('href');
-    v.textContent = '\ud83c\udfac Sketchy';
-    v.classList.add('px-trigger', 'sk-trigger');
-    v.setAttribute('onclick', 'return skMenu(event, this)');
-    v.title = 'Click: watch the Sketchy video or read its notes';
     const tr = w.closest('tr'); const t = tr && tr.querySelector('td.time');
-    if (t && t.dataset.min) v.dataset.min = t.dataset.min;
-    notes.remove();
+    const mn = t && t.dataset.min ? t.dataset.min : '';
+    v.dataset.min = mn;
+    v.className = 'video-link sk-btn';
+    v.textContent = '\ud83c\udfac Video' + (mn ? ' (' + mn + 'm)' : '');
+    notes.className = 'video-link sketchy-link sk-btn sk-btn-notes';
+    if (tr) tr.setAttribute('data-nosplit', '1');
+    notes.textContent = '\ud83d\udcdd Notes';
+    notes.title = 'Open the Sketchy scene + notes page';
+    const lab = document.createElement('span'); lab.className = 'sk-lbl'; lab.textContent = 'Sketchy';
+    w.insertBefore(lab, w.firstChild);
+    w.classList.add('sk-cell');
   });
 }
 function skMenu(ev, a) {
