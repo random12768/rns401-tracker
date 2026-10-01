@@ -2374,11 +2374,6 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .vid-sub a.sk-btn { all: unset; cursor: pointer; display: inline-block; min-width: 4.6em; text-align: center; box-sizing: content-box; flex: none; padding: 3px 12px; border-radius: 14px; font-size: 0.8rem; font-weight: 700; line-height: 1.3; background: var(--green); color: #04250f; }
   .vid-sub a.sk-btn.sk-btn-notes { background: color-mix(in srgb, var(--text-dim) 16%, transparent); color: var(--text); border: 1px solid color-mix(in srgb, var(--text-dim) 40%, transparent); }
   .vid-sub.checked .sk-title { opacity: 0.5; text-decoration: line-through; }
-  .ver-chip { margin-left: auto; font-size: 0.72em; font-weight: 700; padding: 2px 9px; border-radius: 999px; cursor: pointer; border: 1px solid color-mix(in srgb, var(--text-dim) 40%, transparent); color: var(--text-dim); white-space: nowrap; }
-  .ver-chip.latest { color: #16a34a; border-color: color-mix(in srgb, #16a34a 55%, transparent); }
-  .ver-chip.stale { color: #fff; background: #d97706; border-color: #d97706; }
-  #update-banner { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 100000; display: none; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 14px; background: #d97706; color: #fff; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.35); max-width: 92vw; }
-  #update-banner button { font: inherit; font-weight: 800; background: #fff; color: #92400e; border: 0; border-radius: 999px; padding: 5px 14px; cursor: pointer; }
   .pa-trigger::after { color: #ef4444 !important; }
   .px-menu { background: #161c2c !important; background-clip: padding-box; z-index: 1000 !important; box-shadow: 0 14px 40px rgba(0,0,0,0.55) !important; opacity: 1 !important; backdrop-filter: none !important; }
   .px-menu .px-opt { background: #232b40 !important; color: #e8ecf5 !important; }
@@ -2499,10 +2494,7 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   <span id="sync-status">not set up — this file is still saving to your own browser only</span>
   <button id="signin-btn" onclick="signInWithGoogle()">Sign in with Google</button>
   <button id="signout-btn" onclick="signOutGoogle()" style="display:none;">Sign out</button>
-    <span id="app-version" class="ver-chip" title="Site version. Tap to reload and get the newest version." onclick="reloadLatest()">v?</span>
-  </div>
-
-<div id="update-banner" role="status"><span>A newer version of the tracker is available.</span><button type="button" onclick="reloadLatest()">Refresh now</button></div>
+    </div>
 
 <div class="md-modal-overlay" id="md-onboard-overlay">
   <div class="md-modal-box md-modal-box-wide">
@@ -2619,6 +2611,7 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
     <div class="settings-sec" id="set-update">
       <div class="settings-sec-title">4 · 🔄 Updates</div>
       <div class="settings-sec-sub">This tracker is updated often. It <b>checks for a new version every hour</b> while it's open. When one is ready you'll see a "New version available" bar; if you've been idle for about 10 minutes it refreshes itself (your progress is saved automatically, so nothing is lost).</div>
+      <div class="settings-sec-sub" style="margin:8px 0;"><b>You are on version:</b> <span id="app-version-line">—</span></div>
       <button class="md-choice-btn" onclick="checkForUpdate(true)">🔄 Check for updates now</button> <span id="update-status" class="settings-sec-sub"></span>
     </div>
 
@@ -4558,38 +4551,14 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {n: 126, built: '2026-10-01T22:06:50Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {n: 127, built: '2026-10-01T22:08:02Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
-    return 'v' + v.n + ' \u00b7 ' + d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ', ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+    return 'v' + v.n + ' \u00b7 ' + d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) + ', ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
   } catch (e) { return 'v' + v.n; }
 }
-function reloadLatest() {
-  const u = new URL(location.href); u.searchParams.set('v', String(Date.now()));
-  location.replace(u.toString());
-}
-async function checkForUpdate() {
-  const chip = document.getElementById('app-version');
-  try {
-    const r = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
-    if (!r.ok) return;
-    const j = await r.json();
-    if (chip) {
-      if (j.n > APP_VERSION.n) { chip.className = 'ver-chip stale'; chip.textContent = verLabel(APP_VERSION) + ' \u00b7 update available'; }
-      else { chip.className = 'ver-chip latest'; chip.textContent = verLabel(APP_VERSION) + ' \u00b7 latest'; }
-    }
-    const b = document.getElementById('update-banner');
-    if (b) b.style.display = j.n > APP_VERSION.n ? 'flex' : 'none';
-  } catch (e) { /* offline: keep the plain label */ }
-}
-(function () {
-  const chip = document.getElementById('app-version');
-  if (chip) chip.textContent = verLabel(APP_VERSION);
-  checkForUpdate();
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) checkForUpdate(); });
-  setInterval(checkForUpdate, 5 * 60 * 1000);
-})();
+(function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 function splitMultiVideoRows(onlyRow) {
   if (!onlyRow) {
     if (window.__svSplitDone) return;
