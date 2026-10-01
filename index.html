@@ -1588,6 +1588,12 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
     font-variant-numeric: tabular-nums;
   }
 
+
+  .qb-loading { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; min-height:320px; color:var(--text); }
+  .qb-spin { width:34px; height:34px; border-radius:50%; border:3px solid var(--border, rgba(128,128,128,.3)); border-top-color:var(--planner, #38bdf8); animation:qbspin .8s linear infinite; }
+  @keyframes qbspin { to { transform:rotate(360deg); } }
+  .qb-load-msg { font-size:1rem; opacity:.85; }
+  .qb-retry { padding:8px 18px; border-radius:999px; border:1px solid var(--border, rgba(128,128,128,.4)); background:var(--surface, transparent); color:var(--text); cursor:pointer; font-weight:600; }
   /* ===================== Alan's Q Bank (scoped, merged in-DOM) ===================== */
 
 #qbank-root{
@@ -2080,6 +2086,18 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   html[data-theme="light"] .md-choice-btn:hover { background:rgba(15,23,42,0.090); }
   html[data-theme="light"] .settings-btn-header { background:rgba(15,23,42,0.054); }
   html[data-theme="light"] .settings-btn-header:hover { background:rgba(15,23,42,0.090); }
+  html[data-theme="light"] #qbank-root {
+    --bg:#f4f6fa; --surface:#ffffff; --surface2:#eaeef5; --border:rgba(15,23,42,0.14);
+    --accent:#0369a1; --accent-dim:rgba(3,105,161,0.12); --text:#141a28; --muted:#46506a; --dim:#5a6580;
+    --ok:#047857; --ok-bg:rgba(5,150,105,0.10); --ok-br:#059669;
+    --err:#b91c1c; --err-bg:rgba(220,38,38,0.08); --err-br:#dc2626;
+    --flag:#b45309; --flag-bg:rgba(245,158,11,0.14);
+  }
+  html[data-theme="light"] #qbank-root .opt.ans-ok { color:#047857; }
+  html[data-theme="light"] #qbank-root .opt.ans-err { color:#b91c1c; }
+  html[data-theme="light"] #qbank-root .wc-item { color:var(--muted); }
+  html[data-theme="light"] #qbank-root .sub-btn, html[data-theme="light"] #qbank-root .next-btn, html[data-theme="light"] #qbank-root .note-save { color:#fff; box-shadow:none; }
+  html[data-theme="light"] #qbank-root .card { backdrop-filter:none; -webkit-backdrop-filter:none; box-shadow:0 6px 24px rgba(15,23,42,0.08); }
   html[data-theme="light"] #qbank-root #nav { background:var(--bg-2); }
   html[data-theme="light"] #qbank-root #track { background:var(--bg-2); }
   html[data-theme="light"] #qbank-root .clr-hl-btn:hover { color:#92400e; }
@@ -7366,7 +7384,7 @@ initFirebase();
 
 var CHAPTERS={};
 var QB_COUNTS={"C15": 78, "C28": 78, "R12": 55, "R28": 79};
-var QB_DATA_URL="qbank-data.js?v=271c652e";
+var QB_DATA_URL="qbank-data.js?v=ab3d7297";
 var QB_BOOTED=false;
 
 /* ============================ APP ENGINE ============================ */
@@ -7466,14 +7484,23 @@ function loadJsOnce(src, cb, errCb){
 function qbEnsureData(){
   if (QB_BOOTED) return;
   var root = document.getElementById('qbank-root');
-  if (root && !root.dataset.loading) { root.dataset.loading = '1'; var n = document.createElement('div'); n.id = 'qb-loading'; n.style.cssText = 'padding:24px;opacity:.7'; n.textContent = 'Loading Q Bank…'; root.appendChild(n); }
+  function showLoading(msg, retry){
+    if (!root) return;
+    var l = document.getElementById('qb-loading');
+    if (!l) { l = document.createElement('div'); l.id = 'qb-loading'; root.parentNode.insertBefore(l, root); }
+    l.className = 'qb-loading';
+    l.innerHTML = (retry ? '' : '<div class="qb-spin"></div>') + '<div class="qb-load-msg">' + msg + '</div>' + (retry ? '<button class="qb-retry" onclick="qbEnsureData()">Try again</button>' : '');
+    root.style.display = 'none';
+  }
+  showLoading('Loading Q Bank…');
   loadJsOnce(QB_DATA_URL, function () {
     if (QB_BOOTED) return;
     QB_BOOTED = true;
     var l = document.getElementById('qb-loading'); if (l) l.remove();
+    if (root) root.style.display = '';
     qbComputeKeys(); CUR = CHAPTER_KEYS[0];
     buildNav(); showCh(CHAPTER_KEYS[0]); updateQBankCard();
-  }, function () { var l = document.getElementById('qb-loading'); if (l) l.textContent = 'Could not load the Q Bank — check your connection and reopen this tab.'; if (root) delete root.dataset.loading; });
+  }, function () { showLoading('Could not load the Q Bank — check your connection.', true); });
 }
 var ANS = {}, HL = {}, XO = {}, FLAGS = {}, NOTES = {}, SHUF = {}, hlMode = null;
 
@@ -7757,7 +7784,7 @@ function goQ(i){
     var cls=q.images.length>1?'qfig double':'qfig single';
     figHtml='<div class="'+cls+'">';
     for(var g=0;g<q.images.length;g++){
-      figHtml+='<div class="fig-wrap"><img src="'+q.images[g]+'" onclick="openLB(this.src)" alt="Figure for question '+esc(q.id)+'"></div>';
+      figHtml+='<div class="fig-wrap"><img loading="lazy" decoding="async" src="'+q.images[g]+'" onclick="openLB(this.src)" alt="Figure for question '+esc(q.id)+'"></div>';
     }
     figHtml+='</div>';
   }
