@@ -109,6 +109,13 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .module-sub-panel.active { display: block; }
   @media (max-width: 720px) { td.pad-fill { display: none !important; } }
   td.pad-fill { padding: 0 !important; border: 0 !important; }
+  /* clear separation between lectures */
+  table.ghs-table tbody tr[data-id] > td { border-top: 2px solid rgba(127,127,127,.4); }
+  table.ghs-table tbody tr[data-id] > td:first-child { box-shadow: inset 4px 0 0 var(--lec, #888); }
+  table.ghs-table[id$="path-table"] { --lec: var(--path); }
+  table.ghs-table[id$="micro-table"] { --lec: var(--micro); }
+  table.ghs-table[id$="pharm-table"] { --lec: var(--pharm); }
+  table.ghs-table tbody tr[data-id] > td[data-label="Lecture"] { font-weight: 700; }
   table.ghs-table { width: 100%; min-width: 0; border-collapse: separate; border-spacing: 0; }
 
   /* Tabs — floating segmented control */
@@ -4389,13 +4396,7 @@ function gkCollect() {
   document.querySelectorAll('td.video-cell[data-label="Watch"]').forEach(w => {
     const vids = w.querySelectorAll('a.video-link[data-gnotes]');
     if (vids.length !== 1 || w.querySelectorAll('a.video-link').length !== 1) return;
-    const v = vids[0];
-    const mn = v.dataset.min;
-    const nb = document.createElement('a'); nb.className = 'video-link sketchy-link sk-btn sk-btn-notes'; nb.href = v.dataset.gnotes; nb.target = '_blank'; nb.rel = 'noopener'; nb.textContent = '\ud83d\udcdd Notes'; nb.title = 'Open the Sketchy scene + notes page';
-    v.className = 'video-link sk-btn'; v.textContent = '\ud83c\udfac Video' + (mn ? ' (' + mn + 'm)' : ''); v.removeAttribute('data-gnotes');
-    const lab = document.createElement('span'); lab.className = 'sk-lbl'; lab.textContent = 'Sketchy';
-    w.insertBefore(lab, w.firstChild); w.appendChild(document.createTextNode(' ')); w.appendChild(nb); w.classList.add('sk-cell');
-    const gtr = w.closest('tr'); if (gtr) gtr.setAttribute('data-nosplit', '1');
+    const gtr = w.closest('tr'); if (gtr) gtr.setAttribute('data-split1', '1');
   });
 }
 function skMenu(ev, a) {
@@ -4596,7 +4597,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 4, built: '2026-10-01T22:20:51Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 5, built: '2026-10-01T22:24:04Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -4660,7 +4661,7 @@ function splitMultiVideoRows(onlyRow) {
     const uniq = items.filter(it => { const k = (it.a && it.a.getAttribute('href')) || it.label; if (seen.has(k + it.view)) return false; seen.add(k + it.view); return true; });
     const views = {};
     uniq.forEach(it => { views[it.view] = (views[it.view] || 0) + 1; });
-    if (!Object.values(views).some(n => n >= 2)) return;
+    if (!Object.values(views).some(n => n >= 2) && !(row.hasAttribute('data-split1') && uniq.length === 1)) return;
     // build ONE compact block under the lecture (grid of per-video checkboxes)
     const ncols = row.children.length;
     const usedKeys = new Set();
@@ -4775,7 +4776,7 @@ function splitMultiVideoRows(onlyRow) {
         td.classList.remove('missing');
         if (!noteDone && (td.dataset.label === 'Watch' || /Watch/.test(td.dataset.label || '') || touched.size === 1)) {
           const n = uniq.length;
-          td.innerHTML = '<span class="sv-pointer">▾ ' + n + ' videos</span>';
+          td.innerHTML = '<span class="sv-pointer">▾ ' + n + (n === 1 ? ' video' : ' videos') + '</span>';
           noteDone = true;
         } else td.innerHTML = '<span class="sv-pointer sv-dim">▾</span>';
       }
