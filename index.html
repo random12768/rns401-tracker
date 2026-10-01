@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script id="md-auth-hint">try{document.documentElement.classList.add(localStorage.getItem('md_was_signed_in')==='1'?'auth-hint':'auth-pending')}catch(e){document.documentElement.classList.add('auth-pending')}</script>
+<style>
+html.auth-pending #auth-gate .auth-gate-box{visibility:hidden}
+html.auth-hint #auth-gate{display:none!important}
+html.auth-hint #app-content{display:block!important}
+</style>
 <script id="md-theme-init">
 (function(){try{var t=localStorage.getItem('md_theme');var d=document.documentElement;
 function sys(){return window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}
@@ -5183,6 +5189,7 @@ let gatePassed = false;
 function passGate() {
   if (gatePassed) return;
   gatePassed = true;
+  document.documentElement.classList.remove('auth-pending', 'auth-hint');
   const gate = document.getElementById('auth-gate');
   const content = document.getElementById('app-content');
   if (gate) gate.style.display = 'none';
@@ -5231,6 +5238,7 @@ async function onAuthChange(user) {
   fbUser = user;
   const signinBtn = document.getElementById('signin-btn');
   const signoutBtn = document.getElementById('signout-btn');
+  try { localStorage.setItem('md_was_signed_in', user ? '1' : '0'); } catch(e){}
   if (user) {
     if (signinBtn) signinBtn.style.display = 'none';
     if (signoutBtn) signoutBtn.style.display = '';
@@ -5246,6 +5254,14 @@ async function onAuthChange(user) {
     setSyncStatus(`signed in as ${user.displayName || user.email} — synced ✓`, true);
     maybeShowOnboarding();
   } else {
+    // Not signed in: reveal the sign-in screen (also undo an optimistic hint-pass)
+    document.documentElement.classList.remove('auth-pending', 'auth-hint');
+    if (gatePassed) {
+      gatePassed = false;
+      const g = document.getElementById('auth-gate'), c = document.getElementById('app-content');
+      if (g) g.style.display = 'flex';
+      if (c) c.style.display = 'none';
+    }
     if (signinBtn) signinBtn.style.display = '';
     if (signoutBtn) signoutBtn.style.display = 'none';
     setSyncStatus('signed out — progress is only saving to this browser');
