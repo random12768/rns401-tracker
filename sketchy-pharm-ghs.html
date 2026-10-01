@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GHS402 Sketchy Pharm — MD4</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel2: #1e222b;
+    --border: #2a2f3a;
+    --text: #e7e9ee;
+    --muted: #9aa3b2;
+    --accent: #4f8cff;
+    --accent2: #7fd858;
+    --done-bg: rgba(127, 216, 88, 0.08);
+    --done-border: rgba(127, 216, 88, 0.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+  }
+  #sidebar {
+    width: 300px;
+    flex-shrink: 0;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    transition: width .18s ease, min-width .18s ease;
+  }
+  #sidebar-inner {
+    width: 300px;
+    height: 100%;
+    overflow-y: auto;
+    padding: 16px 12px;
+  }
+  body.sidebar-collapsed #sidebar {
+    width: 0;
+    min-width: 0;
+    border-right: none;
+  }
+  #sidebar-toggle {
+    position: sticky;
+    top: 16px;
+    align-self: flex-start;
+    flex-shrink: 0;
+    width: 22px;
+    height: 44px;
+    margin-left: -1px;
+    margin-top: 16px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+  #sidebar-toggle:hover {
+    color: var(--text);
+    background: var(--panel2);
+  }
+  #sidebar-toggle svg {
+    transition: transform .18s ease;
+  }
+  body.sidebar-collapsed #sidebar-toggle svg {
+    transform: rotate(180deg);
+  }
+  #sidebar h1 {
+    font-size: 15px;
+    margin: 4px 4px 2px;
+    color: var(--text);
+  }
+  #sidebar .sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0 4px 14px;
+  }
+  #progress {
+    margin: 0 4px 14px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  #progress-bar-outer {
+    height: 6px;
+    background: var(--panel2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent2);
+    width: 0%;
+    transition: width .2s ease;
+  }
+  #search-box {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--panel2);
+    color: var(--text);
+    font-size: 13px;
+    margin-bottom: 12px;
+    outline: none;
+  }
+  #search-box:focus {
+    border-color: var(--accent);
+  }
+  #nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-item {
+    margin-bottom: 2px;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--text);
+    padding: 7px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.3;
+  }
+  .nav-link:hover {
+    background: var(--panel2);
+  }
+  .nav-link.active {
+    background: rgba(79, 140, 255, 0.15);
+    color: var(--accent);
+  }
+  .nav-num {
+    color: var(--muted);
+    font-size: 11px;
+    min-width: 18px;
+  }
+  .nav-check {
+    accent-color: var(--accent2);
+    cursor: pointer;
+  }
+  .nav-item.done .nav-text {
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+  .nav-item.hidden {
+    display: none;
+  }
+  #main {
+    flex: 1;
+    padding: 24px 20px 80px;
+    max-width: 1500px;
+  }
+  #main-header {
+    margin-bottom: 28px;
+  }
+  #main-header h1 {
+    font-size: 26px;
+    margin: 0 0 6px;
+  }
+  #main-header p {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 640px;
+    line-height: 1.5;
+  }
+  .org-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+    scroll-margin-top: 20px;
+  }
+  .org-section.hidden {
+    display: none;
+  }
+  .org-section.reviewed {
+    background: var(--done-bg);
+    border-color: var(--done-border);
+  }
+  .org-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .org-header h2 {
+    font-size: 18px;
+    margin: 0;
+  }
+  .reviewed-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    user-select: none;
+  }
+  .reviewed-toggle input {
+    accent-color: var(--accent2);
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+  }
+  .org-body {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .org-body:has(.legend-wrap:only-child) {
+    display: block;
+  }
+  .scene-wrap {
+    flex: 1 1 42%;
+    min-width: 0;
+    position: sticky;
+    top: 12px;
+    align-self: flex-start;
+  }
+  .scene-wrap img {
+    width: 100%;
+    display: block;
+    margin: 0;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: zoom-in;
+  }
+  .fullscreen-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: rgba(15, 17, 21, 0.75);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.85;
+    z-index: 2;
+  }
+  .fullscreen-btn:hover {
+    opacity: 1;
+    background: rgba(15, 17, 21, 0.95);
+    border-color: var(--accent);
+  }
+  #lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 7, 10, 0.92);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    cursor: zoom-out;
+  }
+  #lightbox.open {
+    display: flex;
+  }
+  #lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    cursor: default;
+  }
+  #lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--panel2);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 101;
+  }
+  #lightbox-close:hover {
+    background: var(--panel);
+    border-color: var(--accent);
+  }
+  .legend-wrap {
+    flex: 1 1 58%;
+    min-width: 0;
+  }
+  .legend-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .legend-list li {
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.45;
+    padding: 7px 9px;
+    background: var(--panel2);
+    border-radius: 7px;
+  }
+  .legend-list li.empty {
+    color: var(--muted);
+    font-style: italic;
+  }
+  .legend-list .num {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #0b0d11;
+    font-weight: 700;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .legend-list .txt {
+    flex: 1;
+  }
+  @media (max-width: 900px) {
+    .org-body {
+      flex-direction: column;
+    }
+    .scene-wrap {
+      position: relative;
+      top: 0;
+      flex-basis: auto;
+      width: 100%;
+    }
+    .scene-wrap img {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .legend-wrap {
+      flex-basis: auto;
+      width: 100%;
+    }
+  }
+  @media (max-width: 860px) {
+    body { flex-direction: column; }
+    #sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+      max-height: 40vh;
+    }
+    #main { padding: 20px 16px 60px; }
+  }
+  .snap { margin: 0 0 14px; padding: 10px 14px; border: 1px solid var(--done-border); background: var(--done-bg); border-radius: 10px; } .snap-hd { font-weight: 700; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--accent2); margin-bottom: 4px; } .snap ul { margin: 0; padding-left: 18px; } .snap li { margin: 3px 0; font-size: 14px; } .pearl { display: block; margin-top: 4px; color: #f5c842; font-size: 0.93em; } .unsure { display: inline-block; margin-left: 8px; padding: 0 7px; border-radius: 999px; font-size: 11px; background: rgba(245,200,66,.18); color: #f5c842; }
+  .orig-legend { margin-top: 12px; } .orig-legend summary { cursor: pointer; color: var(--muted); font-size: 13px; } .legend-img { width: 100%; height: auto; margin-top: 8px; background: #fff; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<aside id="sidebar">
+  <div id="sidebar-inner">
+    <h1>GHS402 — Sketchy Pharm</h1>
+    <p class="sub">MD4 · 17 videos</p>
+    <div id="progress">
+      <span id="progress-text">0 / 17 reviewed</span>
+      <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    </div>
+    <input type="text" id="search-box" placeholder="Search drugs...">
+    <ul id="nav-list">
+<li class="nav-item" data-name="antiemetic agents"><a href="#org-p1" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p1" onclick="event.stopPropagation()"><span class="nav-num">1</span><span class="nav-text">Antiemetic Agents</span></a></li>
+<li class="nav-item" data-name="h2 receptor blockers &amp; ppis"><a href="#org-p2" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p2" onclick="event.stopPropagation()"><span class="nav-num">2</span><span class="nav-text">H2 Receptor Blockers &amp; PPIs</span></a></li>
+<li class="nav-item" data-name="laxatives"><a href="#org-p3" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p3" onclick="event.stopPropagation()"><span class="nav-num">3</span><span class="nav-text">Laxatives</span></a></li>
+<li class="nav-item" data-name="antidiarrheal agents"><a href="#org-p4" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p4" onclick="event.stopPropagation()"><span class="nav-num">4</span><span class="nav-text">Antidiarrheal Agents</span></a></li>
+<li class="nav-item" data-name="tnf inhibitors"><a href="#org-p5" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p5" onclick="event.stopPropagation()"><span class="nav-num">5</span><span class="nav-text">TNF Inhibitors</span></a></li>
+<li class="nav-item" data-name="first-generation antipsychotics"><a href="#org-p6" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p6" onclick="event.stopPropagation()"><span class="nav-num">6</span><span class="nav-text">First-Generation Antipsychotics</span></a></li>
+<li class="nav-item" data-name="second-generation antipsychotics"><a href="#org-p7" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p7" onclick="event.stopPropagation()"><span class="nav-num">7</span><span class="nav-text">Second-Generation Antipsychotics</span></a></li>
+<li class="nav-item" data-name="ssris, snris, cyproheptadine"><a href="#org-p8" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p8" onclick="event.stopPropagation()"><span class="nav-num">8</span><span class="nav-text">SSRIs, SNRIs, Cyproheptadine</span></a></li>
+<li class="nav-item" data-name="tricyclic antidepressants"><a href="#org-p9" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p9" onclick="event.stopPropagation()"><span class="nav-num">9</span><span class="nav-text">Tricyclic Antidepressants</span></a></li>
+<li class="nav-item" data-name="mao inhibitors"><a href="#org-p10" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p10" onclick="event.stopPropagation()"><span class="nav-num">10</span><span class="nav-text">MAO Inhibitors</span></a></li>
+<li class="nav-item" data-name="bupropion, mirtazapine, trazodone"><a href="#org-p11" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p11" onclick="event.stopPropagation()"><span class="nav-num">11</span><span class="nav-text">Bupropion, Mirtazapine, Trazodone</span></a></li>
+<li class="nav-item" data-name="benzodiazepines &amp; flumazenil"><a href="#org-p12" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p12" onclick="event.stopPropagation()"><span class="nav-num">12</span><span class="nav-text">Benzodiazepines &amp; Flumazenil</span></a></li>
+<li class="nav-item" data-name="nonbenzodiazepine hypnotics, melatonin, ramelteon"><a href="#org-p13" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p13" onclick="event.stopPropagation()"><span class="nav-num">13</span><span class="nav-text">Nonbenzodiazepine Hypnotics, Melatonin, Ramelteon</span></a></li>
+<li class="nav-item" data-name="barbiturates"><a href="#org-p14" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p14" onclick="event.stopPropagation()"><span class="nav-num">14</span><span class="nav-text">Barbiturates</span></a></li>
+<li class="nav-item" data-name="opioids, naloxone, naltrexone"><a href="#org-p15" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p15" onclick="event.stopPropagation()"><span class="nav-num">15</span><span class="nav-text">Opioids, Naloxone, Naltrexone</span></a></li>
+<li class="nav-item" data-name="varenicline"><a href="#org-p16" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p16" onclick="event.stopPropagation()"><span class="nav-num">16</span><span class="nav-text">Varenicline</span></a></li>
+<li class="nav-item" data-name="amphetamine, dexamphetamine, lisdexamfetamine, methylphenidate"><a href="#org-p17" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-p17" onclick="event.stopPropagation()"><span class="nav-num">17</span><span class="nav-text">Amphetamine, Dexamphetamine, Lisdexamfetamine, Methylphenidate</span></a></li>
+    </ul>
+  </div>
+</aside>
+<button id="sidebar-toggle" title="Collapse sidebar" aria-label="Collapse sidebar">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+</button>
+
+<main id="main">
+  <div id="main-header">
+    <h1>GHS402 Sketchy Pharm Pictures</h1>
+    <p style="margin:-4px 0 10px;"><a href="index.html" style="color:#4f8cff;text-decoration:none;font-size:13px;">&larr; Back to Master Tracker</a></p>
+    <p>Every video from the GHS402 Pharm list (MD4): the Sketchy mnemonic scene, an exam snapshot, and a corrected, expanded explanation of every numbered icon. Open the original legend picture under any video to compare. Check off videos as you review them — progress is saved in this browser. Use the search box to jump to a specific drug class. Click the expand icon on an image to view it full screen.</p>
+  </div>
+  
+        <section class="org-section" id="org-p1" data-name="antiemetic agents">
+      <div class="org-header">
+        <h2>1. Antiemetic Agents</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p1">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/0e0eb6f3c1e0639fc7fed403df0f01a9.webp" alt="Antiemetic Agents Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>NTS (medulla) is the vomiting center; inputs: vagal GI afferents (5-HT3), vestibular system (M1, H1), and CTZ in area postrema (D2, NK-1, 5-HT3).</li><li>5-HT3 antagonists (ondansetron, granisetron, palonosetron): chemotherapy, radiation, postoperative and GI-infection nausea; adverse effects: constipation, headache, QT prolongation, serotonin syndrome.</li><li>D2 antagonists (metoclopramide, prochlorperazine): metoclopramide is also prokinetic for gastroparesis, contraindicated in bowel obstruction; adverse effects: EPS, tardive dyskinesia, NMS, hyperprolactinemia, QT prolongation, depression.</li><li>H1 antagonists (diphenhydramine, meclizine, promethazine) and M1 antagonist scopolamine treat vestibular nausea (motion sickness).</li><li>Aprepitant (NK-1 antagonist) plus 5-HT3 antagonist plus dexamethasone for highly emetogenic chemotherapy; benzodiazepines and cannabinoids are adjuncts.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Nucleus Tractus Solitarius:</b> The nucleus tractus solitarius (NTS) in the medulla is the vomiting center. It integrates input from the GI tract, vestibular system and chemoreceptor trigger zone and coordinates the emetic response.<span class="pearl">⭐ Antiemetics work by blocking one of the inputs to the NTS.</span></span></li>
+<li><span class="num">2</span><span class="txt"><b>Vomiting:</b> The NTS (vomiting center) coordinates the vomiting response to many different emetogenic stimuli.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Las Vegas near stomach patch:</b> The GI tract signals the NTS mainly through the vagus nerve (CN X) afferents.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Happy face hammer throw:</b> Enterochromaffin cells in the GI mucosa release serotonin in response to GI irritants. Serotonin activates 5-HT3 receptors on vagal afferent nerves, which stimulate the NTS and cause nausea and vomiting.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Hammer Throw 1,2,3:</b> Same pathway: GI irritants cause serotonin release from enterochromaffin cells, 5-HT3 receptors on vagal afferents are activated, and the NTS triggers nausea and emesis.<span class="pearl">⭐ The 5-HT3 receptor is a ligand-gated ion channel, unlike most other serotonin receptors.</span></span></li>
+<li><span class="num">6</span><span class="txt"><b>Semicircular canal:</b> Stimulation of the vestibular system (e.g. motion) causes vestibular nausea, mediated by M1 muscarinic and H1 histamine receptors.</span></li>
+<li><span class="num">7</span><span class="txt"><b>M1 parking spot:</b> Vestibular input reaches the NTS via CN VIII, with M1 (muscarinic) and H1 (histamine) receptors as the key neurotransmitter receptors.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Beehive:</b> Histamine (H1) and acetylcholine (M1) receptor activation in the vestibular system drives the NTS (via CN VIII), producing vestibular nausea.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Trigger Zone:</b> The chemoreceptor trigger zone (CTZ) senses emetogenic substances (drugs, toxins, metabolites) in the blood and CSF of the 4th ventricle. It is not protected by a well-developed blood-brain barrier.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Pommel horse for posturing:</b> The CTZ is located in the area postrema on the floor of the 4th ventricle.<span class="pearl">⭐ Area postrema lies outside the effective blood-brain barrier, so it can sample blood-borne emetogens.</span></span></li>
+<li><span class="num">11</span><span class="txt"><b>plaNK-1:</b> NK-1 (neurokinin-1) receptors, which bind substance P, are found in the CTZ and contribute to nausea and vomiting.</span></li>
+<li><span class="num">12</span><span class="txt"><b>D-shaped rings:</b> Dopamine D2 receptors are located in the CTZ; stimulation causes nausea and vomiting.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Dancer blocking hammer throw:</b> Ondansetron is a 5-HT3 receptor antagonist that blocks serotonin action at 5-HT3 receptors on vagal afferents. Others include granisetron, dolasetron and palonosetron (-setron suffix).<span class="pearl">⭐ The -setron drugs are first-line for chemotherapy-induced nausea and vomiting and for postoperative nausea.</span></span></li>
+<li><span class="num">14</span><span class="txt"><b>Chemical flask bottle, radiation spotlight, bacteria lamp, scalpel javelin:</b> 5-HT3 antagonists such as ondansetron treat nausea and vomiting caused by chemotherapy, radiation, GI infections (gastroenteritis) and surgery.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Plunger baton:</b> Constipation is an adverse effect of 5-HT3 antagonists such as ondansetron.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Hit in the head:</b> Headache and dizziness are adverse effects of 5-HT3 antagonists such as ondansetron.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Dancer's torsading ribbon:</b> 5-HT3 antagonists (ondansetron) can prolong the QT interval and predispose to torsades de pointes.<span class="pearl">⭐ Use caution with other QT-prolonging drugs and electrolyte abnormalities.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Pile of smiley faces:</b> Ondansetron can contribute to serotonin syndrome, especially when combined with other serotonergic drugs such as SSRIs.<span class="pearl">⭐ Serotonin syndrome: hyperthermia, clonus, agitation, diarrhea, autonomic instability.</span></span></li>
+<li><span class="num">19</span><span class="txt"><b>Bee swatter:</b> Antihistamines are H1 receptor antagonists. First-generation agents (diphenhydramine, meclizine, promethazine) cross the blood-brain barrier and block central H1 receptors.<span class="pearl">⭐ First-generation agents are sedating and have anticholinergic effects.</span></span></li>
+<li><span class="num">20</span><span class="txt"><b>Seasickness + life vests:</b> H1 antagonists (antihistamines) and M1 antagonists (antimuscarinics) treat vestibular nausea such as seasickness and motion sickness.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Telescope blocking the M1 parking spot:</b> Scopolamine is a muscarinic (M1) receptor antagonist used for motion sickness, often as a transdermal patch.<span class="pearl">⭐ Anticholinergic effects: dry mouth, blurred vision, urinary retention, confusion.</span></span></li>
+<li><span class="num">22</span><span class="txt"><b>Fallen off the D rings:</b> Metoclopramide is a D2 receptor antagonist. Others include prochlorperazine (also blocks H1 and M1 receptors) and olanzapine (an antipsychotic that also blocks serotonin receptors).<span class="pearl">⭐ Prochlorperazine and promethazine are phenothiazine antiemetics.</span></span></li>
+<li><span class="num">23</span><span class="txt"><b>Metal clogs:</b> Metoclopramide acts as a D2 receptor antagonist, blocking dopamine signaling in the CTZ.<span class="pearl">⭐ It also has prokinetic activity (5-HT4 agonism in the gut).</span></span></li>
+<li><span class="num">24</span><span class="txt"><b>Chemical flasks:</b> D2 antagonists such as metoclopramide are used to prevent and treat chemotherapy-induced nausea and vomiting.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Pushing out brown liquid:</b> Metoclopramide increases gastric emptying (prokinetic) and is used for gastroparesis, for example in diabetic patients.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Do not obstruct:</b> Metoclopramide is contraindicated in small bowel (mechanical GI) obstruction because increased motility can cause harm or perforation.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Brown liquid:</b> Diarrhea is an adverse effect of D2 antagonists such as metoclopramide (increased GI motility).</span></li>
+<li><span class="num">28</span><span class="txt"><b>Crying at judge:</b> Depression is an adverse effect of D2 antagonists including metoclopramide.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Passed out judge:</b> Drowsiness and fatigue are adverse effects of D2 antagonists including metoclopramide.</span></li>
+<li><span class="num">30</span><span class="txt"><b>Extra pyramid newspaper hat + stuck out tongue:</b> D2 antagonists can cause extrapyramidal symptoms (acute dystonia, akathisia, parkinsonism) and tardive dyskinesia with chronic use.<span class="pearl">⭐ Metoclopramide: avoid prolonged use (greater than 12 weeks) because of tardive dyskinesia risk.</span></span></li>
+<li><span class="num">31</span><span class="txt"><b>Now More Spicy!:</b> Neuroleptic malignant syndrome (fever, rigidity, altered mental status, autonomic instability, elevated CK) is a rare adverse effect of D2 antagonists including metoclopramide.<span class="pearl">⭐ Treat with stopping the drug, supportive care, dantrolene or bromocriptine.</span></span></li>
+<li><span class="num">32</span><span class="txt"><b>Shooting milk upwards:</b> D2 blockade removes dopamine's inhibition of prolactin, causing hyperprolactinemia (galactorrhea, gynecomastia, amenorrhea).</span></li>
+<li><span class="num">33</span><span class="txt"><b>Torsades ribbon:</b> QT prolongation is an adverse effect of D2 antagonists including metoclopramide.</span></li>
+<li><span class="num">34</span><span class="txt"><b>Substance Pee Check:</b> Substance P activates NK-1 receptors in the CTZ, contributing to nausea and vomiting.</span></li>
+<li><span class="num">35</span><span class="txt"><b>All Participants:</b> Aprepitant is an NK-1 receptor antagonist (-pitant suffix). It is typically combined with a 5-HT3 antagonist and dexamethasone for highly emetogenic chemotherapy.<span class="pearl">⭐ Aprepitant is a CYP3A4 substrate and moderate inhibitor; it is especially useful for delayed chemotherapy-induced emesis.</span></span></li>
+<li><span class="num">36</span><span class="txt"><b>Moon face:</b> Glucocorticoids (dexamethasone, methylprednisolone), benzodiazepines and cannabinoids have additional antiemetic effects and may be added to regimens, particularly for chemotherapy-induced nausea and vomiting.<span class="pearl">⭐ Benzodiazepines (e.g. lorazepam) help anticipatory nausea.</span></span></li>
+<li><span class="num">37</span><span class="txt"><b>Ben's Diner advertisement:</b> Glucocorticoids, benzodiazepines and synthetic cannabinoids (dronabinol, nabilone) are adjunct antiemetics for chemotherapy-induced nausea and vomiting.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/1e66b691d255937da651d21124762bc3.webp" alt="Antiemetic Agents original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p2" data-name="h2 receptor blockers &amp; ppis">
+      <div class="org-header">
+        <h2>2. H2 Receptor Blockers &amp; PPIs</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p2">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/2d71a98d4d91678ebf6dfdad00458566.webp" alt="H2 Receptor Blockers &amp; PPIs Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Acid secretion by parietal cells is stimulated by histamine (ECL, H2, Gs, cAMP), acetylcholine (vagus, M3, Gq) and gastrin (G cells, CCK-B, Gq); ECL histamine is gastrin's main route.</li><li>H2 blockers (-tidine: cimetidine, ranitidine, famotidine, nizatidine) block H2 receptors; used for GERD and duodenal ulcer but PPIs are first line.</li><li>Cimetidine: CYP450 inhibitor and antiandrogen (gynecomastia, impotence, raised prolactin).</li><li>PPIs (-prazole) irreversibly inhibit H+/K+ ATPase: first line for GERD, ulcers, H. pylori regimens and Zollinger-Ellison; adverse effects: C. diff, pneumonia, fractures, hypomagnesemia, reduced Ca/Fe/Mg/B12 absorption.</li><li>Somatostatin inhibits G cells and ECL cells; octreotide (long-acting analog) can treat gastrinoma/Zollinger-Ellison.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Pour it all:</b> Parietal cells of the gastric mucosa (body and fundus) are responsible for gastric acid (HCl) secretion.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Battery powered puree pump:</b> The H+/K+ ATPase (proton pump) on the luminal (apical) membrane of the parietal cell pumps H+ into the stomach lumen.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Banana into the pump, lemons out:</b> The H+/K+ ATPase exchanges one K+ (into the cell) for one H+ (into the lumen).</span></li>
+<li><span class="num">4</span><span class="txt"><b>Sidewalk:</b> The sidewalk represents the lumen of the stomach.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Three P batters:</b> The proton pump is an ATPase: acid secretion is an ATP-driven (active) process.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Bees swarming honey pot:</b> Histamine, released by ECL cells, binds H2 receptors on the parietal cell to stimulate acid secretion.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Honey pot with 2 S handles:</b> H2 receptors are on the basolateral membrane and are Gs-coupled, increasing cAMP (via adenylyl cyclase).<span class="pearl">⭐ Gs (H2) increases cAMP; Gq (M3, gastrin/CCK-B) increases IP3/Ca2+.</span></span></li>
+<li><span class="num">8</span><span class="txt"><b>Honey pot kid knocking over acid pitcher:</b> H2 receptor activation (cAMP and protein kinase A) increases activity and insertion of the H+/K+ ATPase, increasing acid secretion.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Enter CarefuLly:</b> Enterochromaffin-like (ECL) cells are in the gastric mucosa near parietal cells.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Bees released from ECL tree:</b> ECL cells release histamine, which acts on parietal cells in a paracrine fashion.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Gas Powered blower releasing bees from ECL tree:</b> Gastrin, released by G cells, stimulates ECL cells to release histamine (this is gastrin's major route of stimulating acid secretion).</span></li>
+<li><span class="num">12</span><span class="txt"><b>Gas truck releasing gas tanks:</b> G cells (in the gastric antrum) release gastrin, which acts on ECL cells and parietal cells.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Gas powered acid pump:</b> Gastrin also acts directly on parietal cell CCK-B (gastrin) receptors to stimulate H+ secretion, but this is a minor effect; its major effect is histamine release from ECL cells.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Motorcycle attached to stand in M3:</b> M3 muscarinic acetylcholine receptors are located on the parietal cell (Gq-coupled, increase IP3 and Ca2+).</span></li>
+<li><span class="num">15</span><span class="txt"><b>Vegas sticker:</b> Vagal stimulation (acetylcholine) directly stimulates the parietal cell through M3 receptors.<span class="pearl">⭐ Vagus also acts on ECL cells (histamine release).</span></span></li>
+<li><span class="num">16</span><span class="txt"><b>Vegas Sticker:</b> Vagal stimulation also causes G cells to release gastrin, via gastrin-releasing peptide (GRP).</span></li>
+<li><span class="num">17</span><span class="txt"><b>Gate release pull:</b> Gastrin-releasing peptide (GRP, bombesin-like), released by vagal nerve endings, activates G cells.</span></li>
+<li><span class="num">18</span><span class="txt"><b>2 bee swatters:</b> H2 receptor antagonists (e.g. ranitidine, cimetidine) block histamine at the parietal cell H2 receptor and reduce acid secretion.<span class="pearl">⭐ H2 blockers reduce acid mainly by blocking histamine and are most effective for nocturnal acid secretion.</span></span></li>
+<li><span class="num">19</span><span class="txt"><b>Tie dye t shirt:</b> H2 antagonists share the -tidine suffix: cimetidine, ranitidine, famotidine, nizatidine.<span class="pearl">⭐ Ranitidine was withdrawn from many markets because of NDMA contamination.</span></span></li>
+<li><span class="num">20</span><span class="txt"><b>Gargling:</b> H2 blockers treat GERD (mild or intermittent symptoms), but PPIs are first line.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Ulcerated sidewalk:</b> H2 blockers can be used for duodenal ulcers, though PPIs are first line.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Tie dye kid on the cement:</b> Cimetidine is the H2 blocker with antiandrogenic effects and the most drug interactions and adverse effects of the class.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Dented chrome bumper:</b> Cimetidine inhibits the cytochrome P-450 system and raises levels of drugs metabolized by it (e.g. warfarin, phenytoin, theophylline).<span class="pearl">⭐ Famotidine and nizatidine have minimal CYP inhibition.</span></span></li>
+<li><span class="num">24</span><span class="txt"><b>Pot lids on chest:</b> Cimetidine can cause gynecomastia with long-term or high-dose use (antiandrogen effect).</span></li>
+<li><span class="num">25</span><span class="txt"><b>Droopy honey wand:</b> Cimetidine can cause impotence (erectile dysfunction) via antiandrogenic effects.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Milk shooting from nose:</b> Cimetidine can raise serum prolactin levels (galactorrhea/hyperprolactinemia).</span></li>
+<li><span class="num">27</span><span class="txt"><b>Girl scout blocking puree pump:</b> Proton pump inhibitors (PPIs) irreversibly bind and inhibit the H+/K+ ATPase, the final common pathway for acid secretion.<span class="pearl">⭐ PPIs are prodrugs activated in acidic canaliculi and work best taken 30 minutes before meals; effect lasts until new pumps are synthesized.</span></span></li>
+<li><span class="num">28</span><span class="txt"><b>PRIZE:</b> PPIs share the -prazole suffix: omeprazole, esomeprazole, lansoprazole, pantoprazole, rabeprazole.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Gargling:</b> H2 blockers treat GERD, but PPIs are first line because they suppress acid more effectively.</span></li>
+<li><span class="num">30</span><span class="txt"><b>Ulcerated sidewalk:</b> PPIs relieve symptoms and heal gastric and duodenal ulcers faster than H2 blockers.<span class="pearl">⭐ Discontinue NSAIDs and test for H. pylori in peptic ulcer disease.</span></span></li>
+<li><span class="num">31</span><span class="txt"><b>Jumbo gas tank on mower with crab logo:</b> A gastrinoma causes excessive gastrin and gastric acid hypersecretion (Zollinger-Ellison syndrome), treated with high-dose PPIs.<span class="pearl">⭐ Zollinger-Ellison: refractory, multiple or distal ulcers, diarrhea; check fasting gastrin and secretin stimulation test; associated with MEN1.</span></span></li>
+<li><span class="num">32</span><span class="txt"><b>Swarm of bees over lawn mower:</b> Excess gastrin acts mainly by increasing histamine release from ECL cells, which stimulates parietal cells (and also directly); PPIs are the best medical treatment.</span></li>
+<li><span class="num">33</span><span class="txt"><b>Helicopter hat:</b> PPIs are part of H. pylori eradication regimens, combined with clarithromycin plus amoxicillin or metronidazole (triple therapy).<span class="pearl">⭐ Bismuth quadruple therapy: PPI, bismuth, metronidazole, tetracycline.</span></span></li>
+<li><span class="num">34</span><span class="txt"><b>Chocolate fondue fountain:</b> PPIs increase the risk of Clostridioides difficile infection (loss of gastric acid barrier).</span></li>
+<li><span class="num">35</span><span class="txt"><b>Dirty lung spots:</b> PPIs increase the risk of respiratory infections such as pneumonia.</span></li>
+<li><span class="num">36</span><span class="txt"><b>Medals bound to wagon:</b> PPIs decrease absorption of Ca2+ (calcium carbonate), Mg2+ and iron, which need an acidic environment; also B12 can be reduced.</span></li>
+<li><span class="num">37</span><span class="txt"><b>Fractured Axel:</b> Long-term PPI use increases the risk of osteoporotic fractures, including hip fracture, partly due to reduced calcium absorption.</span></li>
+<li><span class="num">38</span><span class="txt"><b>Porous wood:</b> PPIs may worsen osteoporosis because of decreased calcium absorption.</span></li>
+<li><span class="num">39</span><span class="txt"><b>Falling magnets on girl scout:</b> PPIs can cause hypomagnesemia (reduced Mg2+ absorption), which can lead to arrhythmias or tetany.</span></li>
+<li><span class="num">40</span><span class="txt"><b>Stop sign:</b> Somatostatin (from D cells) inhibits histamine release from ECL cells, reducing acid secretion.</span></li>
+<li><span class="num">41</span><span class="txt"><b>Stop sign:</b> Somatostatin (SST) inhibits gastrin release from G cells, and its analogs can act on SST-receptor positive gastrinomas.<span class="pearl">⭐ Acid in the antrum stimulates somatostatin, a negative feedback loop on gastrin.</span></span></li>
+<li><span class="num">42</span><span class="txt"><b>Octagon shape of stop sign:</b> Octreotide, a long-acting somatostatin analog, inhibits histamine release/ECL cell activity, reducing acid secretion.</span></li>
+<li><span class="num">43</span><span class="txt"><b>Octagon:</b> Octreotide inhibits G cells (gastrin release) and is useful in gastrinoma/Zollinger-Ellison syndrome.<span class="pearl">⭐ Octreotide is also used for carcinoid syndrome, acromegaly, VIPoma and variceal bleeding.</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/669391eb6de183596529178a4c95c33a.webp" alt="H2 Receptor Blockers &amp; PPIs original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p3" data-name="laxatives">
+      <div class="org-header">
+        <h2>3. Laxatives</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p3">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/6ad5ada3bb1d14c9de38dffc50438122.webp" alt="Laxatives Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Stepwise treatment of constipation: bulk-forming (psyllium), stool softener (docusate), osmotic (Mg salts, PEG, lactulose), stimulant (senna, bisacodyl), then suppository or enema.</li><li>Osmotic laxatives draw water into the lumen: magnesium products (caution in CKD, chelate tetracyclines), PEG (colonoscopy prep), lactulose (hepatic encephalopathy).</li><li>Lactulose is metabolized by colonic bacteria to acids, trapping NH3 as NH4+; rifaximin kills ammonia-producing bacteria.</li><li>Stimulant laxatives (senna, bisacodyl) activate the enteric nervous system; chronic senna causes melanosis coli; overuse causes hypokalemia and dehydration.</li><li>Secretagogues: lubiprostone (ClC-2 chloride channel activator) and linaclotide (guanylate cyclase-C agonist, raises cGMP) for CIC/IBS-C; peripheral opioid antagonists for OIC.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Toilet cleaning schedule:</b> Constipation is defined by straining, hard stools and fewer than 3 bowel movements per week. It is common in elderly and debilitated patients.<span class="pearl">⭐ Common causes: low fiber/fluid intake, immobility, opioids, anticholinergics, hypothyroidism, hypercalcemia.</span></span></li>
+<li><span class="num">2</span><span class="txt"><b>Step-up stool:</b> Constipation is treated stepwise: bulk-forming agent, then stool softener, then osmotic laxative, then stimulant laxative, then enema or suppository.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Psyllium seaweed:</b> Psyllium is a bulk-forming laxative: an indigestible hydrophilic colloid that absorbs water, distends the bowel, stimulates peristalsis and produces a bowel movement.<span class="pearl">⭐ Other bulk-formers: methylcellulose, polycarbophil. Safest for long-term use.</span></span></li>
+<li><span class="num">4</span><span class="txt"><b>Ocean water:</b> Bulk-forming laxatives must be taken with adequate water to avoid obstruction or worsening constipation.</span></li>
+<li><span class="num">5</span><span class="txt"><b>SURFboard:</b> Surfactant agents (stool softeners) soften stool by letting water and lipids penetrate into the stool.</span></li>
+<li><span class="num">6</span><span class="txt"><b>DOCKusate:</b> Docusate is a commonly used stool softener, often combined with a stimulant such as senna.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Red cross:</b> Docusate is used in hospitalized patients to prevent constipation and minimize straining (e.g. after surgery or myocardial infarction).<span class="pearl">⭐ Evidence for efficacy is weak; it is mainly preventive.</span></span></li>
+<li><span class="num">8</span><span class="txt"><b>Mineral bath:</b> Osmotic laxatives (magnesium compounds, lactulose, polyethylene glycol) are poorly absorbed substances that draw water into the intestinal lumen, causing distention and peristalsis.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Magazine:</b> Magnesium-based compounds (magnesium hydroxide, magnesium citrate) are osmotic laxatives.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Mineral bath timer:</b> Magnesium-based laxatives relieve acute constipation and help prevent chronic constipation (e.g. milk of magnesia).</span></li>
+<li><span class="num">11</span><span class="txt"><b>Shriveled kidney paperweight:</b> Use magnesium-based agents cautiously in chronic kidney disease, because reduced renal excretion can cause hypermagnesemia.<span class="pearl">⭐ Hypermagnesemia: loss of deep tendon reflexes, hypotension, respiratory depression, cardiac arrest.</span></span></li>
+<li><span class="num">12</span><span class="txt"><b>Mineral spa filter:</b> Magnesium-based osmotic laxatives can bind (chelate) other drugs such as tetracyclines and reduce their absorption.<span class="pearl">⭐ Fluoroquinolones also chelate with divalent cations.</span></span></li>
+<li><span class="num">13</span><span class="txt"><b>Peg drain cover:</b> Polyethylene glycol (PEG) is an osmotic laxative; it is a non-absorbable polymer (not a sugar).</span></li>
+<li><span class="num">14</span><span class="txt"><b>Drain cleaning:</b> Polyethylene glycol (high volume) is used for pre-procedural colonic cleansing, such as before colonoscopy.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Relaxulose:</b> Lactulose is an osmotic laxative: a non-absorbable sugar (disaccharide).</span></li>
+<li><span class="num">16</span><span class="txt"><b>Relaxing bubbles:</b> Lactulose is metabolized by gut bacteria, producing gas that leads to cramping, bloating and flatus.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Relaxulose in liver and brain coral tank:</b> Lactulose is used to treat hepatic encephalopathy.</span></li>
+<li><span class="num">18</span><span class="txt"><b>Cirrhotic liver + brain coral:</b> Hepatic encephalopathy is a neurologic complication of cirrhosis caused by buildup of ammonia and other gut-derived toxins that bypass hepatic clearance.<span class="pearl">⭐ Precipitants: GI bleed, infection, constipation, hypokalemia, sedatives, high protein load.</span></span></li>
+<li><span class="num">19</span><span class="txt"><b>Fishing out ammonia:</b> Lactulose prevents absorption of ammonia (produced by gut bacteria) from the GI tract.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Fish eating lactulose:</b> Intestinal bacteria metabolize lactulose to acidic metabolites, causing an acidic shift in luminal pH; NH3 is converted to NH4+.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Acidic pH meter:</b> Bacterial metabolism of lactulose creates acidic metabolites and lowers colonic pH, favoring conversion of NH3 to NH4+.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Positive net:</b> Ammonia (NH3) is trapped as charged ammonium (NH4+) in the acidic lumen, which cannot be absorbed and is excreted in stool (ion trapping).<span class="pearl">⭐ Lactulose also increases stool frequency, speeding removal of ammonia.</span></span></li>
+<li><span class="num">23</span><span class="txt"><b>Fisherman kid:</b> Rifaximin is a poorly absorbed antibiotic that reduces ammonia-producing intestinal bacteria and is used to treat (and prevent recurrence of) hepatic encephalopathy, along with lactulose.<span class="pearl">⭐ Rifaximin is also used for traveler's diarrhea and IBS-D.</span></span></li>
+<li><span class="num">24</span><span class="txt"><b>Mud bath + spilling water:</b> Laxative use can cause diarrhea and dehydration (with electrolyte disturbances).</span></li>
+<li><span class="num">25</span><span class="txt"><b>Belly rub:</b> Stimulant laxatives directly stimulate the enteric nervous system and increase colonic secretions and motility.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Stimulating suntan lotion:</b> Senna is a stimulant laxative (cathartic) that stimulates the enteric nervous system and colonic secretions.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Sunny side effect:</b> Chronic senna use can cause melanosis coli, a benign brown-black pigmentation of the colon due to toxic effects of anthraquinones on colonic epithelial cells (apoptosis and lipofuscin-like pigment).<span class="pearl">⭐ Melanosis coli is reversible after stopping the laxative and is not premalignant.</span></span></li>
+<li><span class="num">28</span><span class="txt"><b>BICYCodal:</b> Bisacodyl is a stimulant laxative available in oral and rectal formulations.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Trashed peanuts + banana + wing:</b> Continuous use of stimulant laxatives can cause hypokalemia, salt loss and protein loss (protein-losing enteropathy), as well as dependence.<span class="pearl">⭐ Chronic laxative abuse: hypokalemia and metabolic alkalosis (or non-gap acidosis from stool bicarbonate loss).</span></span></li>
+<li><span class="num">30</span><span class="txt"><b>OUT OF ORDER:</b> Severe constipation may warrant a suppository or enema laxative.</span></li>
+<li><span class="num">31</span><span class="txt"><b>Fart darts:</b> Suppositories (glycerin or bisacodyl formulations) are indicated for severe constipation; they act rapidly in the rectum.</span></li>
+<li><span class="num">32</span><span class="txt"><b>Super pooper:</b> Enemas (e.g. warm tap water) are indicated for severe constipation to evacuate the bowel.<span class="pearl">⭐ Avoid phosphate enemas in kidney disease because of phosphate absorption.</span></span></li>
+<li><span class="num">33</span><span class="txt"><b>Lubricating oil:</b> Lubiprostone is indicated for chronic idiopathic constipation (CIC), opioid-induced constipation (OIC) and IBS with constipation (IBS-C) in adult women.<span class="pearl">⭐ Adverse effects: nausea, diarrhea; avoid in pregnancy.</span></span></li>
+<li><span class="num">34</span><span class="txt"><b>Spilt chlorine:</b> Lubiprostone activates chloride channels (ClC-2) on the intestinal lumen, causing secretion of chloride-rich fluid; the increased fluid raises intestinal motility and eases passage of stool.</span></li>
+<li><span class="num">35</span><span class="txt"><b>Line of clothes:</b> Linaclotide is indicated for chronic idiopathic constipation (CIC) and IBS with constipation (IBS-C).<span class="pearl">⭐ Adverse effect: diarrhea; contraindicated in children under 2 years (risk of dehydration).</span></span></li>
+<li><span class="num">36</span><span class="txt"><b>Grumpy Suds:</b> Linaclotide is a guanylate cyclase-C agonist: it increases intracellular cGMP, which drives chloride secretion, increased luminal fluid and faster intestinal transit.<span class="pearl">⭐ cGMP also reduces visceral pain signaling in IBS-C.</span></span></li>
+<li><span class="num">37</span><span class="txt"><b>Dripping clothes:</b> Linaclotide (guanylate cyclase-C agonist) raises cGMP, stimulating chloride (and bicarbonate) secretion, increasing luminal fluid and accelerating transit.</span></li>
+<li><span class="num">38</span><span class="txt"><b>Ruined Mutopia:</b> Peripherally acting mu-opioid receptor antagonists (e.g. methylnaltrexone, naloxegol, naldemedine) are used for opioid-induced constipation (OIC).<span class="pearl">⭐ Contraindicated in known or suspected mechanical bowel obstruction.</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/06a2372db2c087865b758f12df8c8bff.webp" alt="Laxatives original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p4" data-name="antidiarrheal agents">
+      <div class="org-header">
+        <h2>4. Antidiarrheal Agents</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p4">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/ceda21f96d883f8cb04061b6e701e8ce.webp" alt="Antidiarrheal Agents Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Antidiarrheals treat a symptom; avoid them in bloody diarrhea or fever.</li><li>Bismuth subsalicylate: antimicrobial and antisecretory; used for traveler's diarrhea; causes black stool and tongue, salicylate toxicity, Reye risk in children.</li><li>Loperamide (mu agonist, no CNS entry) and diphenoxylate-atropine (Lomotil) slow transit by increasing segmenting activity; CYP and P-gp inhibitors raise loperamide levels.</li><li>Eluxadoline (mu and kappa agonist, delta antagonist) treats IBS-D; risk of pancreatitis, contraindicated with gallbladder or pancreatic disease.</li><li>Octreotide (somatostatin analog) treats secretory diarrhea from VIPoma, carcinoid, chemotherapy, HIV, and short bowel.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Poopy cleaning schedule:</b> Diarrhea is 3 or more loose or watery stools per day. It is common and usually self-limited.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Out of order:</b> Diarrhea results from insufficient intestinal water absorption or excessive active water secretion. Acute causes are usually infectious; chronic causes are usually functional disorders or systemic illness.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Muddy slippers on doormat:</b> Antidiarrheal agents treat the symptom, not the cause. Diarrhea can stem from infection, systemic illness, or structural or functional disorders, so the underlying etiology still needs to be addressed.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Red stool + inflammatory candle:</b> Antidiarrheals are contraindicated in bloody diarrhea or fever, which suggest invasive or inflammatory infection (e.g., Shigella, EHEC, C. difficile). Slowing motility can prolong exposure and raise the risk of complications such as toxic megacolon or HUS.<span class="pearl">⭐ Avoid antimotility drugs in bloody diarrhea, fever, or suspected C. difficile or EHEC.</span></span></li>
+<li><span class="num">5</span><span class="txt"><b>Adsorptive sweeper:</b> Adsorptive agents (kaolin-pectin, bismuth subsalicylate) bind diarrhea-causing toxins and block bacterial adhesion to the intestinal wall.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Pink cleaning goop:</b> Bismuth subsalicylate is antimicrobial (bismuth salts) and antisecretory (the salicylate inhibits prostaglandin action).</span></li>
+<li><span class="num">7</span><span class="txt"><b>Travel poster:</b> Bismuth subsalicylate is commonly used for traveler's diarrhea. It is also used in H. pylori regimens (bismuth quadruple therapy).</span></li>
+<li><span class="num">8</span><span class="txt"><b>Reye's rays:</b> Bismuth subsalicylate can cause salicylate toxicity and, like aspirin, raises the risk of Reye syndrome in children, especially with viral illness (influenza, varicella).<span class="pearl">⭐ Avoid in children with viral illness; Reye syndrome = hepatic steatosis plus encephalopathy.</span></span></li>
+<li><span class="num">9</span><span class="txt"><b>Dropping black stool:</b> Bismuth subsalicylate causes transient, benign blackening of the stool and tongue. Do not mistake it for melena.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Utopia (label garbled in OCR):</b> Opioid agonists (diphenoxylate, loperamide) treat diarrhea.<span class="unsure" title="OCR was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">11</span><span class="txt"><b>Sausage (label garbled in OCR):</b> Opioid agonists act on mu-opioid receptors in the GI tract, slowing motility and reducing secretion.<span class="unsure" title="OCR was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">12</span><span class="txt"><b>Lop-eared rabbit:</b> Loperamide is a mu-opioid agonist that does NOT cross the blood-brain barrier at normal doses. It treats acute and chronic diarrhea, including diarrhea-predominant IBS and IBD-related diarrhea. It is available over the counter.<span class="pearl">⭐ Because it lacks CNS effects, loperamide has low abuse potential at standard doses.</span></span></li>
+<li><span class="num">13</span><span class="txt"><b>Lop-eared rabbit hopping back and forth:</b> Opioids such as loperamide increase colonic phasic segmenting (non-propulsive) activity. This slows colonic transit and increases water absorption, giving firmer stool. Adverse effects include constipation, abdominal distension, and (rarely) toxic megacolon.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Deluxe Massage Chairs:</b> Eluxadoline is a prescription-only drug for diarrhea-predominant IBS (IBS-D).</span></li>
+<li><span class="num">15</span><span class="txt"><b>Mu Kappa Delta shirt:</b> Eluxadoline is a mu and kappa opioid receptor agonist and a delta opioid receptor antagonist.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Pancreatitis sponge:</b> Eluxadoline is associated with pancreatitis and is contraindicated in patients with a history of pancreatic disease or biliary (gallbladder) disease, sphincter of Oddi dysfunction, or heavy alcohol use.<span class="pearl">⭐ Contraindicated without a gallbladder or with prior pancreatitis.</span></span></li>
+<li><span class="num">17</span><span class="txt"><b>Dolphins:</b> Diphenoxylate is a mu-opioid agonist that can cross the blood-brain barrier to some degree. It is combined with atropine to discourage abuse.</span></li>
+<li><span class="num">18</span><span class="txt"><b>Atropine Alice:</b> Atropine is combined with diphenoxylate (Lomotil) in subtherapeutic doses. At high doses it causes unpleasant anticholinergic effects, deterring overdose or abuse of the opioid (euphoria, physical dependence).<span class="pearl">⭐ Lomotil overdose in a child: respiratory depression plus anticholinergic signs; treat with naloxone.</span></span></li>
+<li><span class="num">19</span><span class="txt"><b>Warning sign:</b> All opioids carry abuse potential, including misuse at non-therapeutic doses. Loperamide levels can rise with CYP inhibitors (e.g., cimetidine, grapefruit juice) or P-glycoprotein inhibitors (e.g., erythromycin), increasing systemic and CNS exposure.<span class="pearl">⭐ Loperamide at very high doses can cause QT prolongation and arrhythmias.</span></span></li>
+<li><span class="num">20</span><span class="txt"><b>VIP customers only crab:</b> VIPoma and carcinoid tumors cause secretory diarrhea (VIP and serotonin respectively).<span class="pearl">⭐ VIPoma: watery diarrhea, hypokalemia, achlorhydria (WDHA).</span></span></li>
+<li><span class="num">21</span><span class="txt"><b>Octagon stop sign:</b> Octreotide, a somatostatin analog, treats the symptoms of VIPoma and carcinoid syndrome (secretory diarrhea). It can also be used for diarrhea from chemotherapy, HIV, or short bowel syndrome.<span class="pearl">⭐ Octreotide is also used for acromegaly, variceal bleeding, and gallstone risk is an adverse effect.</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/022fcf1d454a5efed72331438468fc55.webp" alt="Antidiarrheal Agents original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p5" data-name="tnf inhibitors">
+      <div class="org-header">
+        <h2>5. TNF Inhibitors</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p5">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/b99a677ba3f26506c8170b892d959882.webp" alt="TNF Inhibitors Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Infliximab (chimeric), adalimumab and golimumab (human), certolizumab (PEGylated Fab) are anti-TNF-alpha mAbs; etanercept is a TNF receptor-IgG1 Fc decoy.</li><li>Indications: RA, ankylosing spondylitis, psoriatic arthritis, plaque psoriasis, polyarticular JIA, IBD (not etanercept), uveitis and hidradenitis suppurativa (adalimumab).</li><li>Classic toxicity: reactivation of latent TB and other opportunistic infections; screen with TST or IGRA before starting.</li><li>Other adverse effects: drug-induced lupus (infliximab, etanercept), skin and infusion reactions, lymphoma and nonmelanoma skin cancer.</li><li>Ankylosing spondylitis = HLA-B27, bamboo spine; TNF-alpha maintains granulomas, hence TB risk.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>TNF Fish lake:</b> TNF inhibitors are anti-inflammatory biologics used for rheumatoid arthritis, ankylosing spondylitis, psoriatic arthritis, plaque psoriasis, polyarticular juvenile idiopathic arthritis, inflammatory bowel disease, hidradenitis suppurativa, and uveitis.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Alpha-shaped TNF fish:</b> TNF inhibitors neutralize TNF-alpha, a pro-inflammatory cytokine produced mainly by macrophages that drives inflammation and granuloma maintenance.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Antibody-shaped fishing rod:</b> The monoclonal antibody TNF inhibitors are infliximab, adalimumab, certolizumab, and golimumab (all end in -mab).<span class="pearl">⭐ Etanercept is the only TNF inhibitor that is not a monoclonal antibody.</span></span></li>
+<li><span class="num">4</span><span class="txt"><b>Inflictor lure:</b> Infliximab is a chimeric (mouse/human) anti-TNF-alpha monoclonal antibody, given IV. It can cause infusion reactions and anti-drug antibodies.<span class="pearl">⭐ Infliximab is the one used for severe or fistulizing Crohn disease.</span></span></li>
+<li><span class="num">5</span><span class="txt"><b>A doll lure:</b> Adalimumab is a fully human anti-TNF-alpha monoclonal antibody, given subcutaneously.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Certified lure:</b> Certolizumab is a PEGylated antigen-binding (Fab') fragment of a humanized anti-TNF-alpha antibody. It lacks an Fc portion.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Go lure:</b> Golimumab is a fully human anti-TNF-alpha monoclonal antibody, given subcutaneously (or IV for some indications).</span></li>
+<li><span class="num">8</span><span class="txt"><b>Entercept trap:</b> Etanercept is a fusion protein of the TNF receptor and the Fc portion of human IgG1. It acts as a decoy receptor that binds TNF-alpha.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Decoy TNF fish:</b> Etanercept is a decoy receptor for TNF-alpha, soaking it up so it cannot bind cell-surface receptors.<span class="pearl">⭐ Etanercept is not effective for IBD and is not used for it.</span></span></li>
+<li><span class="num">10</span><span class="txt"><b>Red glove:</b> Rheumatoid arthritis (RA) is treated with all five TNF inhibitors: infliximab, adalimumab, certolizumab, golimumab, and etanercept. Infliximab is given with methotrexate.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Anchor:</b> Ankylosing spondylitis (AS) is treated with all five: infliximab, adalimumab, certolizumab, golimumab, and etanercept.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Bamboo:</b> Bamboo spine (vertebral fusion with syndesmophytes) is the classic radiographic finding in ankylosing spondylitis. AS is HLA-B27 associated and causes sacroiliitis.<span class="pearl">⭐ AS in a young man with morning back stiffness improving with exercise = HLA-B27, bamboo spine.</span></span></li>
+<li><span class="num">13</span><span class="txt"><b>Silvery scale patches of algae:</b> Psoriatic arthritis (infliximab, certolizumab, golimumab, etanercept; adalimumab also used) and plaque psoriasis (infliximab, adalimumab, certolizumab, etanercept) respond to TNF inhibitors.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Statue of juvenile + red algae covering knees/elbows:</b> Polyarticular juvenile idiopathic arthritis (JIA) is treated with adalimumab, golimumab, and etanercept.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Red intestine worm:</b> Inflammatory bowel disease: infliximab, adalimumab, and certolizumab for Crohn disease; infliximab, adalimumab, and golimumab for ulcerative colitis.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Fish eye:</b> Uveitis is treated with adalimumab.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Goo:</b> Hidradenitis suppurativa (recurrent abscesses and sinus tracts in intertriginous areas) is treated with adalimumab.</span></li>
+<li><span class="num">18</span><span class="txt"><b>Sunburnt skin:</b> TNF inhibitors increase the risk of skin reactions, including injection-site or infusion reactions and psoriasiform rashes.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Bug lights:</b> TNF inhibitors increase the risk of serious and opportunistic infections, including fungal infections and hepatitis B reactivation, because TNF-alpha is needed for host defense.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Cavitary lung cactus:</b> TNF inhibitors can reactivate latent tuberculosis, because TNF-alpha is required to maintain granulomas.<span class="pearl">⭐ Latent TB reactivation is the classic TNF inhibitor adverse effect.</span></span></li>
+<li><span class="num">21</span><span class="txt"><b>Screen around cactus:</b> Screen for latent TB with a tuberculin skin test or interferon-gamma release assay before starting a TNF inhibitor. Also screen for hepatitis B.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Wolf dog:</b> TNF inhibitors increase the risk of drug-induced lupus, most commonly with infliximab and etanercept. Anti-histone antibodies are characteristic.<span class="pearl">⭐ Drug-induced lupus: anti-histone antibodies; also anti-TNF can cause new demyelinating disease and worsen heart failure.</span></span></li>
+<li><span class="num">23</span><span class="txt"><b>Crab:</b> TNF inhibitors are associated with an increased risk of malignancy.</span></li>
+<li><span class="num">24</span><span class="txt"><b>White stones:</b> Malignancy risk includes lymphomas (e.g., hepatosplenic T-cell lymphoma, mainly with infliximab and adalimumab in young males with IBD) and nonmelanoma skin cancers.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/cfdca179119b38438ca017ed3f9194e7.webp" alt="TNF Inhibitors original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p6" data-name="first-generation antipsychotics">
+      <div class="org-header">
+        <h2>6. First-Generation Antipsychotics</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p6">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/4a602e264ddb68572975840cb1edd418.webp" alt="First-Generation Antipsychotics Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>FGAs block D2 receptors; used for schizophrenia (positive symptoms), mania, agitation, and Tourette syndrome.</li><li>High potency (haloperidol, fluphenazine, trifluoperazine, pimozide): more EPS - dystonia (minutes), akathisia (days), parkinsonism (weeks), tardive dyskinesia (months to years).</li><li>Low potency (chlorpromazine, thioridazine): anticholinergic, antihistamine (sedation), and alpha-1 blocking effects; corneal deposits (chlorpromazine), retinal deposits (thioridazine).</li><li>Other toxicities: QT prolongation and torsades, neuroleptic malignant syndrome, hyperprolactinemia.</li><li>Treatment: benztropine for dystonia and parkinsonism, propranolol for akathisia, VMAT2 inhibitors for tardive dyskinesia, dantrolene for NMS.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Typical post-impressionist:</b> First-generation (typical) antipsychotics (FGAs) treat schizophrenia, agitation, acute mania in bipolar disorder, psychosis, and Tourette syndrome.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Marionette whispering in ear:</b> FGAs treat positive symptoms of psychosis such as hallucinations and delusions, which are driven by excess mesolimbic dopamine.<span class="pearl">⭐ FGAs treat positive symptoms better than negative symptoms.</span></span></li>
+<li><span class="num">3</span><span class="txt"><b>Marionette:</b> FGAs are used for schizophrenia, agitation, bipolar mania, psychosis, and Tourette syndrome (haloperidol, pimozide are used for tics).</span></li>
+<li><span class="num">4</span><span class="txt"><b>Gazing:</b> Many FGAs end in -azine (phenothiazines): trifluoperazine, fluphenazine, chlorpromazine, thioridazine. Haloperidol and pimozide are non-phenothiazine FGAs.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Snapped rope + 2 D-shaped bales of hay:</b> FGAs act by blocking dopamine D2 receptors in the CNS.<span class="pearl">⭐ Blockade in the tuberoinfundibular pathway causes hyperprolactinemia; in the nigrostriatal pathway it causes EPS.</span></span></li>
+<li><span class="num">6</span><span class="txt"><b>Pyramid of hay:</b> Extrapyramidal symptoms are a hallmark of high-potency FGAs: acute dystonia, akathisia, parkinsonism, and tardive dyskinesia (see the following entries).</span></li>
+<li><span class="num">7</span><span class="txt"><b>Cocked scarecrow:</b> Acute dystonia: sudden muscle spasms (torticollis, oculogyric crisis, laryngospasm) occurring within minutes to hours of starting a drug. Treat with benztropine or diphenhydramine.<span class="pearl">⭐ Acute dystonia: anticholinergic (benztropine, diphenhydramine).</span></span></li>
+<li><span class="num">8</span><span class="txt"><b>Restless child:</b> Akathisia: subjective restlessness and inability to sit still, occurring within days. Treat with beta-blockers (propranolol), benzodiazepines, or lowering the dose.<span class="pearl">⭐ Akathisia: propranolol or benzodiazepines.</span></span></li>
+<li><span class="num">9</span><span class="txt"><b>Cog wheels:</b> Drug-induced parkinsonism: bradykinesia, rigidity (cogwheel), and tremor, occurring within weeks. Treat with benztropine or amantadine, or by switching to a lower-potency or atypical agent.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Tongue sticking out:</b> Tardive dyskinesia: involuntary, repetitive orofacial movements (lip smacking, tongue protrusion) after months to years of use. It may be irreversible. Treat by stopping or switching the drug and with VMAT2 inhibitors (valbenazine, deutetrabenazine).<span class="pearl">⭐ Tardive dyskinesia: VMAT2 inhibitors (valbenazine, deutetrabenazine).</span></span></li>
+<li><span class="num">11</span><span class="txt"><b>Halo high in sky:</b> High-potency FGAs include haloperidol, trifluoperazine, fluphenazine, and pimozide. Haloperidol is given as a long-acting depot injection and is common in acute agitation.<span class="pearl">⭐ Mnemonic: Try to Fly high: Trifluoperazine, Fluphenazine, Haloperidol (high potency).</span></span></li>
+<li><span class="num">12</span><span class="txt"><b>Trying to fly:</b> The high-potency agents (trifluoperazine, fluphenazine, haloperidol, pimozide) have more EPS but fewer anticholinergic, antihistamine, and alpha-blocking effects.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Tea party:</b> Low-potency FGAs have antimuscarinic effects: dry mouth, urinary retention, constipation, and blurred vision from mydriasis (and risk of angle-closure glaucoma).<span class="pearl">⭐ Anticholinergic: dry as a bone, blind as a bat, red as a beet, hot as a hare.</span></span></li>
+<li><span class="num">14</span><span class="txt"><b>Swatting bees:</b> Low-potency FGAs block H1 histamine receptors, causing sedation and weight gain.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Extinguished alpha flame:</b> Low-potency FGAs block alpha-1 adrenergic receptors, causing orthostatic hypotension, dizziness, and reflex tachycardia.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Theory of Art:</b> Low-potency FGAs include thioridazine (sounds like Theory of Art) and chlorpromazine.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Color-Pro:</b> Low-potency FGAs include chlorpromazine (Color-Pro) and thioridazine. They have fewer EPS but more anticholinergic, antihistamine, and alpha-blocking effects.<span class="pearl">⭐ Low potency = more anticholinergic, antihistamine, alpha-1 effects; high potency = more EPS.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Globs of paint on eye-shaped palette:</b> Thioridazine causes retinal deposits (retinitis pigmentosa-like, with visual loss); chlorpromazine causes corneal and lens deposits. Chlorpromazine can also cause photosensitivity and blue-gray skin discoloration.<span class="pearl">⭐ Thioridazine = retinal deposits; chlorpromazine = corneal deposits.</span></span></li>
+<li><span class="num">19</span><span class="txt"><b>Twisted streamer:</b> Other FGA effects include QT prolongation (torsades de pointes), neuroleptic malignant syndrome, and hyperprolactinemia. Thioridazine has the greatest QT risk.<span class="pearl">⭐ NMS: fever, rigidity, autonomic instability, elevated CK; treat with stopping the drug, dantrolene, and supportive care; bromocriptine is also used.</span></span></li>
+<li><span class="num">20</span><span class="txt"><b>Now More Spicy:</b> Neuroleptic malignant syndrome (NMS) is a life-threatening reaction with high fever, lead-pipe rigidity, altered mental status, autonomic instability, and elevated creatine kinase.<span class="pearl">⭐ NMS: dantrolene (and bromocriptine) plus stopping the offending agent.</span></span></li>
+<li><span class="num">21</span><span class="txt"><b>Snorting milk:</b> Hyperprolactinemia results from D2 blockade (loss of dopamine inhibition of prolactin): galactorrhea, gynecomastia, amenorrhea, and sexual dysfunction.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/764f9bbbfad04ead0d7b7a3aa5916029.webp" alt="First-Generation Antipsychotics original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p7" data-name="second-generation antipsychotics">
+      <div class="org-header">
+        <h2>7. Second-Generation Antipsychotics</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p7">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/e99b4e92e88195ac8a8dbae19dd4ded0.webp" alt="Second-Generation Antipsychotics Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>SGAs (quetiapine, olanzapine, risperidone, aripiprazole, ziprasidone, clozapine) antagonize D2 and 5-HT2A receptors; aripiprazole is a partial D2 agonist.</li><li>Treat schizophrenia (positive and negative symptoms); also bipolar disorder, adjunct in treatment-resistant depression and OCD, and Tourette (risperidone).</li><li>Side effects from receptor blockade: H1 (sedation, weight gain), alpha-1 (orthostatic hypotension), muscarinic (anticholinergic, esp. clozapine and olanzapine).</li><li>Metabolic syndrome (weight gain, dyslipidemia, hyperglycemia) mainly with olanzapine and clozapine; clozapine also causes agranulocytosis, myocarditis and seizures.</li><li>EPS, hyperprolactinemia and NMS are less frequent than with FGAs (risperidone is worst for EPS/prolactin); QT prolongation and torsades risk (ziprasidone).</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Atypical surrealist:</b> Second-generation (atypical) antipsychotics (SGAs): the newer antipsychotic class, with antagonism of both D2 and 5-HT2A receptors and generally fewer extrapyramidal effects than first-generation agents.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Quiet please, only whispering is appropriate:</b> Quetiapine, olanzapine, risperidone and aripiprazole are SGAs. Note the -apine/-idone/-iprazole endings.<span class="pearl">⭐ Most SGA names end in -apine, -idone or -azole (aripiprazole is a partial D2 agonist).</span></span></li>
+<li><span class="num">3</span><span class="txt"><b>Zipper:</b> Ziprasidone is an SGA.<span class="pearl">⭐ Ziprasidone has notable QT prolongation; take with food for absorption.</span></span></li>
+<li><span class="num">4</span><span class="txt"><b>Closet:</b> Clozapine is an SGA, reserved for treatment-resistant schizophrenia and for reducing suicidality in schizophrenia, because of its serious toxicities.<span class="pearl">⭐ Clozapine is the most effective antipsychotic for refractory schizophrenia.</span></span></li>
+<li><span class="num">5</span><span class="txt"><b>Snapping double rope:</b> SGAs block D2 receptors in the CNS (mesolimbic pathway), reducing positive psychotic symptoms.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Cut smiley cake:</b> SGAs also block serotonin 5-HT2A receptors, which is thought to contribute to efficacy against negative symptoms and to the lower rate of EPS and hyperprolactinemia compared with FGAs.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Hearing positive and negative voices:</b> SGAs treat schizophrenia, including both positive symptoms (hallucinations, delusions) and negative symptoms (flat affect, avolition).<span class="pearl">⭐ FGAs mainly help positive symptoms; SGAs have better (though modest) effect on negative symptoms.</span></span></li>
+<li><span class="num">8</span><span class="txt"><b>Happy and sad masks:</b> SGAs can treat depression, as adjunctive therapy in treatment-resistant depression (e.g. aripiprazole, quetiapine) and in bipolar depression/mania.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Resisting opening:</b> Treatment-resistant depression: depression that has failed adequate trials of antidepressants; an SGA may be added as augmentation.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Obsessively neat:</b> SGAs (e.g. risperidone) can be used as adjunctive therapy with SSRIs in obsessive-compulsive disorder when SSRI response is inadequate.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Marionette:</b> Risperidone can help manage Tourette syndrome (tics); aripiprazole is also used. Haloperidol and pimozide are classic FGAs for tics.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Bee swatter:</b> SGAs block H1 histamine receptors, causing sedation and contributing to weight gain.<span class="pearl">⭐ Most H1 blockade: olanzapine, clozapine, quetiapine.</span></span></li>
+<li><span class="num">13</span><span class="txt"><b>Extinguished alpha candle:</b> SGAs block alpha-1 adrenergic receptors, causing orthostatic hypotension, dizziness and reflex tachycardia.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Antimuscarinic tea party:</b> SGAs, especially clozapine (and olanzapine), block muscarinic receptors: dry mouth, constipation, blurred vision, urinary retention.<span class="pearl">⭐ Clozapine can paradoxically cause sialorrhea (drooling) despite its anticholinergic activity.</span></span></li>
+<li><span class="num">15</span><span class="txt"><b>Obscured tea party:</b> SGAs generally have lower muscarinic affinity than low-potency FGAs (e.g. chlorpromazine, thioridazine), so antimuscarinic effects are milder overall.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Passed out:</b> Sedation and orthostatic hypotension result from H1 and alpha-1 blockade respectively; counsel on slow position changes and start low in older patients.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Fat face:</b> SGAs, especially olanzapine and clozapine, cause weight gain (metabolic syndrome risk).<span class="pearl">⭐ Lowest metabolic risk: aripiprazole and ziprasidone.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Elevated butter:</b> Olanzapine and clozapine can cause dyslipidemia (raised triglycerides and cholesterol).</span></li>
+<li><span class="num">19</span><span class="txt"><b>Bunch of candy:</b> Olanzapine and clozapine can cause hyperglycemia and new-onset type 2 diabetes. Monitor weight, glucose/HbA1c and lipids.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Melting sand timers:</b> Clozapine can cause agranulocytosis (severe neutropenia), requiring regular absolute neutrophil count monitoring (REMS program).<span class="pearl">⭐ Presents with fever and infection; stop clozapine if ANC falls below the threshold.</span></span></li>
+<li><span class="num">21</span><span class="txt"><b>Surreal heart:</b> Clozapine can cause myocarditis or cardiomyopathy, typically in the first weeks of therapy (fever, tachycardia, chest pain, raised troponin/CRP).</span></li>
+<li><span class="num">22</span><span class="txt"><b>Shaking clock:</b> Clozapine lowers the seizure threshold in a dose-dependent manner; seizures are a recognized risk.<span class="pearl">⭐ Bupropion also lowers seizure threshold.</span></span></li>
+<li><span class="num">23</span><span class="txt"><b>EXTRA pyramid hat:</b> Extrapyramidal symptoms (acute dystonia, akathisia, parkinsonism, and later tardive dyskinesia) result from D2 blockade in the nigrostriatal pathway; risk is FGA &gt; SGA.<span class="pearl">⭐ Timeline: dystonia (hours-days), akathisia (days-weeks), parkinsonism (weeks-months), tardive dyskinesia (months-years).</span></span></li>
+<li><span class="num">24</span><span class="txt"><b>Whispering to EXTRA hat:</b> Risperidone has the highest EPS risk among the SGAs (dose-related); clozapine and quetiapine have the lowest.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Elevated milk release:</b> D2 blockade in the tuberoinfundibular pathway removes dopamine inhibition of prolactin, causing hyperprolactinemia (galactorrhea, gynecomastia, amenorrhea, sexual dysfunction); FGA &gt; SGA.<span class="pearl">⭐ Risperidone and paliperidone cause the most hyperprolactinemia among SGAs; aripiprazole the least.</span></span></li>
+<li><span class="num">26</span><span class="txt"><b>Now more spicy:</b> Neuroleptic malignant syndrome: mental status change, lead-pipe rigidity, autonomic instability and hyperthermia; risk FGA &gt; SGA but can occur with any antipsychotic.<span class="pearl">⭐ Treat with stopping the drug, supportive care, dantrolene, bromocriptine.</span></span></li>
+<li><span class="num">27</span><span class="txt"><b>Bite out of chicken leg:</b> NMS is associated with rhabdomyolysis (elevated CK, myoglobinuria), which can lead to acute kidney injury.</span></li>
+<li><span class="num">28</span><span class="txt"><b>Twisted torsades streamer:</b> SGAs can prolong the QT interval and cause torsades de pointes (notably ziprasidone, and also quetiapine, risperidone).<span class="pearl">⭐ Obtain baseline ECG; avoid combining with other QT-prolonging drugs.</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/3ee329434a3153df62e26f97b7e402e9.webp" alt="Second-Generation Antipsychotics original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p8" data-name="ssris, snris, cyproheptadine">
+      <div class="org-header">
+        <h2>8. SSRIs, SNRIs, Cyproheptadine</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p8">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/8c3fe56e28b2a6927c7b0ca15c6a3450.webp" alt="SSRIs, SNRIs, Cyproheptadine Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>SSRIs (fluoxetine, paroxetine, sertraline, citalopram/escitalopram) block presynaptic serotonin reuptake; SNRIs (venlafaxine, duloxetine) block serotonin and norepinephrine reuptake.</li><li>First-line for depression, GAD, panic disorder, PTSD, social anxiety; SSRIs also for OCD and bulimia; SNRIs also for diabetic neuropathy, chronic pain and fibromyalgia.</li><li>Onset of benefit takes several weeks (about 4-8), so they are not for acute treatment.</li><li>Adverse effects: sexual dysfunction, weight gain, SIADH/hyponatremia, drowsiness or activation; SNRIs can raise blood pressure.</li><li>Serotonin syndrome (hyperthermia, clonus, hyperreflexia, autonomic instability) with combined serotonergic drugs, treated with cyproheptadine; abrupt stop causes flu-like discontinuation syndrome.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>expreSS tRips:</b> Selective serotonin reuptake inhibitors (SSRIs): first-line antidepressants with a favorable safety profile compared with TCAs and MAOIs.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Fly out:</b> Fluoxetine (SSRI).<span class="pearl">⭐ Longest half-life of the SSRIs (active metabolite norfluoxetine), so least discontinuation syndrome; strong CYP2D6 inhibitor.</span></span></li>
+<li><span class="num">3</span><span class="txt"><b>Parrot:</b> Paroxetine (SSRI).<span class="pearl">⭐ Most anticholinergic and most severe discontinuation syndrome; associated with fetal cardiac malformations in pregnancy.</span></span></li>
+<li><span class="num">4</span><span class="txt"><b>Desert Airline:</b> Sertraline (SSRI).<span class="pearl">⭐ Often preferred in cardiac disease and post-MI patients.</span></span></li>
+<li><span class="num">5</span><span class="txt"><b>City:</b> Citalopram (SSRI); escitalopram is its S-enantiomer.<span class="pearl">⭐ Dose-dependent QT prolongation, so maximum doses are capped.</span></span></li>
+<li><span class="num">6</span><span class="txt"><b>Smiley face:</b> Serotonin (5-HT), the neurotransmitter whose synaptic availability is increased by these drugs.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Keeping post-it out of the drawer:</b> SSRIs inhibit presynaptic reuptake of serotonin (SERT), raising synaptic serotonin levels.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Fax machine:</b> Venlafaxine (SNRI).<span class="pearl">⭐ Can raise blood pressure at higher doses; desvenlafaxine is its active metabolite.</span></span></li>
+<li><span class="num">9</span><span class="txt"><b>Dual copier/scanner:</b> Duloxetine (SNRI).</span></li>
+<li><span class="num">10</span><span class="txt"><b>North and South:</b> SNRIs (venlafaxine, duloxetine) inhibit presynaptic reuptake of both norepinephrine and serotonin.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Happy and sad masks:</b> SSRIs and SNRIs are first-line agents for major depressive disorder.</span></li>
+<li><span class="num">12</span><span class="txt"><b>5H-TV:</b> Serotonin (5-hydroxytryptamine, 5-HT).</span></li>
+<li><span class="num">13</span><span class="txt"><b>Anxious coworker:</b> SSRIs and SNRIs are first-line for generalized anxiety disorder (GAD).<span class="pearl">⭐ Buspirone is another non-benzodiazepine option for GAD.</span></span></li>
+<li><span class="num">14</span><span class="txt"><b>The Scream:</b> SSRIs and SNRIs treat panic disorder (long-term); benzodiazepines may be used short term for acute symptoms.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Dog tags:</b> SSRIs and SNRIs treat PTSD (sertraline and paroxetine are FDA approved).</span></li>
+<li><span class="num">16</span><span class="txt"><b>Obsessively neat:</b> SSRIs are first-line for obsessive-compulsive disorder, often at higher doses than for depression.<span class="pearl">⭐ Clomipramine is a TCA alternative.</span></span></li>
+<li><span class="num">17</span><span class="txt"><b>Binge drawer:</b> SSRIs are useful in bulimia nervosa (fluoxetine is approved).<span class="pearl">⭐ Avoid bupropion in bulimia (seizure risk).</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Shy guy:</b> SSRIs are useful in social anxiety disorder; beta-blockers are used for performance-only anxiety.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Pain in the Diasweetes machine:</b> SNRIs (venlafaxine, duloxetine) treat diabetic peripheral neuropathy.<span class="pearl">⭐ Duloxetine is FDA approved for this; TCAs and gabapentinoids are other options.</span></span></li>
+<li><span class="num">20</span><span class="txt"><b>Chronically frayed wire:</b> SNRIs treat chronic pain, including neuropathic pain and chronic musculoskeletal pain.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Fiber bars:</b> SNRIs (e.g. duloxetine) treat fibromyalgia.<span class="pearl">⭐ Duloxetine and milnacipran are approved for fibromyalgia.</span></span></li>
+<li><span class="num">22</span><span class="txt"><b>2 month calendar:</b> SSRIs and SNRIs take roughly 4-8 weeks to reach full effect, so they are not for acute treatment.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Inappropriately wet head:</b> SSRIs may cause hyponatremia via SIADH, particularly in elderly patients.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Rejected advances:</b> SSRIs commonly cause sexual dysfunction (decreased libido, anorgasmia, delayed ejaculation).<span class="pearl">⭐ Management includes dose reduction, switching, or adding or switching to bupropion.</span></span></li>
+<li><span class="num">25</span><span class="txt"><b>Fat belly:</b> SSRIs can cause weight gain with long-term use.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Sleeping on the job:</b> SSRIs can cause drowsiness or fatigue in some patients (insomnia and activation can also occur).</span></li>
+<li><span class="num">27</span><span class="txt"><b>Excessive smiley faces:</b> SSRIs and SNRIs can cause serotonin syndrome from excess serotonergic activity.</span></li>
+<li><span class="num">28</span><span class="txt"><b>Hot and hypertensive:</b> Serotonin syndrome includes hyperthermia, hypertension, tachycardia, diaphoresis and altered mental status.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Hyperactive foot tap:</b> Serotonin syndrome causes neuromuscular hyperactivity: hyperreflexia, clonus, tremor, and myoclonus.<span class="pearl">⭐ Differentiates from NMS (which has bradyreflexia and lead-pipe rigidity with slower onset).</span></span></li>
+<li><span class="num">30</span><span class="txt"><b>Tricycle and mouse traps:</b> Serotonin syndrome occurs when SSRIs or SNRIs are combined with other serotonergic drugs (TCAs, MAO inhibitors, tramadol, meperidine, linezolid, triptans, St John's wort).<span class="pearl">⭐ Never start an SSRI within 2 weeks of stopping an MAOI (5 weeks after fluoxetine).</span></span></li>
+<li><span class="num">31</span><span class="txt"><b>Silly pranks prohibited:</b> Cyproheptadine (5-HT2 antagonist) is used to treat serotonin syndrome, along with stopping the offending drug, supportive care and benzodiazepines.<span class="pearl">⭐ Cyproheptadine is also an H1 blocker and can be used as an appetite stimulant.</span></span></li>
+<li><span class="num">32</span><span class="txt"><b>Hypertensive coworker:</b> SNRIs (especially venlafaxine at high doses) can cause hypertension via increased norepinephrine.</span></li>
+<li><span class="num">33</span><span class="txt"><b>Withdrawn with the flu:</b> Abrupt discontinuation of SSRIs and SNRIs causes a discontinuation syndrome: flu-like symptoms, dizziness, nausea, irritability, paresthesias (brain zaps); taper gradually.<span class="pearl">⭐ Worst with paroxetine and venlafaxine (short half-lives).</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/90cd461080a072aa9fa73f23bf170fed.webp" alt="SSRIs, SNRIs, Cyproheptadine original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p9" data-name="tricyclic antidepressants">
+      <div class="org-header">
+        <h2>9. Tricyclic Antidepressants</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p9">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/cec73b426147c0a98359b3eeb458483a.webp" alt="Tricyclic Antidepressants Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>TCAs (amitriptyline, nortriptyline, imipramine, desipramine, clomipramine) block reuptake of norepinephrine and serotonin.</li><li>Uses: treatment-resistant depression, neuropathic and chronic pain, diabetic neuropathy, migraine prophylaxis, OCD (clomipramine), enuresis (imipramine).</li><li>Receptor blockade side effects: muscarinic (anticholinergic), H1 (sedation, weight gain), alpha-1 (orthostatic hypotension); tertiary amines worse than secondary (nortriptyline, desipramine).</li><li>Avoid in elderly (Beers list); sexual dysfunction and serotonin syndrome risk with other serotonergic drugs.</li><li>Overdose: fast Na+ channel blockade causing wide QRS, arrhythmias, seizures, coma; treat with sodium bicarbonate.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Tricycle:</b> Tricyclic antidepressants (TCAs): older antidepressants with a three-ring structure, now mostly second-line because of toxicity in overdose.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Imprint:</b> Imipramine and its derivatives desipramine and clomipramine are TCAs.<span class="pearl">⭐ Imipramine is also used for nocturnal enuresis.</span></span></li>
+<li><span class="num">3</span><span class="txt"><b>Tripping:</b> Amitriptyline and nortriptyline are TCAs.<span class="pearl">⭐ Amitriptyline is a tertiary amine, commonly used for neuropathic pain and migraine prophylaxis.</span></span></li>
+<li><span class="num">4</span><span class="txt"><b>Prevented from picking up smiley face and compass balls:</b> TCAs inhibit presynaptic reuptake of serotonin and norepinephrine, increasing their synaptic levels.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Happy and sad masks:</b> TCAs treat major depressive disorder, usually after SSRIs or SNRIs have failed or are not tolerated.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Resistant door:</b> TCAs can be useful in treatment-resistant depression.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Pain from Diasweeties machine:</b> TCAs treat diabetic neuropathy.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Chronically frayed wire:</b> TCAs treat chronic pain, including neuropathic pain.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Pounding head bell:</b> TCAs (especially amitriptyline) can be used for migraine prophylaxis.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Obsessively neat:</b> Clomipramine, a TCA, treats OCD, although SSRIs are first line.<span class="pearl">⭐ Clomipramine is the most serotonergic TCA.</span></span></li>
+<li><span class="num">11</span><span class="txt"><b>Rejected advances:</b> TCAs can cause sexual dysfunction.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Anti-muscarinic tea party:</b> TCAs block muscarinic acetylcholine receptors: dry mouth, constipation, blurred vision, urinary retention, tachycardia.<span class="pearl">⭐ Remember: dry as a bone, red as a beet, blind as a bat, mad as a hatter in overdose.</span></span></li>
+<li><span class="num">13</span><span class="txt"><b>Northside Prep:</b> Nortriptyline and desipramine are secondary amines, which are the demethylated metabolites of amitriptyline and imipramine respectively.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Protected by secondary sign:</b> Secondary amines (nortriptyline, desipramine) have fewer anticholinergic, antihistamine and alpha-1 effects than tertiary amines, so they are better tolerated.<span class="pearl">⭐ Tertiary amines: amitriptyline, imipramine, clomipramine, doxepin.</span></span></li>
+<li><span class="num">15</span><span class="txt"><b>Confused elderly:</b> TCAs are generally avoided in elderly patients (Beers list) because of anticholinergic effects (confusion, delirium, urinary retention) and sedation/orthostasis; if needed, nortriptyline or desipramine are preferred.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Bee swatter:</b> TCAs block H1 histamine receptors, causing sedation.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Hefty kid:</b> TCAs can cause increased appetite and weight gain (H1 blockade).</span></li>
+<li><span class="num">18</span><span class="txt"><b>Sleeping kid:</b> TCAs can cause sedation, often exploited by giving the dose at bedtime.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Extinguished alpha flame:</b> TCAs block alpha-1 adrenergic receptors.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Passed out:</b> Alpha-1 blockade causes orthostatic hypotension and falls, especially in older patients.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Broken hearts:</b> TCA cardiotoxicity (conduction abnormalities and arrhythmias) is the most common cause of death in TCA overdose; CNS toxicity (seizures, delirium, coma) also occurs.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Inactivated peanut butter jar:</b> TCAs block cardiac fast sodium channels (class IA-like effect), slowing conduction.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Wide QRS crack:</b> TCAs widen the QRS complex on ECG; QRS duration greater than 100 ms predicts seizures and arrhythmias.<span class="pearl">⭐ A terminal R wave in aVR is another ECG sign of TCA toxicity.</span></span></li>
+<li><span class="num">24</span><span class="txt"><b>Twisted torsades streamer:</b> TCAs can prolong the QT interval and induce torsades de pointes.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Baking soda:</b> Sodium bicarbonate treats TCA-induced QRS widening and ventricular arrhythmias by alkalinizing blood and giving a sodium load.<span class="pearl">⭐ Do not use class IA or IC antiarrhythmics in TCA overdose. Treat seizures with benzodiazepines.</span></span></li>
+<li><span class="num">26</span><span class="txt"><b>Shaking kid:</b> TCAs lower the seizure threshold and can induce seizures, especially in overdose.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Stack of smiley faces:</b> TCAs can cause serotonin syndrome, particularly when combined with SSRIs, SNRIs or MAOIs.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/b0aff4486d76a8ccb0e586c7b11c1562.webp" alt="Tricyclic Antidepressants original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p10" data-name="mao inhibitors">
+      <div class="org-header">
+        <h2>10. MAO Inhibitors</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p10">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/9d4507447442ba0c0c64102d28bfe8a2.webp" alt="MAO Inhibitors Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>MAO-A metabolizes serotonin, norepinephrine, dopamine (and dietary tyramine in the gut); MAO-B mainly metabolizes dopamine.</li><li>Nonselective, irreversible MAOIs: tranylcypromine, phenelzine, isocarboxazid; used for atypical and treatment-resistant depression, not first line.</li><li>Selegiline is a selective MAO-B inhibitor that raises CNS dopamine; used in Parkinson disease.</li><li>Tyramine (aged cheese, cured meats, wine) with an MAOI causes hypertensive crisis; manage with phentolamine.</li><li>MAOIs plus SSRIs, SNRIs, TCAs or other serotonergic drugs cause serotonin syndrome.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Albino mouse:</b> Represents monoamine oxidase A (MAO-A), the enzyme that degrades monoamine neurotransmitters and dietary amines.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Albino mouse eating smiley face:</b> MAO-A breaks down serotonin (5-HT).</span></li>
+<li><span class="num">3</span><span class="txt"><b>Albino mouse eating north compass:</b> MAO-A breaks down norepinephrine.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Albino mouse eating rope:</b> MAO-A breaks down dopamine.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Black mouse:</b> Represents monoamine oxidase B (MAO-B).</span></li>
+<li><span class="num">6</span><span class="txt"><b>Black mouse eating rope:</b> MAO-B breaks down dopamine, and is the more selective dopamine-metabolizing isoform in the brain.<span class="pearl">⭐ This is why selective MAO-B inhibition is used in Parkinson disease.</span></span></li>
+<li><span class="num">7</span><span class="txt"><b>Mouse trap:</b> MAO inhibitors (MAOIs) block monoamine oxidase, raising synaptic levels of serotonin, norepinephrine and dopamine.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Irreversible trap:</b> The classic antidepressant MAOIs bind irreversibly, so enzyme activity returns only after new enzyme is synthesized (about 2 weeks).<span class="pearl">⭐ Wait about 2 weeks after stopping an MAOI before starting a serotonergic drug.</span></span></li>
+<li><span class="num">9</span><span class="txt"><b>'Try a sip of wine':</b> Tranylcypromine, a nonselective MAOI antidepressant.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Funnel:</b> Phenelzine, a nonselective MAOI antidepressant.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Boxed wine:</b> Isocarboxazid, a nonselective MAOI antidepressant.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Happy and sad masks:</b> MAOIs treat depression but are not first line because of dietary restrictions and dangerous drug interactions.</span></li>
+<li><span class="num">13</span><span class="txt"><b>'Not typical':</b> MAOIs are particularly useful in atypical depression (mood reactivity, hypersomnia, hyperphagia, leaden paralysis, rejection sensitivity).</span></li>
+<li><span class="num">14</span><span class="txt"><b>Resistant wine bottle:</b> MAOIs are reserved for treatment-resistant depression after other agents have failed.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Sledge hammer:</b> Selegiline, a selective MAO-B inhibitor at low doses.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Brain tied with rope:</b> Selegiline inhibits MAO-B, reducing dopamine breakdown and increasing CNS dopamine levels.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Cog wheels:</b> Selegiline is used in Parkinson disease (often adjunct to levodopa/carbidopa) because it increases CNS dopamine.<span class="pearl">⭐ Cogwheel rigidity is a classic Parkinson finding.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Aged meats, wine, cheese:</b> Patients on MAOIs must avoid tyramine-rich foods such as aged cheeses, cured meats and red wine.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Albino mouse eating GI meat:</b> Normally gut MAO-A degrades dietary tyramine so little reaches the circulation.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Trap releasing north compass cheeses:</b> With MAO inhibited, tyramine is absorbed into the circulation and displaces norepinephrine from nerve terminals, acting as an indirect sympathomimetic.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Hypertensive and sweaty:</b> Tyramine toxicity causes a hypertensive crisis: severe headache, hypertension, blurry vision, diaphoresis, possibly stroke.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Pile of smiley faces:</b> MAOIs can cause serotonin syndrome when combined with serotonergic drugs.<span class="pearl">⭐ Triad: altered mental status, autonomic instability, neuromuscular excitability (clonus, hyperreflexia); treat with cyproheptadine.</span></span></li>
+<li><span class="num">23</span><span class="txt"><b>Tricycle:</b> Avoid combining MAOIs with other serotonin-raising drugs such as TCAs, SSRIs and SNRIs (also meperidine, dextromethorphan, tramadol), which risks serotonin syndrome.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Phantom of the alpha:</b> Phentolamine, a nonselective alpha-1/alpha-2 blocker, can treat the hypertensive crisis from tyramine toxicity by blocking alpha-mediated vasoconstriction.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/5da1679d1ad08ee6f63c14433be0a26b.webp" alt="MAO Inhibitors original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p11" data-name="bupropion, mirtazapine, trazodone">
+      <div class="org-header">
+        <h2>11. Bupropion, Mirtazapine, Trazodone</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p11">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/4fbc764368a8d7e637760215b2813ef7.webp" alt="Bupropion, Mirtazapine, Trazodone Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Bupropion inhibits norepinephrine and dopamine reuptake (NDRI); activating, aids smoking cessation, no sexual dysfunction or weight gain, lowers seizure threshold.</li><li>Bupropion is contraindicated in bulimia, anorexia nervosa and seizure disorders.</li><li>Mirtazapine blocks alpha-2, 5-HT2, 5-HT3 and H1 receptors: increases 5-HT/NE release, causes sedation and weight gain, little sexual dysfunction.</li><li>Trazodone inhibits 5-HT2 (and weakly SERT), blocks alpha-1 and H1: sedation, orthostatic hypotension, priapism.</li><li>Trazodone can cause sexual dysfunction and serotonin syndrome, unlike mirtazapine which spares sexual function.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>'NET DAT ball':</b> Bupropion inhibits reuptake of norepinephrine (NET) and dopamine (DAT), increasing both in the synapse.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Pro ball player:</b> Bupropion, an atypical antidepressant (NDRI).</span></li>
+<li><span class="num">3</span><span class="txt"><b>Aroused from sleep:</b> Bupropion has CNS-activating (stimulant-like) effects, which can cause insomnia, anxiety and agitation.</span></li>
+<li><span class="num">4</span><span class="txt"><b>'Pros don't smoke':</b> Bupropion is used for tobacco (nicotine) dependence and smoking cessation.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Shaking:</b> Bupropion lowers the seizure threshold and can induce seizures, particularly at high doses.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Shaking binge snacker:</b> Bupropion is contraindicated in bulimia nervosa because purging/electrolyte disturbance plus lowered seizure threshold raises seizure risk.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Shaking skinny player:</b> Bupropion is contraindicated in anorexia nervosa for the same seizure risk.<span class="pearl">⭐ Also avoid in seizure disorders and abrupt alcohol or benzodiazepine withdrawal.</span></span></li>
+<li><span class="num">8</span><span class="txt"><b>Kissing couple:</b> Bupropion does not cause sexual dysfunction, unlike SSRIs; it is a good alternative when sexual side effects occur.</span></li>
+<li><span class="num">9</span><span class="txt"><b>'Lose weight':</b> Bupropion is less likely to cause weight gain and may cause weight loss.</span></li>
+<li><span class="num">10</span><span class="txt"><b>'Mirth and Misery':</b> Mirtazapine, an atypical antidepressant (NaSSA, noradrenergic and specific serotonergic antidepressant).</span></li>
+<li><span class="num">11</span><span class="txt"><b>Happy and sad masks:</b> Atypical antidepressants (bupropion, mirtazapine, trazodone) can be used as first-line agents for depression.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Extinguished double alpha light:</b> Mirtazapine blocks presynaptic alpha-2 receptors (autoreceptors and heteroreceptors).</span></li>
+<li><span class="num">13</span><span class="txt"><b>Released smiley faces and north compasses:</b> Blocking alpha-2 removes negative feedback and increases presynaptic release of serotonin and norepinephrine.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Retired 52 and 53:</b> Mirtazapine also blocks 5-HT2 and 5-HT3 receptors, which reduces anxiety, insomnia and nausea and limits some SSRI-type side effects.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Bee swatter:</b> Mirtazapine antagonizes H1 histamine receptors.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Sleeping fan:</b> Mirtazapine causes sedation (H1 blockade), so it is useful in depression with insomnia.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Hefty fan:</b> Mirtazapine causes weight gain and increased appetite, useful in depressed patients with anorexia or cachexia.<span class="pearl">⭐ Also a cause of hyperlipidemia; rarely agranulocytosis.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Kissing couple:</b> Mirtazapine does not cause sexual dysfunction because 5-HT2 and 5-HT3 receptors are blocked.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Trombone:</b> Trazodone, a serotonin modulator (SARI).</span></li>
+<li><span class="num">20</span><span class="txt"><b>Smiley face drummer:</b> Trazodone modulates serotonin: it antagonizes 5-HT2 receptors and weakly inhibits serotonin reuptake.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Retired 52:</b> Trazodone blocks 5-HT2A receptors.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Extinguished alpha lighter:</b> Trazodone antagonizes alpha-1 adrenergic receptors.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Erect trombone:</b> Trazodone can cause priapism (alpha-1 blockade).<span class="pearl">⭐ Priapism is a classic trazodone adverse effect.</span></span></li>
+<li><span class="num">24</span><span class="txt"><b>Fainting:</b> Trazodone causes orthostatic hypotension from alpha-1 blockade, with dizziness and syncope.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Sleeping players:</b> Trazodone causes sedation; at low doses it is widely used for insomnia.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Bee swatter:</b> Trazodone blocks H1 histamine receptors, contributing to sedation.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Rejected advances:</b> Trazodone can cause sexual dysfunction (decreased libido and other effects), though less than SSRIs.</span></li>
+<li><span class="num">28</span><span class="txt"><b>Pile of smiley faces:</b> Trazodone can cause serotonin syndrome, especially combined with other serotonergic drugs such as MAOIs or SSRIs.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/30cd802f25c20adb7b0cb9391506eca9.webp" alt="Bupropion, Mirtazapine, Trazodone original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p12" data-name="benzodiazepines &amp; flumazenil">
+      <div class="org-header">
+        <h2>12. Benzodiazepines &amp; Flumazenil</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p12">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/8846c643e643c4f5044df360ef0a14ac.webp" alt="Benzodiazepines &amp; Flumazenil Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Benzodiazepines (-pam, -olam, chlordiazepoxide) bind an allosteric site on GABA-A and increase the FREQUENCY of chloride channel opening; barbiturates increase DURATION.</li><li>Uses: alcohol withdrawal (long-acting agents), status epilepticus, anesthesia and conscious sedation, insomnia, parasomnias, spasticity, anxiety and panic.</li><li>Short-acting agents (oxazepam, triazolam, alprazolam, midazolam) have higher addiction potential; oxazepam, lorazepam and temazepam avoid active metabolites (safer in liver disease and elderly).</li><li>Adverse effects: tolerance, dependence, anterograde amnesia, ataxia and falls in the elderly, additive CNS depression with alcohol, barbiturates and sedating antihistamines.</li><li>Flumazenil is a competitive BZD-receptor antagonist that reverses benzodiazepine sedation but can precipitate seizures (and withdrawal).</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Ben's diner:</b> Benzodiazepines (BZDs): positive allosteric modulators of the GABA-A receptor.</span></li>
+<li><span class="num">2</span><span class="txt"><b>PAM-cakes:</b> The suffix '-pam' marks many benzodiazepines, e.g. diazepam, lorazepam, oxazepam.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Fast ox:</b> Oxazepam, a short-acting benzodiazepine.<span class="pearl">⭐ Oxazepam, lorazepam and temazepam (OLT) undergo glucuronidation only, with no active metabolites.</span></span></li>
+<li><span class="num">4</span><span class="txt"><b>'All A.M.':</b> The suffix '-olam' marks short-acting benzodiazepines: triazolam, alprazolam, midazolam.</span></li>
+<li><span class="num">5</span><span class="txt"><b>'Addictive flavor':</b> Benzodiazepines can cause psychological and physical dependence; the risk is greater with short-acting agents.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Liver spot:</b> Benzodiazepines are metabolized by the liver; long-acting agents form active metabolites that prolong effects, especially in the elderly and in liver disease.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Cab-A:</b> Benzodiazepines bind an allosteric site on the GABA-A receptor (between alpha and gamma subunits), not the GABA site itself.</span></li>
+<li><span class="num">8</span><span class="txt"><b>CNS light:</b> Benzodiazepines potentiate GABA-A inhibitory transmission in the CNS.</span></li>
+<li><span class="num">9</span><span class="txt"><b>'Chlo-Rider':</b> The GABA-A receptor is a ligand-gated chloride channel; opening causes chloride influx and hyperpolarization.</span></li>
+<li><span class="num">10</span><span class="txt"><b>'Take it easy':</b> GABA (along with glycine) is a major inhibitory neurotransmitter of the CNS; GABA is the main one in the brain, glycine in the spinal cord.</span></li>
+<li><span class="num">11</span><span class="txt"><b>'Open more frequently':</b> Benzodiazepines increase the frequency of chloride channel opening in the presence of GABA.<span class="pearl">⭐ Barbiturates increase the duration of opening. 'Frequency' = Benzos, 'Duration' = Barbs.</span></span></li>
+<li><span class="num">12</span><span class="txt"><b>Alcoholic on Cab-A:</b> Alcohol also acts on the GABA-A receptor, at a separate allosteric site, potentiating inhibition; this is the basis of cross-tolerance with benzodiazepines.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Hangover special:</b> Benzodiazepines are first-line treatment for alcohol withdrawal.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Anxious tremulous customer:</b> Early alcohol withdrawal (about 8-12 hours): insomnia, tremor, anxiety, and autonomic hyperactivity (tachycardia, hypertension, sweating).</span></li>
+<li><span class="num">15</span><span class="txt"><b>Falling customer:</b> Alcohol withdrawal at about 12-48 hours: withdrawal seizures (generalized tonic-clonic).</span></li>
+<li><span class="num">16</span><span class="txt"><b>Agitated customer:</b> Alcohol withdrawal at about 48-96 hours: delirium tremens with fever, disorientation, severe agitation, hallucinations and autonomic instability.<span class="pearl">⭐ Delirium tremens is life-threatening; treat with benzodiazepines.</span></span></li>
+<li><span class="num">17</span><span class="txt"><b>Long tapering flag:</b> Long-acting benzodiazepines (diazepam, chlordiazepoxide) are used in alcohol withdrawal because their long half-life and active metabolites give a self-tapering effect and smoother withdrawal.<span class="pearl">⭐ In liver disease or the elderly, lorazepam or oxazepam are preferred.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Ivy:</b> IV benzodiazepines are used for severe alcohol withdrawal, acute seizures and anesthesia.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Unplugging jackhammer:</b> Benzodiazepines (IV lorazepam, diazepam) are first-line for status epilepticus.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Intubated customer:</b> IV benzodiazepines (e.g. midazolam) are used as adjuncts in general anesthesia for muscle relaxation and amnesia.</span></li>
+<li><span class="num">21</span><span class="txt"><b>'Lite':</b> IV benzodiazepines (e.g. midazolam) give conscious sedation for minor procedures and surgeries.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Sleeping customer:</b> Benzodiazepines (e.g. triazolam, temazepam) treat insomnia but are not first line because of dependence, tolerance and other adverse effects.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Crying kid in pajamas:</b> Benzodiazepines can treat childhood parasomnias such as sleepwalking and night terrors.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Relaxing chair:</b> Benzodiazepines treat spasticity from upper motor neuron disorders such as MS, stroke, spinal cord injury and tetanus (muscle relaxant effect).</span></li>
+<li><span class="num">25</span><span class="txt"><b>Anxious customer:</b> Benzodiazepines treat generalized anxiety disorder, but SSRIs and SNRIs are first line.</span></li>
+<li><span class="num">26</span><span class="txt"><b>The Scream:</b> Benzodiazepines treat panic disorder (useful for acute attacks), but SSRIs and SNRIs are first line.</span></li>
+<li><span class="num">27</span><span class="txt"><b>All are welcome:</b> Tolerance develops with chronic use, thought to involve GABA-A receptor downregulation; abrupt cessation causes withdrawal (rebound anxiety, insomnia, seizures).</span></li>
+<li><span class="num">28</span><span class="txt"><b>Question mark hat:</b> Benzodiazepines cause anterograde amnesia (impaired formation of new memories), which is useful during conscious sedation.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Disoriented old man:</b> Elderly patients are more sensitive to benzodiazepine effects, including somnolence, confusion and disorientation (Beers criteria).</span></li>
+<li><span class="num">30</span><span class="txt"><b>Unbalanced stack:</b> Benzodiazepines cause central (cerebellar-type) ataxia, leading to falls and fractures in the elderly.</span></li>
+<li><span class="num">31</span><span class="txt"><b>Bee swatter smacking head:</b> Avoid combining benzodiazepines with first-generation antihistamines and other CNS depressants (alcohol, barbiturates, neuroleptics, opioids), which risks additive CNS and respiratory depression.</span></li>
+<li><span class="num">32</span><span class="txt"><b>Barbershop next to Cab-A:</b> Barbiturates bind a separate allosteric site on the GABA-A receptor and increase the duration of chloride channel opening; at high doses they can directly open the channel, so overdose is more dangerous.</span></li>
+<li><span class="num">33</span><span class="txt"><b>Antagonizing fluffy muzzled dog:</b> Flumazenil is a competitive antagonist at the benzodiazepine receptor that reverses benzodiazepine sedation and overdose, but it can precipitate seizures, especially in chronic users or mixed overdoses (e.g. with TCAs).<span class="pearl">⭐ Short half-life: sedation may recur, so monitor and redose.</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/fe2d393a47eae5d6e0e0aa7ba05b9d7d.webp" alt="Benzodiazepines &amp; Flumazenil original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p13" data-name="nonbenzodiazepine hypnotics, melatonin, ramelteon">
+      <div class="org-header">
+        <h2>13. Nonbenzodiazepine Hypnotics, Melatonin, Ramelteon</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p13">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/5d857947a605103461f53d19cdc539dc.webp" alt="Nonbenzodiazepine Hypnotics, Melatonin, Ramelteon Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Zolpidem, zaleplon, eszopiclone (Z-drugs) bind the benzodiazepine allosteric site on GABA-A (alpha-1 selective), increasing Cl- channel opening frequency; reversed by flumazenil (risk of seizures).</li><li>Used for insomnia: zaleplon and zolpidem for sleep onset (rapid onset, short duration, liver metabolism); eszopiclone has the longest half-life, covering onset and maintenance.</li><li>Adverse effects: sedation, ataxia and falls, confusion and delirium in the elderly, complex sleep behaviors; avoid with alcohol, benzodiazepines, barbiturates, and other CNS depressants.</li><li>Compared with benzodiazepines, Z-drugs cause less tolerance, withdrawal, and dependence, and have minimal anticonvulsant or muscle relaxant effects.</li><li>Melatonin and ramelteon act on MT1/MT2 receptors in the suprachiasmatic nucleus to regulate circadian rhythm; ramelteon is safe in the elderly with few side effects and no dependence.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>3Zs:</b> Zolpidem, zaleplon, and eszopiclone are the nonbenzodiazepine hypnotics (the Z-drugs). They are structurally unrelated to benzodiazepines but act on the same receptor system.<span class="pearl">⭐ Names all start or contain a Z: zolpidem, zaleplon, eszopiclone.</span></span></li>
+<li><span class="num">2</span><span class="txt"><b>Cab-A:</b> Nonbenzodiazepine hypnotics such as zolpidem bind an allosteric site on the GABA-A receptor (the benzodiazepine site, with selectivity for the alpha-1 subunit), enhancing the effect of GABA.<span class="pearl">⭐ Zolpidem is relatively selective for the alpha-1 (omega-1) subunit, giving sedation with little anxiolytic, muscle relaxant, or anticonvulsant effect.</span></span></li>
+<li><span class="num">3</span><span class="txt"><b>Chlo-Rider:</b> The GABA-A receptor is a ligand-gated chloride channel. GABA binding opens the channel, Cl- enters, and the neuron hyperpolarizes.</span></li>
+<li><span class="num">4</span><span class="txt"><b>CNS light:</b> Benzodiazepines (and Z-drugs) potentiate GABA-A transmission in the CNS, producing sedation and decreased neuronal excitability.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Take it easy:</b> GABA (along with glycine) is a major inhibitory neurotransmitter in the CNS. GABA predominates in the brain, glycine in the spinal cord and brainstem.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Grabbing same cab handle + Ben's diner bag:</b> Nonbenzodiazepine hypnotics and benzodiazepines bind the same allosteric (BZD) site on GABA-A. Because they share a site, both are reversed by flumazenil.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Alcoholic on Cab-A:</b> Alcohol binds the GABA-A receptor at a separate allosteric site from benzodiazepines and Z-drugs, so effects are additive when combined.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Barbershop next to Cab-A:</b> Barbiturates bind the GABA-A receptor at a separate allosteric site from benzodiazepines and Z-drugs.<span class="pearl">⭐ Barbiturates increase the duration of Cl- channel opening, benzodiazepines increase the frequency of opening.</span></span></li>
+<li><span class="num">9</span><span class="txt"><b>fast:</b> Zaleplon and zolpidem have a rapid onset of action, making them useful for patients who cannot fall asleep.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Quick jump and fall:</b> Nonbenzodiazepine hypnotics have a short duration of action (short half-lives), which limits next-day residual sedation compared with long-acting benzodiazepines.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Liver spot:</b> Zaleplon and zolpidem are rapidly metabolized by the liver (CYP3A4 predominantly), which explains their short half-lives. Inhibitors or inducers of CYP3A4 can change drug levels.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Sleeping:</b> Nonbenzodiazepine hypnotics are used to treat insomnia.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Fall asleep:</b> Zaleplon and zolpidem treat sleep-onset insomnia. Eszopiclone has the longest half-life and is effective for both sleep-onset and sleep-maintenance insomnia.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Disoriented old man:</b> Elderly patients are more sensitive to the adverse effects of nonbenzodiazepine hypnotics, including cognitive impairment, confusion, and delirium. Lower doses are used.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Unbalanced stack:</b> Nonbenzodiazepine hypnotics can cause central ataxia, leading to falls and fractures in the elderly.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Cannot combine with other CoupoNS:</b> Avoid combining nonbenzodiazepine hypnotics with other CNS depressants because of additive sedation and respiratory depression.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Bee swatter smacking head:</b> Avoid use with other CNS depressants such as first-generation antihistamines, alcohol, benzodiazepines, and barbiturates.<span class="pearl">⭐ Complex sleep behaviors (sleepwalking, sleep-driving, eating) and amnesia are classic Z-drug adverse effects, worse with alcohol.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Not tolerated:</b> Nonbenzodiazepine hypnotics are less likely than benzodiazepines to cause tolerance, though it can still occur with prolonged use.</span></li>
+<li><span class="num">19</span><span class="txt"><b>break bad habits:</b> Nonbenzodiazepine hypnotics are less likely to cause withdrawal symptoms and physical dependence than benzodiazepines. They are still controlled substances (Schedule IV) with some abuse potential.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Antagonizing fluffy muzzled dog:</b> Flumazenil is a competitive antagonist at the benzodiazepine site and reverses the sedative effects of nonbenzodiazepine hypnotics. It can precipitate seizures, especially in patients dependent on benzodiazepines or with mixed overdoses (e.g. with TCAs).</span></li>
+<li><span class="num">21</span><span class="txt"><b>melt away:</b> Melatonin and ramelteon (a melatonin receptor agonist) are used to treat insomnia, particularly sleep-onset insomnia and circadian rhythm disorders.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Dark and light:</b> Melatonin receptors help maintain circadian rhythm. Melatonin is released by the pineal gland in darkness and suppressed by light.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Nucleus above X:</b> MT1 and MT2 melatonin receptors are located in the suprachiasmatic nucleus of the hypothalamus (the circadian pacemaker, above the optic chiasm). Ramelteon activates these receptors.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Peacefully sleeping elderly:</b> Ramelteon has few side effects, does not cause dependence or significant cognitive impairment, and is considered safe in geriatric patients. It is not a controlled substance.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/45de17cb146cee76519385f229c36499.webp" alt="Nonbenzodiazepine Hypnotics, Melatonin, Ramelteon original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p14" data-name="barbiturates">
+      <div class="org-header">
+        <h2>14. Barbiturates</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p14">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/5f4f57e205997258ef9cc0ea5a63db35.webp" alt="Barbiturates Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Barbiturates (phenobarbital, thiopental, primidone) bind an allosteric GABA-A site distinct from benzodiazepines and alcohol, and increase the DURATION of Cl- channel opening.</li><li>Potent CYP450 inducers: reduce effect of warfarin, OCPs, and other drugs; contraindicated in acute intermittent porphyria.</li><li>Uses: thiopental for anesthesia induction (high lipid solubility, rapid redistribution to muscle and fat ends effect); phenobarbital for seizures; primidone for seizures and essential tremor (second to propranolol).</li><li>Adverse effects: respiratory and cardiovascular depression, hypotension, severe CNS depression/coma, hangover, additive with alcohol and other depressants; no specific antidote and low safety margin.</li><li>Chronic use causes tolerance, physical dependence, and dangerous withdrawal with seizures; avoid in the elderly.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Activated chrome bumper:</b> Barbiturates such as phenobarbital are potent inducers of the cytochrome P450 system, increasing metabolism of many drugs (warfarin, OCPs, other anticonvulsants) and reducing their effect.<span class="pearl">⭐ Chronic induction: decreased efficacy of warfarin and oral contraceptives. Barbiturates also induce hepatic aminolevulinic acid synthase and are contraindicated in acute intermittent porphyria.</span></span></li>
+<li><span class="num">2</span><span class="txt"><b>Cab-A:</b> Barbiturates bind an allosteric site on the GABA-A receptor.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Ben's diner next to Cab-A:</b> Benzodiazepines bind the GABA-A receptor at a separate allosteric site from barbiturates.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Alcoholic on Cab-A:</b> Alcohol binds the GABA-A receptor at yet another separate allosteric site, so alcohol, benzodiazepines, and barbiturates have additive CNS depression.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Chlo-Rider:</b> The GABA-A receptor is a ligand-gated chloride channel; opening causes Cl- influx and hyperpolarization.</span></li>
+<li><span class="num">6</span><span class="txt"><b>CNS light:</b> Barbiturates potentiate GABA-A transmission in the CNS, causing sedation, anxiolysis, and anticonvulsant effects.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Take it easy:</b> GABA (with glycine) is a major inhibitory neurotransmitter in the CNS.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Open longer:</b> Barbiturates increase the duration of GABA-A chloride channel opening. Benzodiazepines instead increase the frequency of opening.<span class="pearl">⭐ At high doses barbiturates directly open the channel without GABA, which explains their lower safety margin and greater lethality in overdose.</span></span></li>
+<li><span class="num">9</span><span class="txt"><b>Long tapering flag:</b> Barbiturates (especially phenobarbital) have long durations of action, so hangover effects such as residual sedation and impaired cognition are more common.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Intubated customer:</b> IV thiopental can be used for induction of anesthesia.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Ivy:</b> IV administration of barbiturates is useful for induction of anesthesia (thiopental) and management of seizures (phenobarbital).</span></li>
+<li><span class="num">12</span><span class="txt"><b>The ol' quick shave:</b> Thiopental has a rapid onset and short duration of action because it is highly lipid soluble and rapidly enters the brain.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Hair redistributed onto arms and belly:</b> Plasma levels of thiopental fall rapidly because the drug redistributes from the brain to skeletal muscle and adipose tissue, not because of metabolism.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Decay line:</b> The plasma thiopental concentration decays rapidly because of redistribution.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Brief peak:</b> Thiopental accumulates rapidly in brain tissue and then rapidly redistributes out, so the CNS effect is brief.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Growth line:</b> Thiopental accumulates in skeletal muscle and adipose tissue over time; this redistribution is the mechanism of recovery from anesthesia after a single dose.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Unplugging jackhammer:</b> IV phenobarbital can be used to treat seizures, including status epilepticus (after benzodiazepines) and neonatal seizures.<span class="pearl">⭐ Phenobarbital is first-line for neonatal seizures and also used for partial and generalized tonic-clonic seizures.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Perm is done!:</b> Primidone is a barbiturate prodrug (metabolized to phenobarbital) used to treat seizures and essential tremor.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Tremulous hand:</b> Primidone treats essential tremor, with propranolol as first-line therapy.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Collapsed heart and lungs:</b> Barbiturates can cause profound cardiac and respiratory depression, especially in overdose or combined with other depressants.<span class="pearl">⭐ Barbiturate overdose has no specific antidote; treatment is supportive (airway, ventilation, urinary alkalinization can help phenobarbital elimination). Flumazenil does not reverse barbiturates.</span></span></li>
+<li><span class="num">21</span><span class="txt"><b>Fainting:</b> Barbiturates can cause hypotension.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Brain hair dryer:</b> Barbiturates can cause severe CNS depression, including coma, and should be avoided in the elderly.</span></li>
+<li><span class="num">23</span><span class="txt"><b>All are welcome:</b> Chronic barbiturate use leads to tolerance (due in part to enzyme induction and CNS adaptation). The lethal dose does not rise as much as the sedative dose, narrowing the margin of safety.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Addicted:</b> Chronic barbiturate use leads to physical dependence. Abrupt withdrawal can cause severe anxiety, tremor, delirium, and life-threatening seizures.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/0113f6482a6f9e8eec0f086f2245185d.webp" alt="Barbiturates original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p15" data-name="opioids, naloxone, naltrexone">
+      <div class="org-header">
+        <h2>15. Opioids, Naloxone, Naltrexone</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p15">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/0d1295a0b468f7bf5c4ca2ff7bb40b94.webp" alt="Opioids, Naloxone, Naltrexone Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Opioid receptors (mu, kappa, delta) are Gi/o-coupled: open K+ channels, close presynaptic Ca2+ channels, and reduce neurotransmitter release; mu mediates analgesia, sedation, respiratory depression, miosis, constipation.</li><li>Agents: morphine, fentanyl, tramadol (weak mu agonist plus SNRI action, lowers seizure threshold), loperamide and diphenoxylate (antidiarrheals), codeine and dextromethorphan (antitussives; dextromethorphan is an NMDA antagonist).</li><li>Toxicity: respiratory depression, pinpoint pupils, constipation, biliary colic, sedation; tolerance develops to most effects except miosis and constipation; chronic use can cause hyperalgesia and withdrawal with rhinorrhea, yawning, diarrhea, and anxiety.</li><li>Opioid use disorder treatment: methadone (long-acting full agonist) and buprenorphine (long-acting partial mu agonist); partial agonists can precipitate withdrawal; neonatal abstinence syndrome in exposed infants.</li><li>Antagonists: naloxone reverses acute overdose (short-acting, can precipitate withdrawal); naltrexone maintains abstinence in opioid and alcohol use disorder and is used for weight loss with bupropion.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Utopia:</b> Opiates are drugs derived from or acting like opium (poppy) alkaloids, acting on endogenous opioid receptors (mu, kappa, delta) for analgesia and related effects.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Mu massage:</b> The mu-opioid receptor mediates most clinical and adverse effects: analgesia, euphoria, sedation, respiratory depression, miosis, and constipation.<span class="pearl">⭐ Kappa: spinal analgesia, dysphoria, miosis. Delta: analgesia, antidepressant-like effects.</span><span class="unsure" title="OCR was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">3</span><span class="txt"><b>Open banana barrels:</b> Opioid receptors are Gi/o-coupled; they open K+ channels, causing efflux and hyperpolarization of the postsynaptic neuron.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Closed Calci-Yum ice cream cooler:</b> Opioid receptors close presynaptic voltage-gated Ca2+ channels and decrease cAMP.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Disconnected presynaptic wire:</b> Closing presynaptic voltage-gated Ca2+ channels prevents neurotransmitter release (glutamate, acetylcholine, norepinephrine, serotonin, substance P), which blunts pain transmission.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Fantasy:</b> Fentanyl is a potent, short-acting synthetic opioid analgesic (about 100x morphine), used IV, epidural, and transdermally for severe pain and anesthesia.</span></li>
+<li><span class="num">7</span><span class="txt"><b>More fun:</b> Morphine is the prototype opioid analgesic used for severe pain, including acute MI pain and acute pulmonary edema (reduces preload and anxiety).</span></li>
+<li><span class="num">8</span><span class="txt"><b>Distant tram:</b> Tramadol is a weak mu-opioid receptor agonist used to manage chronic pain.</span></li>
+<li><span class="num">9</span><span class="txt"><b>North-South:</b> Tramadol also inhibits reuptake of norepinephrine and serotonin.<span class="pearl">⭐ Tramadol lowers the seizure threshold and can cause serotonin syndrome, especially with SSRIs, SNRIs, or MAOIs.</span></span></li>
+<li><span class="num">10</span><span class="txt"><b>Colon massage table:</b> Opioid receptors are located in the GI tract; activation delays stool transit and increases fluid absorption, causing constipation.<span class="unsure" title="OCR was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">11</span><span class="txt"><b>Removed muddy slippers:</b> Opioids such as loperamide and diphenoxylate are used as antidiarrheals.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Lop-eared rabbit:</b> Loperamide is an opioid antidiarrheal that acts on gut mu-receptors and has minimal CNS effects because it does not cross the blood-brain barrier well (P-glycoprotein efflux).<span class="pearl">⭐ Loperamide is contraindicated in invasive or bloody diarrhea and C. difficile colitis. Very high doses can cause cardiac toxicity (QT prolongation).</span></span></li>
+<li><span class="num">13</span><span class="txt"><b>Loping back and forth:</b> Loperamide increases colonic phasic segmentation, which slows propulsion and increases stool transit time.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Dolphins:</b> Diphenoxylate is an opioid antidiarrheal, combined with atropine (Lomotil) to discourage abuse.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Barcode:</b> Codeine is an opioid antitussive (cough suppressant) and a weak analgesic.<span class="pearl">⭐ Codeine is a prodrug activated to morphine by CYP2D6; ultrarapid metabolizers are at risk of toxicity (avoid in children and breastfeeding mothers).</span></span></li>
+<li><span class="num">16</span><span class="txt"><b>Orphan:</b> Dextromethorphan is a nonaddictive antitussive that is a synthetic codeine analog.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Tethered nomadic camel:</b> Dextromethorphan antagonizes NMDA receptors; at high doses it can cause dissociative effects and hallucinations.<span class="pearl">⭐ Dextromethorphan with MAOIs or SSRIs can cause serotonin syndrome.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Cerebral towel:</b> Opiates cause CNS depression, including sedation, and can cause euphoria.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Deflated lung vest:</b> Opiates can cause respiratory depression by decreasing the brainstem response to CO2. This is the usual cause of death in overdose.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Constricted hood:</b> Opiates cause miosis (pinpoint pupils) via stimulation of the Edinger-Westphal nucleus.<span class="pearl">⭐ Pinpoint pupils plus respiratory depression and coma is the classic opioid overdose triad. Meperidine is an exception that can cause mydriasis in overdose.</span></span></li>
+<li><span class="num">21</span><span class="txt"><b>Plunger:</b> Opiates cause constipation, because of decreased GI motility and secretions.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Biliary tree:</b> Opiates can cause biliary colic by contracting biliary smooth muscle and the sphincter of Oddi.</span></li>
+<li><span class="num">23</span><span class="txt"><b>All are welcome:</b> Patients can develop tolerance to opiates, including to analgesia, euphoria, sedation, and respiratory depression.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Out of order:</b> Tolerance does not develop to miosis or constipation, so these effects persist with chronic use.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Causing pain:</b> Opioid-induced hyperalgesia (increased pain sensitivity) can occur with chronic opioid use.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Anxious, hot, and moist:</b> Opioid withdrawal causes rhinorrhea, lacrimation, yawning, hyperventilation, hyperthermia, muscle aches, vomiting, diarrhea, and anxiety. It is very unpleasant but rarely life-threatening.<span class="pearl">⭐ Treat with methadone or buprenorphine; clonidine can reduce autonomic symptoms.</span></span></li>
+<li><span class="num">27</span><span class="txt"><b>DONE timer:</b> Methadone is a long-acting opioid (full mu agonist) used to attenuate withdrawal symptoms and for maintenance therapy of opioid use disorder; it can also treat chronic pain.<span class="pearl">⭐ Methadone can prolong the QT interval and is also an NMDA antagonist.</span></span></li>
+<li><span class="num">28</span><span class="txt"><b>Long tapering flag:</b> Methadone and buprenorphine have long half-lives, which makes them useful in opioid detoxification and maintenance with less euphoria and fewer withdrawal swings.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Blueprint:</b> Buprenorphine is a long-acting partial mu-opioid agonist used to attenuate withdrawal symptoms and for maintenance treatment of opioid use disorder.<span class="pearl">⭐ Often given sublingually combined with naloxone to deter IV misuse. Has a ceiling effect on respiratory depression, so it is safer in overdose than full agonists.</span></span></li>
+<li><span class="num">30</span><span class="txt"><b>Irritable, moist, tachypneic baby:</b> Neonatal abstinence syndrome occurs in infants of opioid-dependent mothers: diarrhea, sweating, sneezing, crying, tachypnea, and irritability.</span></li>
+<li><span class="num">31</span><span class="txt"><b>Partial massage:</b> Partial mu-opioid agonists (buprenorphine, and by the scene nalbuphine and butorphanol) activate the receptor with lower intrinsic activity than full agonists.<span class="pearl">⭐ Nalbuphine and butorphanol are kappa agonists with mu partial agonist or antagonist activity.</span><span class="unsure" title="OCR was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">32</span><span class="txt"><b>Bluefin:</b> The 'bu-phin' stem marks the partial opioid agonists, such as buprenorphine, nalbuphine, and butorphanol.</span></li>
+<li><span class="num">33</span><span class="txt"><b>Falling into the withdraw spa:</b> Partial mu-opioid agonists can precipitate withdrawal in patients dependent on full agonists, because they displace the full agonist while providing less receptor activation.</span></li>
+<li><span class="num">34</span><span class="txt"><b>No lax zone:</b> Naloxone is a mu-opioid receptor antagonist (competitive) used to reverse acute opioid toxicity. It can precipitate withdrawal in dependent patients.<span class="pearl">⭐ Naloxone has a short half-life (1-2 hours) so repeat dosing or an infusion may be needed after long-acting opioids like methadone.</span></span></li>
+<li><span class="num">35</span><span class="txt"><b>No tricks zone:</b> Naltrexone is a long-acting opioid receptor antagonist that helps maintain abstinence in patients with opioid (heroin) use disorder, given orally or as a monthly injection.<span class="pearl">⭐ Patients must be opioid-free before starting or it precipitates withdrawal. Monitor liver function.</span></span></li>
+<li><span class="num">36</span><span class="txt"><b>Tempting alcohol:</b> Naltrexone (mu-opioid antagonist) helps reduce cravings for alcohol and nicotine.<span class="pearl">⭐ Naltrexone is first-line for alcohol use disorder, in contrast to disulfiram or acamprosate.</span></span></li>
+<li><span class="num">37</span><span class="txt"><b>Getting fit:</b> Naltrexone can help with weight loss, as when combined with bupropion.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/3a6f2f54eb64bd490388a9512c2f6234.webp" alt="Opioids, Naloxone, Naltrexone original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p16" data-name="varenicline">
+      <div class="org-header">
+        <h2>16. Varenicline</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p16">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/1ad1ba0d0284a84f850361742f5e875c.webp" alt="Varenicline Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Nicotine is a nicotinic ACh receptor agonist (ligand-gated Na+/Ca2+ channel) causing dopamine release in the reward pathway; tolerance, dependence, and withdrawal drive relapse; CYP2A6 metabolizes it.</li><li>Varenicline is a partial agonist at alpha4-beta2 nicotinic receptors: relieves craving and withdrawal while blocking nicotine reward; used for smoking cessation, 12-week course.</li><li>Titrate up (0.5 mg daily x3 days, 0.5 mg BID x4 days, then 1 mg BID); reduce dose when CrCl is below 30 mL/min.</li><li>Adverse effects: nausea/vomiting (most common), constipation, flatulence, vivid dreams; also neuropsychiatric effects, seizure risk, alcohol intolerance, possible CV events.</li><li>Avoid varenicline with high-dose NRT; NRT is titrated down. After quitting smoking, CYP1A2 induction is lost, so theophylline, warfarin, clozapine levels can rise (monitor/adjust).</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Smokey holding up 1 claw:</b> Smoking is the leading cause of preventable disease and death in the US (lung cancer, COPD, CAD, stroke, PAD). Cessation counseling plus pharmacotherapy at every visit is high-yield.<span class="pearl">⭐ Combining counseling with medication roughly doubles quit rates versus either alone.</span></span></li>
+<li><span class="num">2</span><span class="txt"><b>Trail map with interconnecting paths:</b> Tobacco addiction is multifactorial: pharmacologic (nicotine), learned/conditioned cues, genetic, and social/environmental factors all interact, so treatment is usually multimodal.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Happy smoking hiker with salty sodium peanuts, Calci-Yum milk, rope:</b> Nicotine is an agonist at nicotinic acetylcholine receptors (ligand-gated cation channels) in the brain. Channel opening causes Na+ influx and depolarization, which opens voltage-gated Ca2+ channels for further Ca2+ influx and triggers neurotransmitter release (notably dopamine in the mesolimbic reward pathway), improving mood and producing reward.<span class="pearl">⭐ Varenicline targets the alpha4-beta2 nicotinic receptor subtype.</span></span></li>
+<li><span class="num">4</span><span class="txt"><b>Frayed reinforcements + dependence:</b> With repeated exposure, tolerance develops and the primary reinforcing effects diminish. Physical dependence follows, so withdrawal symptoms (irritability, anxiety, poor concentration, increased appetite, insomnia, craving) occur when nicotine is absent.</span></li>
+<li><span class="num">5</span><span class="txt"><b>P450 license plate:</b> Nicotine levels depend on rate of metabolism, mainly by CYP2A6. Faster metabolizers clear nicotine quickly and tend to smoke more and have more difficulty quitting.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Replacement Firefighter Nico:</b> Nicotine replacement therapy (NRT) substitutes nicotine from tobacco with safer sources (gum, lozenges, patches, inhaler, nasal spray) that avoid tar and combustion products. It is designed to be titrated down over time. Patch plus a short-acting form (gum or lozenge) is more effective than a single form.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Firefighter Varenica:</b> Varenicline is a partial agonist at nicotinic receptors (alpha4-beta2) indicated for smoking cessation. It provides modest receptor stimulation (reducing craving and withdrawal) while blocking nicotine from the receptor, which reduces the reward from smoking.<span class="pearl">⭐ Among the most effective single agents for cessation; superior to bupropion and to single-form NRT in trials.</span></span></li>
+<li><span class="num">8</span><span class="txt"><b>Pressure adjuster:</b> Varenicline is started with upward dose titration: 0.5 mg once daily for 3 days, then 0.5 mg twice daily for 4 days, then 1 mg twice daily; a usual course is 12 weeks. Patients typically set a quit date about 1 week after starting. Slow titration limits nausea.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Falling brain helmet:</b> Neuropsychiatric adverse effects have been reported (mood changes, agitation, psychosis, hallucinations, suicidal ideation or attempts). Monitor patients for mood and behavior changes and stop the drug if they occur.<span class="pearl">⭐ The former boxed warning was removed after large trials showed no significant excess of serious neuropsychiatric events, but monitoring is still advised.</span></span></li>
+<li><span class="num">10</span><span class="txt"><b>Shaking ladder:</b> Varenicline has been associated with new or worsening seizures; use caution in patients with a seizure history.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Alcohol warning sign:</b> Varenicline may increase the effects of alcohol (decreased tolerance, unusual or aggressive behavior, amnesia). Patients should reduce alcohol intake until they know how varenicline affects them.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Heart patch + Varenica balancing:</b> Varenicline may increase the risk of cardiovascular events (MI, stroke), though the data are limited. This concern should be weighed against the substantial cardiovascular benefit of quitting smoking.</span></li>
+<li><span class="num">13</span><span class="txt"><b>No Road Thru:</b> Combining varenicline with high-dose NRT is associated with intolerable adverse effects (nausea, headache, dizziness) and treatment discontinuation, so avoid the combination.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Damaged P450 license plate:</b> Smoking cessation can change the pharmacokinetics of other drugs. Polycyclic aromatic hydrocarbons in smoke induce CYP1A2, so after quitting CYP1A2 activity falls and levels of substrates such as theophylline (and warfarin, clozapine, olanzapine) can rise toward toxicity. Consider therapeutic drug monitoring and dose reduction.<span class="pearl">⭐ Classic: patient on theophylline or clozapine quits smoking and develops toxicity.</span></span></li>
+<li><span class="num">15</span><span class="txt"><b>Adjustable, shrivelled kidney tank on LOW:</b> Varenicline is renally eliminated, largely unchanged. Reduce the dose in severe renal impairment (estimated CrCl below 30 mL/min), with a lower maximum daily dose.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Vomiting firefighter:</b> Nausea and vomiting are the most common adverse effects of varenicline; taking it with food and a full glass of water helps.<span class="pearl">⭐ Nausea is the most common adverse effect and the usual reason for discontinuation.</span></span></li>
+<li><span class="num">17</span><span class="txt"><b>Blocked truck:</b> Constipation is a common adverse effect of varenicline.</span></li>
+<li><span class="num">18</span><span class="txt"><b>Tailpipe exhaust:</b> Flatulence is a common adverse effect of varenicline.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Dreaming bear:</b> Patients may report vivid, unusual, or strange dreams (and insomnia) with varenicline.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/79b1703f7a9bd2bb17cc4945e094ead7.webp" alt="Varenicline original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    <section class="org-section" id="org-p17" data-name="amphetamine, dexamphetamine, lisdexamfetamine, methylphenidate">
+      <div class="org-header">
+        <h2>17. Amphetamine, Dexamphetamine, Lisdexamfetamine, Methylphenidate</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-p17">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/a6b81104b454bb00ed3e80a5dda4e1b8.webp" alt="Amphetamine, Dexamphetamine, Lisdexamfetamine, Methylphenidate Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Indications: ADHD (all four), narcolepsy (methylphenidate and amphetamines), binge eating disorder (lisdexamfetamine).</li><li>Amphetamines: TAAR1 agonism, VMAT2 inhibition, and reversal of DAT/NET cause release of dopamine and NE; methylphenidate simply blocks DAT/NET reuptake.</li><li>Lisdexamfetamine is a long-acting prodrug (lysine cleaved in RBCs to dextroamphetamine) with lower euphoria and abuse potential.</li><li>Contraindications: MAOI use or within 14 days, hyperthyroidism, pheochromocytoma; caution with substance abuse, psychiatric and cardiovascular disease.</li><li>Adverse effects: insomnia, weight loss, nausea, headache; avoid afternoon/evening dosing; monitor weight, CV function, and height in children.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>AD/HD shirt:</b> Attention-deficit/hyperactivity disorder (ADHD) is the primary indication for amphetamine, dextroamphetamine, lisdexamfetamine, and methylphenidate. Stimulants are first-line pharmacotherapy.<span class="pearl">⭐ Paradoxically calming in ADHD because they enhance prefrontal dopamine and norepinephrine signaling (attention and executive control).</span></span></li>
+<li><span class="num">2</span><span class="txt"><b>Dog binging on picnic:</b> Moderate to severe binge eating disorder can be treated with psychostimulants; lisdexamfetamine is the FDA-approved agent for this.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Narcoleptic pig + CH3 collar:</b> Narcolepsy is another indication (classically methylphenidate; amphetamines are also used). The CH3 collar marks methylphenidate.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Rope:</b> Dopamine, the monoamine neurotransmitter represented by the rope, mediates reward, motivation, and attention.</span></li>
+<li><span class="num">5</span><span class="txt"><b>NE compass:</b> Norepinephrine (NE, noradrenaline) is the second key monoamine; it promotes alertness, attention, and sympathetic activation.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Hyper dogs releasing ropes:</b> Amphetamines increase release of monoamines (dopamine, norepinephrine, and some serotonin) from presynaptic terminals, rather than just blocking reuptake.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Tar pit:</b> Amphetamine is an agonist of trace amine-associated receptor 1 (TAAR1), an intracellular receptor in monoaminergic neurons; this signaling promotes transporter reversal and release of monoamines.</span></li>
+<li><span class="num">8</span><span class="txt"><b>V-neck + Mat the dog walker:</b> Vesicular monoamine transporter 2 (VMAT2) packages cytosolic monoamines (dopamine, NE, serotonin) into synaptic vesicles.<span class="pearl">⭐ Reserpine and tetrabenazine also inhibit VMAT2, but they deplete monoamines.</span></span></li>
+<li><span class="num">9</span><span class="txt"><b>Inhibiting Mat from packing ropes:</b> Amphetamine inhibits VMAT2, so dopamine is not stored in vesicles. Cytosolic dopamine rises and becomes available for reverse transport out of the neuron.</span></li>
+<li><span class="num">10</span><span class="txt"><b>"Best Phriend of Mine" dog vest:</b> Identifies amphetamine (the stimulant that acts as the releasing agent) in the scene.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Turnstile:</b> Plasma membrane monoamine transporters (dopamine transporter DAT, norepinephrine transporter NET/NAT) normally reuptake dopamine and NE from the synapse, ending their action.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Turnstile spinning in reverse + dogs escaping with rope:</b> Amphetamines reverse the direction of DAT and NET, so instead of reuptake, dopamine and norepinephrine flow out of the neuron into the synapse (non-vesicular efflux), increasing synaptic levels.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Sleeping pig with CH3 collar blocking turnstile:</b> Methylphenidate is a reuptake blocker of DAT and NET; it increases synaptic dopamine and NE without causing substantial release.<span class="pearl">⭐ Amphetamine = releaser and reuptake reverser; methylphenidate = pure reuptake blocker.</span></span></li>
+<li><span class="num">14</span><span class="txt"><b>LISt:</b> LISdexamfetamine: the LIS in the name is the mnemonic for lisdexamfetamine.</span></li>
+<li><span class="num">15</span><span class="txt"><b>PROduct:</b> Lisdexamfetamine is a prodrug: it is inactive until red blood cells hydrolyze it, cleaving off lysine to release active dextroamphetamine.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Long dog:</b> Lisdexamfetamine is long-acting because conversion to the active drug is gradual (once-daily dosing).</span></li>
+<li><span class="num">17</span><span class="txt"><b>Low belly:</b> Because activation is rate-limited and slow, it produces less euphoria and has lower abuse and diversion potential than immediate-release amphetamines. It is also less effective if taken by non-oral routes.</span></li>
+<li><span class="num">18</span><span class="txt"><b>"We've been mouse free for 14 days":</b> Contraindicated during or within 14 days of stopping a monoamine oxidase inhibitor, because of the risk of hypertensive crisis from excessive sympathetic activation (and serotonin-type reactions).</span></li>
+<li><span class="num">19</span><span class="txt"><b>"Prevent Dog Abuse":</b> Precaution in patients with a history of drug abuse or dependence; stimulants are Schedule II controlled substances with misuse and diversion risk.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Red bow tie:</b> Contraindicated in hyperthyroidism (neck bow tie represents the thyroid) because of additive sympathetic overactivation (tachycardia, arrhythmia).</span></li>
+<li><span class="num">21</span><span class="txt"><b>Frozen, chromatic shaved ice:</b> Contraindicated in pheochromocytoma (chromaffin cell tumor) because of risk of hypertensive crisis from sympathetic overactivation.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Brain hat:</b> Use with caution in psychiatric disorders; stimulants can precipitate or worsen psychosis, mania, anxiety, agitation, or tics.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Heart patch:</b> Use with caution in cardiovascular disorders; stimulants raise heart rate and blood pressure and are linked to arrhythmia and sudden death in those with structural heart disease.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Stimulated, awake person:</b> Insomnia is a common side effect owing to increased alertness.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Thin person:</b> Weight loss and decreased appetite are common; in children this can lead to growth suppression.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Nauseated:</b> Nausea (and abdominal pain) is a common side effect.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Tight headband:</b> Headache is a common side effect.</span></li>
+<li><span class="num">28</span><span class="txt"><b>"Park Closes at Noon":</b> Avoid dosing in the early afternoon or evening to minimize insomnia.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Scales:</b> Monitor weight (assessment of weight loss and appetite suppression).</span></li>
+<li><span class="num">30</span><span class="txt"><b>EKG machine:</b> Monitor cardiovascular function (heart rate, blood pressure, ECG as appropriate).</span></li>
+<li><span class="num">31</span><span class="txt"><b>Measuring length:</b> Monitor height in children, because chronic stimulant use can slow growth velocity.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/15b6731ded12417313bddb41562ca910.webp" alt="Amphetamine, Dexamphetamine, Lisdexamfetamine, Methylphenidate original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    
+</main>
+
+<div id="lightbox">
+  <button id="lightbox-close" aria-label="Close full screen view">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = "ghs402_sketchypharm_reviewed_v1";
+
+  function loadReviewed() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+  function saveReviewed(obj) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); } catch (e) {}
+  }
+
+  var reviewed = loadReviewed();
+  var navChecks = document.querySelectorAll(".nav-check");
+  var sectionChecks = document.querySelectorAll(".reviewed-check");
+  var total = 17;
+
+  function applyState(id, isReviewed) {
+    var navCheck = document.querySelector('.nav-check[data-target="' + id + '"]');
+    var sectionCheck = document.querySelector('.reviewed-check[data-target="' + id + '"]');
+    var navItem = navCheck ? navCheck.closest(".nav-item") : null;
+    var section = document.getElementById(id);
+    if (navCheck) navCheck.checked = isReviewed;
+    if (sectionCheck) sectionCheck.checked = isReviewed;
+    if (navItem) navItem.classList.toggle("done", isReviewed);
+    if (section) section.classList.toggle("reviewed", isReviewed);
+  }
+
+  function updateProgress() {
+    var count = Object.keys(reviewed).filter(function(k) { return reviewed[k]; }).length;
+    document.getElementById("progress-text").textContent = count + " / " + total + " reviewed";
+    var pct = total ? Math.round((count / total) * 100) : 0;
+    document.getElementById("progress-bar-inner").style.width = pct + "%";
+  }
+
+  function setReviewed(id, val) {
+    reviewed[id] = val;
+    saveReviewed(reviewed);
+    applyState(id, val);
+    updateProgress();
+  }
+
+  Object.keys(reviewed).forEach(function(id) {
+    if (reviewed[id]) applyState(id, true);
+  });
+  updateProgress();
+
+  navChecks.forEach(function(cb) {
+    cb.addEventListener("change", function() {
+      setReviewed(cb.getAttribute("data-target"), cb.checked);
+    });
+  });
+  sectionChecks.forEach(function(cb) {
+    cb.addEventListener("change", function() {
+      setReviewed(cb.getAttribute("data-target"), cb.checked);
+    });
+  });
+
+  // Search / filter
+  var searchBox = document.getElementById("search-box");
+  var navItems = document.querySelectorAll(".nav-item");
+  var sections = document.querySelectorAll(".org-section");
+
+  searchBox.addEventListener("input", function() {
+    var q = searchBox.value.trim().toLowerCase();
+    navItems.forEach(function(li) {
+      var name = li.getAttribute("data-name") || "";
+      li.classList.toggle("hidden", q.length > 0 && name.indexOf(q) === -1);
+    });
+    sections.forEach(function(sec) {
+      var name = sec.getAttribute("data-name") || "";
+      sec.classList.toggle("hidden", q.length > 0 && name.indexOf(q) === -1);
+    });
+  });
+
+  // Sidebar collapse
+  var SIDEBAR_KEY = "ghs402_sketchypharm_sidebar_collapsed_v1";
+  var sidebarToggle = document.getElementById("sidebar-toggle");
+  function setSidebarCollapsed(collapsed) {
+    document.body.classList.toggle("sidebar-collapsed", collapsed);
+    sidebarToggle.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
+    sidebarToggle.title = collapsed ? "Expand sidebar" : "Collapse sidebar";
+    try { localStorage.setItem(SIDEBAR_KEY, collapsed ? "1" : "0"); } catch (e) {}
+  }
+  try {
+    if (localStorage.getItem(SIDEBAR_KEY) === "1") setSidebarCollapsed(true);
+  } catch (e) {}
+  sidebarToggle.addEventListener("click", function() {
+    setSidebarCollapsed(!document.body.classList.contains("sidebar-collapsed"));
+  });
+
+  // Fullscreen image lightbox
+  var lightbox = document.getElementById("lightbox");
+  var lightboxImg = document.getElementById("lightbox-img");
+  var lightboxClose = document.getElementById("lightbox-close");
+
+  function openLightbox(src, alt) {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt || "";
+    lightbox.classList.add("open");
+  }
+  function closeLightbox() {
+    lightbox.classList.remove("open");
+    lightboxImg.src = "";
+  }
+
+  document.querySelectorAll(".fullscreen-btn").forEach(function(btn) {
+    btn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      var img = btn.parentElement.querySelector(".scene-img");
+      if (img) openLightbox(img.src, img.alt);
+    });
+  });
+  document.querySelectorAll(".scene-img").forEach(function(img) {
+    img.addEventListener("click", function() {
+      openLightbox(img.src, img.alt);
+    });
+  });
+  lightboxClose.addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", function(e) {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape" && lightbox.classList.contains("open")) closeLightbox();
+  });
+
+  // Active nav link highlighting on scroll
+  var navLinks = document.querySelectorAll(".nav-link");
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      var link = document.querySelector('.nav-link[href="#' + entry.target.id + '"]');
+      if (!link) return;
+      if (entry.isIntersecting) {
+        navLinks.forEach(function(l) { l.classList.remove("active"); });
+        link.classList.add("active");
+      }
+    });
+  }, { rootMargin: "-10% 0px -70% 0px" });
+  sections.forEach(function(sec) { observer.observe(sec); });
+})();
+</script>
+
+</body>
+</html>
