@@ -8518,7 +8518,7 @@ function showAnatOrderChooser(force) {
 }
 function closeAnatOrderChooser() { var el = document.getElementById('anat-order-overlay'); if (el) el.style.display = 'none'; }
 function maybeAskAnatOrder() {
-  if (_anatAsked || getAnatOrder()) return;
+  if (_anatAsked || getAnatOrder() || document.getElementById('tr-root')) return;
   var panel = document.getElementById('panel-msk101'), sub = document.getElementById('sub-msk-anat');
   if (!panel || !sub) return;
   if (!panel.classList.contains('active') || !sub.classList.contains('active') || panel.offsetParent === null) return;
@@ -8963,6 +8963,25 @@ try { veDecorateAll(); } catch (e) {}
     { full: true, c: '#4ade80', emoji: '🚀', kick: 'All done', title: 'You’re ready. Go crush it.', body: 'Quick start: <b>connect your First Aid 2026 PDF</b> in Settings, then open your module, watch the videos listed under today’s lecture and tick them off. Replay it any time from Settings, Tutorial.', chips: ['⚙️ Connect your First Aid 2026 PDF', '🎬 Open your module, find a lecture', '✅ Tick your first video'], next: 'Let’s go! 🎉', confetti: true, last: true }
   ];
 
+  var ALL = steps.slice();
+  var MD1 = {
+    'Welcome': { title: 'Stop hunting for videos. They’re all labelled right here.', body: 'This tracker lines up every <b>MSK101 lecture</b> with the exact <b>Bootcamp videos</b> that cover it, plus the matching First Aid, Mehlman and 100 Anatomy Concepts pages. No more searching Bootcamp for the right video. This 60-second tour shows you how.', chips: ['🎬 Bootcamp videos matched', '📖 First Aid pages', '🩻 Mehlman · 💯 100 Concepts', '✅ Live progress', '📅 Auto planner'] },
+    'The big idea': { title: 'Class topic in. Exact videos out.', body: 'Your professor teaches a topic. Instead of scrolling through Bootcamp to guess what matches, <b>every lecture already lists the right Bootcamp videos (chapter and number), how long they are, and the pages to read</b>.', flow: [['📚', 'Lecture in class', 'e.g. Brachial Plexus'], ['🎬', 'Exact Bootcamp videos', 'MSK › Ch.8 › 8.4 Radial Nerve'], ['📖', 'Pages to read', 'First Aid · Mehlman · 100 Concepts'], ['✅', 'Tick it off', 'progress updates']] },
+    'Sub-tabs': { title: 'Anatomy, Physiology, Biochemistry', body: 'MSK101 has a sub-tab for each subject. Same layout in all of them, so once you know one you know them all.' },
+    'Lectures': { title: 'Every lecture is its own row', body: 'Each row is one lecture from your class: the date it’s taught, its title, <b>the Bootcamp videos that cover it</b> (in the tray right underneath, with chapter, number and length), the total time, and page badges for First Aid, Mehlman, 100 Concepts, Bootcamp notes and the slides.' },
+    'Try it!': { title: 'Tick a video, watch the bar move', body: 'Go on, tick them. Your progress is weighted by minutes, and it saves automatically.', demoTitle: 'Practice lecture · Brachial plexus', demoItems: [['8.1 Brachial Plexus Overview', 8], ['8.4 Radial Nerve', 10], ['8.5 Median Nerve', 10]], sel: function () { return firstVis('.tab-panel.active tr.vid-group') || firstVis('.tab-panel.active td.watch-cell') || firstVis('.tab-panel.active tbody tr[data-id]'); } },
+    'Videos & notes': { kick: 'Bootcamp videos', title: 'Every Bootcamp video, numbered', body: 'Under each lecture is a tray listing <b>the exact Bootcamp videos</b>: course › chapter › number, with the length of each, so you know precisely what to watch. <b>Tick each one as you finish it</b>, and click a title to open it.', fake: false, fakeHtml: '<div class="tr-demo"><div class="tr-dh">What you’ll see on every lecture</div><div style="font-size:.85rem;font-weight:700;color:var(--text,#fff)">🎬 MSK › Ch.8 Brachial Plexus</div><div style="font-size:.85rem;color:var(--text-dim,#aab4cc);margin-top:4px"><b style="color:var(--text,#fff)">8.4</b> Radial Nerve · 10 min<br><b style="color:var(--text,#fff)">8.5</b> Median Nerve · 10 min</div></div>', sel: function () { return firstVis('.tab-panel.active tr.vid-group') || firstVis('.tab-panel.active td.watch-cell'); } },
+    'Page badges': { title: 'Matching pages, already found', body: 'See <b>📖 p.475</b> next to a lecture? That means <b>“read First Aid page 475 for this topic.”</b> The page numbers are from <b>First Aid 2026</b>, so use the 2026 edition. The other badges work the same way: <b>🩻 Mehlman</b> (high-yield anatomy/MSK notes, approved users only), <b>💯 100 Anatomy Concepts</b>, <b>📄 Bootcamp notes</b> and <b>📑 slides</b>.' },
+    'Connect your PDFs': { body: 'The books aren’t included here (they’re copyrighted), so you connect <b>your own copy</b> once:<ol class="tr-ol"><li>Open <b>Settings</b> (this button) → <b>Connect PDFs</b>.</li><li>Pick your <b>First Aid 2026</b> PDF from your computer. Do the same for 100 Anatomy Concepts, Bootcamp notes and Mehlman if you have them.</li><li>Now every page badge opens <b>your PDF at that exact page</b> in a new tab.</li></ol>The files <b>never leave your device</b>, nothing is uploaded. Using a different browser or device? Connect them there again.' },
+    'All done': { body: 'Quick start: <b>connect your First Aid 2026 PDF</b> in Settings, then open MSK101, find today’s lecture, watch the Bootcamp videos listed and tick them off. Replay this tour any time from Settings, Tutorial.', chips: ['⚙️ Connect your First Aid 2026 PDF', '🦴 Open MSK101 → Anatomy', '✅ Tick your first video'] }
+  };
+  var ORDER_STEP = { c: '#38bdf8', kick: 'Study order', title: 'Lecture order or Bootcamp order', body: 'In Anatomy you can list videos in <b>Lecture order</b> (follows what your professor teaches each day) or <b>Bootcamp order</b> (one flat list in the order Bootcamp teaches it). Your ticks are saved separately for each, so switching never loses progress.', before: goModule, sel: function () { var l = firstVis('.tab-panel.active .anat-view-lbl'); return l && l.parentElement; } };
+  function buildSteps() {
+    var md1 = (typeof currentSemester !== 'undefined' && currentSemester === 'MD1');
+    var out = ALL.map(function (st) { var m = md1 && MD1[st.kick]; if (!m) return st; var c = {}; for (var k in st) c[k] = st[k]; for (var k2 in m) c[k2] = m[k2]; return c; });
+    if (md1) { var at = out.findIndex(function (x) { return x.kick === 'Search & filters'; }); if (at < 0) at = out.length - 1; out.splice(at, 0, ORDER_STEP); }
+    return out;
+  }
   function calib() { var b = $('#tr-block'); if (!b) return; f = (b.getBoundingClientRect().width / b.offsetWidth) || 1; }
   function esc(s) { return s; }
 
@@ -8989,10 +9008,11 @@ try { veDecorateAll(); } catch (e) {}
     h += '<div class="tr-kick">' + s.kick + '</div><h3>' + s.title + '</h3><p>' + s.body + '</p>';
     if (s.chips) h += '<div class="tr-chips">' + s.chips.map(function (c, i) { return '<span style="animation-delay:' + (.25 + i * .12) + 's">' + c + '</span>'; }).join('') + '</div>';
     if (s.flow) h += '<div class="tr-flow">' + s.flow.map(function (x, i) { return (i ? '<em>→</em>' : '') + '<div style="animation-delay:' + (.2 + i * .18) + 's"><b>' + x[0] + '</b><strong>' + x[1] + '</strong><small>' + x[2] + '</small></div>'; }).join('') + '</div>';
-    if (s.demo) h += '<div class="tr-demo" id="tr-demo"><div class="tr-dh">Practice lecture · Hepatitis viruses</div>' +
-      '<label><input type="checkbox" data-m="7"> Hepatitis A virus <i>7 min</i></label><label><input type="checkbox" data-m="10"> Hepatitis B basics <i>10 min</i></label><label><input type="checkbox" data-m="7"> Hepatitis C virus <i>7 min</i></label>' +
-      '<div class="tr-bar"><b id="tr-fill"></b></div><div class="tr-pct" id="tr-pct"><span>0%</span><span>0 / 24 min</span></div></div>';
-    if (s.fake) h += '<div class="tr-demo"><div class="tr-dh">What you’ll see on every video</div><div class="tr-fake"><span style="font-size:.85rem;font-weight:600;color:var(--text,#fff);padding:0">Hepatitis A virus</span><span class="v" style="margin-left:auto">🎬 Video</span><span class="n">📝 Notes</span></div></div>';
+    if (s.demo) { var di = s.demoItems || [['Hepatitis A virus', 7], ['Hepatitis B basics', 10], ['Hepatitis C virus', 7]]; var dt = di.reduce(function (a, x) { return a + x[1]; }, 0);
+      h += '<div class="tr-demo" id="tr-demo"><div class="tr-dh">' + (s.demoTitle || 'Practice lecture · Hepatitis viruses') + '</div>' + di.map(function (x) { return '<label><input type="checkbox" data-m="' + x[1] + '"> ' + x[0] + ' <i>' + x[1] + ' min</i></label>'; }).join('') +
+      '<div class="tr-bar"><b id="tr-fill"></b></div><div class="tr-pct" id="tr-pct"><span>0%</span><span>0 / ' + dt + ' min</span></div></div>'; }
+    if (s.fakeHtml) h += s.fakeHtml;
+    else if (s.fake) h += '<div class="tr-demo"><div class="tr-dh">What you’ll see on every video</div><div class="tr-fake"><span style="font-size:.85rem;font-weight:600;color:var(--text,#fff);padding:0">Hepatitis A virus</span><span class="v" style="margin-left:auto">🎬 Video</span><span class="n">📝 Notes</span></div></div>';
     if (s.tryBtn) h += '<div class="tr-tryit"><button class="tr-btn" id="tr-try">' + s.tryBtn + '</button></div>';
     h += '<div id="tr-foot"><div id="tr-dots">' + steps.map(function (_, i) { return '<i data-i="' + i + '" class="' + (i === idx ? 'on' : (i < idx ? 'done' : '')) + '"></i>'; }).join('') + '</div>' +
       (idx > 0 && !s.full ? '<button class="tr-btn" id="tr-back">Back</button>' : '') +
@@ -9066,14 +9086,14 @@ try { veDecorateAll(); } catch (e) {}
   }
   window.startTour = function () {
     if (root) return;
-    ['md-onboard-overlay', 'settings-modal-overlay'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
+    ['md-onboard-overlay', 'settings-modal-overlay', 'anat-order-overlay'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
     var wn = document.getElementById('wn-overlay'); if (wn) wn.remove();
     root = document.createElement('div'); root.id = 'tr-root';
     root.innerHTML = '<div id="tr-block"></div><div class="tr-floaters" id="tr-float"></div><div id="tr-spot"></div><canvas id="tr-conf"></canvas><button id="tr-skip" type="button">Skip tour ✕</button><div id="tr-card" role="dialog" aria-modal="true" aria-label="Tour"></div>';
     document.body.appendChild(root);
     $('#tr-skip').onclick = function () { end(false); };
     document.addEventListener('keydown', onKey, true); window.addEventListener('resize', place); window.addEventListener('scroll', place, true);
-    idx = 0; steps.forEach(function (s) { s._skipped = false; }); show();
+    steps = buildSteps(); idx = 0; steps.forEach(function (s) { s._skipped = false; }); show();
   };
   window.maybeStartTour = function () { try { if (localStorage.getItem(DONE_KEY)) return; } catch (e) {} setTimeout(window.startTour, 500); };
 })();
