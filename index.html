@@ -2586,6 +2586,7 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
       <a href="#" onclick="event.preventDefault();settingsScroll('set-update')">4 · Updates</a>
       <a href="#" onclick="event.preventDefault();settingsScroll('set-theme')">5 · Appearance</a>
       <a href="#" onclick="event.preventDefault();settingsScroll('set-guide')">6 · How it all works</a>
+      <a href="#" onclick="event.preventDefault();settingsScroll('set-tour')">🎬 Tutorial</a>
     </div>
 
     <div class="settings-sec" id="set-year">
@@ -2674,7 +2675,6 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
       <div class="settings-sec-sub">This tracker is updated often. It <b>checks for a new version every hour</b> while it's open. When one is ready you'll see a "New version available" bar; if you've been idle for about 10 minutes it refreshes itself (your progress is saved automatically, so nothing is lost).</div>
       <div class="settings-sec-sub" style="margin:8px 0;"><b>You are on version:</b> <span id="app-version-line">—</span></div>
       <button class="md-choice-btn" style="margin-bottom:8px;" onclick="showWhatsNew(null,true)">✨ See what’s new</button>
-      <button class="md-choice-btn" style="margin-bottom:8px;" onclick="startTour()">🎬 Replay the welcome tour</button>
       <button class="md-choice-btn" onclick="checkForUpdate(true)">🔄 Check for updates now</button> <span id="update-status" class="settings-sec-sub"></span>
     </div>
 
@@ -2686,6 +2686,12 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
         <button class="md-choice-btn theme-opt" data-theme-opt="light" onclick="setTheme('light')">☀️ Light</button>
         <button class="md-choice-btn theme-opt" data-theme-opt="dark" onclick="setTheme('dark')">🌙 Dark</button>
       </div>
+    </div>
+
+    <div class="settings-sec" id="set-tour">
+      <div class="settings-sec-title">🎬 Tutorial</div>
+      <div class="settings-sec-sub">A quick interactive tour of everything in the tracker: lectures, videos, First Aid pages, the planner and more. It takes about a minute.</div>
+      <button class="md-choice-btn" style="margin-bottom:8px;" onclick="startTour()">▶ Start the tutorial</button>
     </div>
 
     <div class="settings-sec" id="set-guide">
@@ -4656,7 +4662,6 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
-  { v: [2, 16], title: "Welcome tour", items: ["New interactive tour that shows off every feature: progress, lecture cards, tick boxes, the planner, schedule, cloud save and settings. It runs once for new users, and you can replay it any time from Settings, Updates."] },
   { v: [2, 15], title: "Clearer lecture separation", items: ["On the RNS401 Pathology, Microbiology and Pharmacology tabs each lecture now has a heavier divider, a coloured bar down its left edge and a gap after its videos, so lectures no longer blend together."] },
   { v: [2, 13], title: "Micro notes pages", items: ["RNS and GHS each open their own Sketchy Micro notes page again (RNS organisms on the RNS page, GHS videos on the GHS page)."] },
   { v: [2, 9], title: "Videos are always underneath the lecture", items: ["Every lecture on every tab now shows its video(s) the same way: tucked underneath the lecture with a tick box, even when there is only one video. Before, single videos sat inside the row and multi-video lectures sat below, which looked inconsistent.", "Your existing ticks and progress carry over untouched."] },
@@ -8907,6 +8912,17 @@ try { veDecorateAll(); } catch (e) {}
   #tr-root.tr-full #tr-card { top: 50% !important; bottom: auto; width: calc(100vw - 24px); padding: 26px 20px 16px; }
   #tr-root.tr-full #tr-card h3 { font-size: 1.55rem; }
 }
+#tr-card { max-height: calc(100vh - 24px); overflow-y: auto; }
+.tr-ol { margin: 8px 0 8px; padding-left: 20px; font-size: .88rem; line-height: 1.5; color: var(--text-dim, #aab4cc); }
+.tr-ol li { margin-bottom: 4px; }
+.tr-flow { display: flex; align-items: stretch; justify-content: center; gap: 8px; margin: 18px 0 6px; flex-wrap: wrap; }
+.tr-flow em { align-self: center; font-style: normal; font-size: 1.4rem; color: #c084fc; }
+.tr-flow div { flex: 1 1 100px; min-width: 100px; padding: 12px 8px; border-radius: 14px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16); display: flex; flex-direction: column; gap: 3px; opacity: 0; animation: trChip .6s forwards; }
+.tr-flow b { font-size: 1.8rem; line-height: 1; }
+.tr-flow strong { font-size: .88rem; color: #fff; }
+.tr-flow small { font-size: .72rem; color: #aab4cc; }
+#tr-root.tr-full #tr-card { width: 680px; max-width: calc(100vw - 24px); }
+@media (max-width: 720px) { .tr-flow em { display: none; } }
 </style>
 <script>
 (function () {
@@ -8921,21 +8937,23 @@ try { veDecorateAll(); } catch (e) {}
   function goModule() { var b = moduleTab(); if (b) go(b.dataset.tab); }
 
   steps = [
-    { full: true, c: '#38bdf8', emoji: '🩺', kick: 'Welcome', title: 'Your whole med-school semester, in one place', body: 'Every lecture, every video, every page number, already found and linked. This 60-second tour shows you the good stuff. <b>Ready?</b>', chips: ['🎬 Videos pre-linked', '✅ Live progress', '📅 Auto planner', '☁️ Cloud sync', '🌙 Dark mode'], next: 'Start the tour ✨', skipLbl: 'Skip' },
-    { c: '#38bdf8', kick: 'Step 1 · Overview', title: 'Your progress, always in view', body: 'This bar fills as you tick things off, <b>weighted by real video minutes</b>, so a 30-minute lecture counts more than a 5-minute one.', before: function () { go('overview'); }, sel: function () { var e = $('#panel-overview .progress-wrap'); return e; } },
-    { c: '#fbbf24', kick: 'Step 2 · This week', title: 'Today and this week at a glance', body: 'The Overview shows the module you are in right now, this week’s classes in colour, and exam countdowns. <b>It’s your daily starting point.</b>', before: function () { go('overview'); }, sel: function () { return $('#week-sched-box') || $('#module-status'); } },
-    { c: '#4ade80', kick: 'Step 3 · Tabs', title: 'One tab per module', body: 'Each module gets its own tab, plus the Planner and the class Schedule. Wrong year? Switch between <b>MD1 / MD3 / MD4</b> any time from Settings.', before: function () { go('overview'); }, sel: function () { return $('.tabbar') || $('.tab-btn.active').parentElement; } },
-    { c: '#fbbf24', kick: 'Step 4 · Sub-tabs', title: 'Pathology, Micro, Pharm', body: 'Inside a module, every subject has its own sub-tab. Same layout everywhere, so once you learn one you know them all.', before: goModule, sel: function () { var b = firstVis('.tab-panel.active .module-subtab-btn'); return b && b.parentElement; } },
-    { c: '#c084fc', kick: 'Step 5 · Lectures', title: 'Every lecture is its own card', body: 'Date, lecture title, what to watch, length, <b>First Aid page</b> and more. Topic banners group related lectures so nothing blends together.', before: goModule, sel: function () { return firstVis('.tab-panel.active tbody tr[data-id]'); } },
-    { c: '#4ade80', kick: 'Step 6 · Try it!', title: 'Tick a video, watch the bar move', body: 'Go on, tick them. Progress is weighted by minutes, and it saves automatically.', demo: true, before: goModule, sel: function () { return firstVis('.tab-panel.active tr.vid-group') || firstVis('.tab-panel.active tbody tr[data-id]'); } },
-    { c: '#fb7185', kick: 'Step 7 · Videos & notes', title: 'Every video listed, with notes', body: 'Under each lecture you see exactly which videos to watch and how long they are. <b>Video</b> opens the video (for accounts with video access), <b>Notes</b> opens a study page. Everyone can see the list and read the notes.', fake: true, before: goModule, sel: function () { return firstVis('.tab-panel.active tr.vid-group'); } },
-    { c: '#38bdf8', kick: 'Step 8 · Search & filters', title: 'Find anything instantly', body: 'Type in the search box to jump to any topic. <b>Show gaps only</b> lists topics with no video, and <b>Mark all done / Clear all</b> do bulk changes.', before: goModule, sel: function () { var i = firstVis('.tab-panel.active input[type="text"], .tab-panel.active input[type="search"]'); return i && (i.closest('.toolbar, .controls, .search-row, .tbl-tools') || i.parentElement); } },
-    { c: '#38bdf8', kick: 'Step 9 · Planner', title: 'A study plan that builds itself', body: 'Set your exam date and daily study time. The planner spaces every lecture across the calendar and <b>re-plans whenever you tick something</b>. Drag a lecture to lock it to a day.', before: function () { go('planner'); }, sel: function () { return firstVis('#panel-planner h2') || $('#panel-planner'); } },
-    { c: '#818cf8', kick: 'Step 10 · Schedule', title: 'The full class timetable', body: 'Week by week, colour-coded: 🚨 exams, 👥 SGDs, 🧩 TBLs, 🔬 labs. The legend at the top explains every colour.', before: function () { go('schedule'); }, sel: function () { return firstVis('#panel-schedule .sched-legend') || firstVis('#panel-schedule h2') || $('#panel-schedule'); } },
-    { c: '#4ade80', kick: 'Step 11 · Cloud save', title: 'Never lose your progress', body: 'Sign in with Google once and your ticks, notes and planner follow you to <b>any device</b>. <b>Green dot</b> = synced, <b>red dot</b> = this browser only.', before: function () { go('overview'); }, sel: function () { return $('#sync-bar'); } },
-    { c: '#fbbf24', kick: 'Step 12 · Settings', title: 'Connect your PDFs, pick your style', body: 'Attach your own First Aid, Pathoma and other PDFs once (they never leave your device) and every page badge opens <b>right at the right page</b>. Settings also has the full how-it-works guide.', before: function () { go('overview'); }, sel: function () { return $('.settings-hero'); } },
-    { c: '#c084fc', kick: 'Step 13 · Looks', title: 'Light, dark, your call', body: 'Studying at 2 AM? Flip the theme with this button. Go on, <b>try it</b>.', tryBtn: 'Toggle theme 🌗', tryFn: function () { try { toggleTheme(); } catch (e) {} }, before: function () { go('overview'); }, sel: function () { return $('#theme-toggle'); } },
-    { full: true, c: '#4ade80', emoji: '🚀', kick: 'All done', title: 'You’re ready. Go crush it.', body: 'Quick start: <b>connect your PDFs</b> in Settings, then open your module and tick your first video. You can replay this tour any time from Settings.', chips: ['⚙️ Settings → Connect PDFs', '✅ Tick your first video', '📅 Check the Planner'], next: 'Let’s go! 🎉', confetti: true, last: true }
+    { full: true, c: '#38bdf8', emoji: '🎬', kick: 'Welcome', title: 'Stop hunting for videos. They’re all labelled right here.', body: 'This tracker lines up every <b>in-class lecture</b> with the exact <b>third-party videos</b> (Pathoma, Sketchy, Bootcamp and more) that cover it. No more searching, no more guessing which video goes with which topic. This 60-second tour shows you how.', chips: ['🎯 Lecture → matching video', '📖 First Aid pages matched', '✅ Live progress', '📅 Auto planner', '☁️ Cloud sync'], next: 'Start the tour ✨', skipLbl: 'Skip' },
+    { full: true, c: '#c084fc', emoji: '🎯', kick: 'The big idea', title: 'Class topic in. Exact videos out.', body: 'Your school teaches a topic. Instead of digging through Pathoma, Sketchy and Bootcamp to find what matches, <b>every lecture below already lists the right videos, how long they are, and the First Aid page to read</b>.', flow: [['📚', 'Lecture in class', 'e.g. Hepatitis viruses'], ['🎬', 'Exact videos listed', 'Pathoma · Sketchy · Bootcamp'], ['📖', 'First Aid page', 'FA p.170'], ['✅', 'Tick it off', 'progress updates']], next: 'Show me →' },
+    { c: '#38bdf8', kick: 'Overview', title: 'Your progress, always in view', body: 'This bar fills as you tick things off, <b>weighted by real video minutes</b>, so a 30-minute lecture counts more than a 5-minute one.', before: function () { go('overview'); }, sel: function () { var e = $('#panel-overview .progress-wrap'); return e; } },
+    { c: '#fbbf24', kick: 'This week', title: 'Today and this week at a glance', body: 'The Overview shows the module you are in right now, this week’s classes in colour, and exam countdowns. <b>It’s your daily starting point.</b>', before: function () { go('overview'); }, sel: function () { return $('#week-sched-box') || $('#module-status'); } },
+    { c: '#4ade80', kick: 'Tabs', title: 'One tab per module', body: 'Each module gets its own tab, plus the Planner and the class Schedule. Wrong year? Switch between <b>MD1 / MD3 / MD4</b> any time from Settings.', before: function () { go('overview'); }, sel: function () { return $('.tabbar') || $('.tab-btn.active').parentElement; } },
+    { c: '#fbbf24', kick: 'Sub-tabs', title: 'Pathology, Micro, Pharm', body: 'Inside a module, every subject has its own sub-tab. Same layout everywhere, so once you learn one you know them all.', before: goModule, sel: function () { var b = firstVis('.tab-panel.active .module-subtab-btn'); return b && b.parentElement; } },
+    { c: '#c084fc', kick: 'Lectures', title: 'Every lecture is its own card', body: 'Each card is one lecture from your class: the date it is taught, its title, <b>the third-party videos that cover it</b>, how long they are, and the matching First Aid page. Topic banners group related lectures.', before: goModule, sel: function () { return firstVis('.tab-panel.active tbody tr[data-id]'); } },
+    { c: '#4ade80', kick: 'Try it!', title: 'Tick a video, watch the bar move', body: 'Go on, tick them. Progress is weighted by minutes, and it saves automatically.', demo: true, before: goModule, sel: function () { return firstVis('.tab-panel.active tr.vid-group') || firstVis('.tab-panel.active tbody tr[data-id]'); } },
+    { c: '#fb7185', kick: 'Videos & notes', title: 'Every video listed, with notes', body: 'Under each lecture you see <b>exactly which videos to watch</b> and how long each one is, so you never have to search for them. <b>Video</b> opens it (for accounts with video access) and <b>Notes</b> opens a study page. Everyone can see the full list and read the notes.', fake: true, before: goModule, sel: function () { return firstVis('.tab-panel.active tr.vid-group'); } },
+    { c: '#38bdf8', kick: 'Search & filters', title: 'Find anything instantly', body: 'Type in the search box to jump to any topic. <b>Show gaps only</b> lists topics with no video, and <b>Mark all done / Clear all</b> do bulk changes.', before: goModule, sel: function () { var i = firstVis('.tab-panel.active input[type="text"], .tab-panel.active input[type="search"]'); return i && (i.closest('.toolbar, .controls, .search-row, .tbl-tools') || i.parentElement); } },
+    { c: '#fbbf24', kick: 'Page badges', title: 'Matching First Aid pages, already found', body: 'See the yellow <b>📖 FA p.383</b> pill? It means <b>“read First Aid page 383 for this topic.”</b> We matched each lecture to its page for you. Heads up: the page numbers here are from <b>First Aid 2026</b>, so use the 2026 edition (older editions have different page numbers). You’ll also see 📓 Pathoma, 🩻 Mehlman, 💯 100 Concepts and 📄 Bootcamp notes badges the same way.', before: goModule, sel: function () { return firstVis('.tab-panel.active a.fa-link'); } },
+    { c: '#38bdf8', kick: 'Planner', title: 'A study plan that builds itself', body: 'Set your exam date and daily study time. The planner spaces every lecture across the calendar and <b>re-plans whenever you tick something</b>. Drag a lecture to lock it to a day.', before: function () { go('planner'); }, sel: function () { return firstVis('#panel-planner h2') || $('#panel-planner'); } },
+    { c: '#818cf8', kick: 'Schedule', title: 'The full class timetable', body: 'Week by week, colour-coded: 🚨 exams, 👥 SGDs, 🧩 TBLs, 🔬 labs. The legend at the top explains every colour.', before: function () { go('schedule'); }, sel: function () { return firstVis('#panel-schedule .sched-legend') || firstVis('#panel-schedule h2') || $('#panel-schedule'); } },
+    { c: '#4ade80', kick: 'Cloud save', title: 'Never lose your progress', body: 'Sign in with Google once and your ticks, notes and planner follow you to <b>any device</b>. <b>Green dot</b> = synced, <b>red dot</b> = this browser only.', before: function () { go('overview'); }, sel: function () { return $('#sync-bar'); } },
+    { c: '#fbbf24', kick: 'Connect your PDFs', title: 'Make the page badges open your book', body: 'The textbooks aren’t included here (they’re copyrighted), so you connect <b>your own copy</b> once:<ol class="tr-ol"><li>Open <b>Settings</b> (this button) → <b>Connect PDFs</b>.</li><li>Pick your <b>First Aid 2026</b> PDF file from your computer. Do the same for Pathoma or others if you have them.</li><li>Now every <b>📖 FA p.###</b> badge opens <b>your PDF at that exact page</b> in a new tab.</li></ol>The file <b>never leaves your device</b>, nothing is uploaded. Using a different browser or device? Connect it there again.', before: function () { go('overview'); }, sel: function () { return $('.settings-hero'); } },
+    { c: '#c084fc', kick: 'Looks', title: 'Light, dark, your call', body: 'Studying at 2 AM? Flip the theme with this button. Go on, <b>try it</b>.', tryBtn: 'Toggle theme 🌗', tryFn: function () { try { toggleTheme(); } catch (e) {} }, before: function () { go('overview'); }, sel: function () { return $('#theme-toggle'); } },
+    { full: true, c: '#4ade80', emoji: '🚀', kick: 'All done', title: 'You’re ready. Go crush it.', body: 'Quick start: <b>connect your First Aid 2026 PDF</b> in Settings, then open your module, watch the videos listed under today’s lecture and tick them off. Replay it any time from Settings, Tutorial.', chips: ['⚙️ Connect your First Aid 2026 PDF', '🎬 Open your module, find a lecture', '✅ Tick your first video'], next: 'Let’s go! 🎉', confetti: true, last: true }
   ];
 
   function calib() { var b = $('#tr-block'); if (!b) return; f = (b.getBoundingClientRect().width / b.offsetWidth) || 1; }
@@ -8963,6 +8981,7 @@ try { veDecorateAll(); } catch (e) {}
     if (s.emoji) h += '<div class="tr-emoji">' + s.emoji + '</div>';
     h += '<div class="tr-kick">' + s.kick + '</div><h3>' + s.title + '</h3><p>' + s.body + '</p>';
     if (s.chips) h += '<div class="tr-chips">' + s.chips.map(function (c, i) { return '<span style="animation-delay:' + (.25 + i * .12) + 's">' + c + '</span>'; }).join('') + '</div>';
+    if (s.flow) h += '<div class="tr-flow">' + s.flow.map(function (x, i) { return (i ? '<em>→</em>' : '') + '<div style="animation-delay:' + (.2 + i * .18) + 's"><b>' + x[0] + '</b><strong>' + x[1] + '</strong><small>' + x[2] + '</small></div>'; }).join('') + '</div>';
     if (s.demo) h += '<div class="tr-demo" id="tr-demo"><div class="tr-dh">Practice lecture · Hepatitis viruses</div>' +
       '<label><input type="checkbox" data-m="7"> Hepatitis A virus <i>7 min</i></label><label><input type="checkbox" data-m="10"> Hepatitis B basics <i>10 min</i></label><label><input type="checkbox" data-m="7"> Hepatitis C virus <i>7 min</i></label>' +
       '<div class="tr-bar"><b id="tr-fill"></b></div><div class="tr-pct" id="tr-pct"><span>0%</span><span>0 / 24 min</span></div></div>';
