@@ -109,14 +109,19 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .module-sub-panel.active { display: block; }
   @media (max-width: 720px) { td.pad-fill { display: none !important; } }
   td.pad-fill { padding: 0 !important; border: 0 !important; }
-  /* clear separation between lectures */
-  table.ghs-table tbody tr[data-id] > td { border-top: 2px solid rgba(127,127,127,.4); }
-  table.ghs-table tbody tr[data-id] > td:first-child { box-shadow: inset 4px 0 0 var(--lec, #888); }
-  table.ghs-table[id$="path-table"] { --lec: var(--path); }
-  table.ghs-table[id$="micro-table"] { --lec: var(--micro); }
-  table.ghs-table[id$="pharm-table"] { --lec: var(--pharm); }
-  table.ghs-table tbody tr[data-id] > td[data-label="Lecture"] { font-weight: 700; }
-  table.ghs-table { width: 100%; min-width: 0; border-collapse: separate; border-spacing: 0; }
+  /* clear separation between lectures: each lecture (row + its videos) reads as its own card */
+  table.ghs-table, table.path-table, table.micro-table, table.pharm-table { border-collapse: separate; border-spacing: 0; }
+  table.ghs-table { width: 100%; min-width: 0; }
+  table.path-table, table[id$="path-table"] { --lec: var(--path); }
+  table.micro-table, table[id$="micro-table"] { --lec: var(--micro); }
+  table.pharm-table, table[id$="pharm-table"] { --lec: var(--pharm); }
+  @media (min-width: 721px) {
+    :is(table.ghs-table, table.path-table, table.micro-table, table.pharm-table) tbody tr[data-id] > td { border-top: 18px solid var(--bg) !important; }
+    :is(table.ghs-table, table.path-table, table.micro-table, table.pharm-table) tbody tr[data-id] > td:first-child { box-shadow: inset 6px 0 0 var(--lec, #888); border-top-left-radius: 0; }
+    :is(table.ghs-table, table.path-table, table.micro-table, table.pharm-table) tbody tr.vid-group > td { box-shadow: inset 6px 0 0 var(--lec, #888); border-bottom: 0 !important; }
+    :is(table.ghs-table, table.path-table, table.micro-table, table.pharm-table) tbody tr[data-id] > td[data-label="Lecture"] { font-weight: 700; }
+    :is(table.ghs-table, table.path-table, table.micro-table, table.pharm-table) tbody tr.section-row > td { border-top: 0 !important; border-bottom: 3px solid var(--lec, #888) !important; padding-top: 14px; padding-bottom: 14px; }
+  }
 
   /* Tabs — floating segmented control */
   .tabbar {
@@ -2399,6 +2404,35 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .vid-sub a.sk-btn { all: unset; cursor: pointer; display: inline-block; min-width: 4.6em; text-align: center; box-sizing: content-box; flex: none; padding: 3px 12px; border-radius: 14px; font-size: 0.8rem; font-weight: 700; line-height: 1.3; background: var(--green); color: #04250f; }
   .vid-sub a.sk-btn.sk-btn-notes { background: color-mix(in srgb, var(--text-dim) 16%, transparent); color: var(--text); border: 1px solid color-mix(in srgb, var(--text-dim) 40%, transparent); }
   .vid-sub.checked .sk-title { opacity: 0.5; text-decoration: line-through; }
+  /* ---- v2.15 redesign: videos are a compact, quiet tray under the lecture ---- */
+  tr.vid-group > td { padding: 2px 18px 16px 22px !important; }
+  .vg-wrap { padding: 6px 12px 6px 12px; border: 1px solid var(--border-soft); border-left: 1px solid var(--border-soft); border-radius: 10px; background: color-mix(in srgb, var(--text) 4%, transparent); max-width: 820px; }
+  .vg-bar { margin: 0 0 4px; padding: 0 2px 4px; font-size: 0.64rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-faint, var(--text-dim)); max-width: none; border-bottom: 1px solid color-mix(in srgb, var(--border-soft) 80%, transparent); }
+  .vg-count { font-size: 0.68rem; letter-spacing: 0.02em; }
+  .vg-grid { max-width: none; }
+  .vid-sub { gap: 9px; padding: 4px 2px; }
+  .vid-sub .sv-check input { width: 14px; height: 14px; }
+  .vid-sub .sk-group { gap: 4px 8px; }
+  .vid-sub .sk-title, .vid-sub .video-link { font-size: 0.8rem; font-weight: 500; line-height: 1.3; color: var(--text); }
+  .sv-src { font-size: 0.6rem; letter-spacing: 0.05em; text-transform: uppercase; min-width: 4.4em; color: var(--text-faint, var(--text-dim)); }
+  .sv-min { font-size: 0.7rem; color: var(--text-dim); }
+  .vid-sub a.sk-btn { min-width: 0; padding: 1px 9px; border-radius: 999px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.01em; background: color-mix(in srgb, var(--green) 16%, transparent); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 45%, transparent); }
+  .vid-sub a.sk-btn:hover { background: color-mix(in srgb, var(--green) 30%, transparent); }
+  .vid-sub a.sk-btn.sk-btn-notes { background: transparent; color: var(--text-dim); border: 1px solid color-mix(in srgb, var(--text-dim) 40%, transparent); }
+  .vid-sub a.sk-btn.sk-btn-notes:hover { color: var(--text); background: color-mix(in srgb, var(--text-dim) 14%, transparent); }
+  @media (min-width: 721px) {
+    :is(table.ghs-table, table.path-table, table.micro-table, table.pharm-table) tbody tr[data-id] > td[data-label="Lecture"] { font-size: 0.98rem; }
+    /* topic / section banner: clearly the top level, above lectures */
+    :is(table.ghs-table, table.path-table, table.micro-table, table.pharm-table) tbody tr.section-row > td {
+      border-top: 34px solid var(--bg) !important; border-bottom: 0 !important;
+      background: color-mix(in srgb, var(--lec, #888) 26%, var(--surface, #121826)) !important;
+      box-shadow: inset 8px 0 0 var(--lec, #888);
+      padding: 16px 20px 16px 26px !important;
+      font-size: 1.3rem !important; font-weight: 800 !important; letter-spacing: 0.01em;
+      color: var(--text) !important; text-transform: none;
+    }
+    :is(table.ghs-table, table.path-table, table.micro-table, table.pharm-table) tbody tr.section-row:first-child > td { border-top-width: 0 !important; }
+  }
   .pa-trigger::after { color: #ef4444 !important; }
   .px-menu { background: #161c2c !important; background-clip: padding-box; z-index: 1000 !important; box-shadow: 0 14px 40px rgba(0,0,0,0.55) !important; opacity: 1 !important; backdrop-filter: none !important; }
   .px-menu .px-opt { background: #232b40 !important; color: #e8ecf5 !important; }
@@ -4609,7 +4643,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 14, built: '2026-10-02T03:17:53Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 15, built: '2026-10-05T21:30:43Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -4619,6 +4653,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 15], title: "Clearer lecture separation", items: ["On the RNS401 Pathology, Microbiology and Pharmacology tabs each lecture now has a heavier divider, a coloured bar down its left edge and a gap after its videos, so lectures no longer blend together."] },
   { v: [2, 13], title: "Micro notes pages", items: ["RNS and GHS each open their own Sketchy Micro notes page again (RNS organisms on the RNS page, GHS videos on the GHS page)."] },
   { v: [2, 9], title: "Videos are always underneath the lecture", items: ["Every lecture on every tab now shows its video(s) the same way: tucked underneath the lecture with a tick box, even when there is only one video. Before, single videos sat inside the row and multi-video lectures sat below, which looked inconsistent.", "Your existing ticks and progress carry over untouched."] },
   { v: [2, 8], title: "What's new pop-up", items: ["After you update, a pop-up now explains everything that was added since the version you were on. You can re-open it any time from Settings, Updates."] },
