@@ -2674,6 +2674,7 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
       <div class="settings-sec-sub">This tracker is updated often. It <b>checks for a new version every hour</b> while it's open. When one is ready you'll see a "New version available" bar; if you've been idle for about 10 minutes it refreshes itself (your progress is saved automatically, so nothing is lost).</div>
       <div class="settings-sec-sub" style="margin:8px 0;"><b>You are on version:</b> <span id="app-version-line">—</span></div>
       <button class="md-choice-btn" style="margin-bottom:8px;" onclick="showWhatsNew(null,true)">✨ See what’s new</button>
+      <button class="md-choice-btn" style="margin-bottom:8px;" onclick="startTour()">🎬 Replay the welcome tour</button>
       <button class="md-choice-btn" onclick="checkForUpdate(true)">🔄 Check for updates now</button> <span id="update-status" class="settings-sec-sub"></span>
     </div>
 
@@ -4645,7 +4646,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 15, built: '2026-10-05T21:30:43Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 16, built: '2026-10-05T21:58:29Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -4655,6 +4656,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 16], title: "Welcome tour", items: ["New interactive tour that shows off every feature: progress, lecture cards, tick boxes, the planner, schedule, cloud save and settings. It runs once for new users, and you can replay it any time from Settings, Updates."] },
   { v: [2, 15], title: "Clearer lecture separation", items: ["On the RNS401 Pathology, Microbiology and Pharmacology tabs each lecture now has a heavier divider, a coloured bar down its left edge and a gap after its videos, so lectures no longer blend together."] },
   { v: [2, 13], title: "Micro notes pages", items: ["RNS and GHS each open their own Sketchy Micro notes page again (RNS organisms on the RNS page, GHS videos on the GHS page)."] },
   { v: [2, 9], title: "Videos are always underneath the lecture", items: ["Every lecture on every tab now shows its video(s) the same way: tucked underneath the lecture with a tick box, even when there is only one video. Before, single videos sat inside the row and multi-video lectures sat below, which looked inconsistent.", "Your existing ticks and progress carry over untouched."] },
@@ -6388,8 +6390,10 @@ function loadSemesterPref() {
 }
 function applySemesterChoice(sem) {
   try { localStorage.setItem(SEMESTER_PREF_KEY, sem); } catch (e) {}
+  var __first = false; try { var __ov = document.getElementById('md-onboard-overlay'); __first = !!(__ov && getComputedStyle(__ov).display !== 'none'); } catch (e) {}
   switchSemester(sem);
   closeOnboardModal();
+  try { if (__first && window.maybeStartTour) window.maybeStartTour(); } catch (e) {}
   closeSettingsModal();
 }
 function maybeShowOnboarding() {
@@ -8835,5 +8839,219 @@ function veOpen(id) {
 }
 try { veDecorateAll(); } catch (e) {}
 </script>
+<!-- ===== First-time interactive tour ===== -->
+<style>
+#tr-root { position: fixed; inset: 0; z-index: 20000; font-family: inherit; }
+#tr-root * { box-sizing: border-box; }
+#tr-block { position: absolute; inset: 0; }
+#tr-spot { position: absolute; border-radius: 14px; pointer-events: none; box-shadow: 0 0 0 9999px rgba(4,7,14,.78); transition: all .45s cubic-bezier(.2,.8,.2,1); outline: 2px solid rgba(255,255,255,.9); }
+#tr-spot::after { content: ""; position: absolute; inset: -6px; border-radius: 18px; border: 2px solid var(--tr-c, #38bdf8); animation: trPulse 1.6s ease-out infinite; }
+@keyframes trPulse { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.06); } }
+#tr-root.tr-full #tr-spot { opacity: 0; }
+#tr-root.tr-full #tr-block { background: radial-gradient(1200px 700px at 20% 10%, rgba(56,189,248,.35), transparent 60%), radial-gradient(900px 600px at 85% 90%, rgba(192,132,252,.38), transparent 60%), radial-gradient(800px 500px at 60% 30%, rgba(251,191,36,.22), transparent 60%), #070b14; animation: trBg 14s ease-in-out infinite alternate; }
+@keyframes trBg { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(40deg); } }
+#tr-card { position: absolute; width: 380px; max-width: calc(100vw - 24px); background: var(--surface, #121826); color: var(--text, #f4f6fb); border: 1px solid rgba(255,255,255,.14); border-radius: 18px; padding: 18px 20px 14px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.8), 0 0 0 1px var(--tr-c, #38bdf8) inset; transition: left .45s cubic-bezier(.2,.8,.2,1), top .45s cubic-bezier(.2,.8,.2,1), opacity .25s; animation: trIn .5s cubic-bezier(.2,.8,.2,1); }
+@keyframes trIn { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
+#tr-card .tr-kick { display: inline-flex; align-items: center; gap: 6px; font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--tr-c, #38bdf8); }
+#tr-card h3 { margin: 6px 0 6px; font-size: 1.28rem; line-height: 1.2; font-weight: 800; border: 0; padding: 0; color: var(--text, #f4f6fb); }
+#tr-card p { margin: 0 0 8px; font-size: .92rem; line-height: 1.5; color: var(--text-dim, #aab4cc); }
+#tr-card p b { color: var(--text, #f4f6fb); }
+#tr-card .tr-tryit { margin: 10px 0 4px; }
+#tr-foot { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+#tr-dots { display: flex; gap: 5px; flex: 1; flex-wrap: wrap; }
+#tr-dots i { width: 7px; height: 7px; border-radius: 99px; background: rgba(127,127,127,.4); cursor: pointer; transition: all .3s; }
+#tr-dots i.on { width: 20px; background: var(--tr-c, #38bdf8); }
+#tr-dots i.done { background: color-mix(in srgb, var(--tr-c, #38bdf8) 60%, transparent); }
+.tr-btn { font: inherit; font-size: .85rem; font-weight: 700; border-radius: 999px; padding: 8px 16px; cursor: pointer; border: 1px solid rgba(127,127,127,.4); background: transparent; color: var(--text, #f4f6fb); }
+.tr-btn:hover { background: rgba(127,127,127,.18); }
+.tr-btn.pri { background: var(--tr-c, #38bdf8); border-color: transparent; color: #07121f; box-shadow: 0 8px 24px -8px var(--tr-c, #38bdf8); }
+.tr-btn.pri:hover { filter: brightness(1.1); }
+#tr-skip { position: absolute; top: 14px; right: 18px; z-index: 3; font: inherit; font-size: .8rem; font-weight: 700; color: #fff; opacity: .75; background: rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.25); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+#tr-skip:hover { opacity: 1; }
+#tr-conf { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+/* splash + finale */
+#tr-root.tr-full #tr-card { left: 50% !important; top: 50% !important; transform: translate(-50%, -50%); width: 560px; text-align: center; padding: 34px 34px 22px; background: rgba(14,19,32,.82); backdrop-filter: blur(14px); border-color: rgba(255,255,255,.18); animation: trInC .7s cubic-bezier(.2,.8,.2,1); }
+@keyframes trInC { from { opacity: 0; transform: translate(-50%, -46%) scale(.92); } to { opacity: 1; transform: translate(-50%, -50%); } }
+#tr-root.tr-full #tr-card h3 { font-size: 2rem; letter-spacing: -.02em; background: linear-gradient(90deg, #38bdf8, #c084fc, #fbbf24, #38bdf8); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: trShine 5s linear infinite; }
+@keyframes trShine { to { background-position: 250% 0; } }
+#tr-root.tr-full #tr-card p { font-size: 1.02rem; color: #c3cde0; }
+#tr-root.tr-full #tr-card p b { color: #fff; }
+#tr-root.tr-full #tr-card { color: #fff; }
+#tr-root.tr-full .tr-btn:not(.pri) { color: #fff; }
+#tr-root.tr-full #tr-foot { justify-content: center; }
+#tr-root.tr-full #tr-dots { display: none; }
+.tr-emoji { font-size: 3.2rem; display: inline-block; animation: trBob 2.2s ease-in-out infinite; }
+@keyframes trBob { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-8px) rotate(4deg); } }
+.tr-floaters span { position: absolute; font-size: 2rem; opacity: .55; animation: trFloat linear infinite; pointer-events: none; }
+@keyframes trFloat { from { transform: translateY(110vh) rotate(0); } to { transform: translateY(-20vh) rotate(360deg); } }
+.tr-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 14px 0 6px; }
+.tr-chips span { font-size: .8rem; font-weight: 700; padding: 5px 12px; border-radius: 99px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); color: #e8ecf5; opacity: 0; animation: trChip .5s forwards; }
+@keyframes trChip { from { opacity: 0; transform: translateY(10px) scale(.9); } to { opacity: 1; transform: none; } }
+/* mini demo */
+.tr-demo { background: rgba(127,127,127,.12); border: 1px solid rgba(127,127,127,.3); border-radius: 12px; padding: 10px 12px; margin: 6px 0 6px; }
+.tr-demo .tr-dh { font-size: .72rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--text-dim, #aab4cc); margin-bottom: 4px; }
+.tr-demo label { display: flex; align-items: center; gap: 10px; padding: 6px 2px; font-size: .88rem; cursor: pointer; border-bottom: 1px solid rgba(127,127,127,.2); transition: opacity .3s; }
+.tr-demo label i { margin-left: auto; font-style: normal; font-size: .75rem; opacity: .7; }
+.tr-demo label.on { opacity: .5; text-decoration: line-through; }
+.tr-demo input { width: 16px; height: 16px; accent-color: var(--tr-c, #38bdf8); }
+.tr-bar { height: 10px; border-radius: 99px; background: rgba(127,127,127,.25); overflow: hidden; margin-top: 10px; }
+.tr-bar b { display: block; height: 100%; width: 0; border-radius: 99px; background: linear-gradient(90deg, #38bdf8, #4ade80); transition: width .5s cubic-bezier(.2,.8,.2,1); }
+.tr-pct { font-size: .78rem; font-weight: 700; margin-top: 4px; display: flex; justify-content: space-between; color: var(--text-dim, #aab4cc); }
+.tr-pct.win { color: #4ade80; }
+.tr-fake { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.tr-fake span { font-size: .72rem; font-weight: 700; padding: 3px 11px; border-radius: 99px; }
+.tr-fake .v { color: #4ade80; border: 1px solid rgba(74,222,128,.5); background: rgba(74,222,128,.14); }
+.tr-fake .n { color: var(--text-dim, #aab4cc); border: 1px solid rgba(127,127,127,.45); }
+@media (max-width: 720px) {
+  #tr-card { left: 12px !important; right: 12px; top: auto !important; bottom: 12px; width: auto; max-height: 62vh; overflow-y: auto; }
+  #tr-root.tr-full #tr-card { top: 50% !important; bottom: auto; width: calc(100vw - 24px); padding: 26px 20px 16px; }
+  #tr-root.tr-full #tr-card h3 { font-size: 1.55rem; }
+}
+</style>
+<script>
+(function () {
+  var DONE_KEY = 'wu_tour_done_v1';
+  var root = null, idx = 0, steps = [], f = 1, timer = null, rafc = null, parts = [];
+  function $(s, r) { return (r || document).querySelector(s); }
+  function vis(el) { return el && el.getBoundingClientRect().width > 2 && el.getBoundingClientRect().height > 2 && (el.offsetParent !== null || getComputedStyle(el).position === 'fixed'); }
+  function panel() { return $('.tab-panel.active'); }
+  function firstVis(sel, scope) { var l = (scope || document).querySelectorAll(sel); for (var i = 0; i < l.length; i++) if (vis(l[i])) return l[i]; return null; }
+  function moduleTab() { var s = (typeof currentSemester !== 'undefined' && currentSemester) || 'MD4'; var l = document.querySelectorAll('.tab-btn[data-sem="' + s + '"]'); for (var i = 0; i < l.length; i++) if (l[i].style.display !== 'none') return l[i]; return null; }
+  function go(tab) { try { if (typeof switchTab === 'function') switchTab(tab); } catch (e) {} }
+  function goModule() { var b = moduleTab(); if (b) go(b.dataset.tab); }
+
+  steps = [
+    { full: true, c: '#38bdf8', emoji: '🩺', kick: 'Welcome', title: 'Your whole med-school semester, in one place', body: 'Every lecture, every video, every page number, already found and linked. This 60-second tour shows you the good stuff. <b>Ready?</b>', chips: ['🎬 Videos pre-linked', '✅ Live progress', '📅 Auto planner', '☁️ Cloud sync', '🌙 Dark mode'], next: 'Start the tour ✨', skipLbl: 'Skip' },
+    { c: '#38bdf8', kick: 'Step 1 · Overview', title: 'Your progress, always in view', body: 'This bar fills as you tick things off, <b>weighted by real video minutes</b>, so a 30-minute lecture counts more than a 5-minute one.', before: function () { go('overview'); }, sel: function () { var e = $('#panel-overview .progress-wrap'); return e; } },
+    { c: '#fbbf24', kick: 'Step 2 · This week', title: 'Today and this week at a glance', body: 'The Overview shows the module you are in right now, this week’s classes in colour, and exam countdowns. <b>It’s your daily starting point.</b>', before: function () { go('overview'); }, sel: function () { return $('#week-sched-box') || $('#module-status'); } },
+    { c: '#4ade80', kick: 'Step 3 · Tabs', title: 'One tab per module', body: 'Each module gets its own tab, plus the Planner and the class Schedule. Wrong year? Switch between <b>MD1 / MD3 / MD4</b> any time from Settings.', before: function () { go('overview'); }, sel: function () { return $('.tabbar') || $('.tab-btn.active').parentElement; } },
+    { c: '#fbbf24', kick: 'Step 4 · Sub-tabs', title: 'Pathology, Micro, Pharm', body: 'Inside a module, every subject has its own sub-tab. Same layout everywhere, so once you learn one you know them all.', before: goModule, sel: function () { var b = firstVis('.tab-panel.active .module-subtab-btn'); return b && b.parentElement; } },
+    { c: '#c084fc', kick: 'Step 5 · Lectures', title: 'Every lecture is its own card', body: 'Date, lecture title, what to watch, length, <b>First Aid page</b> and more. Topic banners group related lectures so nothing blends together.', before: goModule, sel: function () { return firstVis('.tab-panel.active tbody tr[data-id]'); } },
+    { c: '#4ade80', kick: 'Step 6 · Try it!', title: 'Tick a video, watch the bar move', body: 'Go on, tick them. Progress is weighted by minutes, and it saves automatically.', demo: true, before: goModule, sel: function () { return firstVis('.tab-panel.active tr.vid-group') || firstVis('.tab-panel.active tbody tr[data-id]'); } },
+    { c: '#fb7185', kick: 'Step 7 · Videos & notes', title: 'Every video listed, with notes', body: 'Under each lecture you see exactly which videos to watch and how long they are. <b>Video</b> opens the video (for accounts with video access), <b>Notes</b> opens a study page. Everyone can see the list and read the notes.', fake: true, before: goModule, sel: function () { return firstVis('.tab-panel.active tr.vid-group'); } },
+    { c: '#38bdf8', kick: 'Step 8 · Search & filters', title: 'Find anything instantly', body: 'Type in the search box to jump to any topic. <b>Show gaps only</b> lists topics with no video, and <b>Mark all done / Clear all</b> do bulk changes.', before: goModule, sel: function () { var i = firstVis('.tab-panel.active input[type="text"], .tab-panel.active input[type="search"]'); return i && (i.closest('.toolbar, .controls, .search-row, .tbl-tools') || i.parentElement); } },
+    { c: '#38bdf8', kick: 'Step 9 · Planner', title: 'A study plan that builds itself', body: 'Set your exam date and daily study time. The planner spaces every lecture across the calendar and <b>re-plans whenever you tick something</b>. Drag a lecture to lock it to a day.', before: function () { go('planner'); }, sel: function () { return firstVis('#panel-planner h2') || $('#panel-planner'); } },
+    { c: '#818cf8', kick: 'Step 10 · Schedule', title: 'The full class timetable', body: 'Week by week, colour-coded: 🚨 exams, 👥 SGDs, 🧩 TBLs, 🔬 labs. The legend at the top explains every colour.', before: function () { go('schedule'); }, sel: function () { return firstVis('#panel-schedule .sched-legend') || firstVis('#panel-schedule h2') || $('#panel-schedule'); } },
+    { c: '#4ade80', kick: 'Step 11 · Cloud save', title: 'Never lose your progress', body: 'Sign in with Google once and your ticks, notes and planner follow you to <b>any device</b>. <b>Green dot</b> = synced, <b>red dot</b> = this browser only.', before: function () { go('overview'); }, sel: function () { return $('#sync-bar'); } },
+    { c: '#fbbf24', kick: 'Step 12 · Settings', title: 'Connect your PDFs, pick your style', body: 'Attach your own First Aid, Pathoma and other PDFs once (they never leave your device) and every page badge opens <b>right at the right page</b>. Settings also has the full how-it-works guide.', before: function () { go('overview'); }, sel: function () { return $('.settings-hero'); } },
+    { c: '#c084fc', kick: 'Step 13 · Looks', title: 'Light, dark, your call', body: 'Studying at 2 AM? Flip the theme with this button. Go on, <b>try it</b>.', tryBtn: 'Toggle theme 🌗', tryFn: function () { try { toggleTheme(); } catch (e) {} }, before: function () { go('overview'); }, sel: function () { return $('#theme-toggle'); } },
+    { full: true, c: '#4ade80', emoji: '🚀', kick: 'All done', title: 'You’re ready. Go crush it.', body: 'Quick start: <b>connect your PDFs</b> in Settings, then open your module and tick your first video. You can replay this tour any time from Settings.', chips: ['⚙️ Settings → Connect PDFs', '✅ Tick your first video', '📅 Check the Planner'], next: 'Let’s go! 🎉', confetti: true, last: true }
+  ];
+
+  function calib() { var b = $('#tr-block'); if (!b) return; f = (b.getBoundingClientRect().width / b.offsetWidth) || 1; }
+  function esc(s) { return s; }
+
+  function confetti(n) {
+    var cv = $('#tr-conf'); if (!cv) return; var w = cv.width = cv.offsetWidth * 2, h = cv.height = cv.offsetHeight * 2; var cx = cv.getContext('2d');
+    var cols = ['#38bdf8', '#4ade80', '#fbbf24', '#fb7185', '#c084fc', '#fff'];
+    for (var i = 0; i < (n || 160); i++) parts.push({ x: w / 2 + (Math.random() - .5) * w * .3, y: h * .55, vx: (Math.random() - .5) * 26, vy: -Math.random() * 30 - 8, g: .55 + Math.random() * .3, s: 8 + Math.random() * 10, r: Math.random() * 6, vr: (Math.random() - .5) * .4, c: cols[i % cols.length], life: 1 });
+    if (rafc) return;
+    (function tick() {
+      cx.clearRect(0, 0, w, h);
+      parts = parts.filter(function (p) { return p.y < h + 40 && p.life > 0; });
+      parts.forEach(function (p) { p.vy += p.g; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.vx *= .99; p.life -= .004; cx.save(); cx.globalAlpha = Math.max(p.life, 0); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c; cx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); cx.restore(); });
+      if (parts.length) rafc = requestAnimationFrame(tick); else { rafc = null; cx.clearRect(0, 0, w, h); }
+    })();
+  }
+
+  function render() {
+    var s = steps[idx];
+    root.style.setProperty('--tr-c', s.c);
+    root.classList.toggle('tr-full', !!s.full);
+    var card = $('#tr-card'); card.style.animation = 'none'; void card.offsetWidth; card.style.animation = '';
+    var h = '';
+    if (s.emoji) h += '<div class="tr-emoji">' + s.emoji + '</div>';
+    h += '<div class="tr-kick">' + s.kick + '</div><h3>' + s.title + '</h3><p>' + s.body + '</p>';
+    if (s.chips) h += '<div class="tr-chips">' + s.chips.map(function (c, i) { return '<span style="animation-delay:' + (.25 + i * .12) + 's">' + c + '</span>'; }).join('') + '</div>';
+    if (s.demo) h += '<div class="tr-demo" id="tr-demo"><div class="tr-dh">Practice lecture · Hepatitis viruses</div>' +
+      '<label><input type="checkbox" data-m="7"> Hepatitis A virus <i>7 min</i></label><label><input type="checkbox" data-m="10"> Hepatitis B basics <i>10 min</i></label><label><input type="checkbox" data-m="7"> Hepatitis C virus <i>7 min</i></label>' +
+      '<div class="tr-bar"><b id="tr-fill"></b></div><div class="tr-pct" id="tr-pct"><span>0%</span><span>0 / 24 min</span></div></div>';
+    if (s.fake) h += '<div class="tr-demo"><div class="tr-dh">What you’ll see on every video</div><div class="tr-fake"><span style="font-size:.85rem;font-weight:600;color:var(--text,#fff);padding:0">Hepatitis A virus</span><span class="v" style="margin-left:auto">🎬 Video</span><span class="n">📝 Notes</span></div></div>';
+    if (s.tryBtn) h += '<div class="tr-tryit"><button class="tr-btn" id="tr-try">' + s.tryBtn + '</button></div>';
+    h += '<div id="tr-foot"><div id="tr-dots">' + steps.map(function (_, i) { return '<i data-i="' + i + '" class="' + (i === idx ? 'on' : (i < idx ? 'done' : '')) + '"></i>'; }).join('') + '</div>' +
+      (idx > 0 && !s.full ? '<button class="tr-btn" id="tr-back">Back</button>' : '') +
+      '<button class="tr-btn pri" id="tr-next">' + (s.next || (idx === steps.length - 1 ? 'Finish' : 'Next →')) + '</button></div>';
+    card.innerHTML = h;
+    $('#tr-next').onclick = next; var bk = $('#tr-back'); if (bk) bk.onclick = back;
+    var tb = $('#tr-try'); if (tb) tb.onclick = function () { s.tryFn(); setTimeout(place, 150); };
+    card.querySelectorAll('#tr-dots i').forEach(function (d) { d.onclick = function () { idx = +d.dataset.i; show(); }; });
+    if (s.demo) card.querySelectorAll('#tr-demo input').forEach(function (cb) {
+      cb.onchange = function () {
+        var tot = 0, done = 0; card.querySelectorAll('#tr-demo input').forEach(function (x) { var m = +x.dataset.m; tot += m; if (x.checked) done += m; x.parentElement.classList.toggle('on', x.checked); });
+        var p = Math.round(done / tot * 100); $('#tr-fill').style.width = p + '%'; var pc = $('#tr-pct'); pc.innerHTML = '<span>' + (p === 100 ? '100% · lecture complete! 🎉' : p + '%') + '</span><span>' + done + ' / ' + tot + ' min</span>'; pc.classList.toggle('win', p === 100);
+        if (p === 100) confetti(120);
+      };
+    });
+    if (s.confetti) setTimeout(function () { confetti(260); }, 350);
+    if (s.full && idx === 0) { /* floaters */ var fl = $('#tr-float'); if (fl && !fl.children.length) { var em = ['💊', '🧠', '🫁', '🦠', '🩺', '🧬', '❤️', '🔬', '🦴', '📚']; for (var i = 0; i < 14; i++) { var sp = document.createElement('span'); sp.textContent = em[i % em.length]; sp.style.left = (Math.random() * 96) + '%'; sp.style.animationDuration = (9 + Math.random() * 10) + 's'; sp.style.animationDelay = (-Math.random() * 14) + 's'; sp.style.fontSize = (1.4 + Math.random() * 1.6) + 'rem'; fl.appendChild(sp); } } }
+    $('#tr-float').style.display = (s.full) ? '' : 'none';
+  }
+
+  var target = null;
+  function place() {
+    var s = steps[idx]; calib();
+    var spot = $('#tr-spot'), card = $('#tr-card'); if (!spot || !card) return;
+    if (s.full) { spot.style.opacity = 0; return; }
+    var el = target; if (!el || !vis(el)) { spot.style.opacity = 0; return; }
+    spot.style.opacity = 1;
+    var r = el.getBoundingClientRect(), pad = 8;
+    var W = $('#tr-block').getBoundingClientRect().width, H = $('#tr-block').getBoundingClientRect().height;
+    var x = Math.max(r.left - pad, 4), y = Math.max(r.top - pad, 4), w = Math.min(r.width + pad * 2, W - x - 4), hh = Math.min(r.height + pad * 2, H - y - 4);
+    spot.style.left = x / f + 'px'; spot.style.top = y / f + 'px'; spot.style.width = w / f + 'px'; spot.style.height = hh / f + 'px';
+    if (window.innerWidth <= 720) return;
+    var cw = card.offsetWidth * f, ch = card.offsetHeight * f, gap = 18, cx, cy;
+    if (y + hh + gap + ch <= H - 8) { cy = y + hh + gap; cx = x; }
+    else if (y - gap - ch >= 8) { cy = y - gap - ch; cx = x; }
+    else if (x + w + gap + cw <= W - 8) { cx = x + w + gap; cy = Math.max(8, Math.min(y, H - ch - 8)); }
+    else if (x - gap - cw >= 8) { cx = x - gap - cw; cy = Math.max(8, Math.min(y, H - ch - 8)); }
+    else { cx = (W - cw) / 2; cy = H - ch - 16; }
+    cx = Math.max(8, Math.min(cx, W - cw - 8)); cy = Math.max(8, Math.min(cy, H - ch - 8));
+    card.style.left = cx / f + 'px'; card.style.top = cy / f + 'px';
+  }
+
+  function show() {
+    var s = steps[idx];
+    var guard = 0;
+    try { if (s.before) s.before(); } catch (e) {}
+    render();
+    if (s.full) { target = null; place(); return; }
+    setTimeout(function () {
+      target = null; try { target = s.sel && s.sel(); } catch (e) {}
+      if (!target || !vis(target)) { /* skip steps whose element isn't there */ if (idx < steps.length - 1 && !s._skipped) { s._skipped = true; idx++; show(); } return; }
+      s._skipped = false;
+      try { var r = target.getBoundingClientRect(); if (r.top < 70 || r.bottom > window.innerHeight - 40) target.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {}
+      place(); setTimeout(place, 350); setTimeout(place, 800);
+    }, 220);
+  }
+  function next() { if (idx >= steps.length - 1) return end(true); idx++; show(); }
+  function back() { if (idx > 0) { idx--; var s = steps[idx]; if (s.full && idx === 0) {} show(); } }
+  function end(finished) {
+    try { localStorage.setItem(DONE_KEY, '1'); } catch (e) {}
+    if (root) { root.style.transition = 'opacity .35s'; root.style.opacity = 0; var r = root; setTimeout(function () { r.remove(); }, 380); root = null; }
+    document.removeEventListener('keydown', onKey, true); window.removeEventListener('resize', place); window.removeEventListener('scroll', place, true);
+    go('overview'); try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
+    if (finished) { try { openSettingsTo('set-pdf'); } catch (e) {} }
+  }
+  function onKey(e) {
+    if (!root) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); end(false); }
+    else if (e.key === 'ArrowRight' || e.key === 'Enter') { if (e.target && e.target.tagName === 'INPUT') return; e.preventDefault(); e.stopPropagation(); next(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); e.stopPropagation(); back(); }
+  }
+  window.startTour = function () {
+    if (root) return;
+    ['md-onboard-overlay', 'settings-modal-overlay'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
+    var wn = document.getElementById('wn-overlay'); if (wn) wn.remove();
+    root = document.createElement('div'); root.id = 'tr-root';
+    root.innerHTML = '<div id="tr-block"></div><div class="tr-floaters" id="tr-float"></div><div id="tr-spot"></div><canvas id="tr-conf"></canvas><button id="tr-skip" type="button">Skip tour ✕</button><div id="tr-card" role="dialog" aria-modal="true" aria-label="Tour"></div>';
+    document.body.appendChild(root);
+    $('#tr-skip').onclick = function () { end(false); };
+    document.addEventListener('keydown', onKey, true); window.addEventListener('resize', place); window.addEventListener('scroll', place, true);
+    idx = 0; steps.forEach(function (s) { s._skipped = false; }); show();
+  };
+  window.maybeStartTour = function () { try { if (localStorage.getItem(DONE_KEY)) return; } catch (e) {} setTimeout(window.startTour, 500); };
+})();
+</script>
+
 </body>
 </html>
