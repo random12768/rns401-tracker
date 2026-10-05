@@ -2405,8 +2405,8 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .vid-sub a.sk-btn.sk-btn-notes { background: color-mix(in srgb, var(--text-dim) 16%, transparent); color: var(--text); border: 1px solid color-mix(in srgb, var(--text-dim) 40%, transparent); }
   .vid-sub.checked .sk-title { opacity: 0.5; text-decoration: line-through; }
   .contact-corner { display: flex; justify-content: flex-end; margin: -4px 0 8px; }
-  .contact-corner a { font-size: .74rem; font-weight: 700; color: var(--text-dim) !important; text-decoration: none !important; padding: 4px 11px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--text-dim) 30%, transparent); background: transparent; transition: all .2s; }
-  .contact-corner a:hover { color: #052e16 !important; background: #25d366; border-color: #25d366; }
+  .contact-corner a { font-size: .82rem; font-weight: 800; color: #052e16 !important; text-decoration: none !important; padding: 7px 15px; border-radius: 999px; border: 0; background: #25d366; box-shadow: 0 6px 18px -6px rgba(37,211,102,.75); transition: transform .15s, filter .15s; }
+  .contact-corner a:hover { transform: translateY(-1px); filter: brightness(1.08); }
   .no-video-access a.sk-btn:not(.sk-btn-notes) { display: none !important; }
   .no-video-access a.video-link { pointer-events: none; cursor: default; border-bottom: 0 !important; color: inherit !important; text-decoration: none !important; }
   /* ---- v2.15 redesign: videos are a compact, quiet tray under the lecture ---- */
