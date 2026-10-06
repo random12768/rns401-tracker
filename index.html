@@ -3255,6 +3255,7 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   <button class="module-subtab-btn" data-sub="ghs-micro" onclick="switchSubTab('ghs-micro')">Microbiology</button>
   <button class="module-subtab-btn" data-sub="ghs-pharm" onclick="switchSubTab('ghs-pharm')">Pharmacology</button>
   <button class="module-subtab-btn" data-sub="ghs-anki" onclick="switchSubTab('ghs-anki')">Anki</button>
+  <button class="module-subtab-btn" data-sub="ghs-qbank" onclick="switchSubTab('ghs-qbank')" style="display:none;">Alan's Q Bank</button>
 </div>
 
 <div class="module-sub-panel active" id="sub-ghs-path">
@@ -3336,6 +3337,10 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
 </table></div>
 </div>
 
+<div class="module-sub-panel" id="sub-ghs-qbank" style="display:none;">
+  <div style="font-size:0.85rem;color:var(--text-dim,#8b949e);margin:4px 0 10px;">283 questions &middot; Robbins: Gastrointestinal Tract (71) &middot; Liver &amp; Biliary Tract (62) &middot; Pancreas (18) &middot; Rubin: Gastrointestinal Tract (63) &middot; Liver &amp; Biliary System (50) &middot; Pancreas (19). Progress saves in this browser. <a href="ghs-qbank.html" target="_blank" rel="noopener">Open full screen &#8599;</a></div>
+  <iframe data-src="ghs-qbank.html" title="GHS402 Alan's Q Bank" style="width:100%;height:calc(100vh / var(--zf) - 170px);min-height:600px;border:1px solid var(--border,#30363d);border-radius:10px;background:#0d1117;" loading="lazy"></iframe>
+</div>
 <div class="module-sub-panel" id="sub-ghs-anki">
 <style>
 .ank-wrap{max-width:900px;margin:0 auto;}
@@ -4667,7 +4672,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 16, built: '2026-10-05T21:58:29Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 17, built: '2026-10-06T00:48:23Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -4677,6 +4682,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 17], title: "GHS402 Q Bank", items: ["New Alan's Q Bank tab in GHS402 (for approved accounts): 283 questions from Robbins and Rubin on the GI tract, liver and biliary system, and pancreas, with explanations, highlights, flags and notes."] },
   { v: [2, 15], title: "Clearer lecture separation", items: ["On the RNS401 Pathology, Microbiology and Pharmacology tabs each lecture now has a heavier divider, a coloured bar down its left edge and a gap after its videos, so lectures no longer blend together."] },
   { v: [2, 13], title: "Micro notes pages", items: ["RNS and GHS each open their own Sketchy Micro notes page again (RNS organisms on the RNS page, GHS videos on the GHS page)."] },
   { v: [2, 9], title: "Videos are always underneath the lecture", items: ["Every lecture on every tab now shows its video(s) the same way: tucked underneath the lecture with a tick box, even when there is only one video. Before, single videos sat inside the row and multi-video lectures sat below, which looked inconsistent.", "Your existing ticks and progress carry over untouched."] },
@@ -5137,7 +5143,7 @@ function applyQBankVisibility() {
     if (!allowed && fr) fr.removeAttribute('src');
     if (!allowed && mpanel.classList.contains('active')) switchSubTab('msk-anat');
   }
-  [['fbs','fbs-path'],['chs','chs-path']].forEach(([k, home]) => {
+  [['fbs','fbs-path'],['chs','chs-path'],['ghs','ghs-path']].forEach(([k, home]) => {
     const kb = document.querySelector('.module-subtab-btn[data-sub="' + k + '-qbank"]');
     if (kb) kb.style.display = allowed ? '' : 'none';
     const kp = document.getElementById('sub-' + k + '-qbank');
