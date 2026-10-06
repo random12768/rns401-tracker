@@ -2517,7 +2517,7 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
         <h1 class="auth-welcome-title">Welcome to the Tracker for Windsor University School of Medicine</h1>
         <p class="auth-welcome-tag">Your whole module in one place, so you always know what to study next.</p>
         <button id="gate-signin-btn" onclick="signInWithGoogle()">Sign in with Google to get started</button>
-        <div class="auth-welcome-used"><span class="dot"></span>Used by 20+ Windsor students</div>
+        <div class="auth-welcome-used"><span class="dot"></span>Used by 20+ Windsor students</div><div style="text-align:center;font-size:.72em;color:var(--text-dim);margin:0 0 6px">Signed-in progress can be viewed by the creator for support.</div>
         <div class="auth-gate-note" id="gate-note"></div>
         <div class="auth-welcome-start">
       <h2>New here? Here's how to start</h2>
@@ -2718,7 +2718,7 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
       <details class="guide-det"><summary>🎬 Bootcamp videos (MSK101)</summary><div>Videos aren't linked — you watch them in your own Bootcamp account. Each row tells you exactly which one: <b>course › chapter › video number</b> (e.g. <i>MSK › Ch.9 › 9.3 Clavicle Fractures</i>) plus its length in minutes. Numbers match Bootcamp's own chapter.video numbering. Use <b>Lecture order / Bootcamp order</b> to pick how it's listed.</div></details>
       <details class="guide-det"><summary>🗓️ Schedule tab &amp; colours</summary><div>The full class timetable, week by week. Each subject has its own colour strip. Special sessions stand out: <b>🚨 exams / quizzes / OSCEs / NBME</b> (red), <b>👥 SGDs</b> (teal), <b>🧩 TBLs</b> (amber), <b>🔬 dissection labs</b> (blue) and <b>⭐ events / orientations</b> (dashed gold). Multi-hour sessions span their full length. The legend at the top of the tab explains every colour.</div></details>
       <details class="guide-det" id="guide-det-qbank"><summary>❓ Alan's Q Bank</summary><div>Alan's Q Bank is a practice-question bank with detailed explanations for every answer. The explanations combine material from UWorld, Robbins and Rubin's, and other trusted sources, so you learn why each option is right or wrong, not only which one to pick. You can highlight text, flag questions and keep notes on each one. Your answers are saved in this browser.</div></details>
-      <details class="guide-det"><summary>☁️ Saving your progress</summary><div>Everything you tick or type saves automatically in <b>this browser</b>. To keep progress across devices, use <b>Sign in with Google</b> (top of the page) — then it syncs to the cloud. Clearing your browser data without signing in erases local progress.</div></details>
+      <details class="guide-det"><summary>☁️ Saving your progress</summary><div>Everything you tick or type saves automatically in <b>this browser</b>. To keep progress across devices, use <b>Sign in with Google</b> (top of the page) — then it syncs to the cloud. Clearing your browser data without signing in erases local progress. <i>Note: when signed in, the creator can see your progress (ticked lectures) to help with support.</i></div></details>
       <details class="guide-det"><summary>💡 Quick tips</summary><div><ul class="settings-mini"><li>New here? Do <b>2 · Connect PDFs</b> first — it makes every page badge work.</li><li>Not sure what to study today? Open <b>Overview</b> → this week's schedule, then jump into your module tab.</li><li>If something looks out of date, use <b>4 · Check for updates now</b>.</li></ul></div></details>
     </div>
     <button class="md-modal-close" onclick="closeSettingsModal()">Close</button>
@@ -4715,7 +4715,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 19, built: '2026-10-06T15:39:18Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 20, built: '2026-10-06T15:45:42Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5409,7 +5409,7 @@ async function renderAdminPanel() {
       const email = (data.email || '').trim();
       if (!email) return;
       const key = email.toLowerCase();
-      if (!seen[key] || (data.lastSeen || 0) > seen[key].lastSeen) seen[key] = { email, name: data.displayName || '', lastSeen: data.lastSeen || 0 };
+      if (!seen[key] || (data.lastSeen || 0) > seen[key].lastSeen) seen[key] = { email, name: data.displayName || '', lastSeen: data.lastSeen || 0, uid: d.id };
     });
     fetched = Object.values(seen);
   } catch (e) {
@@ -5462,7 +5462,7 @@ function renderAdminRows() {
     const last = p.lastSeen ? new Date(p.lastSeen).toLocaleDateString() : 'not signed in yet';
     const em = adminEsc(p.email);
     const pills = ADMIN_FEATURES.map(f => { const on = adminHas(f.k, p.email); return '<button class="adm-pill' + (on ? ' on' : '') + '" data-email="' + em + '" data-f="' + f.k + '" onclick="adminPillClick(this)" title="' + adminEsc(f.long) + ': ' + (on ? 'ON — click to turn off' : 'OFF — click to turn on') + '"><span class="adm-pill-dot"></span>' + f.icon + ' ' + f.short + '</button>'; }).join('');
-    return '<div class="adm-person"><div class="adm-who"><div class="admin-avatar">' + adminEsc(adminInitials(p.name, p.email)) + '</div><div class="admin-identity"><span class="admin-email">' + em + (adminIsAdminEmail(p.email) ? ' <span class="adm-badge">ADMIN</span>' : '') + '</span><span class="admin-name">' + (p.name ? adminEsc(p.name) + ' · ' : '') + 'last seen ' + last + '</span></div></div><div class="adm-pills">' + pills + '</div></div>';
+    return '<div class="adm-person"><div class="adm-who"><div class="admin-avatar">' + adminEsc(adminInitials(p.name, p.email)) + '</div><div class="admin-identity"><span class="admin-email">' + em + (adminIsAdminEmail(p.email) ? ' <span class="adm-badge">ADMIN</span>' : '') + '</span><span class="admin-name">' + (p.name ? adminEsc(p.name) + ' · ' : '') + 'last seen ' + last + '</span></div></div><div class="adm-pills">' + (p.uid ? '<button class="adm-viewbtn" data-uid="' + adminEsc(p.uid) + '" data-email="' + em + '" data-name="' + adminEsc(p.name || '') + '" data-last="' + (p.lastSeen || 0) + '" onclick="adminViewUser(this)" title="See their tracker exactly as they see it (read-only)">👁 View tracker</button>' : '') + pills + '</div></div>';
   }).join('') : '<div class="admin-empty">Nobody matches.</div>';
   // by-feature view
   const fe = document.getElementById('admin-features');
@@ -9202,5 +9202,118 @@ try { veDecorateAll(); } catch (e) {}
   });
 })();
 </script>
+<!-- ===== Admin: view someone's tracker (read-only) ===== -->
+<style>
+.adm-viewbtn { font: inherit; font-size: .78rem; font-weight: 700; padding: 5px 12px; border-radius: 999px; cursor: pointer; border: 1px solid #f59e0b; background: rgba(245,158,11,.14); color: #f59e0b; }
+.adm-viewbtn:hover { background: #f59e0b; color: #1c1100; }
+html.viewing-as body { padding-top: 54px; }
+#va-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 9000; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 14px; background: linear-gradient(90deg, #92400e, #b45309); color: #fff; font-size: .88rem; box-shadow: 0 6px 20px rgba(0,0,0,.4); }
+#va-banner b { font-weight: 800; }
+#va-banner .va-sp { flex: 1; }
+#va-banner button { font: inherit; font-size: .8rem; font-weight: 800; padding: 6px 14px; border-radius: 999px; cursor: pointer; border: 1px solid rgba(255,255,255,.55); background: rgba(0,0,0,.25); color: #fff; }
+#va-banner button.pri { background: #fff; color: #7c2d12; border-color: #fff; }
+html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub input[type="checkbox"], html.viewing-as button[onclick*="markAllDone"], html.viewing-as button[onclick*="clearAllDone"] { pointer-events: none; opacity: .75; }
+#va-rep { position: fixed; inset: 0; z-index: 9500; background: rgba(5,8,15,.75); display: flex; align-items: flex-start; justify-content: center; padding: 70px 14px 20px; overflow-y: auto; }
+#va-rep .va-card { width: min(860px, 100%); background: var(--surface, #121826); color: var(--text, #f4f6fb); border: 1px solid rgba(255,255,255,.14); border-radius: 16px; padding: 18px 20px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.8); }
+#va-rep h3 { margin: 0 0 2px; font-size: 1.2rem; border: 0; padding: 0; color: inherit; }
+#va-rep .va-sub { color: var(--text-dim, #aab4cc); font-size: .85rem; margin-bottom: 12px; }
+.va-mod { margin: 14px 0 6px; font-weight: 800; font-size: 1rem; }
+.va-sub-row { margin: 8px 0; padding: 10px 12px; border-radius: 12px; background: rgba(127,127,127,.1); border: 1px solid rgba(127,127,127,.25); }
+.va-sub-h { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: .9rem; }
+.va-sub-h span { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--text-dim, #aab4cc); font-weight: 600; }
+.va-bar { height: 8px; border-radius: 99px; background: rgba(127,127,127,.25); overflow: hidden; margin: 6px 0; }
+.va-bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #38bdf8, #4ade80); }
+.va-sub-row details { margin-top: 4px; font-size: .84rem; }
+.va-sub-row summary { cursor: pointer; font-weight: 700; padding: 3px 0; }
+.va-sub-row ul { margin: 4px 0 6px 18px; padding: 0; line-height: 1.5; }
+.va-sub-row li.todo { color: #fb7185; } .va-sub-row li.done { color: #4ade80; }
+#va-rep .va-close { float: right; font: inherit; font-weight: 800; padding: 6px 14px; border-radius: 999px; cursor: pointer; border: 1px solid rgba(127,127,127,.5); background: transparent; color: inherit; }
+.va-rule { background: #0b1020; color: #cfe3ff; border-radius: 10px; padding: 12px; font-size: .78rem; overflow-x: auto; white-space: pre; }
+</style>
+<script>
+(function () {
+  var VIEW_AS = null, ORIG = {};
+  var MODS = ['rns401', 'ghs402', 'ers403', 'rms406', 'fbs301', 'nis302', 'chs303', 'msk101'];
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function isK(k) { return typeof CLOUD_SYNC_KEYS !== 'undefined' && CLOUD_SYNC_KEYS.indexOf(k) >= 0; }
+  var _gi = Storage.prototype.getItem, _si = Storage.prototype.setItem, _ri = Storage.prototype.removeItem;
+  Storage.prototype.getItem = function (k) { if (VIEW_AS && this === window.localStorage && isK(k)) return VIEW_AS.data[k] !== undefined ? VIEW_AS.data[k] : null; return _gi.apply(this, arguments); };
+  Storage.prototype.setItem = function (k) { if (VIEW_AS && this === window.localStorage && isK(k)) return; return _si.apply(this, arguments); };
+  Storage.prototype.removeItem = function (k) { if (VIEW_AS && this === window.localStorage && isK(k)) return; return _ri.apply(this, arguments); };
+  ['pushToCloudNow', 'pushToCloudDebounced', 'pullFromCloud'].forEach(function (n) { var o = window[n]; if (typeof o === 'function') window[n] = function () { if (VIEW_AS) return; return o.apply(this, arguments); }; });
+
+  function t(fn) { try { fn(); } catch (e) { console.warn('view-as render', e); } }
+  function rerender() {
+    document.querySelectorAll('tr[data-id] input[type="checkbox"], .vid-sub input[type="checkbox"]').forEach(function (cb) { cb.checked = false; });
+    document.querySelectorAll('tr.checked, .vid-sub.checked').forEach(function (r) { r.classList.remove('checked'); });
+    t(function () { var sem = localStorage.getItem('wusom_semester_v1'); if (sem === 'MD1' || sem === 'MD3' || sem === 'MD4') switchSemester(sem); });
+    t(initState); t(function () { applySubStates(loadState()); }); t(updateProgress);
+    t(populateSettingsInputs); t(renderPlanner); t(renderOverviewDynamic); t(renderModuleStatus); t(updateExamCountdown);
+  }
+  function rule() { return "match /users/{userId} {\n  allow read, write: if request.auth != null && request.auth.uid == userId;\n  allow read: if request.auth != null\n    && request.auth.token.email_verified == true\n    && request.auth.token.email in [\n      'mjassal4@gmail.com',\n      'maninder.jassal@student.windsor.edu'\n    ];\n}"; }
+  function modal(html) { var o = document.getElementById('va-rep'); if (o) o.remove(); o = document.createElement('div'); o.id = 'va-rep'; o.innerHTML = '<div class="va-card"><button class="va-close" type="button">Close</button>' + html + '</div>'; o.addEventListener('click', function (e) { if (e.target === o || e.target.classList.contains('va-close')) o.remove(); }); document.body.appendChild(o); }
+
+  window.adminViewUser = async function (btn) {
+    var uid = btn.dataset.uid, email = btn.dataset.email, name = btn.dataset.name, last = +btn.dataset.last || 0;
+    if (!fbDb || !isAdminUser()) return;
+    btn.disabled = true; var lbl = btn.textContent; btn.textContent = 'Loading…';
+    try {
+      var snap = await fbDb.collection('users').doc(uid).get();
+      var data = snap.exists ? (snap.data() || {}) : {};
+      VIEW_AS = { uid: uid, email: email, name: name, last: last, data: data, empty: !snap.exists };
+      document.documentElement.classList.add('viewing-as'); document.documentElement.classList.remove('vid-admin');
+      banner(); rerender(); switchTab('overview'); window.scrollTo(0, 0);
+    } catch (e) {
+      console.error('view-as failed', e);
+      var denied = e && (e.code === 'permission-denied' || /permission/i.test(e.message || ''));
+      modal('<h3>' + (denied ? 'One-time setup needed' : 'Could not load their tracker') + '</h3><div class="va-sub">' + (denied ? 'Firebase is not letting admins read other people’s progress yet. In the Firebase Console go to Firestore Database → Rules and replace the <b>users</b> block with this, then Publish and try again:' : esc(e && e.message || e)) + '</div>' + (denied ? '<div class="va-rule">' + esc(rule()) + '</div>' : ''));
+    }
+    btn.disabled = false; btn.textContent = lbl;
+  };
+  function banner() {
+    var b = document.getElementById('va-banner'); if (b) b.remove();
+    b = document.createElement('div'); b.id = 'va-banner';
+    b.innerHTML = '👁 <span>Viewing <b>' + esc(VIEW_AS.name || VIEW_AS.email) + '</b>' + (VIEW_AS.name ? ' (' + esc(VIEW_AS.email) + ')' : '') + ' · read-only' + (VIEW_AS.last ? ' · last seen ' + new Date(VIEW_AS.last).toLocaleString() : '') + (VIEW_AS.empty ? ' · <b>nothing saved to the cloud yet</b>' : '') + '</span><span class="va-sp"></span><button class="pri" type="button" id="va-rep-btn">📋 What they have / haven’t done</button><button type="button" id="va-exit">Exit</button>';
+    document.body.appendChild(b);
+    document.getElementById('va-rep-btn').onclick = report; document.getElementById('va-exit').onclick = exit;
+  }
+  function lectureName(row) {
+    var td = row.querySelector('td[data-label="Lecture"]') || row.children[1]; if (!td) return row.dataset.id;
+    var c = td.cloneNode(true); c.querySelectorAll('button, .ve-btn, .tag, [class*="chip"]').forEach(function (x) { x.remove(); });
+    return (c.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 90) || row.dataset.id;
+  }
+  function report() {
+    var sem = localStorage.getItem('wusom_semester_v1') || (typeof currentSemester !== 'undefined' ? currentSemester : '');
+    var html = '<h3>Progress report · ' + esc(VIEW_AS.name || VIEW_AS.email) + '</h3><div class="va-sub">' + (sem ? 'Year: ' + esc(sem) + ' · ' : '') + 'Built from their saved ticks. Tick = marked done by them.</div>';
+    var any = false;
+    MODS.forEach(function (m) {
+      var tab = document.querySelector('.tab-btn[data-tab="' + m + '"]'); var panel = document.getElementById('panel-' + m); if (!tab || !panel) return;
+      if (sem && tab.dataset.sem !== sem && tab.dataset.sem !== 'all') return;
+      var subs = panel.querySelectorAll('.module-sub-panel'); var out = '';
+      subs.forEach(function (sp) {
+        var rows = Array.prototype.filter.call(sp.querySelectorAll('tbody tr[data-id]'), function (r) { return !r.classList.contains('vid-sub') && !r.classList.contains('vid-group'); });
+        if (!rows.length) return;
+        var done = [], todo = [];
+        rows.forEach(function (r) { var cb = r.querySelector('input[type="checkbox"]'); var ok = r.classList.contains('checked') || (cb && cb.checked); (ok ? done : todo).push(lectureName(r)); });
+        var btn = document.querySelector('.module-subtab-btn[data-sub="' + (sp.id || '').replace('sub-', '') + '"]'); var nm = btn ? btn.textContent : sp.id;
+        var pct = Math.round(done.length / rows.length * 100);
+        out += '<div class="va-sub-row"><div class="va-sub-h">' + esc(nm) + '<span>' + done.length + ' / ' + rows.length + ' lectures · ' + pct + '%</span></div><div class="va-bar"><i style="width:' + pct + '%"></i></div>' +
+          '<details' + (todo.length && todo.length <= 12 ? ' open' : '') + '><summary>Not done yet (' + todo.length + ')</summary><ul>' + (todo.map(function (x) { return '<li class="todo">' + esc(x) + '</li>'; }).join('') || '<li class="done">Everything done 🎉</li>') + '</ul></details>' +
+          '<details><summary>Done (' + done.length + ')</summary><ul>' + (done.map(function (x) { return '<li class="done">' + esc(x) + '</li>'; }).join('') || '<li>Nothing yet</li>') + '</ul></details></div>';
+      });
+      if (out) { any = true; html += '<div class="va-mod">' + esc((tab.textContent || m).trim()) + '</div>' + out; }
+    });
+    if (!any) html += '<div class="va-sub">No modules found for their year.</div>';
+    modal(html);
+  }
+  function exit() {
+    VIEW_AS = null; var b = document.getElementById('va-banner'); if (b) b.remove(); var o = document.getElementById('va-rep'); if (o) o.remove();
+    document.documentElement.classList.remove('viewing-as');
+    rerender(); t(applyAdminVisibility); t(function () { document.documentElement.classList.toggle('vid-admin', isAdminUser()); });
+    t(function () { switchTab('admin'); });
+  }
+})();
+</script>
+
 </body>
 </html>
