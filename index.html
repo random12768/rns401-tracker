@@ -9113,5 +9113,34 @@ try { veDecorateAll(); } catch (e) {}
 })();
 </script>
 
+<!-- ===== Q bank loading screens ===== -->
+<style>
+.qb-wrap { position: relative; }
+.qb-loading { position: absolute; inset: 0; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 14px; text-align: center; padding: 90px 20px 20px; border-radius: 10px; background: radial-gradient(700px 400px at 20% 0%, rgba(56,189,248,.18), transparent 60%), radial-gradient(600px 400px at 90% 100%, rgba(192,132,252,.2), transparent 60%), #0d1117; color: #e6edf3; transition: opacity .4s; }
+.qb-loading.qb-done { opacity: 0; pointer-events: none; }
+.qb-spin { width: 54px; height: 54px; border-radius: 50%; border: 4px solid rgba(255,255,255,.12); border-top-color: #38bdf8; border-right-color: #c084fc; animation: qbSpin 1s linear infinite; }
+@keyframes qbSpin { to { transform: rotate(360deg); } }
+.qb-loading h4 { margin: 0; font-size: 1.15rem; font-weight: 800; border: 0; padding: 0; color: #fff; }
+.qb-loading p { margin: 0; font-size: .88rem; color: #9aa4b8; max-width: 380px; }
+.qb-bar { width: 220px; height: 6px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden; }
+.qb-bar i { display: block; height: 100%; width: 40%; border-radius: 99px; background: linear-gradient(90deg, #38bdf8, #c084fc); animation: qbBar 1.4s ease-in-out infinite; }
+@keyframes qbBar { 0% { transform: translateX(-110%); } 100% { transform: translateX(260%); } }
+.qb-slow { opacity: 0; transition: opacity .4s; }
+.qb-slow.on { opacity: 1; }
+</style>
+<script>
+(function () {
+  var tips = ['Tip: highlight text, flag questions and add notes as you go.', 'Tip: use ← → to move between questions.', 'Tip: your answers save in this browser.', 'Tip: connect your First Aid PDF for page links in the explanations.'];
+  document.querySelectorAll('iframe[data-src*="qbank"]').forEach(function (fr, i) {
+    var wrap = document.createElement('div'); wrap.className = 'qb-wrap';
+    fr.parentNode.insertBefore(wrap, fr); wrap.appendChild(fr);
+    var ld = document.createElement('div'); ld.className = 'qb-loading';
+    ld.innerHTML = '<div class="qb-spin"></div><h4>Loading your Q bank…</h4><div class="qb-bar"><i></i></div><p>' + tips[i % tips.length] + '</p><p class="qb-slow">Big question bank with lots of images, so this can take a few seconds.</p>';
+    wrap.appendChild(ld);
+    var t = setTimeout(function () { var sl = ld.querySelector('.qb-slow'); if (sl) sl.classList.add('on'); }, 3000);
+    fr.addEventListener('load', function () { if (!fr.getAttribute('src')) return; clearTimeout(t); ld.classList.add('qb-done'); setTimeout(function () { ld.style.display = 'none'; }, 450); });
+  });
+})();
+</script>
 </body>
 </html>
