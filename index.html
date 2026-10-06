@@ -2411,7 +2411,8 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .contact-corner a:hover, .contact-corner a:focus-visible { padding: 0 15px 0 11px; gap: 8px; transform: translateY(-1px); }
   .contact-corner a:hover .cc-lbl, .contact-corner a:focus-visible .cc-lbl { max-width: 400px; opacity: 1; }
   .no-video-access a.sk-btn:not(.sk-btn-notes) { display: none !important; }
-  .no-video-access a.video-link { pointer-events: none; cursor: default; border-bottom: 0 !important; color: inherit !important; text-decoration: none !important; }
+  .no-video-access a.sched-video-link { display: none !important; }
+  .no-video-access :is(a.video-link, a.vid-link, a.watch-hdr, a.sketchy-path-link, a[data-vid]) { pointer-events: none; cursor: default; border-bottom: 0 !important; color: inherit !important; text-decoration: none !important; }
   /* ---- v2.15 redesign: videos are a compact, quiet tray under the lecture ---- */
   tr.vid-group > td { padding: 2px 18px 16px 22px !important; }
   .vg-wrap { padding: 6px 12px 6px 12px; border: 1px solid var(--border-soft); border-left: 1px solid var(--border-soft); border-radius: 10px; background: color-mix(in srgb, var(--text) 4%, transparent); max-width: 820px; }
@@ -4530,7 +4531,7 @@ function skMenu(ev, a) {
   m.className = 'px-menu sk-menu';
   m.innerHTML = '<div class="px-menu-hd">Sketchy \u2014 ' + (org ? org.textContent.trim().replace(/</g, '&lt;') : 'this topic') + '</div>';
   const v = document.createElement('a');
-  v.className = 'px-opt'; v.href = a.getAttribute('href'); v.target = '_blank'; v.rel = 'noopener';
+  v.className = 'px-opt'; v.dataset.vid = '1'; v.href = a.getAttribute('href') || a.dataset.vhref || ''; v.target = '_blank'; v.rel = 'noopener';
   v.innerHTML = '<b>\ud83c\udfac Watch the video' + (mn ? ' (' + mn + ' min)' : '') + '</b><span>Sketchy tells the bug as a picture story. Best for learning it the first time.</span>';
   m.appendChild(v);
   const n = document.createElement('a');
@@ -4606,7 +4607,7 @@ function paMenu(ev, a) {
   m.className = 'px-menu pa-menu';
   m.innerHTML = '<div class="px-menu-hd">Pathoma \u2014 ' + title.replace(/</g, '&lt;') + '</div>';
   const v = document.createElement('a');
-  v.className = 'px-opt'; v.href = a.getAttribute('href'); v.target = '_blank'; v.rel = 'noopener';
+  v.className = 'px-opt'; v.dataset.vid = '1'; v.href = a.getAttribute('href') || a.dataset.vhref || ''; v.target = '_blank'; v.rel = 'noopener';
   v.innerHTML = '<b>\ud83c\udfac Watch the video' + (mn ? ' (' + mn + ' min)' : '') + '</b><span>Dr. Sattar explains the topic step by step. Best for learning it the first time.</span>';
   m.appendChild(v);
   const n = document.createElement('button');
@@ -4633,7 +4634,7 @@ function pxMenu(ev, a) {
   m.className = 'px-menu';
   m.innerHTML = '<div class="px-menu-hd">Pixorize — ' + title.replace(/</g, '&lt;') + '</div>';
   const v = document.createElement('a');
-  v.className = 'px-opt'; v.href = a.getAttribute('href'); v.target = '_blank'; v.rel = 'noopener';
+  v.className = 'px-opt'; v.dataset.vid = '1'; v.href = a.getAttribute('href') || a.dataset.vhref || ''; v.target = '_blank'; v.rel = 'noopener';
   v.innerHTML = '<b>🎬 Watch the video' + (min ? ' (' + min.textContent.trim() + ')' : '') + '</b><span>Pixorize walks you through the topic with a picture mnemonic. Best for learning and remembering it the first time.</span>';
   m.appendChild(v);
   pages.forEach((p, i) => {
@@ -4714,7 +4715,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 18, built: '2026-10-06T01:09:01Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 19, built: '2026-10-06T15:39:18Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5220,19 +5221,35 @@ function buildVideoManagedCells() {
     }
   });
 }
+var VID_SEL = 'a.video-link, a.vid-link, a.watch-hdr, a.sketchy-path-link, a.sched-video-link, a.sk-btn:not(.sk-btn-notes), a[data-vid], a[data-vhref], a[href*="drive.google.com"]:not(.slides-link):not(.sk-btn-notes)';
 function applyVideoAccessVisibility() {
-  // Without video access people still SEE every video title/length and can open the
-  // Notes; only the video links themselves are switched off (hidden buttons, plain titles).
-  const allowed = videoAccessAllowedForCurrentUser();
+  // Without video access people still SEE every video title and length and can open the
+  // Notes, but the video links themselves are removed from the page (not just hidden).
+  var allowed = videoAccessAllowedForCurrentUser();
   document.documentElement.classList.toggle('no-video-access', !allowed);
+  document.querySelectorAll(VID_SEL).forEach(function (a) {
+    if (allowed) {
+      if (a.hasAttribute('data-vhref') && !a.hasAttribute('href')) { a.setAttribute('href', a.getAttribute('data-vhref')); }
+      a.removeAttribute('data-vhref'); a.removeAttribute('aria-disabled');
+    } else {
+      var h = a.getAttribute('href');
+      if (h) { a.setAttribute('data-vhref', h); a.removeAttribute('href'); }
+      a.setAttribute('aria-disabled', 'true');
+    }
+  });
   if (!window.__vidGuard) {
     window.__vidGuard = true;
-    const guard = e => {
+    var guard = function (e) {
       if (!document.documentElement.classList.contains('no-video-access')) return;
-      const a = e.target && e.target.closest && e.target.closest('a.video-link, a.sk-btn:not(.sk-btn-notes)');
+      var a = e.target && e.target.closest && e.target.closest(VID_SEL);
       if (a) { e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); }
     };
-    ['click', 'auxclick', 'mousedown'].forEach(ev => document.addEventListener(ev, guard, true));
+    ['click', 'auxclick', 'mousedown', 'keydown'].forEach(function (ev) { document.addEventListener(ev, function (e) { if (ev === 'keydown' && e.key !== 'Enter') return; guard(e); }, true); });
+    var pending = false;
+    new MutationObserver(function () {
+      if (pending) return; pending = true;
+      requestAnimationFrame(function () { pending = false; if (document.documentElement.classList.contains('no-video-access')) { document.querySelectorAll(VID_SEL).forEach(function (a) { var h = a.getAttribute('href'); if (h) { a.setAttribute('data-vhref', h); a.removeAttribute('href'); a.setAttribute('aria-disabled', 'true'); } }); } });
+    }).observe(document.body, { childList: true, subtree: true });
   }
 }
 // Same pattern as video: every HY Micro/Pharm link cell anywhere in the
