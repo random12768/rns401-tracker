@@ -3817,6 +3817,20 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
 </div>
 
 <div class="module-sub-panel active" id="sub-nis-path">
+<div class="ky-card" id="ky-nispath">
+  <div class="ky-top">
+    <span class="ky-badge">📘 Study guide by Ky</span>
+    <span class="ky-meta">19 sections · 216 practice questions</span>
+  </div>
+  <div class="ky-title">Ky's NIS302 Pathology Study Guide</div>
+  <p class="ky-desc">Ky's own notes for the NIS302 pathology lectures: <b>neoplasia</b> (nomenclature, invasion &amp; metastasis, carcinogenesis, paraneoplastic syndromes, grading &amp; staging), <b>immune pathology</b> (hypersensitivity, transplant rejection &amp; GVHD, autoimmune and immunodeficiency diseases, amyloidosis) and the <b>breast and skin OSCE/ICM</b> topics. Each section has high-yield notes followed by exam-style questions that explain every answer choice. Best used <b>after</b> the lecture or your video/Robbins study — answer first, then read the explanation, so you check what you can actually recall.</p>
+  <div class="ky-actions">
+    <button type="button" class="ky-btn ky-btn-main" onclick="kyToggle('nispath','ky-nis-pathology.html')" id="ky-btn-nispath">Open here ▾</button>
+    <a class="ky-btn" href="ky-nis-pathology.html" target="_blank" rel="noopener">Open in new tab ↗</a>
+  </div>
+  <div class="ky-credit">✍️ Written by <b>Ky</b> and shared here with his permission. Thank you, Ky!</div>
+  <div class="ky-frame" id="ky-frame-nispath" style="display:none;"></div>
+</div>
 <div class="controls">
   <input type="text" class="search-box" placeholder="🔍 Search pathology topics..." oninput="filterTable('nis-path-table', this.value)">
   <button onclick="toggleGapsOnly('nis-path-table')">Show gaps only</button>
@@ -3853,6 +3867,20 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
 </div>
 
 <div class="module-sub-panel" id="sub-nis-micro">
+<div class="ky-card" id="ky-nismicro">
+  <div class="ky-top">
+    <span class="ky-badge">📘 Study guide by Ky</span>
+    <span class="ky-meta">15 sections · 189 practice questions</span>
+  </div>
+  <div class="ky-title">Ky's NIS302 Microbiology Study Guide</div>
+  <p class="ky-desc">Ky's own notes that follow the NIS302 microbiology lectures, from <b>the immune system, complement &amp; cytokines</b> through <b>antibodies, MHC, humoral and cell-mediated immunity</b>, <b>immunoassays and immunization</b>, to <b>transplantation, HIV/AIDS, hypersensitivity and autoimmunity</b>. Each section has high-yield notes followed by exam-style questions that explain every answer choice. Best used <b>after</b> the lecture or your video/Robbins study — answer first, then read the explanation, so you check what you can actually recall.</p>
+  <div class="ky-actions">
+    <button type="button" class="ky-btn ky-btn-main" onclick="kyToggle('nismicro','ky-nis-microbiology.html')" id="ky-btn-nismicro">Open here ▾</button>
+    <a class="ky-btn" href="ky-nis-microbiology.html" target="_blank" rel="noopener">Open in new tab ↗</a>
+  </div>
+  <div class="ky-credit">✍️ Written by <b>Ky</b> and shared here with his permission. Thank you, Ky!</div>
+  <div class="ky-frame" id="ky-frame-nismicro" style="display:none;"></div>
+</div>
 <div class="controls">
   <input type="text" class="search-box" placeholder="🔍 Search organisms/topics..." oninput="filterTable('nis-micro-table', this.value)">
   <button onclick="toggleGapsOnly('nis-micro-table')">Show gaps only</button>
@@ -3888,6 +3916,20 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
 </div>
 
 <div class="module-sub-panel" id="sub-nis-pharm">
+<div class="ky-card" id="ky-nispharm">
+  <div class="ky-top">
+    <span class="ky-badge">📘 Study guide by Ky</span>
+    <span class="ky-meta">9 sections · 132 practice questions</span>
+  </div>
+  <div class="ky-title">Ky's NIS302 Pharmacology Study Guide</div>
+  <p class="ky-desc">Ky's own notes for the NIS302 pharmacology lectures: <b>histamine, serotonin &amp; migraine drugs</b>, <b>NSAIDs</b>, <b>antirheumatoid and antigout drugs</b>, <b>skeletal muscle relaxants</b>, <b>toxicology &amp; antidotes</b>, <b>anticancer agents</b> and <b>immunomodulators</b>. Each section has high-yield notes followed by exam-style questions that explain every answer choice. Best used <b>after</b> the lecture or your video/Robbins study — answer first, then read the explanation, so you check what you can actually recall.</p>
+  <div class="ky-actions">
+    <button type="button" class="ky-btn ky-btn-main" onclick="kyToggle('nispharm','ky-nis-pharmacology.html')" id="ky-btn-nispharm">Open here ▾</button>
+    <a class="ky-btn" href="ky-nis-pharmacology.html" target="_blank" rel="noopener">Open in new tab ↗</a>
+  </div>
+  <div class="ky-credit">✍️ Written by <b>Ky</b> and shared here with his permission. Thank you, Ky!</div>
+  <div class="ky-frame" id="ky-frame-nispharm" style="display:none;"></div>
+</div>
 <div class="controls">
   <input type="text" class="search-box" placeholder="🔍 Search pharmacology topics..." oninput="filterTable('nis-pharm-table', this.value)">
   <button onclick="toggleGapsOnly('nis-pharm-table')">Show gaps only</button>
@@ -4672,7 +4714,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 17, built: '2026-10-06T00:48:23Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 18, built: '2026-10-06T01:09:01Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -4682,6 +4724,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 18], title: "Ky's NIS302 study guides", items: ["NIS302 Pathology, Microbiology and Pharmacology now each have Ky's study guide: high-yield notes plus exam-style practice questions with explanations. Open them right inside the tab."] },
   { v: [2, 17], title: "GHS402 Q Bank", items: ["New Alan's Q Bank tab in GHS402 (for approved accounts): 283 questions from Robbins and Rubin on the GI tract, liver and biliary system, and pancreas, with explanations, highlights, flags and notes."] },
   { v: [2, 15], title: "Clearer lecture separation", items: ["On the RNS401 Pathology, Microbiology and Pharmacology tabs each lecture now has a heavier divider, a coloured bar down its left edge and a gap after its videos, so lectures no longer blend together."] },
   { v: [2, 13], title: "Micro notes pages", items: ["RNS and GHS each open their own Sketchy Micro notes page again (RNS organisms on the RNS page, GHS videos on the GHS page)."] },
