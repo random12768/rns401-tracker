@@ -5014,7 +5014,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 27, built: '2026-10-07T18:48:06Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 28, built: '2026-10-07T18:49:48Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -9763,7 +9763,19 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
   /* ---- find the right file for a tracker link ---- */
   async function findFile(id) {
     var m = MAN[id]; if (!m || !index) return null;
-    var arr = index.map.get(key(m[0])); if (!arr || !arr.length) return null;
+    var arr = index.map.get(key(m[0]));
+    if (!arr || !arr.length) {
+      /* forgiving match: ignore extension, trailing "atf", and allow one name to contain the other */
+      var nz = function (k) { return k.replace(/(mp4|mov|mkv|m4v|webm)$/, '').replace(/atf$/, ''); };
+      var want = nz(key(m[0])), best = null, bestD = 1e9, all = [];
+      if (want.length >= 4) index.map.forEach(function (v, k) {
+        var c = nz(k); if (!c) return;
+        var d = c === want ? 0 : ((c.length >= 6 && want.length >= 6 && (c.indexOf(want) >= 0 || want.indexOf(c) >= 0)) ? Math.abs(c.length - want.length) + 1 : 1e9);
+        if (d < bestD) { bestD = d; best = v; }
+      });
+      arr = best;
+      if (!arr || !arr.length) return null;
+    }
     if (arr.length === 1) return arr[0].h;
     var fs = [];
     for (var i = 0; i < arr.length; i++) { try { fs.push({ a: arr[i], f: await arr[i].h.getFile() }); } catch (e) {} }
@@ -9880,7 +9892,7 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
   window.lvPick = async function () { try { await pickFolder(); } catch (e) { if (e && e.name !== 'AbortError') toast('Could not open that folder'); } status(); };
   window.lvRescan = async function () { try { if (!root) root = await idbGet(); if (!root) return window.lvPick(); if (await permission(root, true)) { index = null; await ensureIndex(); } } catch (e) { toast('Could not scan the folder'); } status(); };
   window.lvForget = async function () { root = null; index = null; await idbDel(); s(LS, null); status(); toast('Folder forgotten. You’ll be asked again on your next video click.'); };
-  window.__lvTest = { setRoot: async function (h) { root = h; index = null; await ensureIndex(); status(); }, hasManifest: function (id) { return !!MAN[id]; }, count: function () { return Object.keys(MAN).length; } };
+  window.__lvTest = { setRoot: async function (h) { root = h; index = null; await ensureIndex(); status(); }, find: function (id) { return findFile(id).then(function (h) { return h ? h.name : null; }); }, hasManifest: function (id) { return !!MAN[id]; }, count: function () { return Object.keys(MAN).length; } };
   idbGet().then(function (h) { if (h) { root = h; } status(); });
   document.addEventListener('DOMContentLoaded', status);
 })();
