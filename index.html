@@ -2372,6 +2372,11 @@ a.video-repeat span { font-style: italic; }
   .bsg-vid .bsg-min { flex: 0 0 auto; font-size: .82em; font-weight: 700; color: var(--text-dim); }
   .bsg-vid.checked a.bsg-link { opacity: .5; text-decoration: line-through; }
   .bsg-vid .lv-ak { flex: 0 0 auto; }
+  .bsg-admin { margin: 10px 0 4px; border: 1px dashed color-mix(in srgb, var(--accent, #6366f1) 55%, transparent); border-radius: 10px; padding: 6px 10px; }
+  .bsg-admin summary { cursor: pointer; font-weight: 700; font-size: .85em; }
+  .bsg-admin-tbl { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: .82em; }
+  .bsg-admin-tbl th, .bsg-admin-tbl td { text-align: left; padding: 4px 6px; border-bottom: 1px solid color-mix(in srgb, var(--text-dim, #888) 25%, transparent); vertical-align: top; }
+  .bsg-admin-note { font-size: .8em; color: var(--text-dim); margin-top: 6px; line-height: 1.45; }
   .bsg-gap { margin: -6px 0 16px 22px; padding: 8px 12px; border: 1px dashed color-mix(in srgb, #f59e0b 60%, transparent); border-radius: 10px; background: color-mix(in srgb, #f59e0b 6%, transparent); }
   .bsg-gap-tag { font-size: .7em; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: #f59e0b; margin-bottom: 2px; }
   .bsg-gap .bsg-vids { margin: 0; }
@@ -4274,6 +4279,11 @@ a.video-repeat span { font-style: italic; }
     <button type="button" class="ky-btn ky-btn-main" onclick="kyToggle('bsg-life','bs-life-cycle.html')" id="ky-btn-bsg-life">Open guide here ▾</button>
     <a class="ky-btn" href="bs-life-cycle.html" target="_blank" rel="noopener">Open in new tab ↗</a>
   </div>
+  <details class="bsg-admin" data-admin-only style="display:none;">
+    <summary>🔒 Admin: BRS Behavioral Science review questions</summary>
+    <table class="bsg-admin-tbl"><thead><tr><th>BRS chapter (book p.)</th><th>Review Qs</th><th>Blueprint topics it drills</th></tr></thead><tbody><tr><td><b>Ch 1 Pregnancy through preschool (p. 8)</b></td><td>~22</td><td>Milestones &amp; red flags, Piaget/Erikson/Freud, baby blues / postpartum</td></tr><tr><td><b>Ch 2 School age, adolescence, adulthood (p. 20)</b></td><td>~19</td><td>Milestones, Erikson, adolescence, adulthood</td></tr><tr><td><b>Ch 3 Aging, death, bereavement (p. 29)</b></td><td>~15</td><td>Aging &amp; life cycle changes, grief</td></tr><tr><td><b>Ch 6 Psychoanalytic theory &amp; defense mechanisms (p. 61)</b></td><td>~10</td><td>Freud (theorists block)</td></tr></tbody></table>
+    <div class="bsg-admin-note">Do the Review Test at the end of each chapter, then read the answer explanations. ~66 questions. BRS has nothing on Kohlberg, so use the guide for that.</div>
+  </details>
   <div class="ky-credit">✍️ Provided by <b>Dr. Sampath</b> for the Block 1 exam.</div>
   <div class="ky-frame" id="ky-frame-bsg-life" style="display:none;"></div>
 </div><div class="ky-card bsg-card" id="ky-bsg-kids">
@@ -4290,6 +4300,11 @@ a.video-repeat span { font-style: italic; }
     <button type="button" class="ky-btn ky-btn-main" onclick="kyToggle('bsg-kids','bs-children-adolescents.html')" id="ky-btn-bsg-kids">Open guide here ▾</button>
     <a class="ky-btn" href="bs-children-adolescents.html" target="_blank" rel="noopener">Open in new tab ↗</a>
   </div>
+  <details class="bsg-admin" data-admin-only style="display:none;">
+    <summary>🔒 Admin: BRS Behavioral Science review questions</summary>
+    <table class="bsg-admin-tbl"><thead><tr><th>BRS chapter (book p.)</th><th>Review Qs</th><th>Blueprint topics it drills</th></tr></thead><tbody><tr><td><b>Ch 15 Psychiatric disorders in children (p. 164)</b></td><td>~13</td><td>ADHD, ODD/conduct, autism/Rett, Tourette, elimination disorders</td></tr><tr><td><b>Ch 1 Pregnancy through preschool (p. 8)</b></td><td>~22</td><td>Early milestones (shared with guide 1)</td></tr><tr><td><b>Ch 2 School age, adolescence, adulthood (p. 20)</b></td><td>~19</td><td>School-age and adolescent development (shared with guide 1)</td></tr></tbody></table>
+    <div class="bsg-admin-note">BRS has no real coverage of learning, language or intellectual disorders, or intermittent explosive disorder. Those come from this guide only.</div>
+  </details>
   <div class="ky-credit">✍️ Provided by <b>Dr. Sampath</b> for the Block 1 exam.</div>
   <div class="ky-frame" id="ky-frame-bsg-kids" style="display:none;"></div>
 </div><div class="bsg-gap">
@@ -4310,6 +4325,11 @@ a.video-repeat span { font-style: italic; }
     <button type="button" class="ky-btn ky-btn-main" onclick="kyToggle('bsg-schiz','bs-schizophrenia.html')" id="ky-btn-bsg-schiz">Open guide here ▾</button>
     <a class="ky-btn" href="bs-schizophrenia.html" target="_blank" rel="noopener">Open in new tab ↗</a>
   </div>
+  <details class="bsg-admin" data-admin-only style="display:none;">
+    <summary>🔒 Admin: BRS Behavioral Science review questions</summary>
+    <table class="bsg-admin-tbl"><thead><tr><th>BRS chapter (book p.)</th><th>Review Qs</th><th>Blueprint topics it drills</th></tr></thead><tbody><tr><td><b>Ch 11 Schizophrenia spectrum &amp; other psychotic disorders (p. 116)</b></td><td>~22</td><td>Schizophrenia criteria/prognosis, psychotic timeline, core features</td></tr><tr><td><b>Ch 16 Psychopharmacology (p. 179), antipsychotic questions</b></td><td>~31 for the whole chapter</td><td>Typical vs atypical, EPS, tardive dyskinesia, NMS, metabolic syndrome</td></tr></tbody></table>
+    <div class="bsg-admin-note">Ch 16 mixes antipsychotics, antidepressants, mood stabilizers and ECT. Do the antipsychotic questions here and the rest with guide 4.</div>
+  </details>
   <div class="ky-credit">✍️ Provided by <b>Dr. Sampath</b> for the Block 1 exam.</div>
   <div class="ky-frame" id="ky-frame-bsg-schiz" style="display:none;"></div>
 </div><div class="ky-card bsg-card" id="ky-bsg-mood">
@@ -4326,6 +4346,11 @@ a.video-repeat span { font-style: italic; }
     <button type="button" class="ky-btn ky-btn-main" onclick="kyToggle('bsg-mood','bs-mood-disorders.html')" id="ky-btn-bsg-mood">Open guide here ▾</button>
     <a class="ky-btn" href="bs-mood-disorders.html" target="_blank" rel="noopener">Open in new tab ↗</a>
   </div>
+  <details class="bsg-admin" data-admin-only style="display:none;">
+    <summary>🔒 Admin: BRS Behavioral Science review questions</summary>
+    <table class="bsg-admin-tbl"><thead><tr><th>BRS chapter (book p.)</th><th>Review Qs</th><th>Blueprint topics it drills</th></tr></thead><tbody><tr><td><b>Ch 12 Depressive &amp; bipolar disorders (p. 127)</b></td><td>~17</td><td>MDD &amp; specifiers, bipolar, persistent depressive, cyclothymic, suicide risk</td></tr><tr><td><b>Ch 16 Psychopharmacology (p. 179), antidepressant / lithium / ECT questions</b></td><td>~31 for the whole chapter</td><td>Antidepressant classes &amp; side effects, lithium, ECT</td></tr><tr><td><b>Ch 1 Pregnancy through preschool (p. 8), postpartum questions</b></td><td>part of ~22</td><td>Baby blues, postpartum depression, postpartum psychosis</td></tr></tbody></table>
+    <div class="bsg-admin-note">BRS does not cover valproate, and lamotrigine only once, so use the guide for those. PMDD only gets a short mention in BRS Ch 11.</div>
+  </details>
   <div class="ky-credit">✍️ Provided by <b>Dr. Sampath</b> for the Block 1 exam.</div>
   <div class="ky-frame" id="ky-frame-bsg-mood" style="display:none;"></div>
 </div><div class="bsg-gap">
@@ -5163,7 +5188,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 39, built: '2026-10-08T22:17:05Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 40, built: '2026-10-08T22:43:50Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5173,6 +5198,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 40], title: "Behavioral Sciences: BRS question pointers (admins)", items: ["Admins now see a collapsed BRS review-question list under each of the four midterm guide cards, with the matching BRS chapters, question counts and blueprint topics."] },
   { v: [2, 39], title: "Behavioral Sciences: simplified around the 4 midterm guides", items: ["The midterm is covered by four study guides from Dr. Sampath (Life Cycle, Children & Adolescents, Schizophrenia, Mood Disorders). Each now has its own card with the matching Boards & Beyond videos (same order as before), lengths, checkboxes and an Open guide button.", "Anxiety Disorders and Child Abuse videos stay on the midterm list, marked as not covered by the guides. Everything else (final-exam videos, full lecture schedule, optional extras) is collapsed below, nothing removed."] },
   { v: [2, 37], title: "MD4 schedule update (weeks 5–6) + planner fixes", items: ["Updated the Oct 9–16 schedule: Non-inflammatory Diarrhea now Fri 10/9, Antidepressants Mon 10/12 + Tue 10/13, Sedatives & Hypnotics Wed 10/14 + Thu 10/15, SFH on Fri 10/16. The Behavioral Sciences Mood Disorders TBL moved to Tue 10/13 and is tagged MIDTERM.", "Planner now works for CHS303: lecture lengths typed as text are read automatically, so it shows the real remaining videos.", "Planner no longer says 'behind by 74 videos' on a module's first open: the pace baseline resets whenever the video list grows."] },
   { v: [2, 32], title: "Behavioral Sciences: midterm vs final", items: ["Each lecture is tagged MIDTERM (Block 1 exam, Oct 14) or FINAL (Dec 7), with separate video counts, time totals and progress for each."] },
@@ -6632,7 +6658,14 @@ function computeStats(tableId) {
 }
 
 
+function bsgAdmin() {
+  try { const on = (typeof isAdminUser === 'function') && isAdminUser();
+    document.querySelectorAll('.bsg-admin[data-admin-only]').forEach(d => { d.style.display = on ? '' : 'none'; });
+  } catch (e) {}
+}
+[1500, 4000, 9000, 20000].forEach(ms => setTimeout(bsgAdmin, ms));
 function bhsGuides() {
+  bsgAdmin();
   const panel = document.getElementById('panel-bhs'); if (!panel) return;
   const subs = Array.from(document.querySelectorAll('#bhs-table .vid-sub')); if (!subs.length) return;
   const byTitle = {};
@@ -9431,6 +9464,7 @@ function veStart() {
       const prev = videoEdits;
       videoEdits = next;
       try { if (typeof renderAdminVideoEdits === 'function' && isAdminUser()) setTimeout(renderAdminVideoEdits, 0); } catch (e) {}
+      try { bsgAdmin(); } catch (e) {}
       ids.forEach(id => { if (JSON.stringify(prev[id] || null) !== JSON.stringify(next[id] || null) || !veEditedRows.has(id) && next[id]) veApplyRow(id); });
     }, err => console.warn('video_edits listener', err && err.code));
   } catch (e) { console.warn('veStart', e); }
