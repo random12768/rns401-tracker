@@ -5188,7 +5188,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 40, built: '2026-10-08T22:43:50Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 41, built: '2026-10-08T22:51:40Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5198,7 +5198,6 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
-  { v: [2, 40], title: "Behavioral Sciences: BRS question pointers (admins)", items: ["Admins now see a collapsed BRS review-question list under each of the four midterm guide cards, with the matching BRS chapters, question counts and blueprint topics."] },
   { v: [2, 39], title: "Behavioral Sciences: simplified around the 4 midterm guides", items: ["The midterm is covered by four study guides from Dr. Sampath (Life Cycle, Children & Adolescents, Schizophrenia, Mood Disorders). Each now has its own card with the matching Boards & Beyond videos (same order as before), lengths, checkboxes and an Open guide button.", "Anxiety Disorders and Child Abuse videos stay on the midterm list, marked as not covered by the guides. Everything else (final-exam videos, full lecture schedule, optional extras) is collapsed below, nothing removed."] },
   { v: [2, 37], title: "MD4 schedule update (weeks 5–6) + planner fixes", items: ["Updated the Oct 9–16 schedule: Non-inflammatory Diarrhea now Fri 10/9, Antidepressants Mon 10/12 + Tue 10/13, Sedatives & Hypnotics Wed 10/14 + Thu 10/15, SFH on Fri 10/16. The Behavioral Sciences Mood Disorders TBL moved to Tue 10/13 and is tagged MIDTERM.", "Planner now works for CHS303: lecture lengths typed as text are read automatically, so it shows the real remaining videos.", "Planner no longer says 'behind by 74 videos' on a module's first open: the pace baseline resets whenever the video list grows."] },
   { v: [2, 32], title: "Behavioral Sciences: midterm vs final", items: ["Each lecture is tagged MIDTERM (Block 1 exam, Oct 14) or FINAL (Dec 7), with separate video counts, time totals and progress for each."] },
