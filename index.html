@@ -5054,7 +5054,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 35, built: '2026-10-08T14:45:20Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 36, built: '2026-10-08T14:50:10Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5064,7 +5064,6 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
-  { v: [2, 34], title: "Planner works for CHS303", items: ["CHS303 showed 'all done / 0 videos' because its video lengths weren't being read. The planner now reads every lecture length automatically, so CHS303 shows its real remaining videos, pace and calendar."] },
   { v: [2, 32], title: "Behavioral Sciences: midterm vs final", items: ["Each lecture is tagged MIDTERM (Block 1 exam, Oct 14) or FINAL (Dec 7), with separate video counts, time totals and progress for each."] },
   { v: [2, 31], title: "Behavioral Sciences: video lengths and no more repeats", items: ["Every Behavioral Science video now shows its length, and the top of the tab says exactly how many videos you need to watch and for how long.","A video that several lectures reuse is listed once, at the first lecture that needs it. Later lectures show a faded review row with nothing to watch, so repeats no longer look like extra homework."] },
   { v: [2, 30], title: "Anki buttons nearly everywhere", items: ["Almost every video in the tracker now has the Anki button: Pathoma, Sketchy and Bootcamp videos that were missing a card link now open their matching AnKing cards. A few review-only videos (board-style question breakdowns) have no matching cards, so they have no Anki button."] },
@@ -7736,6 +7735,12 @@ function computePlan() {
   let meta = loadPlannerMeta();
   const todayStr = fmtDate(dp.today);
   if (!meta) {
+    meta = { baselineDate: todayStr, baselineRemainingCount: totalRemainingCount, baselineContentDays: Math.max(1, contentDaysCount) };
+    savePlannerMeta(meta);
+  }
+  // If the pool grew since the baseline was saved (e.g. lengths were added/fixed, or the baseline was taken when the module looked empty),
+  // the old baseline is meaningless — otherwise every new video would count as "behind". Re-baseline from today.
+  if (totalRemainingCount > meta.baselineRemainingCount) {
     meta = { baselineDate: todayStr, baselineRemainingCount: totalRemainingCount, baselineContentDays: Math.max(1, contentDaysCount) };
     savePlannerMeta(meta);
   }
