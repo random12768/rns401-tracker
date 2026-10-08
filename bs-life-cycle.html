@@ -1,0 +1,2160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Life Cycle — USMLE Step 1 Master Resource 2026 | Dr. Sampath Venkataswamy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1628;--navy-mid:#0f2040;--navy-light:#1a3560;
+  --gold:#c9952c;--gold-light:#f5dfa0;--gold-pale:#fdf8ee;
+  --teal:#0d7377;--teal-light:#14a9af;--teal-pale:#e8f8f8;
+  --rose:#c0392b;--rose-light:#e74c3c;--rose-pale:#fdeaea;
+  --sage:#27ae60;--sage-light:#2ecc71;--sage-pale:#eafaf1;
+  --violet:#8e44ad;--violet-light:#9b59b6;--violet-pale:#f4ecf7;
+  --amber:#d68910;--amber-pale:#fef9e7;
+  --slate:#5d6d7e;--slate-light:#85929e;--slate-pale:#f2f3f4;
+  --blue:#2471a3;--blue-pale:#eaf4fb;
+  --coral:#e67e22;--coral-pale:#fef5e7;
+  --sw:270px;--topH:60px;
+  --card-r:12px;--r:8px;
+  --shadow:0 2px 8px rgba(0,0,0,.1);--shadow-lg:0 8px 32px rgba(0,0,0,.15);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:#f5f4f0;color:#1a2332;font-size:14.5px;line-height:1.72;}
+
+/* TOP BAR */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topH);background:var(--navy);z-index:500;
+  display:flex;align-items:center;gap:12px;padding:0 20px 0 calc(var(--sw)+20px);box-shadow:var(--shadow-lg);}
+.tb-brand{font-family:'Playfair Display',serif;font-size:17px;color:var(--gold-light);letter-spacing:.3px;flex:1;}
+.tb-sub{font-size:11px;color:rgba(255,255,255,.45);font-weight:400;margin-left:8px;}
+.tb-controls{display:flex;align-items:center;gap:10px;}
+#searchInput{padding:8px 16px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);
+  border-radius:20px;color:#fff;font-size:13px;font-family:'Inter',sans-serif;outline:none;width:220px;transition:.2s;}
+#searchInput:focus{background:rgba(255,255,255,.2);border-color:var(--gold);}
+#searchInput::placeholder{color:rgba(255,255,255,.4);}
+#hlBtn{padding:8px 16px;background:var(--gold);color:var(--navy);border:none;border-radius:20px;
+  font-family:'Inter',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;transition:.2s;}
+#hlBtn:hover{background:var(--gold-light);}
+#hlBtn.active{background:#fef3c7;box-shadow:0 0 0 2px var(--gold);}
+#mobileMenu{display:none;background:transparent;border:1.5px solid rgba(255,255,255,.3);color:#fff;
+  padding:6px 10px;border-radius:6px;cursor:pointer;font-size:18px;}
+
+/* SIDEBAR */
+#sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sw);background:var(--navy-mid);z-index:400;
+  display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.07);overflow:hidden;}
+.sb-header{height:var(--topH);display:flex;align-items:center;gap:10px;padding:0 16px;
+  border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;}
+.sb-logo{font-size:22px;}
+.sb-title{font-family:'Playfair Display',serif;font-size:14px;color:var(--gold-light);line-height:1.3;}
+.sb-subtitle{font-size:10px;color:rgba(255,255,255,.4);font-weight:400;margin-top:2px;}
+.doc-tabs{display:flex;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.07);}
+.doc-tab{flex:1;padding:10px 6px;text-align:center;cursor:pointer;font-size:11px;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;color:rgba(255,255,255,.4);border-bottom:3px solid transparent;transition:.2s;}
+.doc-tab.active{color:var(--gold-light);border-bottom-color:var(--gold);}
+.doc-tab:hover:not(.active){color:rgba(255,255,255,.7);}
+.sb-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sb-nav::-webkit-scrollbar{width:3px;}
+.sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px;}
+.nav-section{padding:0;}
+.nav-section-title{font-size:9.5px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;
+  color:rgba(255,255,255,.3);padding:10px 16px 4px;}
+.nav-item{display:block;padding:7px 16px;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.55);
+  cursor:pointer;border-left:3px solid transparent;transition:.15s;text-decoration:none;}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.05);border-left-color:rgba(255,255,255,.3);}
+.nav-item.active{color:var(--gold-light);background:rgba(201,149,44,.12);border-left-color:var(--gold);}
+.nav-item.sub{padding-left:28px;font-size:12px;}
+
+/* MAIN */
+#main{margin-left:var(--sw);padding-top:var(--topH);min-height:100vh;}
+.panel{display:none;padding:28px 32px 80px;max-width:980px;margin:0 auto;}
+.panel.active{display:block;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);
+  border-radius:var(--card-r);padding:36px 40px;margin-bottom:28px;color:#fff;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;
+  border-radius:50%;background:rgba(201,149,44,.1);}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;}
+.hero h1{font-family:'Playfair Display',serif;font-size:30px;margin-bottom:10px;line-height:1.2;}
+.hero p{color:rgba(255,255,255,.7);font-size:14px;max-width:560px;}
+.hero-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;}
+.hero-tag{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;
+  background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);}
+
+/* SECTION HEADINGS */
+h2.section-h{font-family:'Playfair Display',serif;font-size:22px;color:var(--navy);
+  border-bottom:2.5px solid var(--gold);padding-bottom:8px;margin:32px 0 16px;
+  display:flex;align-items:center;gap:10px;}
+h3.sub-h{font-size:16px;font-weight:700;color:var(--navy-mid);margin:22px 0 10px;}
+h4.mini-h{font-size:13px;font-weight:700;color:var(--slate);margin:14px 0 7px;
+  text-transform:uppercase;letter-spacing:.5px;}
+
+/* CALLOUTS */
+.callout{border-radius:var(--r);padding:14px 18px;margin:12px 0;font-size:14px;}
+.callout .cl-label{font-size:9.5px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.cl-pearl{background:var(--amber-pale);border-left:4px solid var(--gold);}
+.cl-pearl .cl-label{color:var(--gold);}
+.cl-clinical{background:var(--teal-pale);border-left:4px solid var(--teal);}
+.cl-clinical .cl-label{color:var(--teal);}
+.cl-danger{background:var(--rose-pale);border-left:4px solid var(--rose);}
+.cl-danger .cl-label{color:var(--rose);}
+.cl-success{background:var(--sage-pale);border-left:4px solid var(--sage);}
+.cl-success .cl-label{color:var(--sage);}
+.cl-violet{background:var(--violet-pale);border-left:4px solid var(--violet);}
+.cl-violet .cl-label{color:var(--violet);}
+.cl-ethics{background:#eaf7fb;border-left:4px solid var(--blue);border:1px solid #b3ddf0;border-left:4px solid var(--blue);}
+.cl-ethics .cl-label{color:var(--blue);}
+.cl-info{background:var(--blue-pale);border-left:4px solid var(--blue);}
+.cl-info .cl-label{color:var(--blue);}
+.cl-navy{background:var(--navy);color:rgba(255,255,255,.9);border-left:4px solid var(--gold);}
+.cl-navy .cl-label{color:var(--gold);}
+.cl-correction{background:var(--rose-pale);border:1.5px solid var(--rose);border-radius:var(--r);}
+.cl-correction .cl-label{color:var(--rose);}
+
+/* HIGHLIGHT MODE */
+.hy{font-weight:600;transition:background .25s, padding .2s, border-radius .2s;}
+body.highlight-mode .hy{background:#fef08a;padding:1px 4px;border-radius:3px;color:#713f12;}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;border-radius:var(--r);box-shadow:var(--shadow);margin:12px 0 20px;}
+table{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff;}
+thead tr{background:var(--navy);}
+thead th{padding:10px 14px;text-align:left;color:#fff;font-weight:700;font-size:12px;letter-spacing:.3px;}
+tbody td{padding:9px 14px;border-bottom:1px solid #e8eaed;vertical-align:top;line-height:1.55;}
+tbody tr:nth-child(even){background:#f8f9fa;}
+tbody tr:hover{background:#eaf4fb;}
+.td-gold{background:var(--amber-pale)!important;font-weight:600;color:var(--navy);}
+.td-teal{background:var(--teal-pale)!important;font-weight:600;color:var(--teal);}
+.td-rose{background:var(--rose-pale)!important;font-weight:600;color:var(--rose);}
+.td-sage{background:var(--sage-pale)!important;font-weight:600;color:#155724;}
+.td-violet{background:var(--violet-pale)!important;font-weight:600;color:var(--violet);}
+.td-blue{background:var(--blue-pale)!important;font-weight:600;color:var(--blue);}
+.td-navy{background:var(--navy)!important;color:#fff;font-weight:700;}
+.td-coral{background:var(--coral-pale)!important;font-weight:600;color:var(--coral);}
+
+/* Q&A BLOCKS */
+.qa-block{border:1.5px solid #dde1e7;border-radius:var(--card-r);margin:20px 0;overflow:hidden;box-shadow:var(--shadow);}
+.qa-header{display:flex;align-items:center;gap:12px;padding:13px 18px;cursor:pointer;transition:.15s;}
+.qa-header:hover{opacity:.9;}
+.qa-type-prenatal{background:linear-gradient(90deg,#eaf7fb,#f0f8ff);border-bottom:1px solid #b3d9f0;}
+.qa-type-infant{background:linear-gradient(90deg,#eafaf1,#f0fff8);border-bottom:1px solid #a9dfbf;}
+.qa-type-theory{background:linear-gradient(90deg,#f4ecf7,#faf0ff);border-bottom:1px solid #d2b4de;}
+.qa-type-school{background:linear-gradient(90deg,#fdf9e7,#fffdf0);border-bottom:1px solid #f0e07a;}
+.qa-type-adolescent{background:linear-gradient(90deg,#fef5e7,#fff8ee);border-bottom:1px solid #f0a060;}
+.qa-type-adult{background:linear-gradient(90deg,#fdeaea,#fff0f0);border-bottom:1px solid #e8a0a0;}
+.qa-type-aging{background:linear-gradient(90deg,#e8f0fe,#eef4ff);border-bottom:1px solid #a0b8f0;}
+.qa-number{background:var(--navy);color:#fff;padding:3px 10px;border-radius:12px;
+  font-size:11px;font-weight:800;white-space:nowrap;}
+.qa-title{font-size:13px;font-weight:700;color:var(--navy);flex:1;}
+.qa-arrow{font-size:14px;color:var(--slate-light);transition:transform .3s;}
+.qa-arrow.open{transform:rotate(180deg);}
+.qa-body{display:none;animation:fadeIn .2s;}
+.qa-body.open{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+.qa-vignette{padding:16px 18px;background:#fff;border-bottom:1px solid #e8eaed;}
+.qa-vignette p{font-size:14px;font-weight:600;color:var(--navy);line-height:1.75;margin-bottom:12px;}
+.qa-options{list-style:none;padding:0;}
+.qa-option{
+  padding:8px 12px;font-size:13.5px;color:var(--slate);border-radius:6px;margin-bottom:4px;
+  border:1px solid #dde1e7;cursor:pointer;transition:background .15s,color .15s,border-color .15s;
+  user-select:none;
+}
+.qa-option:hover:not(.wrong-selection):not(.correct-selection):not(.revealed-correct){
+  background:#f0f2f5;border-color:#bcc0c8;
+}
+.qa-option.wrong-selection{background:#dc2626;color:#fff;font-weight:700;border-color:#b91c1c;cursor:default;}
+.qa-option.correct-selection{background:#16a34a;color:#fff;font-weight:700;border-color:#15803d;cursor:default;}
+.qa-option.revealed-correct{background:var(--sage-pale);color:#155724;font-weight:700;border-color:#a9dfbf;cursor:default;}
+.qa-block.answered .qa-option{cursor:default;pointer-events:none;}
+.qa-reveal-btn{
+  display:block;width:calc(100% - 36px);margin:10px 18px 0;padding:10px 18px;
+  background:#f0f4ff;border:1.5px solid #b3c6f0;border-radius:8px;
+  color:#1a3560;font-size:13px;font-weight:700;cursor:pointer;
+  font-family:'Inter',sans-serif;text-align:left;transition:background .2s;
+}
+.qa-reveal-btn:hover{background:#dde8fb;}
+.qa-reveal-btn.revealed{background:#e8f5e9;border-color:#a9dfbf;color:#155724;}
+.qa-answer-section{padding:14px 18px;background:var(--sage-pale);border-top:1px solid #a9dfbf;}
+.qa-answer-label{font-size:9.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--sage);margin-bottom:8px;}
+.qa-explanation{padding:13px 18px;background:#fdf8ee;border-top:1px solid #f0dfa0;}
+.qa-explanation-label{font-size:9.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:7px;}
+.qa-wrong{padding:12px 18px;background:var(--rose-pale);border-top:1px solid #e8b0a0;}
+.qa-wrong-label{font-size:9.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--rose);margin-bottom:6px;}
+
+/* SCROLL OFFSET for fixed topbar */
+[id]{scroll-margin-top:72px;}
+
+/* IMAGE PLACEHOLDER */
+.img-ph{border:2px dashed #cdd0d4;border-radius:var(--card-r);padding:24px;margin:14px 0;
+  background:#f8f9fa;text-align:center;}
+.img-ph .img-icon{font-size:32px;margin-bottom:7px;}
+.img-ph .img-title{font-weight:700;font-size:14px;color:var(--navy);margin-bottom:5px;}
+.img-ph .img-desc{font-size:12px;color:var(--slate);max-width:480px;margin:0 auto;}
+
+/* HEEADSSS IMAGE */
+.heeadsss-card{background:linear-gradient(135deg,var(--navy) 0%,#1a3560 100%);
+  border-radius:var(--card-r);padding:24px 28px;margin:16px 0;color:#fff;}
+.heeadsss-title{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold-light);margin-bottom:6px;}
+.heeadsss-sub{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:18px;}
+.heeadsss-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.h-item{background:rgba(255,255,255,.08);border-radius:var(--r);padding:10px 12px;
+  border-top:3px solid;}
+.h-item .h-letter{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:3px;}
+.h-item .h-word{font-size:12px;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:2px;}
+.h-item .h-desc{font-size:10.5px;color:rgba(255,255,255,.6);}
+
+/* FLOWCHART (Doc 2) */
+.flowchart{background:#fff;border-radius:var(--card-r);padding:20px;margin:16px 0;box-shadow:var(--shadow);}
+.flow-title{font-family:'Playfair Display',serif;font-size:16px;color:var(--navy);margin-bottom:16px;text-align:center;}
+.flow-row{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin:4px 0;}
+.flow-box{padding:10px 18px;border-radius:var(--r);font-size:13px;font-weight:600;text-align:center;
+  border:2px solid;min-width:140px;}
+.flow-arrow{font-size:20px;color:#aaa;margin:2px 0;text-align:center;}
+.fb-navy{background:var(--navy);border-color:var(--navy);color:#fff;}
+.fb-gold{background:var(--amber-pale);border-color:var(--gold);color:var(--navy);}
+.fb-teal{background:var(--teal-pale);border-color:var(--teal);color:var(--teal);}
+.fb-rose{background:var(--rose-pale);border-color:var(--rose);color:var(--rose);}
+.fb-sage{background:var(--sage-pale);border-color:var(--sage);color:#155724;}
+.fb-violet{background:var(--violet-pale);border-color:var(--violet);color:var(--violet);}
+.fb-blue{background:var(--blue-pale);border-color:var(--blue);color:var(--blue);}
+.fb-coral{background:var(--coral-pale);border-color:var(--coral);color:var(--coral);}
+.flow-branch{display:flex;justify-content:center;gap:20px;width:100%;}
+.flow-branch-item{display:flex;flex-direction:column;align-items:center;flex:1;max-width:220px;}
+.flow-branch-label{font-size:11px;font-weight:700;color:var(--slate);text-align:center;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;}
+
+/* RAPID REVIEW */
+.rr-box{background:var(--navy);color:rgba(255,255,255,.9);border-radius:var(--card-r);
+  padding:20px 24px;margin:18px 0;}
+.rr-title{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:14px;}
+.rr-list{list-style:none;padding:0;}
+.rr-list li{padding:5px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05);
+  display:flex;gap:8px;align-items:flex-start;}
+.rr-list li::before{content:'→';color:var(--gold);font-weight:700;flex-shrink:0;margin-top:2px;}
+
+/* COMPARE CARDS */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.compare-card{border-radius:var(--r);padding:15px 18px;border:1.5px solid;}
+.compare-card h4{font-size:14px;font-weight:700;margin-bottom:8px;}
+.compare-card ul{padding-left:16px;font-size:13.5px;}
+.compare-card ul li{margin-bottom:5px;}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:28px;margin:14px 0;}
+.timeline::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:#e0e4e8;}
+.tl-item{position:relative;padding-bottom:18px;}
+.tl-dot{position:absolute;left:-24px;top:4px;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:var(--shadow);}
+.tl-label{font-size:12px;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.tl-content{font-size:13.5px;}
+
+/* SEARCH */
+#searchResults{display:none;position:fixed;top:calc(var(--topH)+6px);right:16px;
+  background:#fff;border-radius:var(--card-r);box-shadow:var(--shadow-lg);
+  width:340px;max-height:420px;overflow-y:auto;z-index:600;border:1px solid #dde1e7;}
+.sr-item{padding:10px 14px;border-bottom:1px solid #f0f2f4;cursor:pointer;font-size:13px;}
+.sr-item:hover{background:#f8f9fa;}
+.sr-title{font-weight:700;color:var(--navy);}
+.sr-ctx{color:var(--slate-light);font-size:11px;margin-top:2px;}
+
+/* UTILITY */
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;margin-left:5px;}
+.badge-gold{background:var(--amber-pale);color:var(--gold);}
+.badge-teal{background:var(--teal-pale);color:var(--teal);}
+.badge-rose{background:var(--rose-pale);color:var(--rose);}
+.badge-sage{background:var(--sage-pale);color:var(--sage);}
+.badge-navy{background:var(--navy);color:var(--gold-light);}
+ul.cl{padding-left:18px;margin:8px 0 12px;}
+ul.cl li{margin-bottom:5px;font-size:14px;}
+ol.cl{padding-left:18px;margin:8px 0 12px;}
+ol.cl li{margin-bottom:5px;font-size:14px;}
+strong{font-weight:700;}
+hr.divider{border:none;border-top:1.5px solid #e4e6ea;margin:24px 0;}
+.mono{font-family:'JetBrains Mono',monospace;font-size:12px;background:#f0f2f4;padding:2px 5px;border-radius:3px;}
+p{margin-bottom:10px;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  #sidebar{transform:translateX(-100%);transition:transform .3s;}
+  #sidebar.open{transform:translateX(0);}
+  #main{margin-left:0;}
+  #topbar{padding-left:16px;}
+  #mobileMenu{display:block;}
+  .panel{padding:20px 16px 60px;}
+  .compare-grid{grid-template-columns:1fr;}
+  .heeadsss-grid{grid-template-columns:repeat(2,1fr);}
+  .flow-branch{flex-direction:column;align-items:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header id="topbar">
+  <button id="mobileMenu" onclick="toggleSidebar()">☰</button>
+  <div class="tb-brand">Life Cycle <span class="tb-sub">Womb to Tomb · USMLE Step 1 2026</span></div>
+  <div class="tb-controls">
+    <input type="text" id="searchInput" placeholder="🔍 Search notes…" oninput="doSearch(this.value)">
+    <button id="hlBtn" onclick="toggleHighlight()">★ Highlight HY</button>
+  </div>
+</header>
+<div id="searchResults"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo">🔄</div>
+    <div>
+      <div class="sb-title">Life Cycle Master Resource</div>
+      <div class="sb-subtitle">Dr. Sampath Venkataswamy · USMLE Step 1</div>
+    </div>
+  </div>
+  <div class="doc-tabs">
+    <div class="doc-tab active" id="tab-d1" onclick="switchDoc('d1')">MASTER<br><small style="font-size:9px;font-weight:400">Lecture Notes</small></div>
+    <div class="doc-tab" id="tab-d2" onclick="switchDoc('d2')">HIGH YIELD<br><small style="font-size:9px;font-weight:400">HY</small></div>
+  </div>
+  <div class="sb-nav" id="nav-d1">
+    <div class="nav-section">
+      <div class="nav-section-title">Foundations</div>
+      <a class="nav-item" onclick="goTo('lo')">Learning Objectives</a>
+      <a class="nav-item" onclick="goTo('prenatal')">Prenatal Development</a>
+      <a class="nav-item sub" onclick="goTo('apgar')">APGAR Score</a>
+      <a class="nav-item sub" onclick="goTo('reflexes')">Primitive Reflexes</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Developmental Theories</div>
+      <a class="nav-item" onclick="goTo('piaget')">Piaget — Cognitive</a>
+      <a class="nav-item" onclick="goTo('erikson')">Erikson — Psychosocial</a>
+      <a class="nav-item" onclick="goTo('freud')">Freud — Psychosexual</a>
+      <a class="nav-item" onclick="goTo('kohlberg')">Kohlberg — Moral</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Life Stages</div>
+      <a class="nav-item" onclick="goTo('infancy')">Infancy (0–2 yrs)</a>
+      <a class="nav-item" onclick="goTo('toddler')">Toddler & Preschool (2–6)</a>
+      <a class="nav-item" onclick="goTo('school-age')">School Age (6–11)</a>
+      <a class="nav-item" onclick="goTo('adolescence')">Adolescence (12–20)</a>
+      <a class="nav-item sub" onclick="goTo('heeadsss')">HEEADSSS Framework</a>
+      <a class="nav-item" onclick="goTo('early-adult')">Early Adulthood (20–40)</a>
+      <a class="nav-item" onclick="goTo('mid-adult')">Middle Adulthood (40–65)</a>
+      <a class="nav-item" onclick="goTo('late-adult')">Late Adulthood (65+)</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Aging & Death</div>
+      <a class="nav-item" onclick="goTo('aging')">Aging — Bio-Psychosocial</a>
+      <a class="nav-item" onclick="goTo('death')">Death & Dying — DABDA</a>
+      <a class="nav-item" onclick="goTo('grief')">Grief & Bereavement</a>
+      <a class="nav-item" onclick="goTo('illness-rx')">Illness Reactions by Age</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Q&A Practice</div>
+      <a class="nav-item sub" onclick="goTo('qa-sec')">All 25 Q&As</a>
+    </div>
+  </div>
+  <div class="sb-nav" id="nav-d2" style="display:none">
+    <div class="nav-section">
+      <div class="nav-section-title">HY Synthesis</div>
+      <a class="nav-item" onclick="goTo('d2-corrections')">⚠ Corrections Made</a>
+      <a class="nav-item" onclick="goTo('d2-milestones')">Master Milestones Table</a>
+      <a class="nav-item" onclick="goTo('d2-theories')">Theories Quick Ref</a>
+      <a class="nav-item" onclick="goTo('d2-reflexes')">Reflexes Table</a>
+      <a class="nav-item" onclick="goTo('d2-erikson-table')">Erikson Full Table</a>
+      <a class="nav-item" onclick="goTo('d2-adolescent')">Adolescent Flow</a>
+      <a class="nav-item" onclick="goTo('d2-grief-table')">Grief Comparison Table</a>
+      <a class="nav-item" onclick="goTo('d2-illness')">Illness Reactions Flow</a>
+      <a class="nav-item" onclick="goTo('d2-aging-changes')">Aging Changes Table</a>
+      <a class="nav-item" onclick="goTo('d2-rapid')">Rapid Review Bullets</a>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+
+<!-- ═══════════════════ DOCUMENT 1 ═══════════════════ -->
+<div id="d1" class="panel active">
+
+  <div class="hero">
+    <div class="eyebrow">· Behavioral Sciences <span class="hero-tag">· DSM-5-TR Compliant</span> <span class="hero-tag">· USMLE objectives Aligned</span> <span class="hero-tag">· USMLE pattern Q&A's Integrated</span></div>
+
+    <h1>Life Cycle: Womb to Tomb</h1>
+    <p>By Dr.Sampath Venkataswamy, MD (Physiology), MD (Psychiatry).</p>
+    <div class="hero-tags">
+      <span class="hero-tag">Windsor University School of Medicine, St.Kitts and Nevis</span>
+    </div>
+</div>
+ 
+
+  <!-- LEARNING OBJECTIVES -->
+  <div id="lo" class="callout cl-navy">
+    <div class="cl-label">📚 Learning Objectives</div>
+    <ul class="cl">
+      <li>Master key milestones from prenatal through late adulthood using the APGAR, reflex tables, and developmental frameworks.</li>
+      <li>Apply Piaget, Erikson, Freud, and Kohlberg to clinical vignettes — predicting behavior and identifying developmental failures.</li>
+      <li>Distinguish normal age-related changes from pathology across all life stages.</li>
+      <li>Utilize the <span class="hy">HEEADSSS framework</span> for adolescent psychosocial assessment.</li>
+      <li>Describe Kübler-Ross's <span class="hy">DABDA stages</span> and their clinical implications for dying patients.</li>
+      <li>Differentiate typical grief from <span class="hy">complicated grief and MDD</span> using DSM-5-TR criteria.</li>
+      <li>Predict age-specific reactions to illness and hospitalization.</li>
+      <li>Understand biopsychosocial changes in aging including neurochemical, sensory, and cognitive shifts.</li>
+      <li>Solve all 25 embedded USMLE-style questions.</li>
+    </ul>
+  </div>
+
+  <!-- ══ PRENATAL ══ -->
+  <h2 class="section-h" id="prenatal">🧬 Prenatal Development</h2>
+
+  <p>The prenatal period — from conception to birth — is the most rapid and critical window of human development. Environmental, genetic, and intrauterine factors converge to determine the architecture of the developing brain and body.</p>
+
+  <h3 class="sub-h">Intrauterine Influences</h3>
+  <div class="compare-grid">
+    <div class="compare-card" style="border-color:var(--rose);background:var(--rose-pale);">
+      <h4 style="color:var(--rose);">🚨 Noxious Influences (Teratogens)</h4>
+      <ul>
+        <li><strong>Hypoxemia</strong> → neuronal loss + white matter damage</li>
+        <li><strong>Inflammation</strong> → diffuse subcortical damage</li>
+        <li><strong>Placental insufficiency</strong> → long-term <span class="hy">neuronal connectivity deficits</span></li>
+        <li><strong>Maternal smoking/alcohol</strong> → altered placental function + fetal growth restriction</li>
+        <li><strong>TORCH infections</strong>: Toxoplasma, Rubella, CMV, Herpes, Syphilis, HIV</li>
+        <li><strong>Drugs</strong>: Thalidomide (limb defects), Isotretinoin (craniofacial/cardiac), Valproate (NTDs)</li>
+<img src="https://lh3.googleusercontent.com/d/1ct6Zo0FSGHSg3fGuANHLJRmhEpuV_Tji " style="width: 100%; border-radius: 10px; margin: 10px 0;"> 
+      </ul>
+    </div>
+    <div class="compare-card" style="border-color:var(--teal);background:var(--teal-pale);">
+      <h4 style="color:var(--teal);">✅ Protective Factors</h4>
+      <ul>
+        <li>Adequate placental blood flow and nutrition</li>
+        <li>Normal gestational age (37–42 weeks)</li>
+        <li>Appropriate birth weight</li>
+        <li>Prenatal vitamins (folic acid → prevents NTDs)</li>
+        <li>Absence of teratogens</li>
+        <li>Good maternal mental health</li>
+<img src="https://lh3.googleusercontent.com/d/1xCpWu-BbJX-boMUxMLuRWS_c2ylEgJtW " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout cl-pearl">
+    <div class="cl-label">💎 Step 1 Pearl — Placental Insufficiency</div>
+    The three major intrauterine insults and their specific damage patterns are frequently tested:
+    <span class="hy">Hypoxemia → white matter damage</span>;
+    <span class="hy">Inflammation → diffuse subcortical damage</span>;
+    <span class="hy">Placental insufficiency → neuronal connectivity deficits</span>.
+  </div>
+
+  <!-- APGAR -->
+  <div id="apgar">
+  <h3 class="sub-h">APGAR Score</h3>
+  <p>The APGAR score is a rapid, standardized assessment of newborn health performed at <span class="hy">1 minute and 5 minutes</span> after birth (and every 5 min thereafter if score remains &lt;7). Named as an acronym and after Dr. Virginia Apgar.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Component</th><th>0 Points</th><th>1 Point</th><th>2 Points</th></tr></thead>
+      <tbody>
+        <tr><td class="td-navy"><strong>A</strong>ppearance</td><td>Blue/pale all over</td><td>Blue extremities (Acrocyanosis)</td><td class="td-sage">Completely pink</td></tr>
+        <tr><td class="td-navy"><strong>P</strong>ulse</td><td>Absent</td><td>&lt;100 bpm</td><td class="td-sage">&gt;100 bpm</td></tr>
+        <tr><td class="td-navy"><strong>G</strong>rimace</td><td>No response</td><td>Grimace only</td><td class="td-sage">Cough/sneeze/cry</td></tr>
+        <tr><td class="td-navy"><strong>A</strong>ctivity</td><td>Limp/flaccid</td><td>Some flexion</td><td class="td-sage">Active motion</td></tr>
+        <tr><td class="td-navy"><strong>R</strong>espiration</td><td>Absent</td><td>Weak/irregular</td><td class="td-sage">Strong cry</td></tr>
+<img src="https://lh3.googleusercontent.com/d/1nMXPYZUjDei8Fh4n96n7DGTz-mUf6pfk " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout cl-pearl">
+    <div class="cl-label">💎 Step 1 Pearl — APGAR Interpretation</div>
+    7–10 = Normal; 4–6 = Moderate depression → stimulate + O₂; 0–3 = Severe → immediate resuscitation.
+    <span class="hy">Acrocyanosis (blue hands/feet, pink body) = 1 point for Appearance</span> — this is the most commonly tested scoring subtlety.
+    Score of 8 is the classic USMLE answer when vignette shows "pink body, blue extremities, heart rate &gt;100, strong cry, some flexion."
+  </div>
+  </div>
+
+  <!-- REFLEXES -->
+  <div id="reflexes">
+  <h3 class="sub-h">Primitive Reflexes</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Reflex</th><th>Stimulus</th><th>Response</th><th>Onset</th><th>Extinction</th><th>CNS Origin</th></tr></thead>
+      <tbody>
+        <tr><td class="td-gold"><strong>Moro</strong></td><td>Sudden drop/startle</td><td>Arms abduct/extend, then adduct; crying</td><td>Birth</td><td><span class="hy">3–4 months</span></td><td>Brainstem</td></tr>
+        <tr><td class="td-teal"><strong>Rooting</strong></td><td>Touch cheek/corner of mouth</td><td>Head turns toward stimulus; mouth opens</td><td>Birth</td><td>3–4 months</td><td>Brainstem</td></tr>
+        <tr><td class="td-violet"><strong>Palmar Grasp</strong></td><td>Object in palm</td><td>Fingers flex/grasp</td><td>Birth</td><td><span class="hy">2–3 months</span></td><td>Spinal</td></tr>
+        <tr><td class="td-rose"><strong>Babinski</strong></td><td>Stroke lateral sole of foot</td><td>Big toe dorsiflexes, other toes fan out</td><td>Birth</td><td><span class="hy">12–24 months</span></td><td>Spinal</td></tr>
+        <tr><td class="td-blue"><strong>Stepping</strong></td><td>Hold upright, foot touches surface</td><td>Alternating stepping motion</td><td>Birth</td><td>2 months</td><td>Spinal</td>
+<img src="https://lh3.googleusercontent.com/d/1wLPC5SCSRx0ESq9pSrUYv9tvw8FfmpbJ " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+</tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout cl-danger">
+    <div class="cl-label">🚨 Clinical Alert — Babinski After Age 2</div>
+    A positive Babinski reflex (upgoing toe) in a child <span class="hy">AFTER age 2 (24 months)</span> is abnormal and suggests an <span class="hy">upper motor neuron lesion</span> (corticospinal tract damage). This is always normal in infants &lt;24 months. This distinction is heavily tested on USMLE.
+  </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ DEVELOPMENTAL THEORIES ══ -->
+  <h2 class="section-h" id="piaget">🧠 Piaget — Cognitive Development Theory</h2>
+
+  <div class="callout cl-clinical">
+    <div class="cl-label">🏥 Clinical Correlate</div>
+    Piaget's stages explain HOW children think and process illness. They directly guide how physicians should communicate with pediatric patients. A preoperational child who thinks illness is punishment needs very different communication than a formal operational adolescent who can reason abstractly.
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Stage</th><th>Age</th><th>Key Concept</th><th>Key Ability</th><th>USMLE Application</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-teal"><strong>Sensorimotor</strong></td><td>0–2 yrs</td>
+          <td><span class="hy">Object Permanence</span></td>
+          <td>Learn through senses/motor action; "out of sight = out of mind" until ~9 months</td>
+          <td>Absent object permanence by 9 months → global delay/ASD red flag</td>
+        </tr>
+        <tr>
+          <td class="td-gold"><strong>Preoperational</strong></td><td>2–7 yrs</td>
+          <td><span class="hy">Egocentrism, Animism, Magical Thinking</span></td>
+          <td>Symbolic thought; but logic is limited; cannot conserve; centration</td>
+          <td>Illness as punishment (magical thinking); can't take another's perspective</td>
+        </tr>
+        <tr>
+          <td class="td-sage"><strong>Concrete Operational</strong></td><td>7–11 yrs</td>
+          <td><span class="hy">Conservation, Seriation, Reversibility</span></td>
+          <td>Logical thinking about concrete objects; understands conservation</td>
+          <td>Classic Q: Tall glass vs. short glass — same water volume (conservation)</td>
+        </tr>
+        <tr>
+          <td class="td-violet"><strong>Formal Operational</strong></td><td>12+ yrs</td>
+          <td><span class="hy">Abstract Thought, Hypothetical Reasoning</span></td>
+          <td>Can reason about hypotheticals, ethics, future; deductive logic</td>
+          <td>"Personal Fable" — teen invincibility explains risk-taking behaviors</td>
+<img src="https://lh3.googleusercontent.com/d/17Ey9nKCO13Cx-LoNe-drF1hxn973HGXh " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ERIKSON -->
+  <h2 class="section-h" id="erikson">🌱 Erikson — Psychosocial Development Theory</h2>
+
+  <p>Erikson proposed 8 sequential stages across the entire lifespan, each characterized by a psychosocial conflict. <span class="hy">Successful resolution → virtue/strength; failure → psychopathology or arrested development</span>. USMLE loves asking what stage/failure applies to a given clinical presentation.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Stage</th><th>Age</th><th>Conflict</th><th>Virtue (Success)</th><th>Failure → Clinical Outcome</th></tr></thead>
+      <tbody>
+        <tr><td class="td-teal"><strong>1</strong></td><td>0–1 yr</td><td><span class="hy">Trust vs. Mistrust</span></td><td>Hope</td><td>Attachment disorders, mistrust of caregivers</td></tr>
+        <tr><td class="td-gold"><strong>2</strong></td><td>1–3 yrs</td><td><span class="hy">Autonomy vs. Shame &amp; Doubt</span></td><td>Will</td><td>Low self-esteem, excessive dependency, OCD traits from strict toilet training</td></tr>
+        <tr><td class="td-sage"><strong>3</strong></td><td>3–6 yrs</td><td><span class="hy">Initiative vs. Guilt</span></td><td>Purpose</td><td>Excessive guilt, anxiety disorders, inhibition of self-expression</td></tr>
+        <tr><td class="td-blue"><strong>4</strong></td><td>6–11 yrs</td><td><span class="hy">Industry vs. Inferiority</span></td><td>Competence</td><td>Inferiority complex, poor academic self-concept, school avoidance</td></tr>
+        <tr><td class="td-coral"><strong>5</strong></td><td>12–18 yrs</td><td><span class="hy">Identity vs. Role Confusion</span></td><td>Fidelity</td><td>Role confusion, gang/cult membership, rebellious behavior, delinquency</td></tr>
+        <tr><td class="td-violet"><strong>6</strong></td><td>20–40 yrs</td><td><span class="hy">Intimacy vs. Isolation</span></td><td>Love</td><td>Social withdrawal, loneliness, difficulty with commitment, depression</td></tr>
+        <tr><td class="td-rose"><strong>7</strong></td><td>40–65 yrs</td><td><span class="hy">Generativity vs. Stagnation</span></td><td>Care</td><td>Stagnation, midlife crisis, boredom, dissatisfaction, narcissism</td></tr>
+        <tr><td class="td-blue"><strong>8</strong></td><td>65+ yrs</td><td><span class="hy">Integrity vs. Despair</span></td><td>Wisdom</td><td>Despair, regret, fear of death, depression, bitterness</td></tr>
+<img src="https://lh3.googleusercontent.com/d/1pD46ygRH0PxaFkTOOWZyi85_WJuAeG0n" style="width: 70%; border-radius: 10px; margin: 10px 0;">
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FREUD -->
+  <h2 class="section-h" id="freud">🛋️ Freud — Psychosexual Development</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Stage</th><th>Age</th><th>Erogenous Zone / Focus</th><th>Key Concept</th><th>Fixation → Adult Outcome</th></tr></thead>
+      <tbody>
+        <tr><td class="td-teal"><strong>Oral</strong></td><td>0–1 yr</td><td>Mouth (sucking, feeding)</td><td>Dependency on caregiver for oral gratification</td><td>Smoking, nail-biting, overeating, dependency, sarcasm</td></tr>
+        <tr><td class="td-gold"><strong>Anal</strong></td><td>1–3 yrs</td><td>Anus (toilet training)</td><td>Control of bowels; independence vs. dependence</td><td><span class="hy">Anal-retentive: OCD traits, perfectionism, stubbornness, hoarding</span></td></tr>
+        <tr><td class="td-violet"><strong>Phallic</strong></td><td>3–6 yrs</td><td>Genitals</td><td><span class="hy">Oedipus complex</span> (boys) / Electra complex (girls); identification with same-sex parent</td><td>Hysterical personality, authority issues, sexual dysfunction</td></tr>
+        <tr><td class="td-sage"><strong>Latency</strong></td><td>6–12 yrs</td><td>Sexual dormancy</td><td>Sexual urges repressed; energy directed to school and peer relationships</td><td>Minimal relevance; disruption → peer relationship problems</td></tr>
+        <tr><td class="td-rose"><strong>Genital</strong></td><td>12+ yrs</td><td>Genitals (mature sexuality)</td><td>Sexual interest in others; healthy adult relationships</td><td>Normal sexual functioning; earlier stage fixations resurface</td></tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/18smglOe4L6tE_IZ6kA0M6Y1wsR5yzPz1 " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <!-- KOHLBERG -->
+  <h2 class="section-h" id="kohlberg">⚖️ Kohlberg — Moral Development</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Level</th><th>Age</th><th>Basis for Moral Reasoning</th><th>Example</th><th>USMLE Application</th></tr></thead>
+      <tbody>
+        <tr><td class="td-rose"><strong>Preconventional</strong></td><td>&lt;9 yrs</td><td>Self-interest; avoid punishment</td><td>"I won't steal because I'll get in trouble"</td><td>7-yr-old insists on rules to avoid punishment</td></tr>
+        <tr><td class="td-gold"><strong>Conventional</strong></td><td>9–20 yrs</td><td>Follow rules; social conformity; approval</td><td>"Cheating is against school policy"</td><td>Teen follows rules to fit in; peer approval driven</td></tr>
+        <tr><td class="td-sage"><strong>Postconventional</strong></td><td>20+ yrs</td><td>Personal ethics; universal principles</td><td>"Civil disobedience is moral" (Gandhi, MLK)</td><td>Physician whistleblower acting on principle</td></tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/1Lz_AijBpDGjM1wIWJepy2rGmN3psjK6m " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ INFANCY ══ -->
+  <h2 class="section-h" id="infancy">👶 Infancy (0–2 Years)</h2>
+
+  <h3 class="sub-h">Key Motor, Language, and Social Milestones</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Age</th><th>Motor</th><th>Language</th><th>Social/Cognitive</th><th>USMLE Red Flag</th></tr></thead>
+      <tbody>
+        <tr><td class="td-gold"><strong>2 months</strong></td><td>Lifts head prone; social smile</td><td>Cooing, vocalizes to voices</td><td><span class="hy">Social smile (exogenous)</span></td><td>No social smile by 3 months → attachment/neglect</td></tr>
+        <tr><td class="td-teal"><strong>4–6 months</strong></td><td>Rolls, sits with support, reaches</td><td>Babbles (6 mo)</td><td>Orients to voice (3–4 mo)</td><td>No babbles by 9 months → hearing/ASD concern</td></tr>
+        <tr><td class="td-sage"><strong>7–9 months</strong></td><td>Sits alone (6–9 mo); crawls</td><td>Babbles consonants</td><td><span class="hy">Stranger anxiety (6–9 mo)</span>; Peek-a-boo</td><td>Cannot sit by 9 months → neuromuscular evaluation!</td></tr>
+        <tr><td class="td-violet"><strong>10–12 months</strong></td><td>Stands with support; first steps</td><td>First words ("mama","dada")</td><td><span class="hy">Object permanence</span>; Pincer grasp (9–10 mo); waves bye-bye</td><td>No words by 16–18 mo; no pincer by 15 mo</td></tr>
+        <tr><td class="td-blue"><strong>12–18 months</strong></td><td>Walks independently; throws</td><td>5–10 words; points</td><td>Shows affection; separation anxiety peaks</td><td>Not walking by 18 months</td></tr>
+        <tr><td class="td-rose"><strong>18–24 months</strong></td><td>Runs; stacks 4–6 blocks</td><td><span class="hy">2-word phrases by 24 mo; 50+ words</span></td><td>Parallel play; autonomy ("No!"); defiance</td><td>No 2-word phrases by 30 months</td></tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/1qQiVw8RDjvLbqgTKv52m4tvU4czTSU17 " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <div class="callout cl-pearl">
+    <div class="cl-label">💎 Block Stacking Rule — Highly Tested</div>
+    <span class="hy">Number of blocks = Age (in years) × 3</span><br>
+    2 years → 6 blocks | 3 years → 9 blocks | 4 years → 12 blocks<br>
+    This formula appears across multiple USMLE questions and must be memorized.
+<img src="https://lh3.googleusercontent.com/d/14RLkhvyjuHunblnLyqzYjotvg98YKHpv " style="width: 50%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <h3 class="sub-h">Social Smile Development</h3>
+  <div class="callout cl-clinical">
+    <div class="cl-label">🏥 Clinical Correlate</div>
+    <strong>Endogenous smile</strong> (birth) → reflexive/spontaneous<br>
+    <strong>Exogenous smile</strong> (~8 weeks) → in response to any face<br>
+    <span class="hy"><strong>Preferred/Recognition smile</strong> (~16 weeks)</span> → specifically to caregiver/mother<br><br>
+    Absence of social smile by 3 months = red flag for attachment disorder, neglect, or visual impairment.
+<img src="https://lh3.googleusercontent.com/d/1AkrMQ3kLci54QdicRdiiTNOiz4-6atSS " style="width: 60%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ TODDLER & PRESCHOOL ══ -->
+  <h2 class="section-h" id="toddler">🧒 Toddler & Preschool (2–6 Years)</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Age</th><th>Milestones</th><th>Erikson Stage</th><th>Piaget Stage</th></tr></thead>
+      <tbody>
+        <tr><td class="td-gold"><strong>2–3 yrs</strong></td><td>Runs; jumps; kicks ball; 2-word phrases (24 mo) → sentences; 300+ words by 3 yrs; toilet training (~3 yrs)</td><td>Autonomy vs. Shame</td><td>Preoperational (egocentrism begins)</td></tr>
+        <tr><td class="td-teal"><strong>3–4 yrs</strong></td><td>Hops on one foot; rides tricycle (3 wheels@3 yrs); copies circle; 4–6 blocks; cooperative play begins; imaginative play</td><td>Initiative vs. Guilt</td><td>Preoperational (animism, magical thinking)</td></tr>
+        <tr><td class="td-sage"><strong>4–5 yrs</strong></td><td>Draws stick figure; copies square; skips; self-dresses; 1000+ word vocabulary; complete sentences</td><td>Initiative vs. Guilt</td><td>Preoperational (centration, egocentrism)</td></tr>
+        <tr><td class="td-violet"><strong>5–6 yrs</strong></td><td>Counts 20+; understands time; ties shoes; draws detailed person; school readiness</td><td>Transition → Industry vs. Inferiority</td><td>Approaching Concrete Operational</td></tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/1qv9OJHVRPQifDRmPg3n1IZeVJyFhaQCI " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ SCHOOL AGE ══ -->
+  <h2 class="section-h" id="school-age">🏫 School Age (6–11 Years) — "Industry & Concrete Thought"</h2>
+
+  <div class="callout cl-clinical">
+    <div class="cl-label">🏥 Clinical Correlate</div>
+    The school-age child is characterized by three theoretical landmarks happening simultaneously:<br>
+    <strong>Erikson</strong>: Industry vs. Inferiority (mastering skills)<br>
+    <strong>Piaget</strong>: Concrete Operational (conservation, seriation, logical thinking about real objects)<br>
+    <strong>Kohlberg</strong>: Conventional morality begins (rules, approval-seeking)<br>
+    <strong>Freud</strong>: Latency stage (sexual dormancy; energy → academics, hobbies, same-sex peer bonds)
+<img src="https://lh3.googleusercontent.com/d/1zVyfpZ5r5DpqARgHyydsTivYjzhNux6o " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <h3 class="sub-h">Key Concepts in Concrete Operational Stage</h3>
+  <ul class="cl">
+    <li><span class="hy">Conservation</span>: Understanding that quantity doesn't change with shape (classic: tall glass vs. short bowl — same water volume). Emerges ~7 years.</li>
+    <li><span class="hy">Seriation</span>: Ability to order objects by size, weight, or other properties (arranging books by height).</li>
+    <li><span class="hy">Classification</span>: Objects can belong to multiple categories simultaneously (a dog is an animal AND a pet AND brown).</li>
+    <li><span class="hy">Reversibility</span>: Understanding that operations can be undone (clay ball → snake → ball again).</li>
+  </ul>
+
+  <h3 class="sub-h">Social Development at School Age</h3>
+  <ul class="cl">
+    <li>Strong preference for <span class="hy">same-gender peer groups</span></li>
+    <li>Identification with same-gender parent and teachers/role models</li>
+    <li>Strong rule-orientation; fairness is paramount</li>
+    <li>Understanding of death: finality by ~7 years; universality/inevitability by ~10–11 years</li>
+  </ul>
+
+  <hr class="divider">
+
+  <!-- ══ ADOLESCENCE ══ -->
+  <h2 class="section-h" id="adolescence">🧑 Adolescence (12–20 Years) — "Identity & Abstract Thought"</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Phase</th><th>Physical</th><th>Social</th><th>Cognitive</th><th>Key Risks</th></tr></thead>
+      <tbody>
+        <tr><td class="td-teal"><strong>Early (11–14)</strong></td><td>Rapid growth; Tanner Stage 2–3; menarche; body image anxiety; acne, gynecomastia</td><td>Peer groups begin to replace family; same-gender friendships; early sexual experimentation</td><td>Transition concrete→abstract; impulsive; daydreaming; identity exploration</td><td>Body image disorders, early risk behaviors</td></tr>
+        <tr><td class="td-gold"><strong>Middle (15–17)</strong></td><td>Physical development nearly complete; residual body image issues</td><td>Peers take precedence; gang involvement; identity expression (dress, music); risk behaviors peak</td><td>Abstract reasoning improves; future planning begins; omnipotence feeling; "Personal Fable"</td><td><span class="hy">Substance use, unsafe sex, reckless driving</span></td></tr>
+        <tr><td class="td-violet"><strong>Late (18–24)</strong></td><td>Physical stability; adjustment continues</td><td>Focus shifts to monogamous relationships; decreased peer reliance; individual identity separation from norms</td><td>Vocational goals solidify; morals, ethics, self-control develop; postconventional reasoning begins</td><td>Identity crisis, cult involvement, criminality</td></tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/1XnDI6HR953nQu8kdPXKhmQBik8aBSV07 " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <div class="callout cl-pearl">
+    <div class="cl-label">💎 Step 1 Pearl — "Personal Fable"</div>
+    The <span class="hy">Personal Fable</span> is the adolescent cognitive distortion of believing they are unique and invincible — "bad things happen to others, not to me." This explains risk-taking behavior (unprotected sex, drunk driving, drug experimentation) in otherwise intelligent adolescents. It is a product of newly developed formal operational thinking combined with emotional immaturity. Classic USMLE question: Teen says "I know driving drunk is dangerous for most people, but I'm a good driver — nothing bad will happen to me."
+  </div>
+
+  <!-- HEEADSSS -->
+  <div id="heeadsss">
+  <h3 class="sub-h">HEEADSSS Framework — Adolescent Psychosocial Screening</h3>
+  <p>A structured interview framework used to assess psychosocial risks in adolescents. Begin with least sensitive topics and progress to most sensitive to build rapport.</p>
+
+  <div class="heeadsss-card">
+    <div class="heeadsss-title">HEEADSSS</div>
+    <div class="heeadsss-sub">Psychosocial Assessment Tool for Adolescents</div>
+    <div class="heeadsss-grid">
+      <div class="h-item" style="border-color:#4db6ac;">
+        <div class="h-letter" style="color:#4db6ac;">H</div>
+        <div class="h-word">Home</div>
+        <div class="h-desc">Living situation, safety, family relationships, parental conflict</div>
+      </div>
+      <div class="h-item" style="border-color:#81c784;">
+        <div class="h-letter" style="color:#81c784;">E</div>
+        <div class="h-word">Education/Employment</div>
+        <div class="h-desc">School performance, truancy, job, future plans, learning difficulties</div>
+      </div>
+      <div class="h-item" style="border-color:#ffb74d;">
+        <div class="h-letter" style="color:#ffb74d;">E</div>
+        <div class="h-word">Eating</div>
+        <div class="h-desc">Body image, weight concerns, dieting, purging, eating disorders (Anorexia/Bulimia peak in adolescence)</div>
+      </div>
+      <div class="h-item" style="border-color:#64b5f6;">
+        <div class="h-letter" style="color:#64b5f6;">A</div>
+        <div class="h-word">Activities</div>
+        <div class="h-desc">Hobbies, sports, screen time, peer activities, gang involvement</div>
+      </div>
+      <div class="h-item" style="border-color:#e57373;">
+        <div class="h-letter" style="color:#e57373;">D</div>
+        <div class="h-word">Drugs</div>
+        <div class="h-desc">Alcohol, tobacco, marijuana, other substances; friends' use; parental modeling</div>
+      </div>
+      <div class="h-item" style="border-color:#f06292;">
+        <div class="h-letter" style="color:#f06292;">S</div>
+        <div class="h-word">Sexuality</div>
+        <div class="h-desc">Sexual activity, orientation, contraception, STIs, pregnancy history, LGBTQ+ identity</div>
+      </div>
+      <div class="h-item" style="border-color:#ce93d8;">
+        <div class="h-letter" style="color:#ce93d8;">S</div>
+        <div class="h-word">Suicide/Depression</div>
+        <div class="h-desc">Suicidal ideation, self-harm, depression symptoms, mental health history; 2nd/3rd leading cause of adolescent death</div>
+      </div>
+      <div class="h-item" style="border-color:#a5d6a7;">
+        <div class="h-letter" style="color:#a5d6a7;">S</div>
+        <div class="h-word">Safety/Violence</div>
+        <div class="h-desc">Abuse, bullying, carrying weapons, unsafe driving, domestic violence exposure</div>
+      </div>
+    </div>
+<img src="https://lh3.googleusercontent.com/d/1GoY5EO2wO7VaV5-8dQmLRzyDSPToENxy " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <div class="callout cl-ethics">
+    <div class="cl-label">⚖️ Ethics — Adolescent Confidentiality (Heavily Tested)</div>
+    <strong>General Rule:</strong> Minors require parental consent for most medical care.<br>
+    <strong>Exceptions where minors CAN consent independently (varies by state — know general principles):</strong>
+    <ul class="cl">
+      <li><span class="hy">Sexually transmitted infections (STIs)</span> — minor can consent to diagnosis and treatment</li>
+      <li><span class="hy">Contraception and pregnancy-related care</span></li>
+      <li><span class="hy">Substance abuse treatment</span></li>
+      <li><span class="hy">Mental health treatment</span> (generally)</li>
+      <li><span class="hy">Emancipated minors</span> — living independently, married, military, pregnant → full adult rights</li>
+    </ul>
+    <strong>Breaking confidentiality is required when:</strong> Imminent danger to self (suicidal with plan/intent) or others (homicidal ideation with specific target). Mandatory reporting for child abuse regardless of patient age.
+  </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ EARLY ADULTHOOD ══ -->
+  <h2 class="section-h" id="early-adult">💼 Early Adulthood (20–40 Years)</h2>
+
+  <div class="callout cl-clinical">
+    <div class="cl-label">🏥 Clinical Correlate</div>
+    <strong>Erikson Stage 6: Intimacy vs. Isolation</strong><br>
+    Peak physical health and fertility. High-risk period for onset of major psychiatric disorders (schizophrenia typically emerges in late teens to mid-20s for men, late 20s–early 30s for women; bipolar disorder often begins in 20s). Career launch, marriage, parenthood — major psychosocial stressors.
+  </div>
+
+  <ul class="cl">
+    <li>Erikson conflict: <span class="hy">Intimacy vs. Isolation</span> → failure leads to loneliness, social withdrawal, depression</li>
+    <li>Tasks: Forming committed relationships, career establishment, financial independence, becoming a parent</li>
+    <li>Psychiatric onset: <span class="hy">Schizophrenia, bipolar disorder, eating disorders</span> often have first episodes here</li>
+    <li>Physical: Peak physical performance and fertility; begins gradual decline ~30s</li>
+<img src="https://lh3.googleusercontent.com/d/1BoQ7C0ZWWltrUAFAwzPClGAH4QBNJMBz " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </ul>
+
+  <!-- MID ADULTHOOD -->
+  <h2 class="section-h" id="mid-adult">🌿 Middle Adulthood (40–65 Years)</h2>
+
+  <div class="callout cl-clinical">
+    <div class="cl-label">🏥 Clinical Correlate — "Sandwich Generation"</div>
+    Middle-aged adults often face the dual burden of parenting adolescents/young adults & caring for aging parents simultaneously — hence "sandwich generation" This creates significant caregiver burnout & chronic stress. Screen for depression, anxiety, burnout.
+<img src="https://lh3.googleusercontent.com/d/1frvMDPUNjWssVw4beOUKeREM6YHH68Ew " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <ul class="cl">
+    <li>Erikson conflict: <span class="hy">Generativity vs. Stagnation</span> → failure = midlife crisis, boredom, regret, narcissistic focus on self</li>
+    <li><strong>Menopause</strong>: Average age 51. Vasomotor symptoms (hot flashes, night sweats), vaginal atrophy, mood changes. HRT benefits vs. risks (↑ VTE, breast cancer, CAD in some women — individualize)</li>
+    <li>Onset of chronic diseases: HTN, T2DM, CAD, osteoporosis → begin age-appropriate cancer screenings</li>
+    <li>Empty nest syndrome: Children leave → depression, marital strain, identity re-evaluation</li>
+  </ul>
+
+  <!-- LATE ADULTHOOD -->
+  <h2 class="section-h" id="late-adult">🌟 Late Adulthood (65+ Years)</h2>
+
+  <ul class="cl">
+    <li>Erikson conflict: <span class="hy">Integrity vs. Despair</span> → life review; accepting mortality with peace vs. regret and fear</li>
+    <li>Tasks: Retirement adaptation, loss of spouse/friends, maintaining autonomy, meaning-making</li>
+    <li>Geriatric syndromes: Falls, urinary incontinence, pressure ulcers, polypharmacy, frailty</li>
+    <li>Key distinction: Normal aging vs. MCI vs. Dementia (see Aging section)</li>
+    <li><span class="hy">Depression is the MOST common psychiatric disorder in the elderly</span> — often presents atypically (somatic complaints, apathy, pseudodementia)</li>
+<img src="https://lh3.googleusercontent.com/d/1ZfZAcVFEhFnZQBGtiP4HCJ24MMPWmRBc " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </ul>
+
+  <hr class="divider">
+
+  <!-- ══ AGING ══ -->
+  <h2 class="section-h" id="aging">🧓 Aging — Biopsychosocial Changes</h2>
+
+  <h3 class="sub-h">Neurochemical Changes in Aging</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Neurotransmitter Change</th><th>Clinical Consequence</th></tr></thead>
+      <tbody>
+        <tr><td class="td-rose">↓ <span class="hy">Dopamine (DA)</span></td><td>Parkinsonian signs (rigidity, gait changes), depressive symptoms</td></tr>
+        <tr><td class="td-gold">↓ <span class="hy">Acetylcholine (ACh)</span></td><td>Memory decline; hallmark of Alzheimer's disease</td></tr>
+        <tr><td class="td-teal">↓ <span class="hy">Serotonin (5-HT)</span></td><td>Depression, sleep disturbances, appetite changes</td></tr>
+        <tr><td class="td-violet">↓ <span class="hy">Norepinephrine (NE)</span></td><td>Depression, attentional difficulties, cardiovascular regulation issues</td></tr>
+        <tr><td class="td-blue">↓ <span class="hy">GABA</span></td><td>Increased anxiety; altered sleep architecture</td></tr>
+        <tr><td class="td-sage">↑ <span class="hy">MAO</span></td><td>Increased breakdown of all monoamine neurotransmitters</td></tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/1vCF9NaLtnx7B4GBWXkcZhtWRTD6RKJny " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <h3 class="sub-h">Cognitive Changes — Normal vs. Pathological</h3>
+<img src="https://lh3.googleusercontent.com/d/1vDatdgHNMWqqiVxDhohSPH23_R6PmCzU " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  <div class="compare-grid">
+    <div class="compare-card" style="border-color:var(--sage);background:var(--sage-pale);">
+      <h4 style="color:var(--sage);">✅ Normal Aging</h4>
+      <ul>
+        <li><span class="hy">Crystallized intelligence ↔ stable or ↑</span> (vocabulary, accumulated knowledge)</li>
+        <li><span class="hy">Fluid intelligence ↓</span> (processing speed, novel problem-solving)</li>
+        <li>Mild forgetfulness of names/where keys are — DOES NOT impair daily function</li>
+        <li>Remote memory better preserved than recent memory</li>
+        <li>Learning slower; more time needed for new information</li>
+        <li>Sustained attention generally intact</li>
+      </ul>
+    </div>
+    <div class="compare-card" style="border-color:var(--rose);background:var(--rose-pale);">
+      <h4 style="color:var(--rose);">🚨 Dementia (Pathological)</h4>
+      <ul>
+        <li>Memory impairment + functional decline in daily activities</li>
+        <li>Aphasia, apraxia, agnosia, executive dysfunction</li>
+        <li>Progressive, not benign</li>
+        <li>Not explained by depression alone</li>
+        <li><span class="hy">Most common genetic cause: Down Syndrome (Trisomy 21)</span> → early Alzheimer's</li>
+        <li>Depression can mimic dementia → <span class="hy">"Pseudodementia"</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub-h">Other System Changes with Aging</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>System</th><th>Change</th><th>Clinical Implication</th></tr></thead>
+      <tbody>
+        <tr><td class="td-teal">Cardiovascular</td><td>↓ Cardiac output; ↑ systolic BP (stiff arteries); ↑ pulse pressure</td><td>Isolated systolic HTN most common in elderly</td></tr>
+        <tr><td class="td-gold">Renal</td><td>↓ GFR (~1%/yr after 40); ↓ creatinine clearance</td><td>Drug dosing — renally cleared drugs accumulate; adjust doses</td></tr>
+        <tr><td class="td-sage">Pulmonary</td><td>↓ FEV1, FVC; ↑ residual volume; ↓ respiratory reserve</td><td>Increased risk of aspiration, pneumonia</td></tr>
+        <tr><td class="td-violet">Musculoskeletal</td><td>Sarcopenia (↓ muscle mass); osteoporosis (↓ bone density)</td><td>Fall risk; fractures; poor wound healing</td></tr>
+        <tr><td class="td-rose">Sensory</td><td>Presbyopia (near vision); Presbycusis (high-frequency hearing loss); ↓ taste/smell</td><td>Communication barriers; medication non-adherence; nutrition issues</td></tr>
+        <tr><td class="td-blue">GI</td><td>↓ motility; ↓ hepatic metabolism; ↓ gastric acid</td><td>Constipation; drug metabolism altered; aspiration risk</td></tr>
+        <tr><td class="td-coral">Immune</td><td>Immunosenescence (↓ T-cell function; ↑ infection risk; ↓ vaccine efficacy)</td><td>Atypical presentations of infection (afebrile sepsis); emphasize vaccination</td></tr>
+        <tr><td class="td-gold">Sleep</td><td>↓ REM and slow-wave sleep; ↑ awakenings; <span class="hy">advanced sleep phase</span></td><td>Earlier bedtime/wake time; do NOT automatically treat with sedatives</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout cl-pearl">
+    <div class="cl-label">💎 Step 1 Pearl — Hispanic Paradox</div>
+    Despite often having lower socioeconomic status and limited healthcare access, Hispanic populations in the US have <span class="hy">higher life expectancy than non-Hispanic White Americans</span>. This is the "Hispanic Paradox." Proposed mechanisms: strong family/social support, dietary patterns, lower smoking rates, healthy immigrant effect. US life expectancy (2022): Female 80.2 yrs; Male 74.8 yrs; Global avg ~73.4 yrs (WHO).
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ DEATH & DYING ══ -->
+  <h2 class="section-h" id="death">💛 Death & Dying — Kübler-Ross DABDA Model</h2>
+
+  <div class="callout cl-danger">
+    <div class="cl-label">⚠️ Critical Clinical Context</div>
+    The DABDA stages were developed from interviews with terminally ill patients by Dr. Elizabeth Kübler-Ross. They are NOT linear, NOT universal, and NOT required to be experienced in order. Patients may skip stages, revisit them, or experience multiple simultaneously. The model is a <span class="hy">framework for understanding emotional reactions</span>, not a prescription for how patients should grieve.
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--blue);"></div>
+      <div class="tl-label">Stage 1 — D</div>
+      <div class="tl-content"><strong class="hy">Denial</strong>: "This can't be happening to me." Temporary buffer allowing time to process devastating news. Clinical approach: Allow time; don't force acceptance. Provide accurate information calmly and repeatedly.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--rose);"></div>
+      <div class="tl-label">Stage 2 — A</div>
+      <div class="tl-content"><strong class="hy">Anger</strong>: "Why me? It's not fair!" Frustration directed at physicians, family, God, or fate. Clinical approach: <span class="hy">Don't take anger personally</span>; acknowledge feelings empathetically ("I can see how angry and scared you must feel").</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--gold);"></div>
+      <div class="tl-label">Stage 3 — B</div>
+      <div class="tl-content"><strong class="hy">Bargaining</strong>: "If I pray harder, will I get more time?" Attempt to negotiate with a higher power or medical team. Clinical approach: Recognize this reflects the patient's need for control; allow expression without false promises.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--violet);"></div>
+      <div class="tl-label">Stage 4 — D</div>
+      <div class="tl-content"><strong class="hy">Depression</strong>: Two types — Reactive (sadness about current and past losses: job, function) and Preparatory (anticipating future loss of life, relationships). Clinical approach: Distinguish from clinical depression requiring treatment. Preparatory depression is normal and may not need intervention.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--sage);"></div>
+      <div class="tl-label">Stage 5 — A</div>
+      <div class="tl-content"><strong class="hy">Acceptance</strong>: "I'm ready." Calm, peaceful acknowledgment of reality. May need less intense emotional support but still requires presence, symptom management, and dignity-preserving care. Clinical approach: Ensure comfort, presence, and connection to loved ones.</div>
+<img src="https://lh3.googleusercontent.com/d/1q1JLPig3yZb5tBYFqavRLzMIPZRAazKJ " style="width: 100%; border-radius: 10px; margin: 10px 0;"> 
+    </div>
+  </div>
+
+  <h3 class="sub-h">Child's Developmental Understanding of Death</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Age Group</th><th>Piaget Stage</th><th>Understanding of Death</th><th>Clinical Approach</th></tr></thead>
+      <tbody>
+        <tr><td class="td-teal"><strong>&lt;5 yrs</strong></td><td>Preoperational</td><td>Death as reversible/temporary; like sleep; magical thinking; may feel responsible ("I made them sick")</td><td>Simple, concrete language; reassure it's not their fault; maintain routine</td></tr>
+        <tr><td class="td-gold"><strong>5–9 yrs</strong></td><td>Early Concrete Operational</td><td>Beginning to understand finality; may personify death (Grim Reaper); still may feel responsible; curious about biological aspects</td><td>Honest age-appropriate explanations; answer questions directly; allow expression</td></tr>
+        <tr><td class="td-violet"><strong>10+ yrs / Adolescents</strong></td><td>Formal Operational</td><td>Adult understanding of irreversibility and universality; may feel invulnerable OR intense fear/anger if facing own death</td><td>Involve in discussions; respect autonomy; address existential questions; peer support</td></tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/1Ik0E_hvxFNnWN5t2UPj5izJIem7W26x4" style="width: 100%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ GRIEF ══ -->
+  <h2 class="section-h" id="grief">💙 Grief, Bereavement & Complicated Grief</h2>
+
+  <div class="callout cl-clinical">
+    <div class="cl-label">🏥 Key Definitions</div>
+    <strong>Bereavement</strong> = the state of having suffered a loss<br>
+    <strong>Grief</strong> = the emotional, psychological, behavioral response to loss<br>
+    <strong>Mourning</strong> = the outward, culturally-influenced expression of grief
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>Typical Grief (Uncomplicated)</th><th>Complicated Grief (Prolonged Grief Disorder)</th><th>Major Depressive Disorder</th></tr></thead>
+      <tbody>
+        <tr><td class="td-navy"><strong>Primary Emotion</strong></td><td>Sadness, emptiness related to specific loss</td><td>Intense yearning, preoccupation with deceased</td><td>Pervasive low mood, anhedonia unrelated to specific loss</td></tr>
+        <tr><td class="td-navy"><strong>Self-Esteem</strong></td><td><span class="hy">Generally preserved</span></td><td>May be diminished</td><td>Often markedly diminished; worthlessness</td></tr>
+        <tr><td class="td-navy"><strong>Guilt</strong></td><td>Focused on specific aspects of the loss/deceased</td><td>Excessive, centered on the death</td><td>Pervasive, unrelated to specific loss; self-blame</td></tr>
+        <tr><td class="td-navy"><strong>Suicidal Ideation</strong></td><td>Fleeting ("I wish I could be with them")</td><td>Can be persistent</td><td>Persistent; may have plan/intent</td></tr>
+        <tr><td class="td-navy"><strong>Hallucinations</strong></td><td>Brief <span class="hy">illusions of deceased's presence</span> — NORMAL in acute grief</td><td>Persistent illusions/hallucinations</td><td>Mood-congruent psychotic features possible</td></tr>
+        <tr><td class="td-navy"><strong>Duration</strong></td><td>Symptoms lessen over <span class="hy">6–12 months</span></td><td><span class="hy">&gt;12 months with severe impairment</span></td><td>≥2 weeks of qualifying symptoms</td></tr>
+        <tr><td class="td-navy"><strong>Impairment</strong></td><td>Temporary; gradually improves</td><td>Persistent, significant functional impairment</td><td>Significant, persistent impairment</td></tr>
+        <tr><td class="td-navy"><strong>Response to Support</strong></td><td>Generally comforted by support</td><td>May have difficulty with support</td><td>May withdraw; support feels unhelpful</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout cl-pearl">
+    <div class="cl-label">💎 Step 1 Pearl — Grief Hallucinations</div>
+    Briefly hearing or seeing the deceased in the early weeks of grief is <span class="hy">NORMAL and does NOT represent psychosis</span>. This is one of the most commonly tested distinctions. A widow who "hears" her late husband's voice calling her from the kitchen in the first few weeks of bereavement does NOT need antipsychotics. She needs support and normalization of her experience.
+<img src="https://lh3.googleusercontent.com/d/1X56IUGuYnoUEtrqkn8GESiHSi4gliPxR " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <div class="callout cl-ethics">
+    <div class="cl-label">⚖️ Physician's Role in Bereavement</div>
+    <ol class="cl">
+      <li><strong>Acknowledge the loss</strong> → express sincere condolences ("I'm so sorry for your loss")</li>
+      <li><strong>Normalize grief</strong> → reassure that grief is a natural, expected response</li>
+      <li><strong>Educate</strong> about typical grief trajectory → set expectations</li>
+      <li><strong>Monitor</strong> for complicated grief or MDD → screen at regular intervals</li>
+      <li><strong>Encourage</strong> self-care and social support</li>
+      <li><strong>Refer</strong> to counseling/support groups if complicated grief or MDD is suspected</li>
+      <li>For expected deaths: <strong>anticipatory grief work</strong> → encourage family to verbalize thoughts/feelings before death occurs</li>
+<img src="https://lh3.googleusercontent.com/d/1GVQrDD08MbuDFajA6EqZ1FCT59dn3Hja " style="width: 100%; border-radius: 10px; margin: 10px 0;"> 
+    </ol>
+  </div>
+
+  <!-- ILLNESS REACTIONS -->
+  <h2 class="section-h" id="illness-rx">🏥 Age-Specific Illness Reactions</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Age Group</th><th>Piaget/Erikson Stage</th><th>Primary Fear</th><th>Behavior</th><th>Management Strategy</th></tr></thead>
+      <tbody>
+        <tr><td class="td-teal"><strong>Infant (&lt;1 yr)</strong></td><td>Sensorimotor / Trust vs. Mistrust</td><td>Separation anxiety; disruption of routine</td><td>Inconsolable crying; poor feeding</td><td>Parental presence; maintain feeding/sleep schedule; soothing comfort</td></tr>
+        <tr><td class="td-gold"><strong>Toddler (1–3 yrs)</strong></td><td>Preoperational / Autonomy vs. Shame</td><td>Separation anxiety; loss of control</td><td>Regression (thumb-sucking, enuresis); tantrums; refusal</td><td>Simple immediate explanations; offer limited choices; parent must stay; play therapy</td></tr>
+        <tr><td class="td-sage"><strong>Preschool (3–6 yrs)</strong></td><td>Preoperational / Initiative vs. Guilt</td><td><span class="hy">Fear illness is punishment</span> for bad behavior (magical thinking)</td><td>"I'm sick because I was bad"; fears bodily mutilation</td><td>Reassure NOT their fault; concrete simple explanations; use medical play with toys</td></tr>
+        <tr><td class="td-violet"><strong>School Age (6–11)</strong></td><td>Concrete Operational / Industry vs. Inferiority</td><td>Loss of competence; falling behind peers/school</td><td>Worries about missing school; academic performance; self-esteem hit</td><td>Logical explanations; involve in care tasks; maintain school contact; peer connection</td></tr>
+        <tr><td class="td-rose"><strong>Adolescent (12+)</strong></td><td>Formal Operational / Identity vs. Role Confusion</td><td>Loss of independence; body image; peer isolation</td><td>Non-adherence; minimizing illness; risk-taking; anger</td><td>Respect privacy and autonomy; honest information; involve in decisions; support peer interaction; address body image directly</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout cl-clinical">
+    <div class="cl-label">🏥 Clinical Correlate — Preschooler and Illness as Punishment</div>
+    A 4-year-old receiving IV antibiotics says, "I'm being punished for hitting my sister." This is classic <span class="hy">preoperational magical thinking</span> — not psychopathology. Management: "You are NOT sick because you did something wrong. Your body has some germs that the medicine is helping fight." Never dismiss or reinforce the magical thinking; gently correct it with concrete, simple language.
+  </div>
+
+  <hr class="divider">
+
+  <!-- ══ Q&A SECTION ══ -->
+  <h2 class="section-h" id="qa-sec">📋 USMLE-Pattern Q&A Practice (25 Questions)</h2>
+
+  <!-- Q1 -->
+  <div class="qa-block" id="qa1">
+    <div class="qa-header qa-type-infant" onclick="toggleQA(this)">
+      <span class="qa-number">Q1</span>
+      <span class="qa-title">APGAR Score — Classic Calculation</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A male infant is delivered at 39 weeks gestation via spontaneous vaginal delivery. At one minute of life, the infant is crying lustily and has a heart rate of 115/min. He has some flexion of the extremities and grimaces when his nose is suctioned. His body is pink, but his hands and feet remain blue. What is this infant's Apgar score?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) 6</li>
+          <li class="qa-option">B) 7</li>
+          <li class="qa-option" data-correct="true">C) 8</li>
+          <li class="qa-option">D) 9</li>
+          <li class="qa-option">E) 10</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: C — 8</div>
+        <p><strong>A</strong>ppearance: 1 pt (acrocyanosis — pink body, blue extremities) | <strong>P</strong>ulse: 2 pts (&gt;100 bpm) | <strong>G</strong>rimace: 1 pt (grimaces only, not cough/sneeze) | <strong>A</strong>ctivity: 1 pt (some flexion, not active motion) | <strong>R</strong>espiration: 2 pts (strong cry) | <strong>Total = 1+2+1+1+2 = 8</strong></p>
+      </div>
+      <div class="qa-wrong" style="display:none;">
+        <div class="qa-wrong-label">❌ Why Others Are Wrong</div>
+        <p>D (9) and E (10) are too high because: Activity is only "some flexion" (1 pt, not active motion) AND Appearance has acrocyanosis (1 pt, not 2). D would require full pink + some flexion but perfect grimace. E requires full pink + active motion + cough/sneeze + strong cry.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="qa-block" id="qa2">
+    <div class="qa-header qa-type-infant" onclick="toggleQA(this)">
+      <span class="qa-number">Q2</span>
+      <span class="qa-title">Moro Reflex — CNS Origin</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A pediatrician drops the infant's head slightly back; the infant symmetrically abducts and extends his arms, followed by adduction and crying. This reflex originates in which part of the central nervous system?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Spinal Cord</li>
+          <li class="qa-option" data-correct="true">B) Brainstem</li>
+          <li class="qa-option">C) Cerebral Cortex</li>
+          <li class="qa-option">D) Cerebellum</li>
+          <li class="qa-option">E) Basal Ganglia</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: B — Brainstem</div>
+        <p>This is the <span class="hy">Moro reflex</span>. Brainstem-originating reflexes: Moro and Rooting (both extinguish by 3–4 months). Spinal-originating: Palmar Grasp and Babinski.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="qa-block" id="qa3">
+    <div class="qa-header qa-type-infant" onclick="toggleQA(this)">
+      <span class="qa-number">Q3</span>
+      <span class="qa-title">Pincer Grasp — Normal Development at 10 Months</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 10-month-old infant is able to sit without support and crawl. She cannot yet walk or say words. During the exam, she picks up a small raisin using her thumb and forefinger. Which best describes this developmental status?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Delayed in fine motor skills</li>
+          <li class="qa-option">B) Delayed in gross motor skills</li>
+          <li class="qa-option" data-correct="true">C) Normal development</li>
+          <li class="qa-option">D) Concerning for ASD</li>
+          <li class="qa-option">E) Significant cognitive delay</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: C — Normal Development</div>
+        <p><span class="hy">Pincer grasp (thumb + forefinger)</span> is a classic 9–10 month milestone. Sitting without support = 6–9 months. Crawling = 9–10 months. Walking and first words = 12 months. Everything is on track for a 10-month-old. No social/language red flags for ASD are present (D).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="qa-block" id="qa4">
+    <div class="qa-header qa-type-infant" onclick="toggleQA(this)">
+      <span class="qa-number">Q4</span>
+      <span class="qa-title">Block Stacking Rule — 2-Year-Old</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 24-month-old boy walks up stairs with help and kicks a ball. Using the "Rule of 3" for block stacking, how many blocks should this child ideally be able to stack?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) 2</li>
+          <li class="qa-option">B) 3</li>
+          <li class="qa-option">C) 4</li>
+          <li class="qa-option" data-correct="true">D) 6</li>
+          <li class="qa-option">E) 9</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: D — 6 Blocks</div>
+        <p>Formula: <span class="hy">Age in years × 3 = number of blocks</span>. For a 2-year-old: 2 × 3 = <strong>6 blocks</strong>. E (9) would be expected for a 3-year-old.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="qa-block" id="qa5">
+    <div class="qa-header qa-type-theory" onclick="toggleQA(this)">
+      <span class="qa-number">Q5</span>
+      <span class="qa-title">Object Permanence — Piaget Stage</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 9-month-old infant immediately crawls around the mother when she hides the infant's favorite ball behind her back. This behavior indicates which Piagetian stage?</p>
+        <ul class="qa-options">
+          <li class="qa-option" data-correct="true">A) Sensorimotor</li>
+          <li class="qa-option">B) Preoperational</li>
+          <li class="qa-option">C) Concrete Operational</li>
+          <li class="qa-option">D) Formal Operational</li>
+          <li class="qa-option">E) Anal Stage</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: A — Sensorimotor</div>
+        <p>This demonstrates <span class="hy">Object Permanence</span> — knowing an object exists even when out of sight. This develops around 9 months and is a landmark of Piaget's Sensorimotor stage (0–2 years). Before 9 months: "out of sight = out of existence." E is Freudian, not Piagetian.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="qa-block" id="qa6">
+    <div class="qa-header qa-type-theory" onclick="toggleQA(this)">
+      <span class="qa-number">Q6</span>
+      <span class="qa-title">Erikson — Toddler Autonomy</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 2-year-old girl frequently says "No!" and insists on trying to dress herself, even though she struggles with buttons. According to Erikson, this child is navigating which psychosocial crisis?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Trust vs. Mistrust</li>
+          <li class="qa-option" data-correct="true">B) Autonomy vs. Shame and Doubt</li>
+          <li class="qa-option">C) Initiative vs. Guilt</li>
+          <li class="qa-option">D) Industry vs. Inferiority</li>
+          <li class="qa-option">E) Identity vs. Role Confusion</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: B — Autonomy vs. Shame and Doubt</div>
+        <p>The toddler years (1–3 years) are defined by the emergence of autonomy — "No!" is the hallmark. Successful navigation → willpower and self-confidence. Failure (due to harsh parenting) → shame, self-doubt, excessive dependence. A = infants (0–1); C = preschool (3–6); D = school-age (6–11).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="qa-block" id="qa7">
+    <div class="qa-header qa-type-theory" onclick="toggleQA(this)">
+      <span class="qa-number">Q7</span>
+      <span class="qa-title">Freud — Anal Stage Fixation</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 30-year-old male has extreme perfectionism, rigid adherence to rules, and difficulty finishing tasks because they're "not perfect enough." His mother was very punitive during toilet training. Freud would describe this as fixation in which stage?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Oral</li>
+          <li class="qa-option" data-correct="true">B) Anal</li>
+          <li class="qa-option">C) Phallic</li>
+          <li class="qa-option">D) Latency</li>
+          <li class="qa-option">E) Genital</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: B — Anal Stage</div>
+        <p>Fixation in the Anal Stage (1–3 yrs) due to strict toilet training → "anal-retentive" traits: <span class="hy">perfectionism, orderliness, stubbornness, hoarding, excessive control</span>. A (Oral) → dependency, smoking, overeating. C (Phallic) → Oedipal issues, sexual identity conflicts.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="qa-block" id="qa8">
+    <div class="qa-header qa-type-infant" onclick="toggleQA(this)">
+      <span class="qa-number">Q8</span>
+      <span class="qa-title">Social Smile — Developmental Progression</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A pediatrician explains the "social smile" to students. Which correctly describes its progression?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Preferred smile (Birth) → Exogenous smile (8 wks)</li>
+          <li class="qa-option" data-correct="true">B) Endogenous smile (Birth) → Exogenous (8 wks) → Preferred smile (16 wks)</li>
+          <li class="qa-option">C) Exogenous smile (Birth) → Endogenous smile (8 wks)</li>
+          <li class="qa-option">D) Social Recognition smile (Birth) → Endogenous smile (16 wks)</li>
+          <li class="qa-option">E) Preferred smile (8 wks) → Exogenous smile (16 wks)</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: B</div>
+        <p><span class="hy">Endogenous</span> (reflexive, spontaneous) = birth → <span class="hy">Exogenous</span> (in response to any face) = ~8 weeks → <span class="hy">Preferred/Recognition</span> (specifically to caregiver/mother) = ~16 weeks (3–4 months).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="qa-block" id="qa9">
+    <div class="qa-header qa-type-theory" onclick="toggleQA(this)">
+      <span class="qa-number">Q9</span>
+      <span class="qa-title">Magical Thinking — Preoperational Stage</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 4-year-old hospitalized for a procedure says: "I'm sick because I broke my sister's toy yesterday." This magical thinking is characteristic of which Piagetian stage?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Sensorimotor</li>
+          <li class="qa-option" data-correct="true">B) Preoperational</li>
+          <li class="qa-option">C) Concrete Operational</li>
+          <li class="qa-option">D) Formal Operational</li>
+          <li class="qa-option">E) Latency Stage</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: B — Preoperational</div>
+        <p>Ages 2–7 (Preoperational): <span class="hy">egocentrism, animism, magical thinking, and viewing illness as punishment</span> for bad behavior are hallmarks. Management: Gently correct ("You are NOT sick because you did anything wrong"). C (Concrete Operational) involves logical thinking that would eliminate this magical explanation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="qa-block" id="qa10">
+    <div class="qa-header qa-type-prenatal" onclick="toggleQA(this)">
+      <span class="qa-number">Q10</span>
+      <span class="qa-title">Intrauterine Insults — Placental Insufficiency</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 32-week fetus has significant IUGR from placental insufficiency. Which long-term neurological deficit is most associated with this condition?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) White matter damage</li>
+          <li class="qa-option">B) Diffuse subcortical damage</li>
+          <li class="qa-option" data-correct="true">C) Neuronal connectivity deficits</li>
+          <li class="qa-option">D) Acute neuronal loss</li>
+          <li class="qa-option">E) Increased biological potential</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: C — Neuronal Connectivity Deficits</div>
+        <p>Specific pattern: <span class="hy">Hypoxemia → white matter damage (A)</span>; <span class="hy">Inflammation → diffuse subcortical damage (B)</span>; <span class="hy">Placental insufficiency → neuronal connectivity deficits (C)</span>. These associations are directly tested on USMLE.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="qa-block" id="qa11">
+    <div class="qa-header qa-type-school" onclick="toggleQA(this)">
+      <span class="qa-number">Q11</span>
+      <span class="qa-title">School Phobia — Separation Anxiety</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 5-year-old refuses to go to school with nausea and headaches every morning, but symptoms disappear on weekends. "School phobia" at this age is most often a manifestation of which unresolved issue?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Industry vs. Inferiority</li>
+          <li class="qa-option">B) Object permanence failure</li>
+          <li class="qa-option" data-correct="true">C) The separation bond with the mother</li>
+          <li class="qa-option">D) Formal operational thought</li>
+          <li class="qa-option">E) Pincer grasp development</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: C — Separation Bond with the Mother</div>
+        <p><span class="hy">"School phobia" is rarely about school</span> — it is typically unresolved separation anxiety from the mother-child bond. Somatic complaints (stomach aches, headaches) that resolve on weekends are the hallmark pattern. Management: CBT, play therapy, gradual school re-entry with parental support.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="qa-block" id="qa12">
+    <div class="qa-header qa-type-theory" onclick="toggleQA(this)">
+      <span class="qa-number">Q12</span>
+      <span class="qa-title">Milestones — 5-6 Year Old (CINCO)</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 5-year-old child presents for a preschool physical. Which set of milestones is most characteristic for this age?</p>
+        <ul class="qa-options">
+          <li class="qa-option" data-correct="true">A) Counts 20+, dresses independently, understands time</li>
+          <li class="qa-option">B) Rides a tricycle, knows colors, asks "Why?"</li>
+          <li class="qa-option">C) Jumps, kicks a ball, follows 2-step commands</li>
+          <li class="qa-option">D) Walks independently, says 10 words, shows affection</li>
+          <li class="qa-option">E) Sits without support, babbles, stranger anxiety</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: A — CINCO Group (5–6 years)</div>
+        <p>Mnemonic CINCO (5–6 yrs): <span class="hy">C</span>ounts 20+, <span class="hy">I</span>ndependently dresses, <span class="hy">N</span>arrates stories, <span class="hy">C</span>oncept of time, <span class="hy">O</span>bserves rules. B = 3–4 yrs (Share &amp; Care). C = 2–3 yrs (Talk &amp; Jump). D = 12–18 months. E = 7–8 months.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="qa-block" id="qa13">
+    <div class="qa-header qa-type-school" onclick="toggleQA(this)">
+      <span class="qa-number">Q13</span>
+      <span class="qa-title">Language Red Flag — 2-Word Phrases</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A mother is concerned that her 2-year-old son is not speaking enough. Which would be a red flag for language development at age 24 months?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Inability to tell a long story</li>
+          <li class="qa-option">B) Inability to count to 10</li>
+          <li class="qa-option" data-correct="true">C) Absence of 2-word phrases</li>
+          <li class="qa-option">D) Failure to use pronouns</li>
+          <li class="qa-option">E) Inability to use 300+ words</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: C — Absence of 2-Word Phrases</div>
+        <p>By <span class="hy">24 months</span>, a child should be combining words into 2-word phrases ("more milk," "go car"). USMLE Red Flag: No 2-word phrases by 30 months. A and B are 5-year milestones. D and E (pronouns, 300+ words) are 3-year milestones.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="qa-block" id="qa14">
+    <div class="qa-header qa-type-infant" onclick="toggleQA(this)">
+      <span class="qa-number">Q14</span>
+      <span class="qa-title">Babinski — Extinction Age</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A newborn exam reveals the big toe moves upward and other toes fan out when the sole is stroked. At what age should this reflex typically disappear?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) 3 months</li>
+          <li class="qa-option">B) 6 months</li>
+          <li class="qa-option">C) 9 months</li>
+          <li class="qa-option" data-correct="true">D) 12–24 months</li>
+          <li class="qa-option">E) 5 years</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: D — 12–24 Months</div>
+        <p>The <span class="hy">Babinski reflex</span> is the LAST primitive reflex to disappear — by 12–24 months. After age 2, an upgoing Babinski = UMN lesion (pathological). Moro/Rooting extinguish by 3–4 months. Palmar Grasp by 2–3 months.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="qa-block" id="qa15">
+    <div class="qa-header qa-type-infant" onclick="toggleQA(this)">
+      <span class="qa-number">Q15</span>
+      <span class="qa-title">Developmental Red Flag — 10-Month-Old Cannot Sit</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 10-month-old can roll over and lift his head but cannot sit unsupported. He babbles and orients to voice. Most appropriate next step?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Reassure parents — normal finding</li>
+          <li class="qa-option">B) Screen for attachment issues and neglect</li>
+          <li class="qa-option">C) Evaluate for hearing impairment</li>
+          <li class="qa-option" data-correct="true">D) Perform thorough neuromuscular evaluation</li>
+          <li class="qa-option">E) Wait until 15 months to assess for pincer grasp delay</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: D — Neuromuscular Evaluation</div>
+        <p><span class="hy">Sitting alone = typically 6–9 months; USMLE Red Flag = 9 months</span>. This 10-month-old cannot sit → already past the red flag deadline. This warrants neuromuscular evaluation for conditions like cerebral palsy, global developmental delay, or neuromuscular disorder. A = incorrect (10 mo is beyond the red flag).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="qa-block" id="qa16">
+    <div class="qa-header qa-type-theory" onclick="toggleQA(this)">
+      <span class="qa-number">Q16</span>
+      <span class="qa-title">Illness Reaction — Preschooler and Punishment</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 5-year-old hospitalized for pneumonia tells the nurse: "I'm sorry I was mean to my sister! Please don't hurt me anymore." This reaction is most characteristic of which developmental stage and primary fear?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Sensorimotor; Separation anxiety</li>
+          <li class="qa-option" data-correct="true">B) Preoperational; Fear of bodily harm and illness as punishment</li>
+          <li class="qa-option">C) Concrete Operational; Loss of competence</li>
+          <li class="qa-option">D) Autonomy vs. Shame; Loss of control</li>
+          <li class="qa-option">E) Formal Operational; Body image concerns</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: B — Preoperational / Fear of Bodily Harm + Punishment</div>
+        <p>Preschool (3–6 yrs) = Preoperational (magical thinking: illness = punishment) AND Initiative vs. Guilt (Erikson). Primary fear: bodily mutilation and punishment for wrongdoing. C = school-age (6–11); D = toddlers (1–3); E = adolescents (12+).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="qa-block" id="qa17">
+    <div class="qa-header qa-type-adolescent" onclick="toggleQA(this)">
+      <span class="qa-number">Q17</span>
+      <span class="qa-title">Personal Fable — Adolescent Invulnerability</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 16-year-old female rode in a car with drinking friends, saying: "I know it's dangerous for other people, but I'm a lucky person; nothing bad ever happens to me." This statement is a clinical example of:</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Animism</li>
+          <li class="qa-option">B) Conservation</li>
+          <li class="qa-option" data-correct="true">C) Personal Fable</li>
+          <li class="qa-option">D) Identity Crisis</li>
+          <li class="qa-option">E) Industry vs. Inferiority</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: C — Personal Fable</div>
+        <p>The <span class="hy">Personal Fable</span> = adolescent belief in their own uniqueness and invincibility ("It won't happen to me!"). A product of new formal operational thinking combined with emotional immaturity. Explains why teens engage in risky behaviors despite knowing the risks. A = toddler (objects have feelings). B = school-age concrete concept.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="qa-block" id="qa18">
+    <div class="qa-header qa-type-adult" onclick="toggleQA(this)">
+      <span class="qa-number">Q18</span>
+      <span class="qa-title">Erikson — Generativity vs. Stagnation</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 45-year-old man complains of "lack of purpose." He has worked the same job 20 years, feels he has nothing to show for his life, has no children, and rarely volunteers or mentors. According to Erikson, he is likely experiencing:</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Isolation</li>
+          <li class="qa-option" data-correct="true">B) Stagnation</li>
+          <li class="qa-option">C) Despair</li>
+          <li class="qa-option">D) Role Confusion</li>
+          <li class="qa-option">E) Inferiority</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: B — Stagnation</div>
+        <p>Middle adulthood (40–65 yrs) = <span class="hy">Generativity vs. Stagnation</span>. Generativity = contributing to the next generation (parenthood, mentoring, productivity). Failure = stagnation, often manifesting as midlife crisis, boredom, or self-preoccupation. A = early adulthood failure; C = late adulthood failure; D = adolescence failure; E = school-age failure.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="qa-block" id="qa19">
+    <div class="qa-header qa-type-school" onclick="toggleQA(this)">
+      <span class="qa-number">Q19</span>
+      <span class="qa-title">Conservation — Concrete Operational Stage</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 9-year-old girl is shown two identical clay balls. One is rolled into a "snake" shape and she's asked which has more clay. She correctly identifies both have the same amount. This demonstrates mastery of which concept?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Object permanence</li>
+          <li class="qa-option">B) Animism</li>
+          <li class="qa-option" data-correct="true">C) Conservation</li>
+          <li class="qa-option">D) Abstract thought</li>
+          <li class="qa-option">E) Seriation</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: C — Conservation</div>
+        <p><span class="hy">Conservation</span> = understanding that quantity remains constant despite changes in shape or appearance. A hallmark of the <span class="hy">Concrete Operational stage (7–11 years)</span>. Emerges at about age 7. A = 0–2 yrs Sensorimotor. B = 2–7 yrs Preoperational. D = 12+ yrs Formal Operational. E = Seriation is ordering by size/weight, different from conservation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="qa-block" id="qa20">
+    <div class="qa-header qa-type-school" onclick="toggleQA(this)">
+      <span class="qa-number">Q20</span>
+      <span class="qa-title">Kohlberg — Rule Orientation in 7-Year-Old</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 7-year-old boy playing a board game insists his younger brother follow every single rule exactly as written and refuses to let him "slide" even once. According to Kohlberg, this child demonstrates which level of moral development?</p>
+        <ul class="qa-options">
+          <li class="qa-option" data-correct="true">A) Preconventional</li>
+          <li class="qa-option">B) Conventional</li>
+          <li class="qa-option">C) Postconventional</li>
+          <li class="qa-option">D) Law and Order Orientation</li>
+          <li class="qa-option">E) Social Contract Orientation</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: A — Preconventional</div>
+        <p>Children under 9 = Preconventional (avoid punishment; obtain rewards). While school-age children begin developing strong rule orientation, a 7-year-old's rigid rule adherence is still driven by fear of punishment/self-interest, not true societal norm internalization (Conventional begins ~9 yrs). B = 9–20 yrs; C = 20+ yrs.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q21 -->
+  <div class="qa-block" id="qa21">
+    <div class="qa-header qa-type-aging" onclick="toggleQA(this)">
+      <span class="qa-number">Q21</span>
+      <span class="qa-title">Erikson — Integrity in Late Adulthood</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 72-year-old woman reflects on her career as a teacher and raising her children with deep satisfaction: "I've had a good run, and I'm at peace with whatever comes next." This patient has achieved which Eriksonian stage?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Generativity</li>
+          <li class="qa-option">B) Intimacy</li>
+          <li class="qa-option" data-correct="true">C) Integrity</li>
+          <li class="qa-option">D) Autonomy</li>
+          <li class="qa-option">E) Industry</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: C — Integrity (Ego Integrity)</div>
+        <p>Late adulthood (65+) = <span class="hy">Integrity vs. Despair</span>. Integrity = life review with satisfaction; acceptance of mortality; wisdom. Despair = regret, fear of death, bitter outlook. A = middle adulthood (40–65). B = early adulthood (20–40). D = toddlerhood. E = school-age.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q22 -->
+  <div class="qa-block" id="qa22">
+    <div class="qa-header qa-type-aging" onclick="toggleQA(this)">
+      <span class="qa-number">Q22</span>
+      <span class="qa-title">Language Red Flag — Orients to Voice</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>Which language milestone is correctly matched with its USMLE Red Flag age?</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) First Words: Red flag at 12 months</li>
+          <li class="qa-option">B) 2-Word Phrases: Red flag at 24 months</li>
+          <li class="qa-option">C) Babbles: Red flag at 6 months</li>
+          <li class="qa-option" data-correct="true">D) Orients to voice: Red flag at 6 months</li>
+          <li class="qa-option">E) First Words: Red flag at 30 months</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: D — Orients to Voice: Red Flag at 6 Months</div>
+        <p>Orients to voice typically appears at 3–4 months; red flag if absent by 6 months (suspect hearing impairment or global delay). A = First words red flag is 16–18 months (not 12). B = 2-word phrase red flag is 30 months (not 24). C = Babble red flag is 9 months (not 6). E = First words red flag is 16–18 months (not 30).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q23 -->
+  <div class="qa-block" id="qa23">
+    <div class="qa-header qa-type-infant" onclick="toggleQA(this)">
+      <span class="qa-number">Q23</span>
+      <span class="qa-title">Male Vulnerability — Prenatal Sex Ratio</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>The ratio of males to females is higher at conception, yet approximately equal at birth. This is primarily because:</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Males have higher biological potential</li>
+          <li class="qa-option">B) Females are more vulnerable to neurodevelopmental issues</li>
+          <li class="qa-option" data-correct="true">C) Males are more vulnerable to prenatal environmental insults</li>
+          <li class="qa-option">D) Females have higher rates of Down Syndrome</li>
+          <li class="qa-option">E) Genetic factors only apply to females</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: C — Male Vulnerability to Prenatal Insults</div>
+        <p><span class="hy">Males are MORE vulnerable to prenatal environmental insults</span>, which leads to higher prenatal male mortality → equal birth ratio despite higher conception ratio. Surviving males also have higher rates of neurodevelopmental conditions (ADHD, ASD, language delay). D and E are factually incorrect.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q24 -->
+  <div class="qa-block" id="qa24">
+    <div class="qa-header qa-type-aging" onclick="toggleQA(this)">
+      <span class="qa-number">Q24</span>
+      <span class="qa-title">DABDA — Physician Response to Anger</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 58-year-old woman recently diagnosed with stage IV ovarian cancer shouts at her oncologist: "You must have made a mistake! None of you know what you're doing!" The physician's MOST appropriate response is:</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Firmly remind her that you are trying to help and that anger won't change her prognosis</li>
+          <li class="qa-option">B) Leave the room to give her time to calm down</li>
+          <li class="qa-option">C) Request a psychiatric consultation for anger management</li>
+          <li class="qa-option" data-correct="true">D) Acknowledge her feelings and remain present: "I understand this is devastating news. Your anger makes complete sense."</li>
+          <li class="qa-option">E) Ask her to complete treatment for the tumor before discussing her feelings</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: D — Acknowledge and Remain Present</div>
+        <p>Anger is stage 2 of DABDA and is a completely normal response to a terminal diagnosis. <span class="hy">The physician must NOT take anger personally</span>. The correct approach: stay calm, acknowledge the emotional experience ("I can see how angry and scared you are — that makes complete sense"), avoid defensive responses, and maintain presence. Leaving (B) = abandonment. Psychiatric consult (C) = pathologizing a normal response.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q25 -->
+  <div class="qa-block" id="qa25">
+    <div class="qa-header qa-type-aging" onclick="toggleQA(this)">
+      <span class="qa-number">Q25</span>
+      <span class="qa-title">Grief — Normal Hallucination vs. Pathological</span>
+      <span class="qa-arrow">▼</span>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">
+        <p>A 68-year-old widow whose husband died 3 weeks ago reports that she occasionally "hears" his voice calling her from the kitchen and briefly sees his figure at the foot of the bed before sleep. She is otherwise functioning, sleeping adequately, and eating. The MOST appropriate response is:</p>
+        <ul class="qa-options">
+          <li class="qa-option">A) Start a low-dose antipsychotic to prevent worsening psychosis</li>
+          <li class="qa-option">B) Diagnose complicated grief and begin intensive CBT</li>
+          <li class="qa-option">C) Hospitalize for further psychiatric evaluation</li>
+          <li class="qa-option">D) Diagnose MDD with psychotic features and start antidepressant + antipsychotic</li>
+          <li class="qa-option" data-correct="true">E) Normalize the experience and provide supportive counseling</li>
+        </ul>
+      </div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(this)">▼ Show Answer &amp; Explanation</button>
+      <div class="qa-answer-section" style="display:none;">
+        <div class="qa-answer-label">✅ Correct Answer: E — Normalize and Provide Support</div>
+        <p>Brief illusions/hallucinations of the deceased in the first weeks of bereavement are <span class="hy">COMPLETELY NORMAL in uncomplicated grief</span> — they are NOT psychosis. This is one of the most heavily tested grief concepts. She is functioning, this is only 3 weeks out, and she is not meeting criteria for MDD or complicated grief. Antipsychotics (A) are inappropriate and harmful here. Complicated grief (B) requires &gt;12 months of severe impairment.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- END DOCUMENT 1 -->
+
+<!-- ═══════════════════ DOCUMENT 2 ═══════════════════ -->
+<div id="d2" class="panel">
+
+  <div class="hero">
+    <div class="hero-eyebrow">Document 2 · High-Yield Synthesis · Rapid Review</div>
+    <h1>HY Synthesis — Life Cycle: Womb to Tomb</h1>
+    <p>Condensed tables, flowcharts, comparison guides, and rapid review bullets for spaced repetition and final-pass review.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">Master Tables</span>
+      <span class="hero-tag">Flowcharts</span>
+      <span class="hero-tag">Differentials</span>
+      <span class="hero-tag">Rapid Review</span>
+    </div>
+  </div>
+
+  <!-- CORRECTIONS -->
+  <div id="d2-corrections" class="callout cl-correction">
+    <div class="cl-label">⚠️ Corrections & Gaps Filled vs. Source Lectures</div>
+    <ul class="cl">
+      <li><strong>Life Expectancy (updated 2022/2023 data)</strong>: US = 77.5 yrs (2022); Females 80.2; Males 74.8; Global ~73.4 (WHO). Prior lecture slides may have had older figures.</li>
+      <li><strong>HEEADSSS</strong>: Full framework added with clinical details for each domain. Original lecture had only the mnemonic without clinical detail.</li>
+      <li><strong>Complicated Grief (DSM-5-TR)</strong>: Now called "Prolonged Grief Disorder" in DSM-5-TR — added. Duration criterion ≥12 months (vs. the 6-month threshold in some older resources).</li>
+      <li><strong>Kohlberg Rule Clarification</strong>: The 7-year-old rule example is Preconventional (not Conventional as sometimes mistakenly taught). Conventional doesn't solidify until ~9+ yrs.</li>
+      <li><strong>Ethics additions</strong>: Full adolescent confidentiality exceptions added (STIs, contraception, substance abuse, mental health) — not in original lecture.</li>
+      <li><strong>Male prenatal vulnerability</strong>: Added as tested concept — males more vulnerable to intrauterine insults → explains higher conception ratio but equal birth ratio.</li>
+      <li><strong>Hispanic Paradox</strong>: Added with current epidemiological data and proposed mechanisms.</li>
+    </ul>
+  </div>
+
+  <!-- MASTER MILESTONES TABLE -->
+  <h2 class="section-h" id="d2-milestones">🗓️ Master Milestones Quick Reference</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Age</th><th>Motor (Gross/Fine)</th><th>Language</th><th>Social/Cognitive</th><th>Red Flags (USMLE)</th></tr></thead>
+      <tbody>
+        <tr><td class="td-teal"><strong>2 months</strong></td><td>Lifts head prone; tracks</td><td>Cooing</td><td>Social smile (exogenous)</td><td>No social smile by 3 mo</td></tr>
+        <tr><td class="td-gold"><strong>4–6 months</strong></td><td>Rolls; sits with support; reaches</td><td>Babbles (6 mo)</td><td>Orients to voice (3–4 mo)</td><td>No babbles by 9 mo; no orient by 6 mo</td></tr>
+        <tr><td class="td-sage"><strong>7–9 months</strong></td><td>Sits alone (6–9); crawls (9–10)</td><td>Consonant babbles</td><td>Stranger anxiety; peek-a-boo</td><td>Cannot sit by 9 months → neuromuscular eval</td></tr>
+        <tr><td class="td-violet"><strong>10–12 months</strong></td><td>Stands w/ support; pincer grasp</td><td>First words ("mama")</td><td>Object permanence; waves bye</td><td>No pincer by 15 mo; no words by 16–18 mo</td></tr>
+        <tr><td class="td-blue"><strong>12–18 months</strong></td><td>Walks independently (12); throws</td><td>5–10 words; points</td><td>Shows affection; separation anxiety peaks</td><td>Not walking by 18 months</td></tr>
+        <tr><td class="td-coral"><strong>18–24 months</strong></td><td>Runs; 4–6 blocks; feeds self</td><td>2-word phrases (24 mo); 50+ words</td><td>Parallel play; "No!"; defiance</td><td>No 2-word phrases by 30 mo</td></tr>
+        <tr><td class="td-teal"><strong>2–3 years</strong></td><td>Kicks ball; jumps; 6–9 blocks</td><td>2–3 word sentences; 300+ words by 3 yrs</td><td>Toilet trained ~3 yrs; cooperative play begins</td><td>No sentences by 3 yrs</td></tr>
+        <tr><td class="td-gold"><strong>3–4 years</strong></td><td>Hops; tricycle; copies circle/line</td><td>Asks "Why?"; pronouns; 4 yrs = complete sentences</td><td>Imaginative play; knows colors; 4 yrs = shares</td><td>Cannot copy circle by 4 yrs</td></tr>
+        <tr><td class="td-sage"><strong>4–5 years</strong></td><td>Copies square; skips; draws person</td><td>Tells stories; 1000+ words</td><td>Self-dresses; cooperative games; rules</td><td>Cannot copy square by 5 yrs</td></tr>
+        <tr><td class="td-violet"><strong>5–6 years</strong></td><td>Ties shoes; refined motor</td><td>Counts 20+; understands time</td><td>CINCO: Counts, Independent, Narrates, Concept of time, Observes rules</td><td>Benchmark for school readiness</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- THEORIES TABLE -->
+  <h2 class="section-h" id="d2-theories">🧠 Four Theories — Master Cross-Reference</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Age</th><th>Piaget (Cognitive)</th><th>Erikson (Psychosocial)</th><th>Freud (Psychosexual)</th><th>Kohlberg (Moral)</th></tr></thead>
+      <tbody>
+        <tr><td class="td-navy"><strong>0–1 yr</strong></td><td>Sensorimotor<br><em>Object permanence</em></td><td>Trust vs. Mistrust<br><em>→ Hope</em></td><td>Oral<br><em>→ Dependency/smoking if fixated</em></td><td>—</td></tr>
+        <tr><td class="td-navy"><strong>1–3 yrs</strong></td><td>Sensorimotor → Preoperational</td><td>Autonomy vs. Shame<br><em>→ Will; "No!" phase</em></td><td>Anal<br><em>→ OCD/perfectionism if fixated</em></td><td>—</td></tr>
+        <tr><td class="td-navy"><strong>3–6 yrs</strong></td><td>Preoperational<br><em>Egocentrism, animism, magical thinking</em></td><td>Initiative vs. Guilt<br><em>→ Purpose; illness = punishment</em></td><td>Phallic<br><em>Oedipus; identifies w/ same-sex parent</em></td><td>—</td></tr>
+        <tr><td class="td-navy"><strong>6–11 yrs</strong></td><td>Concrete Operational<br><em>Conservation, seriation, reversibility</em></td><td>Industry vs. Inferiority<br><em>→ Competence; school/skills</em></td><td>Latency<br><em>Sexual dormancy; energy → school/peers</em></td><td>Preconventional → Conventional<br><em>Rules/punishment → approval</em></td></tr>
+        <tr><td class="td-navy"><strong>12–20 yrs</strong></td><td>Formal Operational<br><em>Abstract thought; Personal Fable</em></td><td>Identity vs. Role Confusion<br><em>→ Fidelity; teen rebellion</em></td><td>Genital<br><em>Mature sexuality</em></td><td>Conventional<br><em>Social conformity; peer approval</em></td></tr>
+        <tr><td class="td-navy"><strong>20–40 yrs</strong></td><td>Formal Operational (continues)</td><td>Intimacy vs. Isolation<br><em>→ Love; failure = loneliness</em></td><td>Genital (continues)</td><td>Conventional → Postconventional<br><em>Personal ethics; universal principles</em></td></tr>
+        <tr><td class="td-navy"><strong>40–65 yrs</strong></td><td>Formal Operational (continues)</td><td>Generativity vs. Stagnation<br><em>→ Care; failure = midlife crisis</em></td><td>—</td><td>Postconventional<br><em>Universal principles</em></td></tr>
+        <tr><td class="td-navy"><strong>65+ yrs</strong></td><td>Formal Operational (may ↓)</td><td>Integrity vs. Despair<br><em>→ Wisdom; failure = regret</em></td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- REFLEXES TABLE -->
+  <h2 class="section-h" id="d2-reflexes">🦱 Primitive Reflexes — Rapid Reference</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Reflex</th><th>Stimulus</th><th>Onset</th><th>Extinction</th><th>CNS Origin</th><th>If Absent/Persists</th></tr></thead>
+      <tbody>
+        <tr><td class="td-rose"><strong>Moro</strong></td><td>Sudden movement/drop of head</td><td>Birth</td><td><strong>3–4 months</strong></td><td>Brainstem</td><td>Absent: suspect brainstem injury; persists: UMN issue</td></tr>
+        <tr><td class="td-teal"><strong>Rooting</strong></td><td>Touch cheek/corner of mouth</td><td>Birth</td><td>3–4 months</td><td>Brainstem</td><td>Helps with breastfeeding; absence suggests CN deficiency</td></tr>
+        <tr><td class="td-violet"><strong>Palmar Grasp</strong></td><td>Object placed in palm</td><td>Birth</td><td><strong>2–3 months</strong></td><td>Spinal</td><td>Persists beyond 3 mo = UMN lesion</td></tr>
+        <tr><td class="td-gold"><strong>Babinski</strong></td><td>Stroke lateral sole of foot</td><td>Birth</td><td><strong>12–24 months</strong></td><td>Spinal</td><td>After 24 months = UMN lesion (ALWAYS pathological in adults)</td></tr>
+        <tr><td class="td-blue"><strong>Stepping</strong></td><td>Upright with feet touching surface</td><td>Birth</td><td>2 months</td><td>Spinal</td><td>Prerequisite for eventual independent walking</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ADOLESCENT FLOW -->
+  <h2 class="section-h" id="d2-adolescent">🧑 Adolescent Assessment Flowchart</h2>
+  <div class="flowchart">
+    <div class="flow-title">Approaching the Adolescent Patient — Clinical Framework</div>
+    <div class="flow-row"><div class="flow-box fb-navy">Adolescent Patient Visit</div></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-row"><div class="flow-box fb-gold">Step 1: Brief time ALONE with patient (without parents) — builds trust &amp; allows disclosure</div></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-row"><div class="flow-box fb-teal">Step 2: HEEADSSS Screening (H-E-E-A-D-S-S-S)</div></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-row"><div class="flow-box fb-violet">Step 3: Assess developmental stage (Early / Middle / Late adolescence)</div></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-row">
+      <div class="flow-box fb-rose" style="font-size:12px;">🚨 Safety Concern Identified<br>(Suicidal ideation with plan, homicidal ideation, abuse)</div>
+      <span style="padding:10px;font-size:24px;color:#aaa;">vs.</span>
+      <div class="flow-box fb-sage" style="font-size:12px;">✅ Confidential Disclosure<br>(STI, contraception, substance use, mental health)</div>
+    </div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-branch">
+      <div class="flow-branch-item">
+        <div class="flow-branch-label">Safety concern</div>
+        <div class="flow-box fb-rose" style="font-size:12px;">Break confidentiality<br>→ Notify parents + authorities<br>→ Mandatory reporting if abuse</div>
+      </div>
+      <div class="flow-branch-item">
+        <div class="flow-branch-label">Confidential issue</div>
+        <div class="flow-box fb-sage" style="font-size:12px;">Maintain confidentiality<br>→ Minor may consent independently<br>→ Counsel &amp; treat</div>
+      </div>
+    </div>
+<img src="https://lh3.googleusercontent.com/d/1S-9v9oKb0UiUWiADEy4TkjUdQPHk6pTe " style="width: 100%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <!-- GRIEF TABLE -->
+  <h2 class="section-h" id="d2-grief-table">💙 Grief Comparison Table</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th class="td-teal">Normal Grief</th><th class="td-gold">Complicated Grief<br>(Prolonged Grief Disorder)</th><th class="td-rose">MDD</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Duration</strong></td><td>Improves over 6–12 months</td><td>Severe impairment <span class="hy">&gt;12 months</span></td><td>≥2 weeks of symptoms</td></tr>
+        <tr><td><strong>Self-esteem</strong></td><td>Preserved</td><td>May be diminished</td><td>Markedly diminished; worthlessness</td></tr>
+        <tr><td><strong>Hallucinations</strong></td><td><span class="hy">Normal — brief illusions of deceased</span></td><td>Persistent illusions</td><td>Mood-congruent psychotic features</td></tr>
+        <tr><td><strong>Suicidal ideation</strong></td><td>Fleeting ("wish to be with them")</td><td>Can be persistent</td><td>Persistent; may have plan</td></tr>
+        <tr><td><strong>Functional impairment</strong></td><td>Temporary; gradual recovery</td><td>Persistent, significant</td><td>Persistent, significant</td></tr>
+        <tr><td><strong>Trigger</strong></td><td>Specific loss; time-limited</td><td>Specific loss; prolonged</td><td>May or may not have precipitant</td></tr>
+        <tr><td><strong>Response to support</strong></td><td>Comforted</td><td>May resist support</td><td>May withdraw; feels unhelped</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ILLNESS REACTIONS FLOW -->
+  <h2 class="section-h" id="d2-illness">🏥 Illness Reactions — Age-Based Approach Flowchart</h2>
+  <div class="flowchart">
+    <div class="flow-title">Tailoring Communication About Illness by Developmental Stage</div>
+    <div class="flow-row"><div class="flow-box fb-navy">Child/Adolescent Hospitalized or Ill → What approach?</div></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-branch">
+      <div class="flow-branch-item">
+        <div class="flow-branch-label">&lt;1 yr (Infant)</div>
+        <div class="flow-box fb-teal" style="font-size:12px;">Fear: Separation<br>→ Keep parent present<br>→ Maintain routine<br>→ Soothing touch</div>
+      </div>
+      <div class="flow-branch-item">
+        <div class="flow-branch-label">1–3 yrs (Toddler)</div>
+        <div class="flow-box fb-gold" style="font-size:12px;">Fear: Loss of control<br>→ Simple explanations<br>→ Offer choices<br>→ Parent MUST stay</div>
+      </div>
+      <div class="flow-branch-item">
+        <div class="flow-branch-label">3–6 yrs (Preschool)</div>
+        <div class="flow-box fb-rose" style="font-size:12px;">Fear: Illness = punishment<br>→ "NOT your fault"<br>→ Medical play<br>→ Concrete language</div>
+      </div>
+    </div>
+    <div class="flow-branch" style="margin-top:16px;">
+      <div class="flow-branch-item">
+        <div class="flow-branch-label">6–11 yrs (School Age)</div>
+        <div class="flow-box fb-sage" style="font-size:12px;">Fear: Fall behind peers<br>→ Logical explanations<br>→ Involve in care tasks<br>→ School connection</div>
+      </div>
+      <div class="flow-branch-item">
+        <div class="flow-branch-label">12+ yrs (Adolescent)</div>
+        <div class="flow-box fb-violet" style="font-size:12px;">Fear: Loss of independence<br>→ Respect autonomy<br>→ Private time<br>→ Involve in decisions</div>
+      </div>
+    </div>
+<img src="https://lh3.googleusercontent.com/d/1vhmJ4TKq9YeycGR5LIk_33KNZyKFx1_c " style="width: 100%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <!-- AGING CHANGES -->
+  <h2 class="section-h" id="d2-aging-changes">🧓 Aging Changes — Neurochemical Quick Reference</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Change</th><th>NT/System</th><th>Clinical Consequence</th><th>Drug Implication</th></tr></thead>
+      <tbody>
+        <tr><td class="td-rose">↓ Dopamine</td><td>VTA, nigrostriatal</td><td>Parkinsonian signs; depression</td><td>Antipsychotics → worsen Parkinson symptoms</td></tr>
+        <tr><td class="td-gold">↓ Acetylcholine</td><td>Basal nucleus of Meynert</td><td>Memory decline; Alzheimer's hallmark</td><td>Anticholinergics → worsen cognitive decline in elderly (Beers Criteria)</td></tr>
+        <tr><td class="td-teal">↓ Serotonin</td><td>Raphe nuclei</td><td>Depression; sleep disturbance; ↓ appetite</td><td>SSRIs helpful; SIADH risk in elderly</td></tr>
+        <tr><td class="td-violet">↓ NE</td><td>Locus coeruleus</td><td>Depression; attentional issues; autonomic dysregulation</td><td>SNRIs, TCAs (but caution for cardiac/anticholinergic effects)</td></tr>
+        <tr><td class="td-blue">↓ GABA</td><td>Widespread</td><td>Anxiety; altered sleep architecture</td><td>Benzodiazepines → AVOID in elderly (Beers Criteria) — fall risk, delirium</td></tr>
+        <tr><td class="td-sage">↑ MAO</td><td>All monoamine neurons</td><td>↑ NT breakdown → ↓ all monoamines</td><td>MAO inhibitors → effective but risky in elderly due to drug interactions</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- RAPID REVIEW -->
+  <h2 class="section-h" id="d2-rapid">⚡ Rapid Review Bullets</h2>
+
+  <div class="rr-box">
+    <div class="rr-title">🏛️ Foundations — Must-Know Facts</div>
+    <ul class="rr-list">
+      <li>APGAR scored at 1 and 5 minutes; A=Appearance, P=Pulse, G=Grimace, A=Activity, R=Respiration; each 0–2 pts; 7–10=normal; acrocyanosis = 1 pt for Appearance</li>
+      <li>Block stacking rule: Age (years) × 3 = # blocks. 2 yrs = 6; 3 yrs = 9; 4 yrs = 12</li>
+      <li>Babinski extinction: 12–24 months. After 24 months = UMN lesion (pathological)</li>
+      <li>Moro/Rooting = brainstem origin; Palmar Grasp/Babinski = spinal origin</li>
+      <li>Object permanence develops ~9 months (Sensorimotor stage). Before 9 months: "out of sight = out of existence"</li>
+      <li>Social smile: Endogenous (birth) → Exogenous (8 wks) → Preferred (16 wks = 4 months)</li>
+      <li>Placental insufficiency → neuronal connectivity deficits; Hypoxemia → white matter; Inflammation → subcortical</li>
+    </ul>
+  </div>
+
+  <div class="rr-box">
+    <div class="rr-title">📐 Four Theories — USMLE Application</div>
+    <ul class="rr-list">
+      <li>PIAGET: Sensorimotor (0–2) → Preoperational (2–7) → Concrete Operational (7–11) → Formal Operational (12+)</li>
+      <li>PIAGET hallmarks: Object permanence (0–2); Egocentrism/Magical thinking (2–7); Conservation (7–11); Abstract reasoning (12+)</li>
+      <li>ERIKSON: Trust → Autonomy → Initiative → Industry → Identity → Intimacy → Generativity → Integrity</li>
+      <li>ERIKSON failures: Mistrust → Shame → Guilt → Inferiority → Role Confusion → Isolation → Stagnation → Despair</li>
+      <li>FREUD fixations: Oral → smoking/dependency; Anal → perfectionism/OCD; Phallic → sexual issues/authority</li>
+      <li>KOHLBERG: Preconventional (&lt;9) → avoid punishment; Conventional (9–20) → rules/approval; Postconventional (20+) → personal ethics</li>
+      <li>Personal Fable = adolescent invincibility belief ("It won't happen to me") — explains risk-taking in Formal Operational teens</li>
+    </ul>
+  </div>
+
+  <div class="rr-box">
+    <div class="rr-title">🌿 Adulthood, Aging & Death</div>
+    <ul class="rr-list">
+      <li>Early adulthood (20–40): Intimacy vs. Isolation; psychiatric disorders peak onset (schizophrenia, bipolar)</li>
+      <li>Middle adulthood (40–65): Generativity vs. Stagnation; "Sandwich Generation"; menopause avg 51; midlife crisis = failure state</li>
+      <li>Late adulthood (65+): Integrity vs. Despair; depression = MOST common psychiatric disorder; pseudodementia from depression</li>
+      <li>Aging: ↓ DA, ACh, 5HT, NE, GABA; ↑ MAO. Crystallized intelligence stable; fluid intelligence ↓</li>
+      <li>DABDA: Denial → Anger → Bargaining → Depression → Acceptance. NOT linear; NOT universal</li>
+      <li>Physician response to anger (Stage 2): Do NOT take personally; acknowledge feelings; stay present</li>
+      <li>Grief hallucinations (illusions of deceased) = NORMAL in acute grief — NOT psychosis; do NOT treat with antipsychotics</li>
+      <li>Complicated/Prolonged Grief Disorder (DSM-5-TR): &gt;12 months, severe impairment, intense yearning</li>
+      <li>MDD vs. grief: Grief = preserved self-esteem, loss-focused guilt; MDD = impaired self-esteem, pervasive worthlessness</li>
+    </ul>
+  </div>
+
+  <div class="rr-box">
+    <div class="rr-title">⚖️ Ethics & Adolescent Issues</div>
+    <ul class="rr-list">
+      <li>Adolescents can consent independently to: STIs, contraception, pregnancy-related care, substance abuse Tx, mental health Tx</li>
+      <li>Emancipated minor = full adult consent rights (married, military, parent, financially independent, court-ordered)</li>
+      <li>Break confidentiality when: imminent danger to self (suicidal with plan) or others (homicidal) OR mandatory reporting for abuse</li>
+      <li>HEEADSSS: Home, Education/Employment, Eating, Activities, Drugs, Sexuality, Suicide/Depression, Safety/Violence</li>
+      <li>Anorexia/Bulimia: peak prevalence in adolescence — screen with HEEADSSS "Eating" domain</li>
+      <li>Suicide: 2nd/3rd leading cause of death in adolescents; closely assess in every HEEADSSS interview</li>
+    </ul>
+  </div>
+
+  <div class="rr-box">
+    <div class="rr-title">🔴 High-Yield Red Flags by Age</div>
+    <ul class="rr-list">
+      <li>No social smile by 3 months → attachment/neglect/visual impairment concern</li>
+      <li>No orient to voice by 6 months → hearing impairment evaluation</li>
+      <li>No babbles by 9 months → hearing/ASD concern</li>
+      <li>Cannot sit by 9 months (red flag) → 10+ months and not sitting = neuromuscular eval</li>
+      <li>No first words by 16–18 months → language evaluation + ASD screen</li>
+      <li>No 2-word phrases by 30 months → language evaluation</li>
+      <li>Babinski still positive after 24 months → UMN lesion (ALWAYS pathological)</li>
+      <li>Positive Babinski in adult (after age 2) = corticospinal tract lesion</li>
+      <li>School phobia = unresolved separation anxiety (NOT about school)</li>
+    </ul>
+  </div>
+
+</div>
+<!-- END DOCUMENT 2 -->
+
+</main>
+
+<script>
+// ── Document Switching ──────────────────────────────────────────
+function switchDoc(docId) {
+  document.querySelectorAll('.panel').forEach(function(p) {
+    p.classList.remove('active');
+    p.style.display = 'none';
+  });
+  var target = document.getElementById(docId);
+  if (target) { target.classList.add('active'); target.style.display = 'block'; }
+  
+  document.querySelectorAll('.doc-tab').forEach(function(t) { t.classList.remove('active'); });
+  var activeTab = document.getElementById('tab-' + docId);
+  if (activeTab) activeTab.classList.add('active');
+  
+  document.getElementById('nav-d1').style.display = docId === 'd1' ? 'block' : 'none';
+  document.getElementById('nav-d2').style.display = docId === 'd2' ? 'block' : 'none';
+  window.scrollTo(0, 0);
+}
+
+// ── Initialize display state ──
+document.addEventListener('DOMContentLoaded', function() {
+  var d1 = document.getElementById('d1');
+  var d2 = document.getElementById('d2');
+  if (d1) { d1.style.display = 'block'; }
+  if (d2) { d2.style.display = 'none'; }
+});
+
+// ── Scroll Navigation (cross-panel aware) ───────────────────────
+function goTo(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+
+  // Determine which panel owns this element
+  var inD1 = !!el.closest('#d1');
+  var inD2 = !!el.closest('#d2');
+  var d1Active = document.getElementById('d1') && document.getElementById('d1').style.display !== 'none';
+
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  // Highlight matching nav item
+  document.querySelectorAll('.nav-item').forEach(function(n) {
+    var oc = n.getAttribute('onclick') || '';
+    if (oc.indexOf("'" + id + "'") !== -1 || oc.indexOf('"' + id + '"') !== -1) {
+      n.classList.add('active');
+    }
+  });
+
+  if (inD1 && !d1Active) {
+    switchDoc('d1');
+    setTimeout(function() { _scrollTo(id); }, 50);
+  } else if (inD2 && d1Active) {
+    switchDoc('d2');
+    setTimeout(function() { _scrollTo(id); }, 50);
+  } else {
+    _scrollTo(id);
+  }
+}
+
+function _scrollTo(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Q&A Toggle (header click opens/closes the question body) ────
+function toggleQA(header) {
+  var body = header.nextElementSibling;
+  var arrow = header.querySelector('.qa-arrow');
+  var isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  if (arrow) {
+    arrow.textContent = isOpen ? '▼' : '▲';
+    arrow.classList.toggle('open', !isOpen);
+  }
+}
+
+// ── Reveal Answer button ─────────────────────────────────────────
+function revealAnswer(btn) {
+  var block = btn.closest('.qa-block');
+  _revealAnswer(block);
+}
+
+function _revealAnswer(block) {
+  // Show answer section
+  var ansSection = block.querySelector('.qa-answer-section');
+  var wrongSection = block.querySelector('.qa-wrong');
+  if (ansSection) ansSection.style.display = 'block';
+  if (wrongSection) wrongSection.style.display = 'block';
+
+  // Highlight the correct option (if not already selected correctly by user)
+  var correctOpt = block.querySelector('.qa-option[data-correct="true"]');
+  if (correctOpt && !correctOpt.classList.contains('correct-selection')) {
+    correctOpt.classList.add('revealed-correct');
+  }
+
+  // Lock all options
+  block.classList.add('answered');
+
+  // Update reveal button
+  var btn = block.querySelector('.qa-reveal-btn');
+  if (btn) {
+    btn.textContent = '▲ Hide Answer & Explanation';
+    btn.classList.add('revealed');
+    btn.onclick = function() { hideAnswer(btn); };
+  }
+}
+
+function hideAnswer(btn) {
+  var block = btn.closest('.qa-block');
+  // Only hide if not answered by click (to avoid confusion)
+  if (block.classList.contains('click-answered')) return;
+  var ansSection = block.querySelector('.qa-answer-section');
+  var wrongSection = block.querySelector('.qa-wrong');
+  if (ansSection) ansSection.style.display = 'none';
+  if (wrongSection) wrongSection.style.display = 'none';
+  btn.textContent = '▼ Show Answer & Explanation';
+  btn.classList.remove('revealed');
+  btn.onclick = function() { revealAnswer(btn); };
+}
+
+// ── MCQ Option Click Logic ───────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.qa-options').forEach(function(optList) {
+    var block = optList.closest('.qa-block');
+    var opts = optList.querySelectorAll('.qa-option');
+    opts.forEach(function(opt) {
+      opt.addEventListener('click', function() {
+        if (block.classList.contains('answered')) return;
+        var isCorrect = opt.dataset.correct === 'true';
+        if (isCorrect) {
+          opt.classList.add('correct-selection');
+          block.classList.add('answered', 'click-answered');
+          _revealAnswer(block);
+        } else {
+          opt.classList.add('wrong-selection');
+          opt.style.pointerEvents = 'none';
+        }
+      });
+    });
+  });
+});
+
+// ── Highlight Toggle ────────────────────────────────────────────
+function toggleHighlight() {
+  var btn = document.getElementById('hlbtn');
+  document.body.classList.toggle('highlight-mode');
+  btn.classList.toggle('active');
+  btn.textContent = document.body.classList.contains('highlight-mode') ? '★ HY On' : '★ Highlight HY';
+}
+
+// ── Mobile Sidebar ──────────────────────────────────────────────
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ── Search ──────────────────────────────────────────────────────
+var searchTimer = null;
+function doSearch(query) {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(function() { performSearch(query.trim()); }, 220);
+}
+
+function performSearch(query) {
+  var resultsEl = document.getElementById('searchResults');
+  if (!query || query.length < 2) { resultsEl.style.display = 'none'; return; }
+  var lower = query.toLowerCase();
+  var results = [];
+
+  // Search both panels so cross-panel results work
+  ['d1','d2'].forEach(function(panelId) {
+    var panel = document.getElementById(panelId);
+    if (!panel) return;
+    var nodes = panel.querySelectorAll('h2, h3, h4, .callout, .qa-vignette p, td, li');
+    nodes.forEach(function(node) {
+      if (node.textContent.toLowerCase().indexOf(lower) !== -1) {
+        var title = node.tagName.match(/^H[234]$/) ? node.textContent.slice(0, 65)
+                  : node.closest('.qa-block') ? 'Q&A: ' + node.textContent.slice(0, 50)
+                  : node.textContent.slice(0, 60);
+        var anchor = node.closest('[id]');
+        if (!anchor || anchor.id === panelId) {
+          if (!node.id) node.id = '_sr_' + results.length;
+          anchor = node;
+        }
+        var docLabel = panelId === 'd1' ? 'Lecture Notes' : 'High Yield';
+        results.push({ title: title, anchorId: anchor.id, panelId: panelId, tag: docLabel });
+      }
+    });
+  });
+
+  if (!results.length) {
+    resultsEl.innerHTML = '<div class="sr-item"><div class="sr-title">No results found</div></div>';
+  } else {
+    resultsEl.innerHTML = results.slice(0, 8).map(function(r, i) {
+      return '<div class="sr-item" onclick="jumpToResult(' + i + ')"><div class="sr-title">' +
+        r.title.replace(/[<>]/g, '').slice(0, 65) + '…</div>' +
+        '<div class="sr-ctx">' + r.tag + '</div></div>';
+    }).join('');
+    window._searchResults = results;
+  }
+  resultsEl.style.display = 'block';
+}
+
+function jumpToResult(index) {
+  document.getElementById('searchResults').style.display = 'none';
+  if (!window._searchResults || !window._searchResults[index]) return;
+  var r = window._searchResults[index];
+  var d1Active = document.getElementById('d1') && document.getElementById('d1').style.display !== 'none';
+  var needSwitch = (r.panelId === 'd1' && !d1Active) || (r.panelId === 'd2' && d1Active);
+  if (needSwitch) {
+    switchDoc(r.panelId);
+    setTimeout(function() { _scrollTo(r.anchorId); }, 50);
+  } else {
+    _scrollTo(r.anchorId);
+  }
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#searchResults') && !e.target.closest('#searchInput')) {
+    document.getElementById('searchResults').style.display = 'none';
+  }
+});
+
+// ── Nav link active state ────────────────────────────────────────
+document.querySelectorAll('.nav-item').forEach(function(link) {
+  link.addEventListener('click', function() {
+    document.querySelectorAll('.nav-item').forEach(function(l) { l.classList.remove('active'); });
+    link.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

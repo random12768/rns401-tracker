@@ -2361,6 +2361,25 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
 tr.repeat-row > td { opacity: .62; } tr.repeat-row .rep-dash { text-align: center; color: var(--text-dim); font-weight: 700; }
 #bhs-table a.video-repeat, a.video-repeat { display: block; margin: 3px 0; padding: 3px 8px; font-size: .8em; line-height: 1.25; color: var(--text-dim) !important; border: 1px dashed var(--border); border-radius: 8px; text-decoration: none; white-space: normal; }
 a.video-repeat span { font-style: italic; }
+
+  .bsg-vids-title { font-size: .74em; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--text-dim); margin: 2px 0 4px; }
+  .bsg-vids { margin: 0 0 10px; }
+  .bsg-vid { display: flex; align-items: center; gap: 10px; padding: 6px 4px; border-bottom: 1px solid color-mix(in srgb, var(--border-soft) 70%, transparent); min-width: 0; }
+  .bsg-vid:last-child { border-bottom: none; }
+  .bsg-vid input[type=checkbox] { margin: 0; width: 16px; height: 16px; cursor: pointer; flex: 0 0 auto; }
+  .bsg-vid a.bsg-link { all: unset; cursor: pointer; flex: 1 1 auto; min-width: 0; font-size: .95em; line-height: 1.3; color: var(--text); border-bottom: 1px dotted var(--text-faint); }
+  .bsg-vid a.bsg-link:hover { color: var(--accent, #a3e635); border-bottom-style: solid; }
+  .bsg-vid .bsg-min { flex: 0 0 auto; font-size: .82em; font-weight: 700; color: var(--text-dim); }
+  .bsg-vid.checked a.bsg-link { opacity: .5; text-decoration: line-through; }
+  .bsg-vid .lv-ak { flex: 0 0 auto; }
+  .bsg-gap { margin: -6px 0 16px 22px; padding: 8px 12px; border: 1px dashed color-mix(in srgb, #f59e0b 60%, transparent); border-radius: 10px; background: color-mix(in srgb, #f59e0b 6%, transparent); }
+  .bsg-gap-tag { font-size: .7em; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: #f59e0b; margin-bottom: 2px; }
+  .bsg-gap .bsg-vids { margin: 0; }
+  .bsg-gap-note { font-size: .82em; color: var(--text-dim); line-height: 1.45; margin-top: 2px; }
+  .bsg-det { margin: 14px 0; border: 1px solid var(--border-soft); border-radius: 12px; padding: 4px 14px 10px; }
+  .bsg-det > summary { cursor: pointer; font-weight: 800; padding: 8px 0; list-style-position: inside; }
+  .bsg-det[open] > summary { border-bottom: 1px solid var(--border-soft); margin-bottom: 8px; }
+  .bsg-count { font-weight: 700; font-size: .82em; color: var(--bhs, var(--text-dim)); margin-left: 6px; }
   .exam-pill { display:inline-block; margin-left:6px; padding:1px 7px; border-radius:999px; font-size:.62rem; font-weight:800; letter-spacing:.04em; vertical-align:middle; }
   .exam-pill.exam-mid { background: color-mix(in srgb, #f59e0b 22%, transparent); color:#f59e0b; border:1px solid color-mix(in srgb,#f59e0b 55%,transparent); }
   .exam-pill.exam-fin { background: color-mix(in srgb, #818cf8 20%, transparent); color:#818cf8; border:1px solid color-mix(in srgb,#818cf8 50%,transparent); }
@@ -4230,14 +4249,99 @@ a.video-repeat span { font-style: italic; }
 <div class="tab-panel" id="panel-bhs">
 <h2 class="bhs">BS — Behavioral Sciences (MD4 · Sept 8 &ndash; Dec 7, 2026)</h2>
 <div class="summary" style="border-color: var(--bhs);">
-  <div class="bhs-big"><strong>15 videos to watch · 3h 19m total</strong></div>
-  Boards &amp; Beyond videos matched to your Behavioral Science lectures (Dr. Sampath), in lecture order. Each video is listed once, at the first lecture that needs it. Later lectures that reuse a video show as faded <em>review</em> rows with nothing new to watch, and they don't count toward your total. Lectures with no dedicated video are marked as gaps (use the lecture slides). Optional extras (Pharmacology) are not counted.
+  <div class="bhs-big"><strong>Midterm: Wed Oct 14, 9:00 AM &middot; study from the 4 guides below</strong></div>
+  Dr. Sampath gave four study guides for the Block 1 exam. Each one is shown below with the Boards &amp; Beyond videos that match it, in the same order as before. Tick videos off as you watch them.
   <div class="exam-split">
-    <div class="exam-box exam-mid"><b>MIDTERM · Block 1 exam, Wed Oct 14</b><span>9 videos · 2h 2m — everything through the Oct 8 lecture (development, childhood disorders, psychosis, mood, anxiety)</span><em id="bhs-mid-live"></em></div>
-    <div class="exam-box exam-fin"><b>FINAL · Mon Dec 7</b><span>6 videos · 1h 17m — personality, substance use, eating disorders (assessment/abuse lectures have no new video)</span><em id="bhs-fin-live"></em></div>
+    <div class="exam-box exam-mid"><b>MIDTERM &middot; Block 1 exam, Wed Oct 14</b><span>9 videos &middot; 2h 2m total &mdash; 7 videos (1h 37m) match the 4 guides, plus 2 videos (25m) from lectures the guides don't cover</span><em id="bhs-mid-live"></em></div>
+    <div class="exam-box exam-fin"><b>FINAL &middot; Mon Dec 7</b><span>6 videos &middot; 1h 17m &mdash; personality, substance use, eating disorders</span><em id="bhs-fin-live"></em></div>
   </div>
   <div class="bhs-live"><strong id="bhs-progress"></strong></div>
 </div>
+
+<h3 class="bhs-h3">Midterm &mdash; the 4 guides <span class="sec-sub">(Block 1 exam, Oct 14)</span></h3>
+<div id="bhs-guides">
+<div class="ky-card bsg-card" id="ky-bsg-life">
+  <div class="ky-top">
+    <span class="ky-badge">📘 Midterm guide 1 of 4</span>
+    <span class="ky-meta">25 practice Q&amp;As</span>
+    <span class="ky-meta bsg-count" data-for="bsg-life"></span>
+  </div>
+  <div class="ky-title">Life Cycle: Womb to Tomb</div>
+  <p class="ky-desc"><b>Covers these lectures:</b> Theories of Development: Piaget, Erikson, Freud (9/9) · SGD Prenatal, Infancy &amp; Milestones (9/14) · School Age &amp; Adolescence (9/17) · SGD Adulthood, Aging, Death &amp; Grief (9/18)</p>
+  <div class="bsg-vids-title">Matching Boards &amp; Beyond videos</div>
+  <div class="bsg-vids" id="vids-bsg-life" data-vids="Pediatrics|Geriatrics"></div>
+  <div class="ky-actions">
+    <button type="button" class="ky-btn ky-btn-main" onclick="kyToggle('bsg-life','bs-life-cycle.html')" id="ky-btn-bsg-life">Open guide here ▾</button>
+    <a class="ky-btn" href="bs-life-cycle.html" target="_blank" rel="noopener">Open in new tab ↗</a>
+  </div>
+  <div class="ky-credit">✍️ Provided by <b>Dr. Sampath</b> for the Block 1 exam.</div>
+  <div class="ky-frame" id="ky-frame-bsg-life" style="display:none;"></div>
+</div><div class="ky-card bsg-card" id="ky-bsg-kids">
+  <div class="ky-top">
+    <span class="ky-badge">📘 Midterm guide 2 of 4</span>
+    <span class="ky-meta">18 practice questions</span>
+    <span class="ky-meta bsg-count" data-for="bsg-kids"></span>
+  </div>
+  <div class="ky-title">Mental Disorders of Children &amp; Adolescents</div>
+  <p class="ky-desc"><b>Covers these lectures:</b> Neurodevelopmental Disorders: ADHD, Autism, etc. (9/23) · SGD Childhood Disorders Case Vignettes (9/24)</p>
+  <div class="bsg-vids-title">Matching Boards &amp; Beyond videos</div>
+  <div class="bsg-vids" id="vids-bsg-kids" data-vids="ADHD and Autism|Childhood Disorders"></div>
+  <div class="ky-actions">
+    <button type="button" class="ky-btn ky-btn-main" onclick="kyToggle('bsg-kids','bs-children-adolescents.html')" id="ky-btn-bsg-kids">Open guide here ▾</button>
+    <a class="ky-btn" href="bs-children-adolescents.html" target="_blank" rel="noopener">Open in new tab ↗</a>
+  </div>
+  <div class="ky-credit">✍️ Provided by <b>Dr. Sampath</b> for the Block 1 exam.</div>
+  <div class="ky-frame" id="ky-frame-bsg-kids" style="display:none;"></div>
+</div><div class="bsg-gap">
+  <div class="bsg-gap-tag">Not in the four guides</div>
+  <div class="bsg-vids" data-vids="Child Abuse and Neglect"></div>
+  <div class="bsg-gap-note">On your schedule with the childhood-disorders lectures, but the guides only touch on it (neglect as the cause of Reactive Attachment Disorder in guide 2, mandatory reporting in guide 1). Use the lecture slides for abuse.</div>
+</div><div class="ky-card bsg-card" id="ky-bsg-schiz">
+  <div class="ky-top">
+    <span class="ky-badge">📘 Midterm guide 3 of 4</span>
+    <span class="ky-meta">10 practice questions</span>
+    <span class="ky-meta bsg-count" data-for="bsg-schiz"></span>
+  </div>
+  <div class="ky-title">Schizophrenia &amp; Psychotic Disorders</div>
+  <p class="ky-desc"><b>Covers these lectures:</b> Psychosis &amp; Schizophrenia: Core Concepts (9/30) · TBL Psychosis associated disorders (10/7)</p>
+  <div class="bsg-vids-title">Matching Boards &amp; Beyond videos</div>
+  <div class="bsg-vids" id="vids-bsg-schiz" data-vids="Psychosis|Psychotic Disorders"></div>
+  <div class="ky-actions">
+    <button type="button" class="ky-btn ky-btn-main" onclick="kyToggle('bsg-schiz','bs-schizophrenia.html')" id="ky-btn-bsg-schiz">Open guide here ▾</button>
+    <a class="ky-btn" href="bs-schizophrenia.html" target="_blank" rel="noopener">Open in new tab ↗</a>
+  </div>
+  <div class="ky-credit">✍️ Provided by <b>Dr. Sampath</b> for the Block 1 exam.</div>
+  <div class="ky-frame" id="ky-frame-bsg-schiz" style="display:none;"></div>
+</div><div class="ky-card bsg-card" id="ky-bsg-mood">
+  <div class="ky-top">
+    <span class="ky-badge">📘 Midterm guide 4 of 4</span>
+    <span class="ky-meta">34 practice MCQs</span>
+    <span class="ky-meta bsg-count" data-for="bsg-mood"></span>
+  </div>
+  <div class="ky-title">Mood Disorders</div>
+  <p class="ky-desc"><b>Covers these lectures:</b> Depressive &amp; Bipolar Disorders: The Criteria (10/1) · TBL Mood Disorders (10/13)</p>
+  <div class="bsg-vids-title">Matching Boards &amp; Beyond videos</div>
+  <div class="bsg-vids" id="vids-bsg-mood" data-vids="Mood Disorders"></div>
+  <div class="ky-actions">
+    <button type="button" class="ky-btn ky-btn-main" onclick="kyToggle('bsg-mood','bs-mood-disorders.html')" id="ky-btn-bsg-mood">Open guide here ▾</button>
+    <a class="ky-btn" href="bs-mood-disorders.html" target="_blank" rel="noopener">Open in new tab ↗</a>
+  </div>
+  <div class="ky-credit">✍️ Provided by <b>Dr. Sampath</b> for the Block 1 exam.</div>
+  <div class="ky-frame" id="ky-frame-bsg-mood" style="display:none;"></div>
+</div><div class="bsg-gap">
+  <div class="bsg-gap-tag">Not in the four guides</div>
+  <div class="bsg-vids" data-vids="Anxiety Disorders"></div>
+  <div class="bsg-gap-note">This is the Oct 8 lecture (Anxiety, OCD &amp; Trauma Disorders), before your exam, but none of the four guides teach it &mdash; only passing mentions (separation anxiety and selective mutism in guide 2; SSRIs for OCD/PTSD in guide 4). Use the lecture slides.</div>
+</div>
+</div>
+
+<details class="bsg-det" id="bhs-later">
+  <summary>After the midterm &mdash; for the Dec 7 final <span class="sec-sub">(6 videos &middot; 1h 17m)</span> <span class="bsg-count" data-for="later"></span></summary>
+  <div class="bsg-vids" data-vids="Personality Disorders|Alcohol and CNS Depressants|Opioids|Stimulants|Other Drugs|Eating Disorders"></div>
+</details>
+
+<details class="bsg-det" id="bhs-fullwrap">
+  <summary>Full lecture-by-lecture schedule <span class="sec-sub">(every lecture with dates, repeats and gaps &mdash; nothing was removed)</span></summary>
 <div class="controls">
   <input type="text" class="search-box" placeholder="🔍 Search behavioral science topics..." oninput="filterTable('bhs-table', this.value)">
   <button onclick="toggleGapsOnly('bhs-table')">Show gaps only</button>
@@ -4276,7 +4380,10 @@ a.video-repeat span { font-style: italic; }
 </tbody>
 <tfoot><tr><td colspan="4" style="text-align:right;">Total unique video time:</td><td class="time">199m = 3h 19m</td></tr></tfoot>
 </table></div>
+</details>
 
+<details class="bsg-det">
+  <summary>Optional extra review videos <span class="sec-sub">(not on the MD4 schedule &middot; 12 videos &middot; 2h 33m)</span></summary>
 <h3 class="bhs-h3">Extra review videos <span class="sec-sub">(optional · not on the MD4 schedule · 12 videos · 2h 33m)</span></h3>
 <div class="summary" style="border-color: var(--bhs);"><strong id="bhs-extra-progress"></strong> Good for exam review once you've finished the lectures above.</div>
 <div class="table-scroll"><table class="ghs-table" id="bhs-extra-table">
@@ -4298,6 +4405,8 @@ a.video-repeat span { font-style: italic; }
 <tr data-id="bx12"><td data-label="✓"><input type="checkbox" onchange="onCheck(this)"></td><td data-label="Lecture">The Healthy Patient</td><td data-label="Date">—</td><td data-label="Boards &amp; Beyond video">The Healthy Patient</td><td class="time" data-min="13" data-label="Length">13m</td><td class="video-cell" data-label="Optional extras">—</td><td class="video-cell" data-label="Watch"><a href="https://drive.google.com/file/d/1-t-e6EUQSey6jhofcSFeaXeVRii9yd8g/view?usp=drivesdk" target="_blank" rel="noopener" class="video-link">🎬 The Healthy Patient (13m)</a></td></tr>
 </tbody>
 </table></div>
+
+</details>
 </div>
 
 <div class="tab-panel" id="panel-chs303">
@@ -5054,7 +5163,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 38, built: '2026-10-08T18:26:17Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 39, built: '2026-10-08T22:17:05Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5064,6 +5173,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 39], title: "Behavioral Sciences: simplified around the 4 midterm guides", items: ["The midterm is covered by four study guides from Dr. Sampath (Life Cycle, Children & Adolescents, Schizophrenia, Mood Disorders). Each now has its own card with the matching Boards & Beyond videos (same order as before), lengths, checkboxes and an Open guide button.", "Anxiety Disorders and Child Abuse videos stay on the midterm list, marked as not covered by the guides. Everything else (final-exam videos, full lecture schedule, optional extras) is collapsed below, nothing removed."] },
   { v: [2, 37], title: "MD4 schedule update (weeks 5–6) + planner fixes", items: ["Updated the Oct 9–16 schedule: Non-inflammatory Diarrhea now Fri 10/9, Antidepressants Mon 10/12 + Tue 10/13, Sedatives & Hypnotics Wed 10/14 + Thu 10/15, SFH on Fri 10/16. The Behavioral Sciences Mood Disorders TBL moved to Tue 10/13 and is tagged MIDTERM.", "Planner now works for CHS303: lecture lengths typed as text are read automatically, so it shows the real remaining videos.", "Planner no longer says 'behind by 74 videos' on a module's first open: the pace baseline resets whenever the video list grows."] },
   { v: [2, 32], title: "Behavioral Sciences: midterm vs final", items: ["Each lecture is tagged MIDTERM (Block 1 exam, Oct 14) or FINAL (Dec 7), with separate video counts, time totals and progress for each."] },
   { v: [2, 31], title: "Behavioral Sciences: video lengths and no more repeats", items: ["Every Behavioral Science video now shows its length, and the top of the tab says exactly how many videos you need to watch and for how long.","A video that several lectures reuse is listed once, at the first lecture that needs it. Later lectures show a faded review row with nothing to watch, so repeats no longer look like extra homework."] },
@@ -6521,6 +6631,41 @@ function computeStats(tableId) {
   return { total, done, totalMin, doneMin };
 }
 
+
+function bhsGuides() {
+  const panel = document.getElementById('panel-bhs'); if (!panel) return;
+  const subs = Array.from(document.querySelectorAll('#bhs-table .vid-sub')); if (!subs.length) return;
+  const byTitle = {};
+  subs.forEach(r => { const a = r.querySelector('.sv-line .video-link'); if (!a) return; const t = (a.dataset.svLabel || a.textContent).replace(/^[^\w(]+/, '').replace(/\s*\(\d+m\)\s*$/, '').trim(); if (t) byTitle[t] = r; });
+  panel.querySelectorAll('.bsg-vids').forEach(box => {
+    if (box.__built) return; box.__built = true; box.textContent = '';
+    box.dataset.vids.split('|').forEach(t => {
+      const r = byTitle[t]; if (!r) return;
+      const a = r.querySelector('.sv-line .video-link');
+      const line = document.createElement('div'); line.className = 'bsg-vid'; line.dataset.sid = r.dataset.sid;
+      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.setAttribute('aria-label', 'Watched');
+      cb.addEventListener('change', () => { const o = document.querySelector('.vid-sub[data-sid="' + r.dataset.sid + '"] input'); if (o) { o.checked = cb.checked; onSubCheck(o); } });
+      const link = a.cloneNode(true); link.classList.add('bsg-link');
+      const min = document.createElement('span'); min.className = 'bsg-min'; min.textContent = (r.dataset.min || '?') + ' min';
+      line.appendChild(cb); line.appendChild(link); line.appendChild(min);
+      box.appendChild(line);
+    });
+  });
+  const f = (m) => m >= 60 ? Math.floor(m / 60) + 'h ' + (m % 60) + 'm' : m + 'm';
+  panel.querySelectorAll('.bsg-vid').forEach(line => {
+    const orig = document.querySelector('.vid-sub[data-sid="' + line.dataset.sid + '"]'); if (!orig) return;
+    const o = orig.querySelector('input'), cb = line.querySelector('input');
+    cb.checked = o.checked; line.classList.toggle('checked', o.checked);
+    if (!line.querySelector('.lv-ak')) { const ak = orig.querySelector('.lv-ak'); if (ak) line.insertBefore(ak.cloneNode(true), line.querySelector('.bsg-min')); }
+  });
+  panel.querySelectorAll('.bsg-count').forEach(el => {
+    const box = el.dataset.for === 'later' ? document.getElementById('bhs-later') : document.getElementById('vids-' + el.dataset.for);
+    if (!box) return;
+    let n = 0, d = 0, tm = 0, dm = 0;
+    box.querySelectorAll('.bsg-vid').forEach(l => { const m = +(document.querySelector('.vid-sub[data-sid="' + l.dataset.sid + '"]') || { dataset: {} }).dataset.min || 0; n++; tm += m; if (l.querySelector('input').checked) { d++; dm += m; } });
+    el.textContent = n ? ('· ' + d + ' of ' + n + ' watched · ' + f(Math.max(0, tm - dm)) + ' left') : '';
+  });
+}
 function bhsExamProgress() {
   const f = (m) => m >= 60 ? Math.floor(m / 60) + 'h ' + (m % 60) + 'm' : m + 'm';
   [['exam-mid', 'bhs-mid-live'], ['exam-fin', 'bhs-fin-live']].forEach(([c, id]) => {
@@ -6548,7 +6693,7 @@ function bhsProgress() {
   });
 }
 function updateProgress() {
-  try { bhsProgress(); bhsExamProgress(); } catch (e) {}
+  try { bhsProgress(); bhsExamProgress(); bhsGuides(); } catch (e) {}
   // Overview now shows only the current module's cards/overall bar/watch-time
   // box — see renderOverviewDynamic() and MODULE_CARDS below — so this just
   // re-runs that (it's cheap: computeStats() only touches the current

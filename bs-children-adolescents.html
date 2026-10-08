@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Behavioral Science — USMLE Step 1 | 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0f1117;
+  --paper: #f7f5f0;
+  --cream: #ede9e1;
+  --gold: #c8982a;
+  --gold-light: #f0e2b2;
+  --red: #c0392b;
+  --red-light: #fdecea;
+  --teal: #1a6b6b;
+  --teal-light: #d4eeee;
+  --navy: #1b2a4a;
+  --navy-light: #dce4f0;
+  --purple: #6b3fa0;
+  --purple-light: #eee5f8;
+  --green: #2d7a4f;
+  --green-light: #d6f0e3;
+  --orange: #b85c1a;
+  --orange-light: #fce8d5;
+  --sidebar-w: 260px;
+  --header-h: 64px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* ── HEADER ── */
+#header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--header-h);
+  background: var(--navy);
+  display: flex; align-items: center; padding: 0 24px;
+  gap: 20px;
+  border-bottom: 3px solid var(--gold);
+}
+#header .logo {
+  font-family: 'Playfair Display', serif;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+#header .logo span { color: var(--gold); }
+#search-bar {
+  flex: 1;
+  max-width: 400px;
+  padding: 8px 16px;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+#search-bar::placeholder { color: rgba(255,255,255,0.4); }
+#search-bar:focus { border-color: var(--gold); }
+.header-btns { display: flex; gap: 10px; margin-left: auto; }
+.btn {
+  padding: 7px 16px;
+  border: none; border-radius: 5px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-gold { background: var(--gold); color: #fff; }
+.btn-gold:hover { background: #b07820; }
+.btn-outline { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.3); }
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+.btn-outline.active { background: var(--gold); color: #fff; border-color: var(--gold); }
+
+/* ── LAYOUT ── */
+#layout {
+  display: flex;
+  padding-top: var(--header-h);
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: var(--sidebar-w);
+  min-height: calc(100vh - var(--header-h));
+  background: var(--navy);
+  position: fixed;
+  top: var(--header-h);
+  left: 0;
+  overflow-y: auto;
+  padding-bottom: 40px;
+}
+.sidebar-section { padding: 16px 0 4px; }
+.sidebar-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  padding: 0 20px 6px;
+}
+.sidebar-link {
+  display: block;
+  padding: 9px 20px;
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  font-size: 13.5px;
+  transition: all 0.15s;
+  border-left: 3px solid transparent;
+}
+.sidebar-link:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.sidebar-link.active { color: var(--gold); border-left-color: var(--gold); background: rgba(200,152,42,0.1); }
+.sidebar-link .badge {
+  float: right;
+  background: var(--gold);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 10px;
+  padding: 1px 6px;
+  font-weight: 700;
+}
+
+/* ── MAIN ── */
+#main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  padding: 40px 48px 80px;
+  max-width: calc(100% - var(--sidebar-w));
+}
+
+/* ── TAB PANELS ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── PAGE TITLE ── */
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px;
+  font-weight: 900;
+  color: var(--navy);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.page-subtitle {
+  color: #666;
+  font-size: 15px;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--cream);
+}
+.page-subtitle strong { color: var(--gold); }
+
+/* ── SECTIONS ── */
+.section {
+  scroll-margin-top: calc(var(--header-h) + 24px);
+  margin-bottom: 56px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title .icon { font-size: 24px; }
+.section-divider {
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin-bottom: 24px;
+  border-radius: 2px;
+}
+.subsection {
+  background: #fff;
+  border: 1px solid var(--cream);
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.subsection-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1.5px solid var(--cream);
+}
+
+/* ── CALLOUT BOXES ── */
+.callout {
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  border-left: 4px solid;
+}
+.callout-pearl { background: var(--gold-light); border-color: var(--gold); }
+.callout-clinical { background: var(--teal-light); border-color: var(--teal); }
+.callout-ethics { background: var(--purple-light); border-color: var(--purple); }
+.callout-caution { background: var(--red-light); border-color: var(--red); }
+.callout-tip { background: var(--green-light); border-color: var(--green); }
+.callout-info { background: var(--navy-light); border-color: var(--navy); }
+.callout-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.callout-pearl .callout-title { color: var(--gold); }
+.callout-clinical .callout-title { color: var(--teal); }
+.callout-ethics .callout-title { color: var(--purple); }
+.callout-caution .callout-title { color: var(--red); }
+.callout-tip .callout-title { color: var(--green); }
+.callout-info .callout-title { color: var(--navy); }
+
+/* ── HIGHLIGHT SYSTEM ── */
+body.highlight-mode .hy {
+  background: var(--gold-light);
+  border-radius: 3px;
+  padding: 1px 3px;
+  font-weight: 600;
+}
+
+/* ── LEARNING OBJECTIVES ── */
+.objectives-box {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin-bottom: 32px;
+}
+.objectives-box h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  color: var(--gold);
+  margin-bottom: 14px;
+  letter-spacing: 0.5px;
+}
+.objectives-list { list-style: none; }
+.objectives-list li {
+  padding: 5px 0 5px 22px;
+  position: relative;
+  color: rgba(255,255,255,0.85);
+  font-size: 14px;
+}
+.objectives-list li::before {
+  content: '◆';
+  position: absolute; left: 0;
+  color: var(--gold);
+  font-size: 8px;
+  top: 9px;
+}
+
+/* ── TABLES ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  margin: 16px 0;
+}
+.data-table th {
+  background: var(--navy);
+  color: #fff;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.data-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--cream);
+  vertical-align: top;
+}
+.data-table tr:hover td { background: var(--cream); }
+.data-table tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+.data-table tr:nth-child(even):hover td { background: var(--cream); }
+
+/* ── DRUG TABLE ── */
+.drug-row td:first-child { font-weight: 600; font-family: 'DM Mono', monospace; font-size: 13px; }
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  margin: 2px;
+}
+.tag-first { background: var(--green-light); color: var(--green); }
+.tag-alt { background: var(--navy-light); color: var(--navy); }
+.tag-warn { background: var(--red-light); color: var(--red); }
+.tag-gold { background: var(--gold-light); color: var(--orange); }
+
+/* ── Q&A SECTION ── */
+.qa-card {
+  background: #fff;
+  border: 1px solid var(--cream);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.qa-header {
+  background: var(--navy);
+  color: #fff;
+  padding: 14px 24px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+.qa-num {
+  background: var(--gold);
+  color: #fff;
+  border-radius: 50%;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+  flex-shrink: 0;
+}
+.qa-stem { flex: 1; font-size: 14px; color: rgba(255,255,255,0.9); }
+.qa-toggle { color: var(--gold); font-size: 18px; transition: transform 0.3s; }
+.qa-card.open .qa-toggle { transform: rotate(180deg); }
+.qa-body { display: none; padding: 24px; }
+.qa-card.open .qa-body { display: block; }
+.qa-vignette {
+  font-size: 14.5px;
+  line-height: 1.75;
+  padding: 16px 18px;
+  background: var(--cream);
+  border-radius: 7px;
+  margin-bottom: 16px;
+  border-left: 3px solid var(--navy);
+}
+.qa-options { margin-bottom: 16px; }
+.qa-option {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 14px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: 1.5px solid transparent;
+}
+.qa-option:hover { background: var(--cream); }
+.qa-option.correct { background: var(--green-light); border-color: var(--green); }
+.qa-option.wrong { background: var(--red-light); border-color: var(--red); }
+.qa-opt-letter {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.qa-option.correct .qa-opt-letter { background: var(--green); }
+.qa-option.wrong .qa-opt-letter { background: var(--red); }
+.qa-reveal-btn {
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  padding: 9px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px; font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s;
+}
+.qa-reveal-btn:hover { background: var(--orange); }
+.qa-explanation {
+  display: none;
+  background: var(--cream);
+  border-radius: 7px;
+  padding: 18px;
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.75;
+  border-left: 4px solid var(--gold);
+}
+.qa-explanation.visible { display: block; }
+.qa-answer-tag {
+  display: inline-block;
+  background: var(--green);
+  color: #fff;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 12px; font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* ── FLOWCHART ── */
+.flow-container {
+  overflow-x: auto;
+  padding: 10px 0;
+}
+.flow-box {
+  display: inline-block;
+  background: var(--navy);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px; font-weight: 500;
+  text-align: center;
+  min-width: 160px;
+}
+.flow-box.gold { background: var(--gold); }
+.flow-box.teal { background: var(--teal); }
+.flow-box.red { background: var(--red); }
+.flow-box.green { background: var(--green); }
+.flow-arrow {
+  font-size: 18px;
+  color: var(--gold);
+  font-weight: 700;
+  padding: 0 8px;
+}
+
+/* ── DIFF DX TABLE ── */
+.diff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+.diff-card {
+  border-radius: 8px;
+  padding: 18px;
+  border: 1.5px solid;
+}
+.diff-card.adhd { border-color: var(--teal); background: var(--teal-light); }
+.diff-card.asd { border-color: var(--navy); background: var(--navy-light); }
+.diff-card.cd { border-color: var(--red); background: var(--red-light); }
+.diff-card.odd { border-color: var(--orange); background: var(--orange-light); }
+.diff-card.dmdd { border-color: var(--purple); background: var(--purple-light); }
+.diff-card.ied { border-color: var(--gold); background: var(--gold-light); }
+.diff-card.rett { border-color: var(--green); background: var(--green-light); }
+.diff-card.tourette { border-color: var(--navy); background: var(--cream); }
+.diff-title {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 10px;
+  font-family: 'Playfair Display', serif;
+}
+.diff-list { list-style: none; font-size: 13px; }
+.diff-list li { padding: 3px 0 3px 16px; position: relative; }
+.diff-list li::before { content: '•'; position: absolute; left: 0; font-weight: 700; }
+
+/* ── MILESTONE TABLE ── */
+.milestone-row td:first-child { font-weight: 700; color: var(--navy); width: 80px; }
+
+/* ── SEARCH HIGHLIGHT ── */
+.search-highlight { background: #ffe066; border-radius: 2px; }
+
+/* ── HIDDEN BY SEARCH ── */
+.search-hidden { display: none !important; }
+
+/* ── PROGRESS BAR ── */
+.progress-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 32px;
+}
+.stats-row {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.stat-pill {
+  background: #fff;
+  border: 1.5px solid var(--cream);
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 13px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.stat-pill strong { font-size: 22px; font-weight: 700; color: var(--navy); }
+.stat-pill span { color: #888; font-size: 12px; }
+
+/* ── NO RESULTS ── */
+#no-results {
+  display: none;
+  text-align: center;
+  padding: 60px;
+  color: #999;
+  font-size: 16px;
+}
+
+/* ── SCROLL BEHAVIOR ── */
+html { scroll-behavior: smooth; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  #sidebar { transform: translateX(-100%); z-index: 99; }
+  #main { margin-left: 0; max-width: 100%; padding: 24px 20px; }
+}
+
+/* ── PRINT OVERRIDE ── */
+@media print {
+  #sidebar, #header { display: none; }
+  #main { margin: 0; padding: 0; }
+}
+
+/* doc2 specific */
+.syndrome-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  border: 1px solid var(--cream);
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.syndrome-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.syndrome-tag { font-size: 11px; color: #888; }
+.syndrome-detail { font-size: 13.5px; }
+.syndrome-detail strong { color: var(--navy); }
+
+@media (max-width: 700px) {
+  .syndrome-card { grid-template-columns: 1fr; }
+}
+
+.mnemonic-box {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 10px;
+  padding: 20px 24px;
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 16px 0;
+}
+.mnemonic-box .letter { color: var(--gold); font-weight: 700; font-size: 18px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="header">
+  <div class="logo">Behavioral Science <span>USMLE Step 1</span></div>
+  <input type="text" id="search-bar" placeholder="Search any disorder, drug, or concept…" oninput="doSearch(this.value)">
+  <div class="header-btns">
+    <button class="btn btn-outline" id="hl-btn" onclick="toggleHighlight()">⭐ Toggle Highlights</button>
+    <button class="btn btn-outline active" id="tab-doc1" onclick="switchTab('doc1')">📖 Master Notes</button>
+    <button class="btn btn-outline" id="tab-doc2" onclick="switchTab('doc2')">⚡ High-Yield Synthesis</button>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<div id="layout">
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <!-- DOC 1 NAV -->
+  <div id="nav-doc1">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Document 1 — Master Notes</div>
+      <a class="sidebar-link active" href="#objectives" onclick="scrollTo('objectives')">Learning Objectives</a>
+      <a class="sidebar-link" href="#adhd" onclick="scrollTo('adhd')">ADHD <span class="badge">★</span></a>
+      <a class="sidebar-link" href="#asd" onclick="scrollTo('asd')">Autism Spectrum Disorder <span class="badge">★</span></a>
+      <a class="sidebar-link" href="#rett" onclick="scrollTo('rett')">Rett Syndrome</a>
+      <a class="sidebar-link" href="#conduct" onclick="scrollTo('conduct')">Conduct Disorder</a>
+      <a class="sidebar-link" href="#odd" onclick="scrollTo('odd')">ODD</a>
+      <a class="sidebar-link" href="#dmdd" onclick="scrollTo('dmdd')">DMDD <span class="badge">★</span></a>
+      <a class="sidebar-link" href="#ied" onclick="scrollTo('ied')">Intermittent Explosive</a>
+      <a class="sidebar-link" href="#intellectual" onclick="scrollTo('intellectual')">Intellectual Disability</a>
+      <a class="sidebar-link" href="#sld" onclick="scrollTo('sld')">Specific Learning Disorder</a>
+      <a class="sidebar-link" href="#tourette" onclick="scrollTo('tourette')">Tourette Syndrome <span class="badge">★</span></a>
+      <a class="sidebar-link" href="#selective" onclick="scrollTo('selective')">Selective Mutism</a>
+      <a class="sidebar-link" href="#separation" onclick="scrollTo('separation')">Separation Anxiety</a>
+      <a class="sidebar-link" href="#rad" onclick="scrollTo('rad')">Reactive Attachment</a>
+      <a class="sidebar-link" href="#elimination" onclick="scrollTo('elimination')">Elimination Disorders</a>
+      <a class="sidebar-link" href="#milestones" onclick="scrollTo('milestones')">Dev. Milestones</a>
+      <a class="sidebar-link" href="#schizchild" onclick="scrollTo('schizchild')">Childhood Psychosis</a>
+      <a class="sidebar-link" href="#pharmacology" onclick="scrollTo('pharmacology')">Pharmacology Summary</a>
+      <a class="sidebar-link" href="#qanda" onclick="scrollTo('qanda')">USMLE Q&A (18 Qs) <span class="badge">18</span></a>
+    </div>
+  </div>
+  <!-- DOC 2 NAV -->
+  <div id="nav-doc2" style="display:none">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Document 2 — High-Yield</div>
+      <a class="sidebar-link active" href="#hy-overview" onclick="scrollTo('hy-overview')">Quick Reference Cards</a>
+      <a class="sidebar-link" href="#hy-diffdx" onclick="scrollTo('hy-diffdx')">Differential Diagnosis</a>
+      <a class="sidebar-link" href="#hy-flowcharts" onclick="scrollTo('hy-flowcharts')">Decision Flowcharts</a>
+      <a class="sidebar-link" href="#hy-treatment" onclick="scrollTo('hy-treatment')">Treatment Matrix</a>
+      <a class="sidebar-link" href="#hy-mnemonics" onclick="scrollTo('hy-mnemonics')">Mnemonics</a>
+      <a class="sidebar-link" href="#hy-ages" onclick="scrollTo('hy-ages')">Age-Based Anchors</a>
+      <a class="sidebar-link" href="#hy-comorbidities" onclick="scrollTo('hy-comorbidities')">Comorbidity Map</a>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+<div id="no-results">No results found. Try a different search term.</div>
+
+<!-- ════════════════════ DOCUMENT 1 ════════════════════ -->
+<div id="panel-doc1" class="tab-panel active">
+
+<div class="hero">
+    <div class="eyebrow">
+        <span class="main-title">· Behavioral Sciences</span>
+        <span class="badge">· DSM-5-TR Compliant</span> 
+        <span class="badge">· USMLE objectives Aligned</span> 
+        <span class="badge">· USMLE pattern Q&A's Integrated</span>
+    </div>
+</div>
+<div class="page-title">Mental Disorders of Children & Adolescents</div>
+<p>By Dr.Sampath Venkataswamy, MD (Physiology), MD(Psychiatry)</p>
+<div>Windsor University School of Medicine.St.Kitts</div>
+
+<!-- OBJECTIVES -->
+<div class="section" id="objectives">
+  <div class="section-title"><span class="icon">🎯</span> Learning Objectives</div>
+  <div class="section-divider"></div>
+  <div class="objectives-box">
+    <h3>By the end of this module, you will be able to:</h3>
+    <ul class="objectives-list">
+      <li>Diagnose and differentiate all major childhood-onset psychiatric disorders using DSM-5-TR criteria</li>
+      <li>Distinguish ADHD, ASD, ODD, Conduct Disorder, and DMDD using age of onset, core symptoms, and course</li>
+      <li>Compare Rett Syndrome vs ASD vs Global Developmental Delay using key clinical and genetic clues</li>
+      <li>Identify Reactive Attachment Disorder and distinguish it from ASD using history of neglect/maltreatment</li>
+      <li>Apply developmental milestone knowledge to identify language, motor, and social delays</li>
+      <li>Recall first-line and alternative pharmacologic/behavioral treatments for each disorder</li>
+      <li>Predict adult sequelae of untreated childhood behavioral disorders (e.g., CD → Antisocial PD)</li>
+      <li>Recognize Tourette syndrome and its high-yield comorbidities (ADHD, OCD)</li>
+      <li>Manage elimination disorders (enuresis, encopresis) using evidence-based stepwise approach</li>
+      <li>Answer USMLE-style clinical vignettes with confidence across all topics</li>
+    </ul>
+  </div>
+</div>
+
+<iframe src="https://drive.google.com/file/d/1VcfNldEN4xZxOGP3g7foLdCtMmEWkYZ1/preview" width="80%" height="60" style="border:none; border-radius:10px; margin:10px 0;"></iframe>
+
+
+
+<!-- ADHD -->
+<div class="section" id="adhd">
+  <div class="section-title"><span class="icon">⚡</span> Attention-Deficit/Hyperactivity Disorder (ADHD)</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Core Concepts & Diagnostic Criteria</div>
+    <p>ADHD is one of the most common neurodevelopmental disorders of childhood, characterized by persistent patterns of <strong>inattention, hyperactivity, and/or impulsivity</strong> that interfere with functioning. Onset must occur before age 12, though the diagnosis cannot be reliably established before age 4. Symptoms must be present in <strong>≥2 settings</strong> (e.g., school and home) to rule out situational/contextual causes.</p>
+<img src="https://lh3.googleusercontent.com/d/1hnry7jYKlvXrTwi4ugEDk7ZbyS0rR1FC " style="width: 100%; border-radius: 10px; margin: 10px 0;"> 
+    <div class="callout callout-caution">
+      <div class="callout-title">⚠ DSM-5-TR Diagnostic Anchors</div>
+      <p>Minimum <strong>6 symptoms</strong> of inattention AND/OR hyperactivity-impulsivity lasting <strong>≥6 months (≥5 in adults ≥17)</strong>. Symptoms must cause impairment and not be better explained by another condition (psychosis, anxiety, mood disorder).</p>
+    </div>
+<img src="https://lh3.googleusercontent.com/d/1bC5RU5Cb58idSHM19nsaUuwJNaXLObx_" style="width: 80%; border-radius: 10px; margin: 10px 0;"> 
+    <p style="margin-top:14px"><strong>Neurobiology:</strong> ADHD is associated with <span class="hy">hypofunctioning of the prefrontal cortex</span> due to reduced dopamine (DA) and norepinephrine (NE) signaling. This explains both the cognitive symptoms (working memory, attention) and why stimulants (which increase DA/NE) are effective.</p>
+    <div class="callout callout-clinical">
+
+      <div class="callout-title">🏥 Clinical Correlate</div>
+      <p>Children with ADHD have <em>normal intelligence</em> — school failure results from behavioral/attentional disruption, not cognitive incapacity. ADHD frequently coexists with learning disorders, oppositional defiant disorder, anxiety, and depression. ADHD commonly <strong>persists into adulthood</strong> (up to 60–70% of cases).</p>
+    </div>
+  </div>
+  <div class="subsection">
+    <div class="subsection-title">Presentations: Three Subtypes</div>
+    <table class="data-table">
+      <thead><tr><th>Subtype</th><th>Dominant Features</th><th>Testing Clue</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Predominantly Inattentive</strong></td><td>Loses focus, forgets tasks, disorganized, makes careless errors; easily distracted</td><td>Often missed in girls; diagnosed later</td></tr>
+        <tr><td><strong>Predominantly Hyperactive-Impulsive</strong></td><td>Can't stay seated, runs/climbs excessively, blurts out answers, can't wait turn</td><td>Classic "disruptive boy" presentation</td></tr>
+        <tr><td><strong>Combined</strong></td><td>Meets criteria for both inattention AND hyperactivity-impulsivity</td><td>Most common subtype overall</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="subsection">
+    <div class="subsection-title">Treatment Algorithm</div>
+    <p>Treatment combines behavioral and pharmacological strategies, titrated to age and severity.</p>
+<img src="https://lh3.googleusercontent.com/d/1allUXPYLwlN7HgNaIW1G1rqfWpAeaXZ5" style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+    <table class="data-table drug-row">
+      <thead><tr><th>Agent</th><th>Class</th><th>Mechanism</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Methylphenidate</td><td>Stimulant <span class="tag tag-first">1st Line</span></td><td>Blocks DA/NE reuptake in prefrontal cortex</td><td>Monitor weight & growth; abuse potential</td></tr>
+        <tr><td>Amphetamines (mixed salts)</td><td>Stimulant <span class="tag tag-first">1st Line</span></td><td>Releases DA/NE + blocks reuptake</td><td>Schedule II; appetite suppression</td></tr>
+        <tr><td>Atomoxetine</td><td>SNRI <span class="tag tag-alt">2nd Line</span></td><td>Selective NE reuptake inhibitor</td><td>Non-stimulant; good for comorbid anxiety; risk of suicidality (BB warning)</td></tr>
+        <tr><td>Clonidine / Guanfacine</td><td>α₂-agonists <span class="tag tag-alt">2nd Line</span></td><td>Presynaptic α₂ agonism → ↓ NE release</td><td>Useful for tics; somnolence side effect</td></tr>
+        <tr><td>Behavioral Therapy</td><td>Non-pharmacologic <span class="tag tag-first">All Ages</span></td><td>Parent training, CBT, classroom accommodations</td><td>Preferred in preschool age (&lt;6)</td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-pearl">
+      <div class="callout-title">⭐ Step 1 Pearl</div>
+      <p><strong>For children under age 6</strong>, behavioral therapy alone is the preferred first step before medications. For ages 6+, combined therapy is most effective. Stimulants are <span class="hy">Schedule II controlled substances</span> — monitor for growth suppression (weight/height at each visit).</p>
+    </div>
+  </div>
+</div>
+
+<!-- ASD -->
+<div class="section" id="asd">
+  <div class="section-title"><span class="icon">🧩</span> Autism Spectrum Disorder (ASD)</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Core Diagnostic Criteria (DSM-5-TR)</div>
+    <p>ASD is a lifelong neurodevelopmental disorder with onset in early childhood (symptoms recognized before age 3, though often diagnosed later). The two core domains are:</p>
+    <div class="callout callout-info">
+      <div class="callout-title">📋 DSM-5-TR Two-Domain Model</div>
+      <p><strong>Domain A:</strong> Persistent deficits in social communication and social interaction across multiple contexts — reduced eye contact, lack of reciprocal conversation, failure to develop peer relationships, reduced sharing of emotions.<br><br>
+      <strong>Domain B:</strong> Restricted, repetitive patterns of behavior, interests, or activities — stereotyped movements, insistence on sameness, highly restricted/fixated interests, hyper- or hypo-reactivity to sensory input.</p>
+<img src="https://lh3.googleusercontent.com/d/1dp36ogbE16LX3WBrqcpuiCsSzjar8nDg " style="width: 80%; border-radius: 10px; margin: 10px 0;">
+    </div>
+    <p style="margin-top:14px"><strong>Epidemiology:</strong> Prevalence ~1 in 36 children (CDC 2023). <span class="hy">Male:Female ratio ≈ 4:1</span>. Associated with increased head circumference/brain size in early childhood. No causal link to vaccines (definitively refuted).</p>
+    <div class="callout callout-clinical">
+      <div class="callout-title">🏥 Clinical Correlate: Savant Skills</div>
+      <p>Approximately 10% of individuals with ASD display exceptional abilities in specific domains (music, mathematics, art, memory). The vignette clue of a child who <em>"cannot speak in sentences but can name 50 dinosaurs"</em> is a classic ASD presentation combining language deficit with restricted special interest.</p>
+    </div>
+  </div>
+  <div class="subsection">
+    <div class="subsection-title">ASD vs. Rett Syndrome — High-Yield Comparison</div>
+<img src="https://lh3.googleusercontent.com/d/1E20jIHNUVU2aqQvIDSsf27gx0-TO3HWP " style="width: 60%; border-radius: 10px; margin: 10px 0;">
+
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>ASD</th><th>Rett Syndrome</th></tr></thead>
+      <tbody>
+        <tr><td>Sex</td><td>Male predominance (4:1)</td><td><span class="hy">Females almost exclusively</span></td></tr>
+        <tr><td>Development</td><td>Abnormal from early infancy</td><td><span class="hy">Normal until 6–18 months, then regression</span></td></tr>
+        <tr><td>Hand movements</td><td>Flapping, rocking</td><td><span class="hy">Stereotyped hand-wringing/squeezing</span></td></tr>
+        <tr><td>Head circumference</td><td>Often increased</td><td><span class="hy">Deceleration (acquired microcephaly)</span></td></tr>
+        <tr><td>Genetics</td><td>Multifactorial, polygenic</td><td><span class="hy">MECP2 mutation (Xq28)</span></td></tr>
+        <tr><td>IQ</td><td>Variable (normal to severe ID)</td><td>Severe intellectual disability</td></tr>
+        <tr><td>Social skills</td><td>Consistently impaired</td><td>May show social interest (smiles, eye contact)</td></tr>
+        <tr><td>Seizures</td><td>~30% comorbid</td><td>Common; breathing irregularities too</td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-pearl">
+      <div class="callout-title">⭐ Step 1 Pearl — The Rett Regression Clue</div>
+      <p>The USMLE loves the <span class="hy">regression after normal development</span> + <span class="hy">hand-wringing</span> + <span class="hy">female sex</span> triad. If you see this: RETT, not ASD. The MECP2 gene encodes a methyl-CpG binding protein critical for neuronal maturation. Rett is X-linked dominant — lethal in males (most 46,XY males die in utero or early infancy).</p>
+    </div>
+  </div>
+</div>
+
+<!-- RETT -->
+<div class="section" id="rett">
+  <div class="section-title"><span class="icon">🧬</span> Rett Syndrome</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Stages of Rett Syndrome</div>
+    <table class="data-table">
+      <thead><tr><th>Stage</th><th>Age</th><th>Key Features</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Stage I — Early Onset</strong></td><td>6–18 months</td><td>Subtle developmental stagnation; reduced eye contact; mild hypotonia</td></tr>
+        <tr><td><strong>Stage II — Rapid Destructive</strong></td><td>1–4 years</td><td>Rapid regression of purposeful hand use; hand-wringing stereotypies; loss of speech; acquired microcephaly; possible seizures; breathing irregularities</td></tr>
+        <tr><td><strong>Stage III — Plateau</strong></td><td>2–10 years</td><td>Regression stabilizes; ataxia/apraxia; some social re-engagement; seizures prominent</td></tr>
+        <tr><td><strong>Stage IV — Late Motor Deterioration</strong></td><td>&gt;10 years</td><td>Progressive scoliosis; wheelchair dependency; reduced mobility; prolonged survival possible</td></tr>
+<img src="https://lh3.googleusercontent.com/d/1k3PPWUUP0OMnhJ12tyTs9IEJDVeihQ59" style="width: 80%; border-radius: 10px; margin: 10px 0;">
+      </tbody>
+    </table>
+    <div class="callout callout-pearl">
+      <div class="callout-title">⭐ Step 1 Pearl</div>
+      <p>Rett Syndrome is <strong>not listed in DSM-5-TR</strong> as a separate diagnosis — it falls under ASD if criteria met, but it is a <em>distinct genetic/neurological condition</em>. USMLE tests it as a differential for ASD. Key: <span class="hy">MECP2 mutation → X-linked dominant → affects females</span>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CONDUCT DISORDER -->
+<div class="section" id="conduct">
+  <div class="section-title"><span class="icon">⚠️</span> Conduct Disorder (CD)</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Core Concept & Diagnostic Criteria</div>
+    <p>Conduct Disorder is characterized by a <strong>repetitive and persistent pattern of behavior that violates the rights of others or societal norms</strong>. The behavior falls into four categories:</p>
+    <table class="data-table">
+      <thead><tr><th>Category</th><th>Examples</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Aggression toward people/animals</strong></td><td>Bullying, fighting, using weapons, rape, cruelty</td></tr>
+        <tr><td><strong>Destruction of property</strong></td><td>Fire-setting, vandalism</td></tr>
+        <tr><td><strong>Deceitfulness/theft</strong></td><td>Breaking and entering, shoplifting, lying for gain</td></tr>
+        <tr><td><strong>Serious rule violations</strong></td><td>Truancy, running away, staying out at night before age 13</td></tr>
+<img src="https://lh3.googleusercontent.com/d/1KA1tKfvUsIwQ1uKI-F-UzgdlOWPJ5DuT " style="width: 80%; border-radius: 10px; margin: 10px 0;">
+      </tbody>
+    </table>
+    <div class="callout callout-caution">
+      <div class="callout-title">⚠ Critical Distinction: CD vs. ODD</div>
+      <p><strong>CD = Violates RIGHTS of others</strong> (cruelty, theft, destruction, aggression). <strong>ODD = Defies AUTHORITY</strong> (argumentative, vindictive, non-compliant). CD is more severe. A child with CD <em>does not</em> necessarily have ODD first — they can be independent diagnoses. However, ODD is a risk factor for CD.</p>
+    </div>
+    <div class="callout callout-pearl">
+      <div class="callout-title">⭐ Step 1 Pearl — Adult Trajectory</div>
+      <p>After age 18, Conduct Disorder is often reclassified as <span class="hy">Antisocial Personality Disorder</span>. The mnemonic: <strong>Conduct = Children, Antisocial = Adults</strong>. The question "what disorder will this child be at highest risk for in adulthood?" → always ASPD.</p>
+    </div>
+    <p><strong>Treatment:</strong> Psychotherapy (CBT), family therapy, parent management training. No FDA-approved pharmacotherapy specific to CD.</p>
+  </div>
+</div>
+
+<!-- ODD -->
+<div class="section" id="odd">
+  <div class="section-title"><span class="icon">😤</span> Oppositional Defiant Disorder (ODD)</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Diagnostic Criteria & Clinical Profile</div>
+    <p>ODD is defined as a pattern of <strong>angry/irritable mood, argumentative/defiant behavior, and/or vindictiveness</strong> toward authority figures lasting <strong>≥6 months</strong>. Three symptom categories:</p>
+    <div class="callout callout-info">
+      <div class="callout-title">📋 ODD Symptom Triads</div>
+      <p>1. <strong>Angry/Irritable Mood:</strong> Loses temper easily, touchy/easily annoyed, angry/resentful<br>
+      2. <strong>Argumentative/Defiant Behavior:</strong> Argues with adults, refuses to comply, deliberately annoys others, blames others<br>
+      3. <strong>Vindictiveness:</strong> Spiteful or vengeful ≥2 times in past 6 months</p>
+<img src="https://lh3.googleusercontent.com/d/1OnNC8mmyMlwR2P1GP0v6n2EMLAXC0SMu " style="width: 80%; border-radius: 10px; margin: 10px 0;">
+    </div>
+    <p><strong>Key differentiator from CD:</strong> ODD does NOT involve serious aggression, cruelty, theft, or property destruction. The behavior is disruptive but stays within the domain of <em>defiance</em>, not rights violation.</p>
+    <p><strong>Treatment:</strong> Psychotherapy (CBT), parent management training, family therapy.</p>
+    <div class="callout callout-pearl">
+
+      <div class="callout-title">⭐ Step 1 Pearl</div>
+      <p>ODD requires <span class="hy">≥6 months</span> duration. Do not diagnose before confirming chronicity. ODD can coexist with ADHD (both are common in childhood). If a question shows a child with ODD who later shows stealing/aggression → that evolution suggests Conduct Disorder has developed.</p>
+    </div>
+  </div>
+</div>
+
+<!-- DMDD -->
+<div class="section" id="dmdd">
+  <div class="section-title"><span class="icon">🌩️</span> Disruptive Mood Dysregulation Disorder (DMDD)</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Core Concept & Why It Was Created</div>
+    <p>DMDD was introduced in DSM-5 specifically to <span class="hy">reduce overdiagnosis of pediatric bipolar disorder</span>. It captures children who have severe temper dysregulation but do NOT have distinct manic/hypomanic episodes.</p>
+    <div class="callout callout-info">
+      <div class="callout-title">📋 DSM-5-TR Criteria</div>
+      <p>• Severe, recurrent <strong>temper outbursts</strong> (verbal or behavioral) grossly disproportionate to trigger<br>
+      • Outbursts occur ≥3×/week<br>
+      • <strong>Mood between outbursts</strong> is persistently irritable or angry most of the day, nearly every day<br>
+      • Symptoms in ≥2 settings; present for ≥12 months (no symptom-free period ≥3 months)<br>
+      • <strong>Onset before age 10</strong>; diagnosis between ages 6–18<br>
+      • CANNOT diagnose if ever had a manic or hypomanic episode</p>
+<img src="https://lh3.googleusercontent.com/d/1NbTsf0Zj8o_hyPHNt79f1P9zBOGfZkg1" style="width: 70%; border-radius: 10px; margin: 10px 0;">
+    </div>
+    <div class="callout callout-caution">
+      <div class="callout-title">⚠ DMDD vs. Bipolar Disorder — The Critical Distinction</div>
+      <p>In <strong>DMDD</strong>: Mood is persistently irritable between episodes — there is no distinct "up" or "down" cycling. In <strong>Bipolar Disorder</strong>: Episodes are discrete, with clear periods of elevated/expansive mood (mania) or depression. The child with DMDD is <em>chronically</em> irritable, not episodically elevated.</p>
+    </div>
+    <p><strong>Treatment:</strong> CBT, stimulants (for comorbid ADHD), atypical antipsychotics (for severe cases).</p>
+    <div class="callout callout-pearl">
+      <div class="callout-title">⭐ Step 1 Pearl</div>
+      <p>The USMLE distinction: <span class="hy">DMDD = chronic irritability + explosive outbursts (NO cycling)</span>. Bipolar = discrete mood episodes. Remember: DMDD was invented to stop calling persistently irritable children "bipolar."</p>
+    </div>
+  </div>
+</div>
+
+<!-- IED -->
+<div class="section" id="ied">
+  <div class="section-title"><span class="icon">💢</span> Intermittent Explosive Disorder (IED)</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Diagnostic Criteria & Profile</div>
+    <p>IED is characterized by <strong>recurrent behavioral outbursts representing failure to control aggressive impulses</strong>. Important features:</p>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Age of onset</td><td>After age 6; most often adolescence to early adulthood</td></tr>
+        <tr><td>Duration of outbursts</td><td><span class="hy">&lt;30 minutes</span></td></tr>
+        <tr><td>Nature of outbursts</td><td>Verbal aggression or physical aggression/destruction</td></tr>
+        <tr><td>Proportionality</td><td><span class="hy">Grossly disproportionate to provocation</span></td></tr>
+        <tr><td>Premeditation</td><td><span class="hy">NOT premeditated</span> — impulsive</td></tr>
+        <tr><td>Emotional sequelae</td><td>Immediate relief/release → followed by remorse and embarrassment</td></tr>
+        <tr><td>Consequences</td><td>Legal, financial, occupational, social consequences common</td></tr>
+<img src="https://lh3.googleusercontent.com/d/1R5-Qjy6d9TDOZ2wufB-WbA_Yuc7t8beR " style="width: 80%; border-radius: 10px; margin: 10px 0;">
+      </tbody>
+    </table>
+    <p><strong>Treatment:</strong> Psychotherapy (CBT, impulse control training), SSRIs.</p>
+    <div class="callout callout-pearl">
+      <div class="callout-title">⭐ Step 1 Pearl — IED vs. CD vs. ASPD</div>
+      <p>IED: <span class="hy">Impulsive + remorseful + brief + adult context</span>. CD: Premeditated/patterned, children. ASPD: Planned, no remorse, pervasive. The <em>remorse/guilt after the episode</em> is a key IED differentiator — antisocial individuals feel no remorse.</p>
+    </div>
+  </div>
+</div>
+
+<!-- INTELLECTUAL DISABILITY -->
+<div class="section" id="intellectual">
+  <div class="section-title"><span class="icon">🧠</span> Intellectual Disability (Intellectual Developmental Disorder)</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Core Criteria & Classification</div>
+    <div class="callout callout-info">
+      <div class="callout-title">📋 DSM-5-TR Criteria (all 3 required)</div>
+      <p>1. Deficits in <strong>intellectual functions</strong> (reasoning, problem-solving, planning, abstract thinking, judgment, academic learning, learning from experience) — typically IQ ≤70<br>
+      2. Deficits in <strong>adaptive functioning</strong> — conceptual (language, reading, money), social (interpersonal, social judgment), or practical (self-care, job tasks, health management)<br>
+      3. Onset during the <strong>developmental period</strong></p>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Severity</th><th>IQ Range</th><th>Adaptive Functioning</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mild</strong></td><td>~50–70</td><td>Can live independently with support; 6th-grade academic level</td></tr>
+        <tr><td><strong>Moderate</strong></td><td>~35–50</td><td>Needs supervision; 2nd-grade level; simple jobs possible</td></tr>
+        <tr><td><strong>Severe</strong></td><td>~20–35</td><td>Needs close supervision; basic self-care with support</td></tr>
+        <tr><td><strong>Profound</strong></td><td>&lt;20</td><td>Dependent for all activities; significant motor/communication limitations</td></tr>
+<img src="https://lh3.googleusercontent.com/d/1_6V5_IvDVOTc1JGT6Sy269YVD5SAQZ9z " style="width: 80%; border-radius: 10px; margin: 10px 0;">
+      </tbody>
+    </table>
+    <div class="callout callout-pearl">
+      <div class="callout-title">⭐ Step 1 Pearl — Genetic Causes</div>
+      <p><strong>Most common genetic cause:</strong> <span class="hy">Down syndrome (Trisomy 21)</span><br>
+      <strong>Most common inherited cause:</strong> <span class="hy">Fragile X syndrome</span> (trinucleotide CGG repeat expansion in FMR1 gene on X chromosome; X-linked dominant with reduced penetrance)<br>
+      Fragile X: Males severely affected; females carrier or mildly affected; associated with large testes (macroorchidism), large ears, prominent jaw, autism-like features.</p>
+    </div>
+    <p><strong>Treatment:</strong> Psychotherapy, occupational therapy, special education (no pharmacologic cure).</p>
+  </div>
+</div>
+
+<!-- SPECIFIC LEARNING DISORDER -->
+<div class="section" id="sld">
+  <div class="section-title"><span class="icon">📚</span> Specific Learning Disorder (SLD)</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Diagnostic Criteria</div>
+    <p>SLD involves difficulty learning and using academic skills despite instruction and intervention. The deficit is <strong>specific to one or more academic domains</strong> (reading, written expression, mathematics) while general intelligence and other domains are <strong>preserved</strong>.</p>
+    <table class="data-table">
+      <thead><tr><th>Specifier</th><th>Common Name</th><th>Hallmark</th></tr></thead>
+      <tbody>
+        <tr><td>Impairment in reading</td><td><span class="hy">Dyslexia</span></td><td>Difficulty decoding words, slow reading, poor spelling despite normal IQ</td></tr>
+        <tr><td>Impairment in written expression</td><td><span class="hy">Dysgraphia</span></td><td>Difficulty with spelling, grammar, punctuation, and written expression</td></tr>
+        <tr><td>Impairment in mathematics</td><td><span class="hy">Dyscalculia</span></td><td>Difficulty processing numbers, learning arithmetic, math reasoning</td></tr>
+<img src="https://lh3.googleusercontent.com/d/1smUdWkMUiZcIN0fHDowAOiBt05CnQgBQ " style="width: 80%; border-radius: 10px; margin: 10px 0;">
+      </tbody>
+    </table>
+    <div class="callout callout-caution">
+      <div class="callout-title">⚠ SLD vs. Intellectual Disability — Critical Distinction</div>
+      <p><strong>SLD:</strong> Normal IQ, normal adaptive functioning, specific academic deficit only. <strong>Intellectual Disability:</strong> Global cognitive deficits + impaired adaptive functioning across domains. The question "which finding is inconsistent with dyslexia?" → difficulty with personal hygiene (adaptive functioning) → that's ID, not SLD.</p>
+    </div>
+    <p><strong>Treatment:</strong> Academic support, individualized education programs (IEP), counseling, extracurricular activities to build confidence.</p>
+    <div class="callout callout-pearl">
+      <div class="callout-title">⭐ Step 1 Pearl</div>
+      <p>Diagnosis requires ≥6 months of symptoms despite targeted intervention, onset during school-age years. IQ must be ≥70 to rule out intellectual disability. A child with "above average IQ" + struggles in <em>only one subject</em> → SLD.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TOURETTE -->
+<div class="section" id="tourette">
+  <div class="section-title"><span class="icon">🔄</span> Tourette Syndrome (TS)</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Diagnostic Criteria & Tic Spectrum</div>
+    <div class="callout callout-info">
+      <div class="callout-title">📋 DSM-5-TR Criteria for Tourette's</div>
+      <p>• Both <strong>multiple motor tics</strong> AND <strong>at least one vocal tic</strong> present at some point during illness<br>
+      • Tics may wax and wane but have persisted <strong>&gt;1 year</strong> since first onset<br>
+      • Onset <strong>before age 18</strong><br>
+      • Not due to substances or another medical condition</p>
+<img src="https://lh3.googleusercontent.com/d/1P8AeXbkIWmpNxPrnGM_XXjhBWZsdfhAc " style="width: 80%; border-radius: 10px; margin: 10px 0;">
+    </div>
+    <table class="data-table">
+      <thead><tr><th>Type</th><th>Simple</th><th>Complex</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Motor Tics</strong></td><td>Eye blinking, grimacing, shoulder shrugging, head jerking</td><td>Jumping, obscene gestures (copropraxia), touching</td></tr>
+        <tr><td><strong>Vocal Tics</strong></td><td>Throat clearing, grunting, sniffing, squeaking</td><td><span class="hy">Coprolalia</span> (involuntary obscene speech) — only 10–15% of patients</td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-caution">
+      <div class="callout-title">⚠ Coprolalia ≠ Required for Diagnosis</div>
+      <p>Coprolalia (involuntary cursing) is the most well-known but least common tic — only present in ~10–15% of patients. <strong>Do not require coprolalia to diagnose Tourette's.</strong> The USMLE may test this by presenting a "clean" vignette of motor + vocal tics and asking if Tourette's is still possible → YES.</p>
+    </div>
+    <div class="callout callout-pearl">
+      <div class="callout-title">⭐ Step 1 Pearl — Comorbidities</div>
+      <p>Tourette's has extremely high comorbidity with: <span class="hy">ADHD (~50–60%)</span> and <span class="hy">OCD (~40–50%)</span>. The comorbid ADHD often causes more functional impairment than the tics themselves. Treatment sequence: address ADHD first (methylphenidate), then tics if distressing.</p>
+    </div>
+  </div>
+  <div class="subsection">
+    <div class="subsection-title">Treatment of Tourette Syndrome</div>
+    <table class="data-table drug-row">
+      <thead><tr><th>Agent</th><th>Class</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td>Psychoeducation + Behavioral Therapy (CBIT)</td><td>Non-pharmacologic <span class="tag tag-first">1st Line</span></td><td>All patients; habit reversal training</td></tr>
+        <tr><td>Clonidine / Guanfacine</td><td>α₂-agonists <span class="tag tag-alt">Mild-Moderate tics</span></td><td>Also treats comorbid ADHD</td></tr>
+        <tr><td>Fluphenazine / Haloperidol</td><td>Typical antipsychotics <span class="tag tag-alt">Severe tics</span></td><td>Highly effective; risk of EPS/tardive dyskinesia</td></tr>
+        <tr><td>Tetrabenazine</td><td>VMAT2 inhibitor <span class="tag tag-alt">Intractable tics</span></td><td>Depletes presynaptic monoamines; ↓ involuntary movements</td></tr>
+        <tr><td>Aripiprazole</td><td>Atypical antipsychotic <span class="tag tag-alt">Severe tics</span></td><td>Better tolerated than typicals; D2 partial agonist</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SELECTIVE MUTISM -->
+<div class="section" id="selective">
+  <div class="section-title"><span class="icon">🤫</span> Selective Mutism</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Core Profile</div>
+    <p>Selective mutism is an <strong>anxiety disorder</strong> (not a communication disorder) characterized by consistent failure to speak in specific social situations where speaking is expected, despite speaking normally in other settings.</p>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Onset</td><td>Before age 5; diagnosed after ≥1 month (not just first month of school)</td></tr>
+        <tr><td>Classic presentation</td><td><span class="hy">Silent at school, talkative at home</span></td></tr>
+        <tr><td>Language development</td><td><strong>Normal</strong> — not impaired (key distinction from language disorder)</td></tr>
+        <tr><td>Mechanism</td><td>Social anxiety → inhibition of speech in unfamiliar/public settings</td></tr>
+        <tr><td>Comorbidities</td><td>Social anxiety disorder (highly common), separation anxiety</td></tr>
+        <tr><td>Treatment</td><td>Behavioral therapy, family therapy, play therapy; SSRIs (fluoxetine)</td></tr>
+<img src="https://lh3.googleusercontent.com/d/1rjngTjdUP_k1zx915xXTTYrA0EPWQBfY " style="width: 80%; border-radius: 10px; margin: 10px 0;">
+      </tbody>
+    </table>
+    <div class="callout callout-pearl">
+      <div class="callout-title">⭐ Step 1 Pearl</div>
+      <p>Selective mutism is classified under <span class="hy">anxiety disorders in DSM-5</span>. The child CAN speak — they CHOOSE not to (due to anxiety). Language and speech are structurally intact. Contrast with Language Disorder where the underlying speech mechanism is impaired.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SEPARATION ANXIETY -->
+<div class="section" id="separation">
+  <div class="section-title"><span class="icon">👧</span> Separation Anxiety Disorder</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Diagnostic Profile</div>
+    <p>Excessive, developmentally inappropriate fear or anxiety about separation from attachment figures. Key: <strong>can be normal behavior up to age 3–4</strong>; only pathological after that developmental window.</p>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Duration required</td><td><span class="hy">≥4 weeks</span> (children); ≥6 months (adults)</td></tr>
+        <tr><td>Somatic complaints</td><td>Headaches, nausea, stomachaches — often used to avoid school (<span class="hy">school refusal</span>)</td></tr>
+        <tr><td>Nighttime symptoms</td><td>Nightmares about separation, refusing to sleep without attachment figure nearby</td></tr>
+        <tr><td>Worries</td><td>Fear of harm to attachment figure; fear of getting lost/kidnapped/dying</td></tr>
+        <tr><td>Treatment</td><td>CBT, play therapy, family therapy; SSRIs for refractory cases</td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-clinical">
+      <div class="callout-title">🏥 Clinical Correlate — School Refusal</div>
+      <p>The child who presents with recurrent abdominal pain/headaches every Monday morning, normal physical exam, and whose symptoms resolve on weekends → classic separation anxiety with school refusal. First step: rule out organic cause, then behavioral interventions.</p>
+<img src="https://lh3.googleusercontent.com/d/1uAQVpPE87jfHVRPkSCQXOuhzNN8OjVnT " style="width: 80%; border-radius: 10px; margin: 10px 0;">
+    </div>
+  </div>
+</div>
+
+<!-- REACTIVE ATTACHMENT -->
+<div class="section" id="rad">
+  <div class="section-title"><span class="icon">💔</span> Reactive Attachment Disorder (RAD)</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Core Concept & Diagnostic Criteria</div>
+    <p>RAD results from <span class="hy">pathogenic care in early childhood</span> — severe neglect, repeated changes in primary caregivers (orphanage, foster care), or social deprivation during the critical attachment period.</p>
+    <div class="callout callout-info">
+      <div class="callout-title">📋 Two Forms of Attachment Disorders</div>
+      <p><strong>Reactive Attachment Disorder (RAD):</strong> Child is emotionally withdrawn/inhibited; rarely seeks comfort; minimal positive affect; unexplained irritability/sadness/fear during nonthreatening interactions.<br><br>
+      <strong>Disinhibited Social Engagement Disorder (DSED):</strong> Child is indiscriminately sociable with strangers; shows no hesitation approaching/following unfamiliar adults; reduced checking back with caregiver.</p>
+    </div>
+    <div class="callout callout-caution">
+      <div class="callout-title">⚠ RAD vs. ASD — High-Yield Distinction</div>
+      <p>Both show social deficits. KEY: <span class="hy">History of neglect/maltreatment strongly favors RAD.</span> ASD is neurobiological and not caused by environment. If a vignette mentions "raised in an institution," "multiple foster homes," "severe neglect" → think RAD first. ASD features (repetitive behaviors, restricted interests) are absent in RAD.</p>
+    </div>
+    <p><strong>Treatment:</strong> Stable, nurturing caregiving environment; child-parent psychotherapy; trauma-focused CBT.</p>
+  </div>
+</div>
+
+<!-- ELIMINATION DISORDERS -->
+<div class="section" id="elimination">
+  <div class="section-title"><span class="icon">💧</span> Elimination Disorders</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Enuresis</div>
+    <p>Repeated voluntary or involuntary voiding of urine into bed or clothes. Requires age ≥5 years for diagnosis. Types: <strong>nocturnal</strong> (most common), <strong>diurnal</strong>, or both.</p>
+    <table class="data-table drug-row">
+      <thead><tr><th>Treatment</th><th>Mechanism</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Behavioral modifications</td><td>Fluid restriction before bed, timed voiding</td><td>First step; limited efficacy alone</td></tr>
+        <tr><td><strong>Enuresis alarm (bell-and-pad)</strong></td><td>Conditioned avoidance — alarm wakes child at first urine drop</td><td><span class="tag tag-first">1st-Line Evidence-Based</span> — highest long-term remission</td></tr>
+        <tr><td>Desmopressin</td><td>ADH analog → ↓ urine production at night</td><td><span class="tag tag-alt">Pharmacotherapy</span>; good for short-term/special occasions; no long-term cure</td></tr>
+        <tr><td>Imipramine</td><td>TCA; anticholinergic + ADH-like effect</td><td><span class="tag tag-warn">Last resort</span> — risk of cardiac toxicity, overdose danger</td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-pearl">
+      <div class="callout-title">⭐ Step 1 Pearl — Enuresis Alarm</div>
+      <p>When behavioral modifications (fluid restriction) have failed, the next step is <span class="hy">enuresis alarm</span> — NOT desmopressin. The alarm has the best long-term evidence and lowest relapse rate. Desmopressin is useful short-term but has high relapse on discontinuation.</p>
+<img src="https://lh3.googleusercontent.com/d/1osKrgfebmcLIT-Sp4Rd3l5Dz-83X6gjy " style="width: 80%; border-radius: 10px; margin: 10px 0;">
+    </div>
+  </div>
+  <div class="subsection">
+    <div class="subsection-title">Encopresis</div>
+    <p>Repeated passage of feces into inappropriate places (clothing, floor). Age ≥4 years required. <strong>Most commonly due to constipation with overflow incontinence</strong> — stool withholding → impaction → liquid stool leaks around impaction.</p>
+    <p><strong>Treatment:</strong> Disimpaction (enemas/laxatives), maintenance laxatives, behavioral interventions (scheduled post-meal toilet sitting), dietary fiber.</p>
+    <div class="callout callout-clinical">
+      <div class="callout-title">🏥 Clinical Correlate</div>
+      <p>Children with encopresis often suffer shame and social isolation. The key clinical point: rule out Hirschsprung disease (especially if congenital). Hirschsprung has a transition zone on barium enema; functional encopresis does not. Most encopresis is <em>functional</em> (constipation-related).</p>
+<img src="https://lh3.googleusercontent.com/d/1OQOw4yeplKK689vBRjJmxtSiXSx85wPK " style="width: 80%; border-radius: 10px; margin: 10px 0;">
+    </div>
+  </div>
+</div>
+
+<!-- DEVELOPMENTAL MILESTONES -->
+<div class="section" id="milestones">
+  <div class="section-title"><span class="icon">📏</span> Developmental Milestones — Language Focus</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Language Milestones (USMLE High-Yield)</div>
+    <table class="data-table milestone-row">
+      <thead><tr><th>Age</th><th>Milestone</th><th>If Delayed → Consider</th></tr></thead>
+      <tbody>
+        <tr><td>2 months</td><td>Social smile, coos</td><td>ASD, global delay</td></tr>
+        <tr><td>6 months</td><td>Babbles, turns to voice</td><td>Hearing loss → audiology eval</td></tr>
+        <tr><td>12 months</td><td>Says "mama/dada" (specific), 1–3 words</td><td>→ Formal audiology evaluation</td></tr>
+        <tr><td>18 months</td><td>10–25 words; points to body parts</td><td>No words at 18 mo → audiology + ASD screen</td></tr>
+        <tr><td>24 months</td><td><span class="hy">2-word phrases</span> ("more milk"); 50+ words</td><td>Not combining words at 24 mo → Language delay</td></tr>
+        <tr><td>36 months</td><td>3-word sentences; 75% intelligible to strangers</td><td>→ Speech-language pathology referral</td></tr>
+        <tr><td>48 months</td><td>Tells stories; 100% intelligible</td><td>Persistent articulation errors → eval</td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-pearl">
+      <div class="callout-title">⭐ Step 1 Pearl — Language Delay Workup</div>
+      <p>For ANY language delay: <span class="hy">First step is ALWAYS formal audiology evaluation</span>. Hearing loss is the most common and most treatable cause of language delay. Even if the child "seems to hear" (responds to loud sounds), high-frequency hearing loss may be missed clinically.</p>
+    </div>
+    <div class="callout callout-caution">
+      <div class="callout-title">⚠ Red Flags for ASD Screening</div>
+      <p>• No babbling by 12 months<br>
+      • No pointing or waving by 12 months<br>
+      • No single words by 16 months<br>
+      • No 2-word phrases by 24 months<br>
+      • <span class="hy">ANY loss of previously acquired language or social skills at any age</span> → immediate evaluation</p>
+    </div>
+  </div>
+</div>
+
+<!-- CHILDHOOD PSYCHOSIS -->
+<div class="section" id="schizchild">
+  <div class="section-title"><span class="icon">👁️</span> Childhood-Onset Psychotic Disorders</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Schizophrenia in Children</div>
+    <p>Childhood-onset schizophrenia (onset before age 13) is rare but represents the same disorder as adult schizophrenia. Features include hallucinations (auditory most common), delusions, disorganized thinking, and negative symptoms. Critically: <strong>distinguish from normal childhood fantasy/imaginary friends</strong>.</p>
+    <div class="callout callout-caution">
+      <div class="callout-title">⚠ Distinguishing Psychosis from Normal Fantasy</div>
+      <p>Normal fantasy: Child knows the friend is imaginary, content is benign, no functional impairment, no distress. <strong>Psychosis:</strong> Child believes hallucinations/delusions are real, content is threatening, significant <span class="hy">functional decline</span> (dropping grades, withdrawal), persistent over months.</p>
+    </div>
+    <p><strong>Treatment:</strong> Antipsychotics (atypical preferred in children — risperidone, aripiprazole), family support, school accommodations.</p>
+  </div>
+</div>
+
+<!-- PHARMACOLOGY SUMMARY -->
+<div class="section" id="pharmacology">
+  <div class="section-title"><span class="icon">💊</span> Pharmacology Master Summary</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">Treatment by Disorder — Quick Reference</div>
+    <table class="data-table">
+      <thead><tr><th>Disorder</th><th>First-Line Tx</th><th>Alternatives / Notes</th></tr></thead>
+      <tbody>
+        <tr><td>ADHD (&lt;6 yo)</td><td>Behavioral therapy alone</td><td>No stimulants under 6 preferred</td></tr>
+        <tr><td>ADHD (≥6 yo)</td><td>Stimulants (methylphenidate, amphetamines) + behavioral therapy</td><td>Atomoxetine (non-stimulant), clonidine/guanfacine (α₂-agonists)</td></tr>
+        <tr><td>ASD</td><td>Behavioral therapy (ABA), speech therapy, occupational therapy</td><td>Risperidone/aripiprazole for irritability/aggression</td></tr>
+        <tr><td>Conduct Disorder</td><td>Psychotherapy (CBT), parent management training</td><td>No specific pharmacotherapy approved</td></tr>
+        <tr><td>ODD</td><td>CBT, family therapy, parent management training</td><td>Treat comorbid ADHD if present</td></tr>
+        <tr><td>DMDD</td><td>CBT</td><td>Stimulants (if ADHD comorbid), atypical antipsychotics</td></tr>
+        <tr><td>IED</td><td>CBT, impulse control therapy</td><td>SSRIs (fluoxetine, sertraline)</td></tr>
+        <tr><td>Tourette (tics only)</td><td>Psychoeducation + CBIT (behavioral)</td><td>Clonidine/guanfacine → antipsychotics (haloperidol, aripiprazole) → tetrabenazine</td></tr>
+        <tr><td>Selective Mutism</td><td>Behavioral + family + play therapy</td><td>SSRIs (fluoxetine) for moderate-severe</td></tr>
+        <tr><td>Separation Anxiety</td><td>CBT, play therapy, family therapy</td><td>SSRIs (escitalopram, sertraline)</td></tr>
+        <tr><td>Enuresis</td><td>Behavioral modification → enuresis alarm</td><td>Desmopressin (short-term), imipramine (last resort)</td></tr>
+        <tr><td>Encopresis</td><td>Disimpaction + laxatives + behavioral toilet training</td><td>Dietary modifications, fiber</td></tr>
+        <tr><td>Intellectual Disability</td><td>Occupational therapy, special education, CBT</td><td>Treat comorbid psychiatric conditions</td></tr>
+        <tr><td>Specific Learning Disorder</td><td>Academic support, IEP</td><td>Counseling; treat comorbid ADHD</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Q&A SECTION -->
+<div class="section" id="qanda">
+  <div class="section-title"><span class="icon">❓</span> USMLE Pattern Questions & Explanations</div>
+  <div class="section-divider"></div>
+  <p style="margin-bottom:20px;color:#666;font-size:14px">Click each question to expand. Reveal the answer after formulating your own response for maximum retention.</p>
+  <div id="qa-container"></div>
+</div>
+
+</div><!-- end panel-doc1 -->
+
+<!-- ════════════════════ DOCUMENT 2 ════════════════════ -->
+<div id="panel-doc2" class="tab-panel">
+
+<div class="page-title">High-Yield Synthesis</div>
+<div class="page-subtitle">Rapid-review logic maps, differentials & mnemonics for <strong>USMLE Step 1 · 2026</strong></div>
+
+<!-- QUICK REF CARDS -->
+<div class="section" id="hy-overview">
+  <div class="section-title"><span class="icon">🃏</span> Quick Reference Cards</div>
+  <div class="section-divider"></div>
+
+  <div class="syndrome-card">
+    <div>
+      <div class="syndrome-name">ADHD</div>
+      <div class="syndrome-tag">Neurodevelopmental</div>
+    </div>
+    <div class="syndrome-detail">
+      <strong>Onset:</strong> Before age 12 (diagnosed after age 4) · <strong>Sex:</strong> M > F (2:1)<br>
+      <strong>Core:</strong> Inattention + Hyperactivity + Impulsivity in ≥2 settings<br>
+      <strong>Neuro:</strong> ↓ DA/NE in prefrontal cortex<br>
+      <strong>1st Line:</strong> Stimulants (methylphenidate) + behavioral therapy; α₂-agonists for tics<br>
+      <strong>Pearl:</strong> Persists into adulthood in ~60%; comorbid with ODD, CD, anxiety
+    </div>
+  </div>
+
+  <div class="syndrome-card">
+    <div>
+      <div class="syndrome-name">ASD</div>
+      <div class="syndrome-tag">Neurodevelopmental</div>
+    </div>
+    <div class="syndrome-detail">
+      <strong>Onset:</strong> Early childhood (symptoms before age 3) · <strong>Sex:</strong> M:F = 4:1<br>
+      <strong>Core:</strong> Social communication deficits + restricted/repetitive behaviors<br>
+      <strong>Assoc:</strong> ↑ head/brain size; ~30% comorbid epilepsy; savant skills in 10%<br>
+      <strong>1st Line:</strong> ABA behavioral therapy, speech therapy, OT<br>
+      <strong>Pearl:</strong> No vaccine link (definitively refuted); rule out Rett if female + regression
+    </div>
+  </div>
+
+  <div class="syndrome-card">
+    <div>
+      <div class="syndrome-name">Rett Syndrome</div>
+      <div class="syndrome-tag">Genetic / Neurodevelopmental</div>
+    </div>
+    <div class="syndrome-detail">
+      <strong>Genetics:</strong> MECP2 mutation, Xq28, X-linked dominant · <strong>Sex:</strong> Females only<br>
+      <strong>Key:</strong> Normal development → regression at 6–18 months → hand-wringing + acquired microcephaly<br>
+      <strong>Stages:</strong> I: Stagnation → II: Regression → III: Plateau → IV: Motor deterioration<br>
+      <strong>Pearl:</strong> Not in DSM-5 as separate diagnosis; tested as ASD differential
+    </div>
+  </div>
+
+  <div class="syndrome-card">
+    <div>
+      <div class="syndrome-name">Conduct Disorder</div>
+      <div class="syndrome-tag">Disruptive Behavior</div>
+    </div>
+    <div class="syndrome-detail">
+      <strong>Core:</strong> Violates RIGHTS of others (aggression, destruction, theft, serious rule violations)<br>
+      <strong>Duration:</strong> ≥12 months; ≥1 criterion in past 6 months<br>
+      <strong>Adult trajectory:</strong> → <span style="color:var(--red);font-weight:700">Antisocial Personality Disorder</span><br>
+      <strong>Pearl:</strong> CD = Children; Antisocial = Adults. No remorse is key feature.
+    </div>
+  </div>
+
+  <div class="syndrome-card">
+    <div>
+      <div class="syndrome-name">ODD</div>
+      <div class="syndrome-tag">Disruptive Behavior</div>
+    </div>
+    <div class="syndrome-detail">
+      <strong>Core:</strong> Defies AUTHORITY — angry/irritable mood + argumentative + vindictive<br>
+      <strong>Duration:</strong> ≥6 months · <strong>Does NOT include:</strong> serious aggression, theft, or property destruction<br>
+      <strong>Treatment:</strong> CBT, parent management training<br>
+      <strong>Pearl:</strong> ODD → can escalate to CD if untreated
+    </div>
+  </div>
+
+  <div class="syndrome-card">
+    <div>
+      <div class="syndrome-name">DMDD</div>
+      <div class="syndrome-tag">Mood / Disruptive</div>
+    </div>
+    <div class="syndrome-detail">
+      <strong>Core:</strong> Severe temper outbursts + chronic irritability BETWEEN outbursts<br>
+      <strong>Onset:</strong> Before age 10; diagnosed ages 6–18<br>
+      <strong>Created to prevent:</strong> Overdiagnosis of pediatric bipolar disorder<br>
+      <strong>Cannot diagnose if:</strong> Ever had a manic/hypomanic episode<br>
+      <strong>Pearl:</strong> No cycling = DMDD; Cycling = consider Bipolar
+    </div>
+  </div>
+
+  <div class="syndrome-card">
+    <div>
+      <div class="syndrome-name">Tourette Syndrome</div>
+      <div class="syndrome-tag">Tic Disorder</div>
+    </div>
+    <div class="syndrome-detail">
+      <strong>Criteria:</strong> Multiple motor + ≥1 vocal tic; &gt;1 year duration; onset &lt;18<br>
+      <strong>Comorbidities:</strong> ADHD (50–60%), OCD (40–50%)<br>
+      <strong>Coprolalia:</strong> Only 10–15% of patients — NOT required for diagnosis<br>
+      <strong>Treatment:</strong> CBIT → α₂-agonists → antipsychotics → tetrabenazine
+    </div>
+  </div>
+
+  <div class="syndrome-card">
+    <div>
+      <div class="syndrome-name">Enuresis</div>
+      <div class="syndrome-tag">Elimination Disorder</div>
+    </div>
+    <div class="syndrome-detail">
+      <strong>Diagnosis:</strong> Age ≥5 years; nocturnal type most common<br>
+      <strong>Treatment ladder:</strong> Behavioral → <span style="color:var(--green);font-weight:700">Enuresis alarm (1st-line)</span> → Desmopressin → Imipramine (last resort)<br>
+      <strong>Pearl:</strong> Alarm has highest long-term remission; desmopressin has high relapse rate
+    </div>
+  </div>
+</div>
+
+<!-- DIFFERENTIAL DIAGNOSIS -->
+<div class="section" id="hy-diffdx">
+  <div class="section-title"><span class="icon">🔀</span> Differential Diagnosis — Key Comparisons</div>
+  <div class="section-divider"></div>
+
+  <div class="subsection">
+    <div class="subsection-title">Temper/Aggression Disorders</div>
+    <div class="diff-grid">
+      <div class="diff-card dmdd">
+        <div class="diff-title">DMDD</div>
+        <ul class="diff-list">
+          <li>Age onset &lt;10; diagnosed 6–18</li>
+          <li>Chronic irritability between outbursts</li>
+          <li>No manic episodes ever</li>
+          <li>No criminal behavior</li>
+        </ul>
+      </div>
+      <div class="diff-card odd">
+        <div class="diff-title">ODD</div>
+        <ul class="diff-list">
+          <li>Defies authority figures</li>
+          <li>No serious aggression/theft</li>
+          <li>≥6 months duration</li>
+          <li>Mood irritable but not explosive outbursts</li>
+        </ul>
+      </div>
+      <div class="diff-card cd">
+        <div class="diff-title">Conduct Disorder</div>
+        <ul class="diff-list">
+          <li>Violates rights of others</li>
+          <li>Aggression, theft, fire-setting</li>
+          <li>No remorse</li>
+          <li>→ ASPD in adulthood</li>
+        </ul>
+      </div>
+      <div class="diff-card ied">
+        <div class="diff-title">IED</div>
+        <ul class="diff-list">
+          <li>Impulsive, brief (&lt;30 min)</li>
+          <li>Grossly disproportionate</li>
+          <li>NOT premeditated</li>
+          <li>Remorse + embarrassment after</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">ASD vs. Rett vs. Intellectual Disability vs. RAD</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>ASD</th><th>Rett</th><th>Intellectual Disability</th><th>RAD</th></tr></thead>
+      <tbody>
+        <tr><td>Sex</td><td>M &gt; F</td><td>F only</td><td>M = F</td><td>M = F</td></tr>
+        <tr><td>Cause</td><td>Multifactorial</td><td>MECP2 mutation</td><td>Genetic/env/acquired</td><td>Neglect/maltreatment</td></tr>
+        <tr><td>Development</td><td>Abnormal from start</td><td>Regression after normal period</td><td>Global delay throughout</td><td>Normal if placed in care</td></tr>
+        <tr><td>Social skills</td><td>Severely impaired</td><td>May retain some</td><td>Impaired; try to socialize</td><td>Inhibited or indiscriminate</td></tr>
+        <tr><td>Repetitive behaviors</td><td>Prominent</td><td>Hand-wringing</td><td>Absent</td><td>Absent</td></tr>
+        <tr><td>IQ</td><td>Variable</td><td>Severe ID</td><td>Global ↓</td><td>Normal (if history corrected)</td></tr>
+        <tr><td>Key clue</td><td>Restricted interests, no eye contact</td><td>Hand-wringing + microcephaly</td><td>Both intellectual + adaptive domains ↓</td><td>History of neglect/institutional care</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">SLD vs. Intellectual Disability vs. ADHD</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Specific Learning Disorder</th><th>Intellectual Disability</th><th>ADHD</th></tr></thead>
+      <tbody>
+        <tr><td>IQ</td><td>Normal (&gt;70)</td><td>≤70</td><td>Normal</td></tr>
+        <tr><td>Adaptive functioning</td><td>Normal</td><td>Impaired (daily living skills)</td><td>Normal</td></tr>
+        <tr><td>Academic deficit</td><td>Specific subject only</td><td>Global academic impairment</td><td>All subjects (attention-related)</td></tr>
+        <tr><td>Attention</td><td>Normal</td><td>May be impaired</td><td>Core deficit</td></tr>
+        <tr><td>Onset</td><td>School-age years</td><td>Developmental period</td><td>Before age 12</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FLOWCHARTS -->
+<div class="section" id="hy-flowcharts">
+  <div class="section-title"><span class="icon">🔁</span> Decision Flowcharts</div>
+  <div class="section-divider"></div>
+
+  <div class="subsection">
+    <div class="subsection-title">Language Delay Workup — Step-by-Step</div>
+    <div class="flow-container" style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:16px 0;">
+      <div class="flow-box gold">Child with Language Delay</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Audiology Evaluation<br><small>Always FIRST step</small></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box teal">Hearing loss found?<br><small>→ Hearing aids/CI</small></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Screen for ASD<br><small>(M-CHAT-R)</small></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box green">Speech-Language Pathology<br>Referral</div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Enuresis Management Algorithm</div>
+    <div class="flow-container" style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:16px 0;">
+      <div class="flow-box gold">Enuresis (Age ≥5)</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Rule out medical causes<br><small>(UTI, DM, structural)</small></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box teal">Behavioral Modification<br><small>Fluid restriction, timed voiding</small></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box green">Enuresis Alarm<br><small>1st-line pharmacologic next step</small></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Desmopressin<br><small>Short-term / special occasions</small></div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box red">Imipramine<br><small>Last resort ONLY</small></div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <div class="subsection-title">Childhood Temper Outbursts — Differential Flow</div>
+    <div class="flow-container" style="display:flex;align-items:flex-start;flex-wrap:wrap;gap:12px;padding:16px 0;">
+      <div style="text-align:center">
+        <div class="flow-box gold">Temper Outbursts in Child</div>
+        <br>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:10px">
+          <div style="text-align:center">
+            <div class="flow-box teal" style="font-size:12px">Chronic irritability<br>between episodes?</div>
+            <div style="margin-top:6px;font-size:12px;color:var(--teal)"><strong>YES → DMDD</strong></div>
+          </div>
+          <div style="text-align:center">
+            <div class="flow-box" style="font-size:12px">Defies authority<br>No rights violations?</div>
+            <div style="margin-top:6px;font-size:12px;color:var(--navy)"><strong>YES → ODD</strong></div>
+          </div>
+          <div style="text-align:center">
+            <div class="flow-box red" style="font-size:12px">Aggression, theft,<br>destruction?</div>
+            <div style="margin-top:6px;font-size:12px;color:var(--red)"><strong>YES → Conduct Disorder</strong></div>
+          </div>
+          <div style="text-align:center">
+            <div class="flow-box green" style="font-size:12px">Brief, impulsive, adult,<br>remorse after?</div>
+            <div style="margin-top:6px;font-size:12px;color:var(--green)"><strong>YES → IED</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TREATMENT MATRIX -->
+<div class="section" id="hy-treatment">
+  <div class="section-title"><span class="icon">💊</span> Treatment Matrix — Visual Summary</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Disorder</th>
+          <th style="background:#1a6b6b">Behavioral Tx</th>
+          <th style="background:#6b3fa0">Stimulants</th>
+          <th style="background:#2d7a4f">SSRIs</th>
+          <th style="background:#c8982a">Other Drugs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>ADHD</td><td>✅ CBT, parent training</td><td>✅ 1st Line</td><td>❌</td><td>Atomoxetine, Clonidine</td></tr>
+        <tr><td>ASD</td><td>✅ ABA (1st Line)</td><td>⚠ if ADHD comorbid</td><td>❌</td><td>Risperidone, Aripiprazole (irritability)</td></tr>
+        <tr><td>Conduct Disorder</td><td>✅ CBT, family Tx</td><td>❌</td><td>❌</td><td>None specific</td></tr>
+        <tr><td>ODD</td><td>✅ CBT, parent training</td><td>⚠ if ADHD comorbid</td><td>❌</td><td>None specific</td></tr>
+        <tr><td>DMDD</td><td>✅ CBT</td><td>⚠ if ADHD comorbid</td><td>❌</td><td>Atypical antipsychotics</td></tr>
+        <tr><td>IED</td><td>✅ Impulse control CBT</td><td>❌</td><td>✅</td><td>—</td></tr>
+        <tr><td>Tourette</td><td>✅ CBIT (1st Line)</td><td>⚠ if ADHD comorbid</td><td>❌</td><td>Clonidine, Haloperidol, Tetrabenazine</td></tr>
+        <tr><td>Selective Mutism</td><td>✅ Behavioral, family, play</td><td>❌</td><td>✅ Fluoxetine</td><td>—</td></tr>
+        <tr><td>Separation Anxiety</td><td>✅ CBT, play therapy</td><td>❌</td><td>✅ Sertraline</td><td>—</td></tr>
+        <tr><td>Enuresis</td><td>✅ Alarm (after behavioral)</td><td>❌</td><td>❌</td><td>Desmopressin, Imipramine (last)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MNEMONICS -->
+<div class="section" id="hy-mnemonics">
+  <div class="section-title"><span class="icon">🧠</span> High-Yield Mnemonics</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <div class="subsection-title">ADHD Treatment Ladder</div>
+    <div class="mnemonic-box">
+      <span class="letter">S</span>timulants first (methylphenidate, amphetamines)<br>
+      <span class="letter">A</span>tomoxetine if stimulants contraindicated/failed<br>
+      <span class="letter">G</span>uanfacine/Clonidine (α₂-agonists) — especially with tics<br>
+      → <em>"SAG when stimulants fail"</em>
+    </div>
+  </div>
+  <div class="subsection">
+    <div class="subsection-title">Conduct Disorder → Adult Outcome</div>
+    <div class="mnemonic-box">
+      <span class="letter">C</span>onduct disorder = <span class="letter">C</span>hildren<br>
+      <span class="letter">A</span>ntisocial personality = <span class="letter">A</span>dults<br>
+      → <em>"C → A: Children Grow into Adults (with ASPD)"</em>
+    </div>
+  </div>
+  <div class="subsection">
+    <div class="subsection-title">Rett Syndrome Key Features</div>
+    <div class="mnemonic-box">
+      <span class="letter">R</span>egression after normal development<br>
+      <span class="letter">E</span>xclusively females (MECP2, X-linked dominant)<br>
+      <span class="letter">T</span>wisting/wringing hands (stereotyped)<br>
+      <span class="letter">T</span>iny head (acquired microcephaly)<br>
+      → <em>"RETT = Regression + Exclusively Female + Twisting + Tiny head"</em>
+    </div>
+  </div>
+  <div class="subsection">
+    <div class="subsection-title">Tourette Comorbidities</div>
+    <div class="mnemonic-box">
+      <span class="letter">T</span>ourette = Tics<br>
+      <span class="letter">A</span>DHD (50–60% comorbid)<br>
+      <span class="letter">O</span>CD (40–50% comorbid)<br>
+      → <em>"TAO — Tourette-ADHD-OCD Triangle"</em>
+    </div>
+  </div>
+  <div class="subsection">
+    <div class="subsection-title">Intellectual Disability — Most Common Causes</div>
+    <div class="mnemonic-box">
+      <span class="letter">D</span>own syndrome = most common <span class="letter">G</span>enetic cause<br>
+      <span class="letter">F</span>ragile X = most common <span class="letter">I</span>nherited cause<br>
+      → <em>"Down = most common Genetic; Fragile X = most common Inherited"</em><br>
+      → <em>Fragile X: CGG repeat in FMR1 gene + macroorchidism + large ears</em>
+    </div>
+  </div>
+</div>
+
+<!-- AGE-BASED ANCHORS -->
+<div class="section" id="hy-ages">
+  <div class="section-title"><span class="icon">📅</span> Age-Based Diagnostic Anchors</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <table class="data-table">
+      <thead><tr><th>Age Criterion</th><th>Disorder</th><th>Significance</th></tr></thead>
+      <tbody>
+        <tr><td>Before age 3</td><td>ASD</td><td>Symptoms must be recognizable before age 3</td></tr>
+        <tr><td>Before age 5</td><td>Selective Mutism</td><td>Onset typically before age 5</td></tr>
+        <tr><td>Before age 10</td><td>DMDD</td><td>Onset criterion; diagnose only ages 6–18</td></tr>
+        <tr><td>Before age 12</td><td>ADHD</td><td>Symptom onset before 12; diagnosed after age 4</td></tr>
+        <tr><td>Before age 18</td><td>Tourette Syndrome</td><td>Must have onset before age 18 for diagnosis</td></tr>
+        <tr><td>Age ≥4</td><td>Encopresis</td><td>Minimum age for diagnosis</td></tr>
+        <tr><td>Age ≥5</td><td>Enuresis</td><td>Minimum age for diagnosis</td></tr>
+        <tr><td>≥6 months</td><td>ODD</td><td>Duration required for ODD diagnosis</td></tr>
+        <tr><td>≥4 weeks</td><td>Separation Anxiety</td><td>Duration required (≥6 months in adults)</td></tr>
+        <tr><td>&gt;1 year</td><td>Tourette Syndrome</td><td>Tics must persist &gt;1 year since first onset</td></tr>
+        <tr><td>After age 18</td><td>Conduct → ASPD</td><td>CD reclassified as ASPD after 18</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- COMORBIDITIES -->
+<div class="section" id="hy-comorbidities">
+  <div class="section-title"><span class="icon">🔗</span> High-Yield Comorbidity Map</div>
+  <div class="section-divider"></div>
+  <div class="subsection">
+    <table class="data-table">
+      <thead><tr><th>Primary Disorder</th><th>Key Comorbidities</th><th>Clinical Implication</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Tourette Syndrome</strong></td><td>ADHD (50–60%), OCD (40–50%)</td><td>Comorbid ADHD often causes MORE impairment than tics; treat ADHD first</td></tr>
+        <tr><td><strong>ADHD</strong></td><td>ODD, Conduct Disorder, Anxiety, Depression, SLD</td><td>Treat ADHD to prevent secondary emotional/behavioral complications</td></tr>
+        <tr><td><strong>ASD</strong></td><td>Intellectual Disability (~50%), Epilepsy (~30%), ADHD, Anxiety</td><td>Comprehensive evaluation needed; address each comorbidity separately</td></tr>
+        <tr><td><strong>Selective Mutism</strong></td><td>Social Anxiety Disorder, Separation Anxiety</td><td>Treat underlying anxiety; SSRIs + CBT combination most effective</td></tr>
+        <tr><td><strong>Conduct Disorder</strong></td><td>ADHD, Substance Use Disorders, Depression</td><td>Early ADHD treatment may reduce CD risk</td></tr>
+        <tr><td><strong>Down Syndrome</strong></td><td>Intellectual Disability, Alzheimer's (early onset), Hypothyroidism, Congenital heart defects</td><td>Annual screening for thyroid function; early dementia screening after age 40</td></tr>
+        <tr><td><strong>Fragile X</strong></td><td>ASD features, ADHD, Anxiety, Seizures</td><td>FMR1 testing recommended in unexplained ID in males</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- end panel-doc2 -->
+</main>
+</div>
+
+<script>
+// ── Q&A DATA ──
+const questions = [
+  {
+    num: 1,
+    stem: "4-year-old boy: limited speech, names 50 dinosaurs, lines up toys, distressed by order change, avoids eye contact",
+    vignette: "A 4-year-old boy is brought for evaluation because he does not play with other children at preschool. His parents note he has limited speech but can name over 50 species of dinosaurs. He spends hours lining up his dinosaur toys and becomes extremely distressed if their order is changed. He avoids eye contact and does not respond to his name. His symptoms have been noted since he was a toddler.",
+    question: "What is the most likely diagnosis?",
+    options: ["Rett syndrome","Specific learning disorder","Social anxiety disorder","Autism spectrum disorder","Schizoid personality disorder"],
+    answer: 3,
+    explanation: "Answer: D — Autism Spectrum Disorder. This is a classic ASD vignette: social communication deficits (no eye contact, doesn't respond to name, doesn't play with others), restricted/fixated interest (dinosaurs), and insistence on sameness (distressed by toy order change). The early onset (noted since toddler) and the combination of a specific restricted interest with social deficits clinch ASD. Rett (A) is excluded because this is a male — Rett occurs almost exclusively in females and involves regression from normal development. Social anxiety (C) would not explain the restricted interests or early onset."
+  },
+  {
+    num: 2,
+    stem: "14-month-old girl: normal development → regression, head circumference dropping, hand-wringing",
+    vignette: "A 14-month-old girl is brought to the pediatrician. Her parents report that she was developing normally; she was able to sit unsupported and said 'mama.' Over the last two months, she has lost these abilities. On exam, her head circumference has dropped from the 50th to the 30th percentile. The physician notes that the child is constantly twisting and clasping her hands together.",
+    question: "Which of the following is the most likely diagnosis?",
+    options: ["Autism spectrum disorder","Rett syndrome","Tuberous sclerosis","Global developmental delay","Lesch-Nyhan syndrome"],
+    answer: 1,
+    explanation: "Answer: B — Rett Syndrome. The triad of (1) regression after normal early development, (2) acquired microcephaly (head circumference dropping percentiles), and (3) stereotyped hand-wringing in a female infant is pathognomonic for Rett syndrome. Caused by MECP2 mutation (X-linked dominant). ASD (A) does not typically have regression followed by acquired microcephaly — ASD brains tend to be larger early. Tuberous sclerosis (C) causes hamartomas and seizures but not this specific regression + hand-wringing pattern."
+  },
+  {
+    num: 3,
+    stem: "2-year-old girl: regression + purposeless hand movements — which feature favors Rett over ASD?",
+    vignette: "A 2-year-old girl presents with regression of language skills and the new onset of purposeless hand movements.",
+    question: "Which of the following features would most strongly support a diagnosis of Rett syndrome over autism spectrum disorder?",
+    options: ["Insistence on a rigid daily routine","Lack of social smiling","Stereotypic wringing of hands","Intense interest in a single topic","Delayed language development"],
+    answer: 2,
+    explanation: "Answer: C — Stereotypic hand-wringing. Hand-wringing/squeezing/clasping is the hallmark distinguishing feature of Rett syndrome that is NOT seen in ASD. ASD features insistence on routine (A), restricted interests (D), and language delay (E) — all of which also appear in Rett but are not specific. Lack of social smiling (B) can be seen in both. The stereotyped hand-wringing replacing purposeful hand use is the pathognomonic clinical feature of Rett syndrome, corresponding to Stage II (Rapid Destructive phase)."
+  },
+  {
+    num: 4,
+    stem: "14-year-old boy: fights, bullying, fire-setting, no remorse — what disorder in adulthood?",
+    vignette: "A 14-year-old boy is brought for evaluation after being suspended from school. His history is significant for multiple physical fights, bullying younger children, and recently being caught setting a fire in a trash can behind the school. He shows little remorse for his actions, stating his victims 'deserved it.' This pattern of behavior has been present for over a year.",
+    question: "If his behavior persists, he will be at highest risk for which of the following disorders in adulthood?",
+    options: ["Bipolar I disorder","Schizophrenia","Antisocial personality disorder","Borderline personality disorder","Oppositional defiant disorder"],
+    answer: 2,
+    explanation: "Answer: C — Antisocial Personality Disorder. This is Conduct Disorder: persistent pattern of violating others' rights (physical aggression, bullying, fire-setting, no remorse). The key USMLE principle: Conduct Disorder in childhood/adolescence evolves into Antisocial Personality Disorder in adulthood (after age 18). The mnemonic is 'Conduct = Children, Antisocial = Adults.' ODD (E) is less severe than CD (no rights violations); this boy clearly has CD. Borderline PD (D) is characterized by emotional dysregulation and fear of abandonment, not criminal behavior patterns."
+  },
+  {
+    num: 5,
+    stem: "10-year-old girl: argues with every rule, deliberately annoys siblings, blames others — no aggression or theft",
+    vignette: "A 10-year-old girl is described by her parents as 'impossible.' For the past year, she has persistently argued with them over every rule, actively defied requests, and deliberately tried to annoy her siblings. She often blames others for her mistakes. She has no history of physical aggression, stealing, or destroying property.",
+    question: "Which of the following is the most likely diagnosis?",
+    options: ["Conduct disorder","Normal childhood behavior","Disruptive mood dysregulation disorder (DMDD)","Oppositional defiant disorder (ODD)","Attention-deficit hyperactivity disorder (ADHD)"],
+    answer: 3,
+    explanation: "Answer: D — Oppositional Defiant Disorder. ODD is characterized by a persistent pattern (≥6 months) of angry/irritable mood, argumentative/defiant behavior toward authority figures, and vindictiveness — WITHOUT serious aggression, theft, or property destruction. The question explicitly states NO aggression, stealing, or destruction, ruling out Conduct Disorder (A). Duration is 1 year, meeting the ≥6 month criterion. DMDD (C) would require severe, recurrent temper outbursts plus persistent irritability between outbursts — the vignette doesn't describe outbursts. Normal behavior (B) is incorrect given the 1-year duration and functional impairment."
+  },
+  {
+    num: 6,
+    stem: "30-year-old man: recurrent rage episodes over minor provocations — brief, unpremeditated, remorse afterward",
+    vignette: "A 30-year-old man reports recurrent episodes where he 'explodes' with rage over minor provocations, such as someone cutting him off in traffic. During these episodes, he screams and has thrown objects, causing damage. The outbursts are brief and unpremeditated, and he feels intensely guilty and embarrassed afterward.",
+    question: "Which of the following is the most likely diagnosis?",
+    options: ["Conduct disorder","Antisocial personality disorder","Narcissistic personality disorder","Bipolar disorder, manic episode","Intermittent explosive disorder"],
+    answer: 4,
+    explanation: "Answer: E — Intermittent Explosive Disorder (IED). IED features: (1) recurrent aggressive outbursts grossly disproportionate to provocation, (2) NOT premeditated, (3) brief (&lt;30 minutes), (4) significant remorse/embarrassment afterward. The remorse and guilt are critical distinguishing features — Antisocial PD (B) individuals feel no remorse. Bipolar mania (D) would involve elevated/expansive mood lasting days, not brief explosive episodes. Conduct Disorder (A) is a childhood diagnosis involving persistent rights violations. Adult age, impulsive brief outbursts, and guilt = IED."
+  },
+  {
+    num: 7,
+    stem: "8-year-old bright boy: verbal/math excellent, writing/spelling 5th percentile, IQ 115",
+    vignette: "An 8-year-old boy is referred for evaluation due to disruptive behavior in class, particularly during writing assignments. His parents report he is bright and excels at verbal storytelling and mathematics. However, standardized educational testing reveals his writing and spelling skills are in the 5th percentile for his age, while his IQ is 115. He often refuses to do his writing homework and complains of stomach aches to avoid school.",
+    question: "Which of the following is the most likely diagnosis?",
+    options: ["Intellectual developmental disorder","Attention-deficit hyperactivity disorder","Specific learning disorder","Oppositional defiant disorder","Conduct disorder"],
+    answer: 2,
+    explanation: "Answer: C — Specific Learning Disorder (dysgraphia). Key elements: (1) Normal/above-normal IQ (115), (2) Specific deficit in only one academic domain (writing/spelling), (3) Other academic areas preserved (verbal, math). This is the hallmark of SLD — isolated academic deficit despite normal overall intelligence. Intellectual Disability (A) requires global deficits + impaired adaptive functioning; IQ 115 rules this out. ADHD (B) would cause difficulty across ALL subjects due to attention, not a specific writing deficit while math/verbal are excellent. The avoidance behaviors (refusing homework, somatic complaints) are secondary to frustration with the undiagnosed SLD."
+  },
+  {
+    num: 8,
+    stem: "10-year-old boy: IQ 60, delayed speech, struggles with reading/math, difficulty with daily living skills",
+    vignette: "A 10-year-old boy is evaluated for significant developmental delays. He did not speak in full sentences until age 6 and continues to struggle with basic reading and math concepts. Standardized testing reveals an IQ of 60. His parents note he also has difficulty with daily living skills, such as dressing himself appropriately for the weather and understanding basic social cues like taking turns in a conversation.",
+    question: "Which two domains of functioning are impaired in this patient?",
+    options: ["Social and Gross Motor","Intellectual and Adaptive","Fine Motor and Language","Academic and Conceptual","Sensory and Emotional"],
+    answer: 1,
+    explanation: "Answer: B — Intellectual and Adaptive. DSM-5-TR requires deficits in BOTH intellectual functioning (IQ ≤70) AND adaptive functioning for the diagnosis of Intellectual Disability. This patient has: (1) IQ of 60 = intellectual domain deficit, AND (2) Difficulty with dressing, social cues, daily living = adaptive domain deficit (conceptual, social, and practical subdomains). This two-domain requirement distinguishes ID from Specific Learning Disorder (where only academic/intellectual domain affected, adaptive functioning is preserved)."
+  },
+  {
+    num: 9,
+    stem: "7-year-old girl with dyslexia — which finding is INCONSISTENT with this diagnosis?",
+    vignette: "A 7-year-old girl is found to have a specific learning disorder with impairment in reading (dyslexia).",
+    question: "Which of the following findings would be most inconsistent with this diagnosis?",
+    options: ["She has a measured IQ of 110","She becomes anxious and defiant when asked to read aloud","Her math and science grades are above average","She has difficulty with personal hygiene and basic money concepts","Her hearing and vision tests are normal"],
+    answer: 3,
+    explanation: "Answer: D — Difficulty with personal hygiene and basic money concepts. This describes impaired ADAPTIVE functioning, which is characteristic of Intellectual Disability, NOT Specific Learning Disorder. In SLD (dyslexia): IQ is normal (A ✓), anxiety/avoidance of reading is expected (B ✓), other subjects like math/science can be excellent (C ✓), hearing and vision are normal by definition (E ✓). The hallmark of SLD is a specific academic deficit with otherwise preserved functioning — including preserved daily living/adaptive skills. Difficulty with hygiene and money management points to global impairment, consistent with ID."
+  },
+  {
+    num: 10,
+    stem: "18-month-old boy: no clear words yet, meeting motor milestones, happy and interactive — next step?",
+    vignette: "A concerned mother brings her 18-month-old son for a check-up. She states that he is not yet saying any clear words like 'mama' or 'dada.' He is otherwise meeting his motor milestones and is a happy, interactive child. Physical examination is unremarkable.",
+    question: "Which of the following is the most appropriate next step in management?",
+    options: ["Reassure the mother that children develop at different rates","Obtain an MRI of the brain","Refer for formal audiology evaluation","Start speech therapy immediately","Screen for autism spectrum disorder"],
+    answer: 2,
+    explanation: "Answer: C — Formal audiology evaluation. Developmental milestone: 18 months = should have at least 10–25 words and be pointing to body parts. No words at 18 months is a significant delay. The FIRST step for any language delay is ALWAYS formal audiology evaluation to rule out hearing loss — the most common and most treatable cause of language delay. Even if the child 'seems to hear' (responds to loud sounds), high-frequency sensorineural hearing loss can be missed clinically. Reassurance (A) is never appropriate when a milestone is clearly delayed. ASD screening (E) would be appropriate but comes AFTER ruling out hearing loss. MRI (B) is premature without first excluding hearing impairment."
+  },
+  {
+    num: 11,
+    stem: "5-year-old girl: silent all year at school, but 'a chatterbox' at home",
+    vignette: "A 5-year-old girl is brought to the pediatrician due to concerns from her kindergarten teacher. The teacher reports that the girl has not spoken a single word in class all year. However, her parents state that at home she is 'a chatterbox' who speaks in full, complex sentences.",
+    question: "What is the most likely diagnosis?",
+    options: ["Language disorder","Autism spectrum disorder","Intellectual developmental disorder","Selective mutism","Tourette syndrome"],
+    answer: 3,
+    explanation: "Answer: D — Selective Mutism. The defining feature is the contrast: total silence in specific social situations (school) while speaking normally in familiar environments (home). Speech and language are structurally intact — the child can form complex sentences, ruling out Language Disorder (A). ASD (B) would involve broader social deficits not just in school, and would not have normal complex speech at home. Selective mutism is classified as an anxiety disorder — the child is inhibited by anxiety in unfamiliar/public settings. The diagnosis requires ≥1 month duration (not the first month of school)."
+  },
+  {
+    num: 12,
+    stem: "30-month-old child: 20 single words, not combining into phrases — which domain is delayed?",
+    vignette: "A pediatrician is evaluating a 2.5-year-old (30-month-old) child during a well-child visit. The parents report the child can say about 20 single words but is not yet combining them into phrases.",
+    question: "According to developmental milestones, this finding is most concerning for a delay in which domain?",
+    options: ["Gross Motor","Fine Motor","Social/Cognitive","Language","Adaptive"],
+    answer: 3,
+    explanation: "Answer: D — Language. By 24 months (2 years), children should be combining at least 2 words into phrases (e.g., 'more juice,' 'daddy go'). At 30 months, a child who is only using single words is clearly behind in the language domain. The 2-word phrase by 24 months milestone is one of the most tested developmental milestones on USMLE. Motor milestones (A, B) and social/adaptive milestones (C, E) are not described as impaired. This isolated language delay, with intact motor skills, should prompt audiology evaluation as the first step."
+  },
+  {
+    num: 13,
+    stem: "10-year-old: 2-year history of eye blinking + facial grimacing + shoulder shrugging + throat-clearing for 1 year",
+    vignette: "A 10-year-old boy presents with a 2-year history of eye blinking, facial grimacing, and shoulder shrugging. For the past year, he has also developed a repetitive throat-clearing sound. The symptoms worsen when he is stressed or tired.",
+    question: "This presentation is most characteristic of which of the following disorders?",
+    options: ["Stereotypic movement disorder","Myoclonus","Tourette syndrome","Transient tic disorder","Obsessive-compulsive disorder"],
+    answer: 2,
+    explanation: "Answer: C — Tourette Syndrome. Criteria met: (1) Multiple motor tics (eye blinking, facial grimacing, shoulder shrugging), (2) At least one vocal tic (throat-clearing), (3) Duration &gt;1 year, (4) Onset before age 18. The waxing-and-waning with stress/fatigue is characteristic of tics. Transient tic disorder (D) requires duration &lt;12 months — this child has had motor tics for 2 years and vocal tics for 1 year. Stereotypic movement disorder (A) involves rhythmic, repetitive movements (head-banging) without the combination of motor + vocal tics. OCD (E) involves obsessions/compulsions, not tics."
+  },
+  {
+    num: 14,
+    stem: "9-year-old with Tourette — his biggest problem is inability to focus, not the tics. Most likely comorbid diagnosis?",
+    vignette: "A 9-year-old boy is diagnosed with Tourette syndrome. His parents are most concerned about his tics, but the patient reports his biggest problem is an inability to focus in school and complete his homework. He is easily distracted and disorganized.",
+    question: "Which of the following is the most likely comorbid diagnosis?",
+    options: ["Generalized anxiety disorder","Major depressive disorder","Attention-deficit hyperactivity disorder","Autism spectrum disorder","Specific learning disorder"],
+    answer: 2,
+    explanation: "Answer: C — ADHD. Tourette syndrome has a ~50–60% comorbidity with ADHD. Critically, the comorbid ADHD often causes MORE functional impairment than the tics themselves — a high-yield fact the USMLE loves to test. The patient's symptoms (inability to focus, easily distracted, disorganized, can't complete homework) are classic ADHD-inattentive presentation. When treating Tourette + ADHD: address ADHD first. Stimulants can be used (though may slightly worsen tics in some patients), or α₂-agonists (clonidine/guanfacine) treat BOTH ADHD and tics."
+  },
+  {
+    num: 15,
+    stem: "7-year-old: bedwetting 3-4×/week, fluid restriction failed. Next step?",
+    vignette: "The parents of a 7-year-old boy are concerned about his persistent bedwetting, which occurs 3-4 nights per week. He has been fully toilet trained during the day since age 3. Medical causes have been ruled out. The parents have already tried limiting fluids before bed without success.",
+    question: "According to evidence-based guidelines, which of the following is the most appropriate next step in management?",
+    options: ["Prescribe oral desmopressin","Prescribe imipramine","Reassure the parents that he will outgrow it","Start an enuresis alarm","Refer for psychotherapy"],
+    answer: 3,
+    explanation: "Answer: D — Enuresis alarm. The management ladder for enuresis: (1) Behavioral modification (fluid restriction, timed voiding) → (2) Enuresis alarm → (3) Desmopressin → (4) Imipramine (last resort). Since fluid restriction has already been tried without success, the next evidence-based step is the enuresis alarm (bell-and-pad). The alarm has the highest long-term remission rate of any treatment. Desmopressin (A) is effective short-term but has high relapse rates upon discontinuation. Imipramine (B) is reserved for refractory cases due to cardiac toxicity and overdose risk. Reassurance (C) is inappropriate when functional impairment warrants treatment."
+  },
+  {
+    num: 16,
+    stem: "5-year-old adopted boy: emotionally distant, doesn't seek comfort, no positive emotions. Adopted from institution with severe neglect at age 3.",
+    vignette: "A 5-year-old boy is evaluated for behavioral problems. His adoptive parents report that he is emotionally distant, rarely seeks comfort from them when he is hurt or upset, and does not seem to show positive emotions like joy or excitement. He was adopted at age 3 from an institution where he experienced severe neglect.",
+    question: "Which of the following is the most likely diagnosis?",
+    options: ["Autism spectrum disorder","Oppositional defiant disorder","Reactive attachment disorder","Adjustment disorder","Normal stranger anxiety"],
+    answer: 2,
+    explanation: "Answer: C — Reactive Attachment Disorder (RAD). The triad: (1) Pathogenic care (severe neglect in institution), (2) Emotionally withdrawn/inhibited pattern (doesn't seek comfort, no positive affect), (3) Social and emotional disturbance. The CRITICAL clue is the documented history of severe neglect/institutional care — RAD REQUIRES a history of pathogenic caregiving. This differentiates RAD from ASD (A), which is neurobiological and not caused by neglect. ASD would have restricted interests and stereotyped behaviors not mentioned. ODD (B) involves defiance toward authority, not emotional withdrawal. Normal stranger anxiety (E) resolves by 24 months."
+  },
+  {
+    num: 17,
+    stem: "8-year-old girl: 6-month decline, auditory hallucinations, delusions that teachers are aliens, grades dropping",
+    vignette: "An 8-year-old girl is brought to a child psychiatrist due to a six-month decline in functioning. Her parents report that she is increasingly withdrawn and spends hours in her room talking to herself. The girl tells the physician that she hears 'mean voices telling her she is bad.' She also believes that her teachers have been replaced by aliens who are monitoring her. Her grades have dropped from A's to F's.",
+    question: "What is the most likely diagnosis?",
+    options: ["Reactive attachment disorder","Obsessive-compulsive disorder","Normal childhood fantasy","Schizophrenia","Severe social anxiety disorder"],
+    answer: 3,
+    explanation: "Answer: D — Schizophrenia (childhood-onset). This vignette demonstrates: (1) Auditory hallucinations ('mean voices'), (2) Delusions (teachers replaced by aliens — paranoid delusion), (3) Significant functional decline (A's to F's), (4) Social withdrawal, (5) Duration ≥6 months — meeting full schizophrenia criteria. Normal childhood fantasy (C) would be recognized as imaginary by the child, the content would be benign, and there would be no functional decline. OCD (B) involves obsessions and compulsions, not hallucinations or delusions. The functional decline over 6 months with psychosis is the key — this is not normal development."
+  },
+  {
+    num: 18,
+    stem: "6-year-old with social deficits + poor emotional regulation — which historical finding favors RAD over ASD?",
+    vignette: "A 6-year-old child presents with significant social deficits and poor emotional regulation.",
+    question: "Which of the following historical findings would most strongly favor a diagnosis of Reactive Attachment Disorder over Autism Spectrum Disorder?",
+    options: ["The presence of stereotyped hand-flapping","An intense, restricted interest in dinosaurs","A documented history of repeated changes in primary caregivers during infancy","Delayed language development","The absence of social smiling as an infant"],
+    answer: 2,
+    explanation: "Answer: C — Documented history of repeated changes in primary caregivers during infancy. RAD is DEFINED by pathogenic care (neglect, maltreatment, repeated caregiver changes) as a prerequisite. Without this history, RAD cannot be diagnosed. Stereotyped hand-flapping (A) and restricted interests (B) are characteristic of ASD, not RAD. Delayed language (D) and absent social smiling (E) can occur in both. The environmental history of disrupted attachments is the single most powerful discriminating feature. Also note: if placed in a stable environment, RAD symptoms can improve — ASD symptoms are neurobiologically fixed."
+  }
+];
+
+// ── BUILD Q&A ──
+const container = document.getElementById('qa-container');
+questions.forEach((q, i) => {
+  const card = document.createElement('div');
+  card.className = 'qa-card';
+  card.id = `q${i+1}`;
+  const opts = q.options.map((opt, j) => `
+    <div class="qa-option" data-q="${i}" data-opt="${j}" onclick="selectOption(${i},${j})">
+      <div class="qa-opt-letter">${String.fromCharCode(65+j)}</div>
+      <div>${opt}</div>
+    </div>`).join('');
+  card.innerHTML = `
+    <div class="qa-header" onclick="toggleQA(${i})">
+      <div class="qa-num">${q.num}</div>
+      <div class="qa-stem">${q.stem}</div>
+      <div class="qa-toggle">▾</div>
+    </div>
+    <div class="qa-body">
+      <div class="qa-vignette">${q.vignette}<br><br><strong>${q.question}</strong></div>
+      <div class="qa-options" id="opts-${i}">${opts}</div>
+      <button class="qa-reveal-btn" onclick="revealAnswer(${i})">Reveal Answer & Explanation</button>
+      <div class="qa-explanation" id="exp-${i}">
+        <div class="qa-answer-tag">✓ Correct Answer: ${String.fromCharCode(65+q.answer)}</div>
+        <div>${q.explanation}</div>
+      </div>
+    </div>`;
+  container.appendChild(card);
+});
+
+function toggleQA(i) {
+  const card = document.querySelectorAll('.qa-card')[i];
+  card.classList.toggle('open');
+}
+
+function selectOption(qi, oi) {
+  const opts = document.querySelectorAll(`[data-q="${qi}"]`);
+  opts.forEach(o => { o.classList.remove('correct','wrong'); });
+}
+
+function revealAnswer(i) {
+  const q = questions[i];
+  const opts = document.querySelectorAll(`[data-q="${i}"]`);
+  opts.forEach((opt, j) => {
+    if (j === q.answer) opt.classList.add('correct');
+    else opt.classList.add('wrong');
+  });
+  document.getElementById(`exp-${i}`).classList.add('visible');
+}
+
+// ── TAB SWITCHING ──
+function switchTab(tab) {
+  document.getElementById('panel-doc1').classList.toggle('active', tab==='doc1');
+  document.getElementById('panel-doc2').classList.toggle('active', tab==='doc2');
+  document.getElementById('tab-doc1').classList.toggle('active', tab==='doc1');
+  document.getElementById('tab-doc2').classList.toggle('active', tab==='doc2');
+  document.getElementById('nav-doc1').style.display = tab==='doc1' ? '' : 'none';
+  document.getElementById('nav-doc2').style.display = tab==='doc2' ? '' : 'none';
+  // update active sidebar links
+  document.querySelectorAll('#nav-doc1 .sidebar-link, #nav-doc2 .sidebar-link').forEach(l => l.classList.remove('active'));
+  const firstLink = document.querySelector(`#nav-${tab} .sidebar-link`);
+  if (firstLink) firstLink.classList.add('active');
+}
+
+// ── HIGHLIGHT TOGGLE ──
+function toggleHighlight() {
+  document.body.classList.toggle('highlight-mode');
+  const btn = document.getElementById('hl-btn');
+  btn.classList.toggle('active', document.body.classList.contains('highlight-mode'));
+}
+
+// ── SEARCH ──
+let searchTimeout;
+function doSearch(val) {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    const v = val.trim().toLowerCase();
+    // Remove previous highlights
+    document.querySelectorAll('.search-highlight').forEach(el => {
+      el.outerHTML = el.innerHTML;
+    });
+    if (!v) {
+      document.querySelectorAll('.section, .syndrome-card, .qa-card, .subsection').forEach(el => el.classList.remove('search-hidden'));
+      document.getElementById('no-results').style.display = 'none';
+      return;
+    }
+    let anyVisible = false;
+    // Search in active panel sections
+    const panel = document.querySelector('.tab-panel.active');
+    panel.querySelectorAll('.section, .syndrome-card, .qa-card').forEach(el => {
+      const text = el.textContent.toLowerCase();
+      if (text.includes(v)) {
+        el.classList.remove('search-hidden');
+        anyVisible = true;
+      } else {
+        el.classList.add('search-hidden');
+      }
+    });
+    document.getElementById('no-results').style.display = anyVisible ? 'none' : 'block';
+  }, 250);
+}
+
+// ── SMOOTH SCROLL ──
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Update active sidebar link
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+}
+
+// ── SIDEBAR ACTIVE ON SCROLL ──
+window.addEventListener('scroll', () => {
+  const sections = document.querySelectorAll('.section[id]');
+  let current = '';
+  sections.forEach(s => {
+    const rect = s.getBoundingClientRect();
+    if (rect.top <= 80) current = s.id;
+  });
+  if (current) {
+    document.querySelectorAll('.sidebar-link').forEach(l => {
+      l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+    });
+  }
+});
+</script>
+</body>
+</html>

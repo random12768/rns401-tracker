@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schizophrenia & Psychotic Disorders — Master USMLE Step 1 Resource</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f2137;--navy2:#1a3355;--navy3:#1e3f6b;
+  --gold:#c9952c;--gold2:#f0b429;--gold3:#fff8e7;
+  --sch:#1e6fb5;--sch2:#e8f3ff;--sch3:#b8d9f5;
+  --neg:#6b21a8;--neg2:#f5f0ff;--neg3:#d8b4fe;
+  --tx:#166534;--tx2:#f0fdf4;--tx3:#bbf7d0;
+  --eps:#b91c1c;--eps2:#fef2f2;--eps3:#fecaca;
+  --qa:#92400e;--qa2:#fffbeb;--qa3:#fde68a;
+  --eth:#0f766e;--eth2:#f0fdfa;--eth3:#99f6e4;
+  --warn:#d97706;--warn2:#fffbeb;
+  --gray50:#f9fafb;--gray100:#f3f4f6;--gray200:#e5e7eb;
+  --gray300:#d1d5db;--gray400:#9ca3af;--gray500:#6b7280;
+  --gray700:#374151;--gray800:#1f2937;--gray900:#111827;
+  --white:#ffffff;
+  --sidebar-w:268px;
+  --topbar-h:60px;
+  --shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.08);
+  --shadow-md:0 4px 16px rgba(0,0,0,.12);
+  --shadow-lg:0 10px 40px rgba(0,0,0,.18);
+  --radius:10px;--radius-sm:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--gray50);color:var(--gray800);font-size:15px;line-height:1.65;overflow-x:hidden;}
+
+/* ── TOP BAR ── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--topbar-h);
+  background:var(--navy);color:white;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px 0 288px;z-index:100;
+  box-shadow:var(--shadow-md);transition:padding .3s;
+}
+#topbar .brand{font-weight:800;font-size:15px;letter-spacing:-.2px;color:var(--gold2);}
+#topbar .subtitle{font-size:12px;color:rgba(255,255,255,.6);margin-left:10px;}
+#topbar .controls{display:flex;gap:10px;align-items:center;}
+#search-input{
+  padding:7px 14px;border-radius:20px;border:none;
+  background:rgba(255,255,255,.12);color:white;font-size:13px;
+  width:240px;outline:none;transition:background .2s;font-family:'Inter',sans-serif;
+}
+#search-input::placeholder{color:rgba(255,255,255,.45);}
+#search-input:focus{background:rgba(255,255,255,.22);}
+.btn{
+  padding:7px 14px;border-radius:20px;border:none;cursor:pointer;
+  font-size:12px;font-weight:600;font-family:'Inter',sans-serif;
+  transition:all .2s;letter-spacing:.3px;
+}
+#hl-btn{background:var(--gold2);color:var(--navy);}
+#hl-btn:hover{background:var(--gold);}
+#hl-btn.active{background:var(--gold3);color:var(--navy);box-shadow:0 0 0 2px var(--gold2);}
+#menu-btn{background:rgba(255,255,255,.15);color:white;display:none;}
+#menu-btn:hover{background:rgba(255,255,255,.25);}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  position:fixed;top:var(--topbar-h);left:0;bottom:0;
+  width:var(--sidebar-w);background:var(--navy2);
+  overflow-y:auto;z-index:90;transition:transform .3s;
+}
+#sidebar::-webkit-scrollbar{width:4px;}
+#sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px;}
+.doc-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.1);}
+.doc-tab{
+  flex:1;padding:14px 8px;text-align:center;cursor:pointer;
+  font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.55);border-bottom:3px solid transparent;transition:all .2s;
+}
+.doc-tab.active{color:var(--gold2);border-bottom-color:var(--gold2);}
+.doc-tab:hover{color:white;}
+.nav-section{padding:12px 0;}
+.nav-section-label{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.35);padding:6px 18px;margin-top:4px;
+}
+.nav-link{
+  display:block;padding:8px 18px;font-size:13px;font-weight:500;
+  color:rgba(255,255,255,.65);text-decoration:none;
+  border-left:3px solid transparent;transition:all .15s;cursor:pointer;
+}
+.nav-link:hover{color:white;background:rgba(255,255,255,.06);border-left-color:var(--gold2);}
+.nav-link.active{color:var(--gold2);background:rgba(255,255,255,.08);border-left-color:var(--gold2);}
+.nav-link.sub{padding-left:30px;font-size:12px;}
+
+/* ── MAIN ── */
+#main{margin-left:var(--sidebar-w);padding-top:var(--topbar-h);min-height:100vh;}
+.doc-panel{display:none;padding:36px 44px 80px;}
+.doc-panel.active{display:block;}
+
+/* ── SECTION HERO ── */
+.section-hero{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 100%);
+  border-radius:var(--radius);padding:32px 36px;margin-bottom:32px;
+  color:white;position:relative;overflow:hidden;
+}
+.section-hero::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.04);
+}
+.section-hero .eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold2);margin-bottom:8px;
+}
+.section-hero h1{font-size:30px;font-weight:800;line-height:1.2;margin-bottom:8px;}
+.section-hero p{font-size:14px;color:rgba(255,255,255,.7);max-width:640px;}
+.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+.hero-badge{
+  font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;border:1px solid rgba(240,180,41,.4);
+  color:rgba(240,180,41,.9);background:rgba(240,180,41,.1);
+}
+
+h2.section-title{
+  font-size:20px;font-weight:700;color:var(--navy);
+  padding-bottom:10px;border-bottom:2px solid var(--gold2);
+  margin:36px 0 18px;display:flex;align-items:center;gap:10px;
+}
+h2.section-title .tag{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;letter-spacing:.5px;}
+h3.subsect{font-size:16px;font-weight:700;color:var(--navy2);margin:24px 0 12px;}
+h4.sub4{font-size:14px;font-weight:600;color:var(--gray700);margin:18px 0 8px;text-transform:uppercase;letter-spacing:.5px;}
+p{margin-bottom:12px;}
+
+/* ── CALLOUTS ── */
+.callout{border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;font-size:14px;}
+.callout .callout-label{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;}
+.callout-sch{background:var(--sch2);border-left:4px solid var(--sch);}
+.callout-sch .callout-label{color:var(--sch);}
+.callout-neg{background:var(--neg2);border-left:4px solid var(--neg);}
+.callout-neg .callout-label{color:var(--neg);}
+.callout-tx{background:var(--tx2);border-left:4px solid var(--tx);}
+.callout-tx .callout-label{color:var(--tx);}
+.callout-eps{background:var(--eps2);border-left:4px solid var(--eps);}
+.callout-eps .callout-label{color:var(--eps);}
+.callout-warn{background:var(--warn2);border-left:4px solid var(--warn);}
+.callout-warn .callout-label{color:var(--warn);}
+.callout-eth{background:var(--eth2);border-left:4px solid var(--eth);}
+.callout-eth .callout-label{color:var(--eth);}
+.callout-gold{background:var(--gold3);border-left:4px solid var(--gold);}
+.callout-gold .callout-label{color:var(--qa);}
+.callout-pearl{background:linear-gradient(135deg,#fef9ec,#fff8dc);border-left:4px solid var(--gold2);border-radius:var(--radius-sm);}
+.callout-pearl .callout-label{color:var(--qa);}
+
+/* ── MNEMONIC ── */
+.mnemonic{
+  background:var(--gold3);border:2px solid var(--gold2);
+  border-radius:var(--radius);padding:18px 22px;margin:16px 0;
+}
+.mnemonic .mn-label{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--qa);margin-bottom:6px;}
+.mnemonic .mn-title{font-size:17px;font-weight:800;color:var(--navy);margin-bottom:8px;}
+.mnemonic-letter{color:var(--sch);font-weight:800;font-size:16px;}
+.mnemonic .mn-body{font-size:13.5px;line-height:1.7;}
+
+/* ── TABLES ── */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow);margin:16px 0 24px;}
+table{width:100%;border-collapse:collapse;font-size:13.5px;background:white;}
+thead tr{background:var(--navy);}
+thead th{padding:11px 14px;text-align:left;color:white;font-weight:700;font-size:11.5px;letter-spacing:.3px;}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--gray200);vertical-align:top;line-height:1.5;}
+tbody tr:nth-child(even){background:var(--gray50);}
+tbody tr:hover{background:var(--sch2);}
+.td-sch{background:var(--sch2)!important;color:var(--sch);font-weight:600;}
+.td-neg{background:var(--neg2)!important;color:var(--neg);font-weight:600;}
+.td-tx{background:var(--tx2)!important;color:var(--tx);font-weight:600;}
+.td-eps{background:var(--eps2)!important;color:var(--eps);font-weight:600;}
+.td-gold{background:var(--gold3)!important;font-weight:600;}
+
+/* ── Q&A BLOCKS ── */
+.qa-block{
+  border:1.5px solid var(--gray200);border-radius:var(--radius);
+  margin:24px 0;overflow:hidden;box-shadow:var(--shadow);
+}
+.qa-header{
+  background:var(--qa2);border-bottom:1px solid var(--qa3);
+  padding:14px 20px;display:flex;align-items:center;gap:12px;
+}
+.qa-num{
+  background:var(--warn);color:white;font-size:11px;font-weight:800;
+  padding:4px 10px;border-radius:20px;letter-spacing:.5px;white-space:nowrap;
+}
+.qa-topic{font-size:12px;color:var(--qa);font-weight:600;letter-spacing:.3px;}
+.qa-stem{padding:18px 20px;background:white;border-bottom:1px solid var(--gray200);}
+.qa-stem p{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:14px;line-height:1.7;}
+.qa-options{list-style:none;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+/* All options start neutral — correct answer is NOT visually marked until revealed */
+.qa-opt{
+  font-size:13px;color:var(--gray700);padding:6px 8px;border-radius:4px;
+  border:1px solid var(--gray200);cursor:pointer;
+  transition:background .15s, color .15s, border-color .15s;
+  user-select:none;
+}
+.qa-opt:hover:not(.wrong-selection):not(.correct-selection):not(.revealed-correct){
+  background:var(--gray100);border-color:var(--gray300);
+}
+/* User clicked a WRONG option */
+.qa-opt.wrong-selection{
+  background:#dc2626;color:white;font-weight:700;
+  border-color:#b91c1c;cursor:default;
+}
+/* User clicked the CORRECT option */
+.qa-opt.correct-selection{
+  background:#16a34a;color:white;font-weight:700;
+  border-color:#15803d;cursor:default;
+}
+/* Revealed by "Show Answer" button (correct answer highlighted, no guess) */
+.qa-opt.revealed-correct{
+  background:var(--tx3);color:var(--tx);font-weight:700;
+  border-color:var(--tx);cursor:default;
+}
+/* Lock all options after answer is revealed */
+.qa-block.answered .qa-opt{cursor:default;pointer-events:none;}
+.qa-toggle-btn{
+  width:100%;padding:11px 20px;background:var(--qa2);border:none;cursor:pointer;
+  font-size:13px;font-weight:700;color:var(--qa);font-family:'Inter',sans-serif;
+  display:flex;align-items:center;gap:8px;transition:background .2s;
+  border-top:1px solid var(--qa3);
+}
+.qa-toggle-btn:hover{background:var(--qa3);}
+.qa-answer{display:none;padding:18px 20px;background:var(--tx2);border-top:1px solid var(--tx3);}
+.qa-answer.show{display:block;}
+.answer-tag{display:inline-block;background:var(--tx);color:white;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;margin-bottom:10px;letter-spacing:.5px;}
+.qa-wrong{background:var(--eps2);border-top:1px solid var(--eps3);padding:14px 20px;display:none;}
+.qa-wrong.show{display:block;}
+.wrong-tag{display:inline-block;background:var(--eps);color:white;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;margin-bottom:6px;}
+.qa-answer p,.qa-wrong p{font-size:13.5px;line-height:1.65;}
+.qa-answer ul,.qa-wrong ul{padding-left:18px;font-size:13.5px;margin-top:6px;}
+.qa-answer ul li{margin-bottom:4px;}
+
+/* ── HIGHLIGHT ── */
+.hl-key{background:transparent;border-radius:3px;transition:background .25s;font-weight:600;}
+body.highlight-on .hl-key{background:#fef08a;color:#713f12;}
+
+/* ── SEARCH RESULTS ── */
+#search-results{
+  position:fixed;top:calc(var(--topbar-h) + 10px);right:20px;
+  background:white;border-radius:var(--radius);box-shadow:var(--shadow-lg);
+  width:340px;max-height:400px;overflow-y:auto;z-index:200;display:none;
+}
+.sr-item{padding:12px 16px;border-bottom:1px solid var(--gray200);cursor:pointer;font-size:13px;}
+.sr-item:hover{background:var(--gray50);}
+.sr-item .sr-title{font-weight:700;color:var(--navy);margin-bottom:2px;}
+.sr-item .sr-ctx{color:var(--gray500);font-size:12px;}
+
+/* ── GRID ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:16px 0;}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin:16px 0;}
+.card{background:white;border-radius:var(--radius);border:1.5px solid var(--gray200);padding:18px 20px;box-shadow:var(--shadow);}
+.card h4{font-size:14px;font-weight:700;margin-bottom:10px;}
+.card ul{padding-left:18px;font-size:13px;}
+.card ul li{margin-bottom:4px;}
+.card.card-sch{border-color:var(--sch3);background:var(--sch2);}
+.card.card-neg{border-color:var(--neg3);background:var(--neg2);}
+.card.card-tx{border-color:var(--tx3);background:var(--tx2);}
+.card.card-eps{border-color:var(--eps3);background:var(--eps2);}
+
+/* ── RAPID REVIEW ── */
+.rapid-review{background:var(--navy);color:white;border-radius:var(--radius);padding:22px 26px;margin:24px 0;}
+.rapid-review .rr-title{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);margin-bottom:14px;}
+.rapid-review ul{list-style:none;padding:0;}
+.rapid-review ul li{padding:4px 0;font-size:13.5px;color:rgba(255,255,255,.9);}
+.rapid-review ul li::before{content:'→ ';color:var(--gold2);font-weight:700;}
+
+/* ── CORRECTIONS ── */
+.corrections-box{
+  background:linear-gradient(135deg,#1a0000,#3b0000);
+  border:2px solid var(--eps);border-radius:var(--radius);
+  padding:20px 24px;margin-bottom:28px;
+}
+.corrections-box .c-title{font-size:11px;font-weight:800;letter-spacing:2px;color:var(--eps);margin-bottom:12px;}
+.corrections-box ul{list-style:none;padding:0;}
+.corrections-box li{color:#ffd0d0;font-size:13.5px;padding:5px 0;padding-left:20px;position:relative;}
+.corrections-box li::before{content:'✗';position:absolute;left:0;color:var(--eps);font-weight:700;}
+
+/* ── FLOWCHART ── */
+.flowchart{display:flex;flex-direction:column;align-items:center;gap:0;padding:24px;background:white;border-radius:var(--radius);box-shadow:var(--shadow);margin:20px 0;}
+.fc-box{padding:12px 24px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;text-align:center;min-width:280px;max-width:480px;border:2px solid;}
+.fc-arrow{font-size:22px;color:var(--gray400);margin:2px 0;line-height:1;}
+.fc-diamond{padding:12px 28px;font-size:13px;font-weight:600;text-align:center;min-width:260px;background:var(--gold3);border:2px solid var(--gold2);border-radius:var(--radius-sm);}
+.fc-branch{display:flex;gap:20px;align-items:flex-start;width:100%;}
+.fc-branch-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:0;}
+.fc-branch-label{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gray500);padding:2px 8px;}
+.fc-sch{background:var(--sch2);border-color:var(--sch);color:var(--sch);}
+.fc-neg{background:var(--neg2);border-color:var(--neg);color:var(--neg);}
+.fc-tx{background:var(--tx2);border-color:var(--tx);color:var(--tx);}
+.fc-eps{background:var(--eps2);border-color:var(--eps);color:var(--eps);}
+.fc-navy{background:var(--navy);border-color:var(--navy);color:white;}
+.fc-gold{background:var(--gold3);border-color:var(--gold2);color:var(--qa);}
+
+/* ── PATHWAY CARDS ── */
+.pathway-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0;}
+.pathway-card{border-radius:var(--radius);padding:16px 18px;border:2px solid;}
+.pathway-card h4{font-size:14px;font-weight:700;margin-bottom:6px;}
+.pathway-card p{font-size:13px;margin:0;}
+
+/* ── ACTIVE LEARNING ── */
+.active-learning{background:var(--navy);color:white;border-radius:var(--radius);padding:26px 30px;margin:32px 0;}
+.active-learning .al-title{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);margin-bottom:14px;}
+.active-learning ol{padding-left:20px;}
+.active-learning ol li{font-size:14px;padding:5px 0;color:rgba(255,255,255,.9);}
+
+/* ── DOC 2 FORMULA ── */
+.formula-box{background:linear-gradient(135deg,var(--navy),var(--navy3));color:white;border-radius:var(--radius);padding:18px 22px;margin:14px 0;font-family:'Courier New',monospace;font-size:14px;}
+.formula-box .f-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--gold2);margin-bottom:8px;}
+
+/* ── PROGRESS BAR ── */
+.dur-timeline{margin:20px 0;}
+.dur-row{display:flex;align-items:center;gap:12px;margin-bottom:8px;font-size:13px;}
+.dur-label{width:200px;flex-shrink:0;font-weight:600;color:var(--navy);}
+.dur-bar-wrap{flex:1;background:var(--gray200);border-radius:4px;height:16px;overflow:hidden;}
+.dur-bar{height:16px;border-radius:4px;}
+.dur-val{width:120px;font-size:12px;color:var(--gray500);flex-shrink:0;}
+
+/* ── SCROLL OFFSET for fixed topbar ── */
+[id] { scroll-margin-top: 72px; }
+
+/* ── UTILITY ── */
+ul.content-list{padding-left:20px;}
+ul.content-list li{margin-bottom:6px;font-size:14px;}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.3px;}
+.badge-sch{background:var(--sch2);color:var(--sch);}
+.badge-neg{background:var(--neg2);color:var(--neg);}
+.badge-tx{background:var(--tx2);color:var(--tx);}
+.badge-eps{background:var(--eps2);color:var(--eps);}
+.badge-gold{background:var(--gold3);color:var(--qa);}
+strong{color:var(--navy);}
+hr.sec-divider{border:none;border-top:1px solid var(--gray200);margin:32px 0;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  #topbar{padding-left:20px;}
+  #sidebar{transform:translateX(-100%);}
+  #sidebar.open{transform:translateX(0);}
+  #main{margin-left:0;}
+  #menu-btn{display:block;}
+  .doc-panel{padding:24px 20px 60px;}
+  .grid-2,.grid-3,.grid-4,.pathway-grid{grid-template-columns:1fr;}
+  .qa-options{grid-template-columns:1fr;}
+  #search-input{width:160px;}
+}
+@media(max-width:600px){
+  .section-hero h1{font-size:22px;}
+  #search-input{width:120px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<div id="topbar">
+  <div style="display:flex;align-items:center;gap:8px;">
+    <button class="btn" id="menu-btn" onclick="toggleSidebar()">☰</button>
+    <span class="brand">Schizophrenia & Psychotic Disorders</span>
+    <span class="subtitle">· USMLE Step 1 Master Resource · 2026</span>
+  </div>
+  <div class="controls">
+    <input type="text" id="search-input" placeholder="🔍  Search notes..." oninput="handleSearch(this.value)">
+    <button class="btn" id="hl-btn" onclick="toggleHighlight()">★ Highlight HY</button>
+  </div>
+</div>
+<div id="search-results"></div>
+
+<!-- ── SIDEBAR ── -->
+<nav id="sidebar">
+  <div class="doc-tabs">
+    <div class="doc-tab active" onclick="switchDoc('doc1')" id="tab-doc1">Master Lecture Notes</div>
+    <div class="doc-tab" onclick="switchDoc('doc2')" id="tab-doc2" style="color:#f0b429;font-weight:bold;">High Yield</div>
+  </div>
+
+  <!-- Doc 1 Nav -->
+  <div id="nav-doc1" class="nav-section">
+    <div class="nav-section-label">Lecture Notes</div>
+    <a class="nav-link" onclick="scrollTo('d1-intro')">Introduction & Psychosis</a>
+    <a class="nav-link" onclick="scrollTo('d1-criteria')">DSM-5-TR Criteria</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-criteria')">Criterion A–E</a>
+    <a class="nav-link" onclick="scrollTo('d1-symptoms')">Symptom Domains</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-positive')">Positive Symptoms</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-negative')">Negative Symptoms</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-cognitive')">Cognitive Symptoms</a>
+    <a class="nav-link" onclick="scrollTo('d1-neuro')">Neurobiology</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-da')">4 Dopamine Pathways</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-glut')">Glutamate/NMDA</a>
+    <a class="nav-link" onclick="scrollTo('d1-epi')">Epidemiology & Genetics</a>
+    <a class="nav-link" onclick="scrollTo('d1-course')">Course & Prognosis</a>
+    <a class="nav-link" onclick="scrollTo('d1-spectrum')">Psychotic Spectrum</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-spectrum')">Duration Comparison</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-schizoaff')">Schizoaffective</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-delusional')">Delusional Disorder</a>
+    <a class="nav-link" onclick="scrollTo('d1-treatment')">Treatment</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-typical')">Typical Antipsychotics</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-atypical')">Atypical Antipsychotics</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-clozapine')">Clozapine</a>
+    <a class="nav-link" onclick="scrollTo('d1-eps')">Adverse Effects (ADAPT)</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-nms')">NMS</a>
+    <a class="nav-link" onclick="scrollTo('d1-qa')">Q&A Bank (10 Questions)</a>
+  </div>
+
+  <!-- Doc 2 Nav -->
+  <div id="nav-doc2" class="nav-section" style="display:none;">
+    <div class="nav-section-label">High Yield Synthesis</div>
+    <a class="nav-link" onclick="scrollTo('d2-ddx')">Differential Flowchart</a>
+    <a class="nav-link" onclick="scrollTo('d2-timeline')">Duration Timeline</a>
+    <a class="nav-link" onclick="scrollTo('d2-pathways')">DA Pathways Summary</a>
+    <a class="nav-link" onclick="scrollTo('d2-drugs')">Drug Comparison Table</a>
+    <a class="nav-link" onclick="scrollTo('d2-eps')">EPS Quick-Ref</a>
+    <a class="nav-link" onclick="scrollTo('d2-prognosis')">Prognostic Factors</a>
+    <a class="nav-link" onclick="scrollTo('d2-rapid')">Rapid Review</a>
+    <a class="nav-link" onclick="scrollTo('d2-active')">Active Learning</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     DOCUMENT 1 — MASTER LECTURE NOTES
+══════════════════════════════════════════════ -->
+<main id="main">
+<div id="doc1" class="doc-panel active">
+
+  <!-- HERO -->
+  <div class="section-hero" id="d1-intro">
+    <div class="eyebrow">· Behavioral Sciences ·<span class="hero-badge">DSM-5-TR Compliant</span><span class="hero-badge">USMLE objectives Aligned</span><span class="hero-badge">USMLE pattern Q&A's Integrated</span></div>
+    <h1>Schizophrenia & Psychotic Disorders</h1>
+    <p>By Dr.Sampath Venkataswamy, MD (Physiology), MD (Psychiatry).</p>
+    <div class="hero-badges">
+      <span class="hero-badge">Windsor University School of Medicine, St.Kitts and Nevis</span>
+    </div>
+
+
+    </div>
+
+  <!-- LEARNING OBJECTIVES -->
+  <div class="callout callout-sch" style="background:var(--navy2);border-left:4px solid var(--gold2);border-radius:var(--radius);padding:22px 28px;margin-bottom:28px;">
+    <div class="callout-label" style="color:var(--gold2);">📋 Learning Objectives — After This Module You Will Be Able To:</div>
+    <ol style="padding-left:20px;margin-top:8px;">
+      <li style="color:#e2e8f8;font-size:14px;margin-bottom:7px;">Define psychosis and identify core features (delusions, hallucinations, disorganized thought/speech) with clinical examples</li>
+      <li style="color:#e2e8f8;font-size:14px;margin-bottom:7px;">Apply DSM-5-TR diagnostic criteria for schizophrenia (Criterion A–E framework and duration requirements)</li>
+      <li style="color:#e2e8f8;font-size:14px;margin-bottom:7px;">Differentiate positive, negative, and cognitive symptom domains with their neurobiological correlates (4 dopamine pathways)</li>
+      <li style="color:#e2e8f8;font-size:14px;margin-bottom:7px;">Explain the dopamine, serotonin, and glutamate (NMDA) hypotheses of schizophrenia</li>
+      <li style="color:#e2e8f8;font-size:14px;margin-bottom:7px;">Distinguish schizophrenia from the full spectrum of psychotic disorders using a timeline-based framework</li>
+      <li style="color:#e2e8f8;font-size:14px;margin-bottom:7px;">Identify epidemiological features, genetic risk data, and prognostic indicators</li>
+      <li style="color:#e2e8f8;font-size:14px;margin-bottom:7px;">Describe first- and second-line treatments with complete adverse effect profiles (ADAPT framework + NMS)</li>
+      <li style="color:#e2e8f8;font-size:14px;margin-bottom:7px;">Apply knowledge to USMLE-style clinical vignettes (10 Q&As integrated)</li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <h2 class="section-title" id="d1-intro">1. Psychosis — The Core Syndrome <span class="tag badge-sch">Foundational</span></h2>
+
+  <p><strong>Psychosis is a syndrome, not a disease</strong> — a distorted perception of reality that can manifest in numerous underlying conditions. The clinician's first task is to recognize psychosis; the second is to identify the etiology.</p>
+
+  <h3 class="subsect">1.1 Conditions Causing Psychosis</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Category</th><th>Examples</th><th>Key Distinguishing Feature</th></tr></thead>
+      <tbody>
+        <tr><td class="td-gold"><strong>Primary Psychiatric</strong></td><td>Schizophrenia, Schizoaffective, Brief Psychotic Disorder, Delusional Disorder</td><td>Core diagnosis after exclusions</td></tr>
+        <tr><td><strong>Mood Disorders</strong></td><td>Bipolar I with psychotic features, MDD with psychotic features</td><td>Psychosis only during mood episodes</td></tr>
+        <tr><td><strong>Substance-Induced</strong></td><td>PCP, cocaine, amphetamines, cannabis, LSD, alcohol withdrawal</td><td>Temporal relationship to substance; resolves with abstinence</td></tr>
+        <tr><td><strong>Medical/Neurological</strong></td><td>Delirium, CNS tumors, temporal lobe epilepsy, anti-NMDA-R encephalitis, syphilis, HIV, Wilson's disease</td><td>Medical findings on workup; often visual hallucinations</td></tr>
+        <tr><td><strong>Medication-Induced</strong></td><td>Corticosteroids, levodopa, stimulants, anticholinergics</td><td>Temporal relationship to medication start</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="subsect">1.2 Types of Delusions (High-Yield)</h3>
+  <div class="grid-3">
+    <div class="card">
+      <h4 style="color:var(--sch);">Persecutory</h4>
+      <p style="font-size:13px;">Belief of being plotted against, harmed, or harassed. Most common type. "The FBI is monitoring my apartment."</p>
+<img src="https://lh3.googleusercontent.com/d/1Sc0ynaGXFgELU-ql7oDS46zSsR2YknDo" style="width: 70%; border-radius: 10px; margin: 10px 0;">
+    </div>
+    <div class="card">
+      <h4 style="color:var(--sch);">Referential (Ideas of Reference)</h4>
+      <p style="font-size:13px;">Belief that external events/objects are specifically directed at oneself. "The news anchor is sending me secret messages."</p>
+<img src="https://lh3.googleusercontent.com/d/1Zc5My98_doGNCj5SaONJ-gJjQ2UvPtZc" style="width: 70%; border-radius: 10px; margin: 10px 0;">
+    </div>
+    <div class="card">
+      <h4 style="color:var(--sch);">Grandiose</h4>
+      <p style="font-size:13px;">Inflated self-worth, power, or identity. "I am the chosen one sent to save humanity."</p>
+<img src="https://lh3.googleusercontent.com/d/1QzXqH8xk4KqqisJtI_X-HIGj1YWzPmJo" style="width: 70%; border-radius: 10px; margin: 10px 0;">
+    </div>
+    <div class="card">
+      <h4 style="color:var(--neg);">Somatic</h4>
+      <p style="font-size:13px;">Fixed false belief about bodily function. Delusional infestation (Ekbom syndrome) — believes parasites crawl under skin.</p>
+<img src="https://lh3.googleusercontent.com/d/1bAWlC8ZbjJyQsKbmHzHJFHrLPFJwJ-Lx" style="width: 70%; border-radius: 10px; margin: 10px 0;">
+    </div>
+    <div class="card">
+      <h4 style="color:var(--neg);">Erotomanic</h4>
+      <p style="font-size:13px;">Belief that someone of higher status is in love with you (de Clérambault syndrome). Classic Delusional Disorder subtype.</p>
+<img src="https://lh3.googleusercontent.com/d/1k3RmnRcCMEi-D8JORuKs37MnOFOy43cu" style="width: 70%; border-radius: 10px; margin: 10px 0;">
+    </div>
+    <div class="card">
+      <h4 style="color:var(--eps);">Thought Insertion / Broadcasting</h4>
+      <p style="font-size:13px;">First-rank (Schneider) symptoms: thoughts are inserted by outside force, or broadcast to others. Strongly suggest schizophrenia.</p>
+<img src="https://lh3.googleusercontent.com/d/1X66CxY5urEUhINZN9RDg5L72_pQ2grqJ" style="width: 70%; border-radius: 10px; margin: 10px 0;">
+    </div>
+  </div>
+
+  <h3 class="subsect">1.3 Hallucination Types</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Type</th><th>Clinical Association</th><th>USMLE Pearl</th></tr></thead>
+      <tbody>
+        <tr><td class="td-sch"><strong>Auditory</strong></td><td>Most common in schizophrenia; command, commenting, or conversing voices</td><td>Auditory hallucinations = schizophrenia until proven otherwise</td></tr>
+        <tr><td><strong>Visual</strong></td><td>Delirium, substance intoxication, Lewy body dementia, medical causes</td><td><span class="hl-key">Visual > auditory → think medical/substance cause</span></td></tr>
+        <tr><td><strong>Tactile</strong></td><td>Alcohol withdrawal (formication = "bugs crawling"), cocaine ("coke bugs")</td><td>Formication = tactile hallucination in alcohol/stimulant withdrawal</td></tr>
+        <tr><td><strong>Olfactory / Gustatory</strong></td><td>Temporal lobe epilepsy (olfactory aura)</td><td>Smell/taste hallucinations → think TLE</td></tr>
+        <tr><td><strong>Hypnagogic</strong></td><td>Occurring at sleep onset — seen in normal individuals AND narcolepsy</td><td>Narcolepsy: hypnagogic + hypnopompic hallucinations</td></tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/1akNVqWILcqyIDySJBx5njVLyASCcUe9D" style="width: 70%; border-radius: 10px; margin: 10px 0;">
+  </div>
+
+  <!-- SECTION 2 -->
+  <hr class="sec-divider">
+  <h2 class="section-title" id="d1-criteria">2. Schizophrenia — DSM-5-TR Diagnostic Criteria <span class="tag badge-sch">Core Dx</span></h2>
+
+  <div class="callout callout-warn">
+    <div class="callout-label">⚠ DSM-5 vs DSM-IV-TR — Critical Difference</div>
+    DSM-5 <strong>eliminated all schizophrenia subtypes</strong> (Paranoid, Disorganized, Catatonic, Undifferentiated, Residual). These are DSM-IV-TR classifications. <span class="hl-key">Catatonia is now a specifier</span> applicable across multiple diagnoses (MDD, bipolar, schizophrenia). Do NOT use old subtypes on Step 1.
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Criterion</th><th>Requirement</th><th>Clinical Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="td-sch"><strong>A — Active Symptoms</strong></td><td>≥2 of 5 symptoms for ≥1 month (or less if treated): <strong>delusions, hallucinations, disorganized speech, grossly disorganized/catatonic behavior, negative symptoms</strong>. <span class="hl-key">At least 1 must be from the first 3.</span></td><td>The "first 3" rule is tested! Cannot have only negative symptoms and catatonia.</td></tr>
+        <tr><td><strong>B — Functional Decline</strong></td><td>Work, interpersonal relations, or self-care markedly below prior level</td><td>Required for schizophrenia (NOT required for schizophreniform)</td></tr>
+        <tr><td class="td-sch"><strong>C — Duration</strong></td><td>Continuous disturbance ≥<span class="hl-key">6 months</span> (including ≥1 month active-phase symptoms)</td><td>Key timeline distinction from schizophreniform (1–6 months)</td></tr>
+        <tr><td><strong>D — Exclusion: Schizoaffective/Mood</strong></td><td>Schizoaffective disorder and mood disorder with psychotic features are ruled out</td><td>If significant mood episode present concurrently → consider schizoaffective</td></tr>
+        <tr><td><strong>E — Exclusion: Substances/Medical</strong></td><td>Symptoms NOT due to direct physiological effects of a substance or another medical condition</td><td>Always rule out organic causes first</td></tr>
+   <img src="https://lh3.googleusercontent.com/d/1nKoHcPyBYgBhJCjQfhb5eDI9h398T4ng" style="width: 70%; border-radius: 10px; margin: 10px 0;">  
+      </tbody>
+    </table>
+     </div>
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💎 Step 1 Pearl — The Numbers</div>
+    <strong>Schizophrenia timeline:</strong> <span class="hl-key">≥6 months total; ≥1 month active symptoms; ≥1 Criterion A symptom must be delusion, hallucination, or disorganized speech.</span><br>
+    <strong>Schizophreniform:</strong> 1–6 months (functional decline NOT required)<br>
+    <strong>Brief Psychotic Disorder:</strong> 1 day – 1 month (with or without stressor)
+  </div>
+
+  <!-- SECTION 3 -->
+  <hr class="sec-divider">
+  <h2 class="section-title" id="d1-symptoms">3. Symptom Domains <span class="tag badge-sch">Core Concept</span></h2>
+
+  <h3 class="subsect" id="d1-positive">3.1 Positive Symptoms</h3>
+  <div class="callout callout-sch">
+    <div class="callout-label">📋 Positive Symptoms — An Excess or Distortion of Normal Function</div>
+           <img src="https://lh3.googleusercontent.com/d/1FT6OY1jMjjO3FQoGR24s3jsEMpa3X2M_" style="width: 70%; border-radius: 10px; margin: 10px 0;">
+     </div>
+    <div>
+    Delusions · Hallucinations (predominantly auditory) · Disorganized speech (word salad, loose associations, clang associations, tangentiality, circumstantiality) · Grossly disorganized or catatonic behavior<br>
+    <strong>Neurobiological basis:</strong> <span class="hl-key">↑ Dopamine activity in the mesolimbic pathway</span><br>
+    <strong>Treatment response:</strong> Respond well to both typical AND atypical antipsychotics (D2 blockade)
+<img src="https:/lh3.googleusercontent.com/d/1viTAf94KYVvOTK7HK7kD5H-CgQE1SvXx " style="width: 70%; border-radius: 10px; margin: 10px 0;">
+  </div>
+    
+      
+  <h4 class="sub4">Thought Disorder Glossary</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Term</th><th>Definition</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Word Salad</strong></td><td>Random, incomprehensible sequence of words</td><td>"Green Tuesday bicycle sings the hospital clock"</td></tr>
+        <tr><td><strong>Loose Associations</strong></td><td>Ideas shift without logical connection (derailment)</td><td>Starts talking about family, jumps to astronomy, then color of socks</td></tr>
+        <tr><td><strong>Clang Associations</strong></td><td>Word choice driven by sound/rhyme, not meaning</td><td>"I need to flee, the key, the sea, agree with me"</td></tr>
+        <tr><td><strong>Neologisms</strong></td><td>Made-up words</td><td>"I have 'blurpiness' in my mind"</td></tr>
+        <tr><td><strong>Echolalia</strong></td><td>Pathological repetition of another's words</td><td>Doctor: "How are you?" Patient: "How are you? How are you?"</td></tr>
+        <tr><td><strong>Thought Broadcasting</strong></td><td>Belief that thoughts are audible to others — first-rank symptom</td><td>"Everyone in the room can hear my thoughts"</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="subsect" id="d1-negative">3.2 Negative Symptoms — The 5 A's</h3>
+  <div class="mnemonic">
+    <div class="mn-label">🧠 Mnemonic — The 5 A's of Negative Symptoms</div>
+    <div class="mn-title">5 A's of Negative Symptoms</div>
+    <div class="mn-body">
+      <span class="mnemonic-letter">A</span>ffect (flat / blunted) — reduced emotional expression; flat facial expression<br>
+      <span class="mnemonic-letter">A</span>logia — poverty of speech; brief, empty replies; decreased output<br>
+      <span class="mnemonic-letter">A</span>volition — decreased motivation; inability to initiate goal-directed behavior<br>
+      <span class="mnemonic-letter">A</span>nhedonia — inability to experience pleasure; loss of interest<br>
+      <span class="mnemonic-letter">A</span>sociality — social withdrawal; reduced social drive and interaction
+<img src="https://lh3.googleusercontent.com/d/1YSsLbQ2AY2Tbz-v4XLd6BGQdmH-tB06d " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+    </div>
+  </div>
+
+  <div class="callout callout-neg">
+    <div class="callout-label">🔬 Negative Symptoms — Neurobiological Basis</div>
+    <strong>Neurobiological basis:</strong> <span class="hl-key">↓ Dopamine activity in the mesocortical pathway</span><br>
+    <strong>Treatment response:</strong> Respond POORLY to typical antipsychotics; <span class="hl-key">atypical antipsychotics (5-HT2A antagonism) have relatively better effect</span><br>
+    <strong>Prognosis:</strong> Predominantly negative symptoms = <strong>worse prognosis</strong> — often persist even when positive symptoms are controlled
+ 
+<img src="https://lh3.googleusercontent.com/d/1v7_D0nxiLaoewXsBYjx_fgVPjZD6aeb1" style="width: 60%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <h3 class="subsect" id="d1-cognitive">3.3 Cognitive Symptoms</h3>
+  <div class="callout callout-gold">
+    <div class="callout-label">Cognitive Symptoms</div>
+    <ul class="content-list">
+      <li>Poor <span class="hl-key">executive function</span> (planning, abstract reasoning, flexibility)</li>
+      <li>Working memory deficits</li>
+      <li>Impaired attention and processing speed</li>
+      <li>Social cognition deficits (difficulty reading emotions, social cues)</li>
+      <li><strong>Neurobiological basis:</strong> prefrontal cortex dysfunction; also mesocortical DA hypofunction</li>
+      <li><strong>Often present from premorbid phase</strong> — may predate psychosis by years</li>
+      <li>Poorly responsive to antipsychotics; targeted by psychosocial rehabilitation</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 4 -->
+  <hr class="sec-divider">
+  <h2 class="section-title" id="d1-neuro">4. Neurobiology of Schizophrenia <span class="tag badge-neg">Mechanisms</span></h2>
+
+  <h3 class="subsect" id="d1-da">4.1 The Four Dopamine Pathways</h3>
+<img src="https://lh3.googleusercontent.com/d/1shNsvP2H3Zm4m_ZIQs9n0zUHZskudfNo " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  <div class="pathway-grid">
+    <div class="pathway-card" style="background:var(--sch2);border-color:var(--sch);">
+      <h4 style="color:var(--sch);">1. Mesolimbic Pathway</h4>
+      <p><strong>Route:</strong> Ventral tegmental area (VTA) → limbic system (nucleus accumbens)<br>
+      <strong>In schizophrenia:</strong> <span class="hl-key">↑ DA activity → POSITIVE symptoms</span><br>
+      <strong>Drug effect:</strong> D2 blockade here = therapeutic (reduces positive symptoms)</p>
+    </div>
+    <div class="pathway-card" style="background:var(--neg2);border-color:var(--neg);">
+      <h4 style="color:var(--neg);">2. Mesocortical Pathway</h4>
+      <p><strong>Route:</strong> VTA → prefrontal cortex<br>
+      <strong>In schizophrenia:</strong> <span class="hl-key">↓ DA activity → NEGATIVE + COGNITIVE symptoms</span><br>
+      <strong>Drug effect:</strong> D2 blockade here worsens negative symptoms (typical antipsychotics)</p>
+    </div>
+    <div class="pathway-card" style="background:var(--eps2);border-color:var(--eps);">
+      <h4 style="color:var(--eps);">3. Nigrostriatal Pathway</h4>
+      <p><strong>Route:</strong> Substantia nigra → striatum (basal ganglia)<br>
+      <strong>In schizophrenia:</strong> Not primarily dysfunctional<br>
+      <strong>Drug effect:</strong> <span class="hl-key">D2 blockade here = EPS (parkinsonism, acute dystonia, akathisia, tardive dyskinesia)</span></p>
+    </div>
+    <div class="pathway-card" style="background:var(--tx2);border-color:var(--tx);">
+      <h4 style="color:var(--tx);">4. Tuberoinfundibular Pathway</h4>
+      <p><strong>Route:</strong> Hypothalamus → anterior pituitary<br>
+      <strong>Normal function:</strong> DA tonically inhibits prolactin release<br>
+      <strong>Drug effect:</strong> <span class="hl-key">D2 blockade → ↑ prolactin → galactorrhea, gynecomastia, amenorrhea, sexual dysfunction</span></p>
+    </div>
+  </div>
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💎 Step 1 Pearl — DA Pathway Summary</div>
+    <strong>Mesolimbic ↑</strong> → positive symptoms → D2 blockade = therapeutic<br>
+    <strong>Mesocortical ↓</strong> → negative/cognitive symptoms → D2 blockade = harmful (worsens)<br>
+    <strong>Nigrostriatal block</strong> → EPS (motor side effects)<br>
+    <strong>Tuberoinfundibular block</strong> → hyperprolactinemia
+  </div>
+
+  <h3 class="subsect" id="d1-glut">4.2 Glutamate / NMDA Hypothesis</h3>
+  <div class="callout callout-neg">
+    <div class="callout-label">🔬 Glutamate Hypothesis of Schizophrenia</div>
+    <ul class="content-list">
+      <li><span class="hl-key">NMDA receptor hypofunction</span> is an alternative/complementary model to dopamine excess</li>
+      <li><strong>PCP (phencyclidine) and Ketamine</strong> are NMDA antagonists → can induce a schizophrenia-like state with BOTH positive AND negative symptoms</li>
+      <li>This is why NMDA antagonism model is superior to pure DA hypothesis — it explains negative symptoms that dopamine theory does not</li>
+      <li>The anti-NMDA receptor encephalitis (an autoimmune condition) can also produce psychosis — important medical differential</li>
+      <li><strong>Clinical implication:</strong> Ketamine dissociative anesthesia can worsen psychosis in schizophrenia patients</li>
+<img src="https://lh3.googleusercontent.com/d/1giHZwbo6YvfbK2qyu8qsjt-O7pxbgdwf" style="width: 60%; border-radius: 10px; margin: 10px 0;"> 
+    </ul>
+  </div>
+
+  <h3 class="subsect">4.3 Serotonin Hypothesis</h3>
+  <p>5-HT2A receptors modulate dopamine release. <span class="hl-key">Atypical antipsychotics block both D2 AND 5-HT2A receptors.</span> The 5-HT2A antagonism in the nigrostriatal and mesocortical pathways increases DA release locally → reduces EPS risk and partially improves negative symptoms compared to typical antipsychotics.</p>
+<img src="https://lh3.googleusercontent.com/d/19dnEI_5Ki8rDuFmxFzVwr6tCZv55OkoS " style="width: 40%; border-radius: 10px; margin: 10px 0;">
+
+  <!-- SECTION 5 -->
+  <hr class="sec-divider">
+  <h2 class="section-title" id="d1-epi">5. Epidemiology, Genetics & Risk Factors <span class="tag badge-gold">Epi</span></h2>
+
+  <div class="grid-2">
+    <div class="card">
+      <h4 style="color:var(--navy);">📊 Epidemiology</h4>
+      <ul>
+        <li><span class="hl-key">Lifetime prevalence: 1.5%</span> (FA 2026; corrected from 1%)</li>
+        <li>Males > females in prevalence</li>
+        <li>Males: earlier onset (late teens–early 20s)</li>
+        <li>Females: later onset (late 20s–30s); better prognosis</li>
+        <li>Suicide: <span class="hl-key">~10% die by suicide</span> — major cause of death</li>
+        <li>Substance comorbidity: very high (~50%); cannabis worsens course</li>
+<img src="https://lh3.googleusercontent.com/d/137Ie0rBLv2fvthXSa02itOvzLbCCG5JE " style="width: 105%; border-radius: 10px; margin: 10px 0;"> 
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="color:var(--navy);">🧬 Genetic Risk</h4>
+      <ul>
+        <li>General population: ~1.5%</li>
+        <li>First-degree relative: ~10%</li>
+        <li>Both parents affected: ~40%</li>
+        <li><span class="hl-key">Monozygotic (MZ) twin: ~50%</span> — NOT 100%</li>
+        <li>Dizygotic (DZ) twin: ~15%</li>
+<img src="https://lh3.googleusercontent.com/d/1kOvoVrqbUmOM14LzXCsVdtaQYvjmX9BF " style="width: 25%; border-radius: 10px; margin: 10px 0;"> 
+      </ul>
+      <div style="margin-top:8px;font-size:13px;color:var(--gray700);"><strong>Key concept:</strong> MZ concordance of 50% confirms that genetics alone does not cause schizophrenia → <strong>stress-diathesis model</strong></div>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-label">⚠ High-Yield Environmental Risk Factors</div>
+    <ul class="content-list">
+      <li><span class="hl-key">Adolescent cannabis use</span> → ↑ incidence and worsened course (FA 2026 — frequently tested)</li>
+      <li><strong>Obstetric complications:</strong> Prenatal infections (influenza 2nd trimester), birth hypoxia, maternal malnutrition</li>
+      <li><strong>Urban upbringing</strong> and social disadvantage → ↑ risk</li>
+      <li><strong>Migration</strong> (social defeat hypothesis) → ↑ risk in immigrant populations</li>
+      <li><strong>Season of birth:</strong> winter/spring birth → slight ↑ risk (possible prenatal viral exposure)</li>
+      <li><strong>Neurodevelopmental origin:</strong> premorbid cognitive/motor/social deficits often present years before onset</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 6 -->
+  <hr class="sec-divider">
+  <h2 class="section-title" id="d1-course">6. Course, Phases & Prognosis <span class="tag badge-gold">Prognosis</span></h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Phase</th><th>Duration</th><th>Features</th><th>Clinical Significance</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Premorbid</strong></td><td>Years before illness</td><td>Subtle social, cognitive, and motor impairments; described as "odd" or "loner"</td><td>Neurodevelopmental origin; often missed</td></tr>
+        <tr class="td-gold"><td><strong>Prodromal</strong></td><td>Months–years before first episode</td><td>Social withdrawal, odd beliefs, magical thinking, perceptual disturbances, declining function</td><td>Early intervention during this phase has greatest impact on outcome</td></tr>
+        <tr class="td-eps"><td><strong>Active (Acute) Phase</strong></td><td>Weeks to months</td><td>Full positive symptoms (hallucinations, delusions, disorganized speech/behavior)</td><td>Requires antipsychotic treatment. <span class="hl-key">Longer DUP (Duration of Untreated Psychosis) = worse outcome</span></td></tr>
+        <tr><td><strong>Residual Phase</strong></td><td>Between episodes</td><td>Attenuated positive symptoms; persistent negative and cognitive symptoms; social withdrawal</td><td>Negative symptoms often persist despite good treatment of positive symptoms</td></tr>
+        <tr><td><strong>Stabilization</strong></td><td>6–18 months post-acute</td><td>Partial recovery; reintegration; vulnerable period for relapse</td><td>Maintain antipsychotic; psychosocial rehabilitation begins</td></tr>
+<img src="https://lh3.googleusercontent.com/d/1sjyFcGRo6vr5wFZ-cD2_SeC-th3UVVxF " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="subsect">6.1 Prognostic Factors</h3>
+  <div class="grid-2">
+    <div class="card card-tx">
+      <h4 style="color:var(--tx);">✅ Better Prognosis</h4>
+      <ul>
+        <li>Female sex</li>
+        <li>Late age of onset</li>
+        <li>Acute / abrupt onset</li>
+        <li>Predominantly <strong>positive</strong> symptoms</li>
+        <li>Good premorbid functioning</li>
+        <li>Married / strong social support</li>
+        <li>Good treatment compliance</li>
+        <li>No family history of schizophrenia</li>
+        <li>No substance use comorbidity</li>
+<img src="https://lh3.googleusercontent.com/d/1REylg8VKCDBJGUPm48UzwIaGii1akcqF " style="width: 75%; border-radius: 10px; margin: 10px 0;"> 
+      </ul>
+    </div>
+    <div class="card card-eps">
+      <h4 style="color:var(--eps);">🚨 Worse Prognosis (FA 2026)</h4>
+      <ul>
+        <li>Male sex</li>
+        <li>Early onset / gradual (insidious) onset</li>
+        <li>Predominantly <strong>negative</strong> symptoms</li>
+        <li>Poor premorbid functioning</li>
+        <li>Strong family history of psychosis</li>
+        <li>Long Duration of Untreated Psychosis (DUP)</li>
+        <li>Social isolation</li>
+        <li>Substance use comorbidity</li>
+        <li>Ventriculomegaly on imaging</li>
+<img src="https://lh3.googleusercontent.com/d/1SfiioPpF19Qld_aP75aYCN6qE2W8Y3F7" style="width: 80%; border-radius: 10px; margin: 10px 0;"> 
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <hr class="sec-divider">
+  <h2 class="section-title" id="d1-spectrum">7. Schizophrenia Spectrum & Other Psychotic Disorders <span class="tag badge-sch">Differential</span></h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Disorder</th><th>Duration</th><th>Key Features</th><th>Functional Decline</th><th>USMLE Trick</th></tr></thead>
+      <tbody>
+        <tr class="td-gold">
+          <td><strong>Brief Psychotic Disorder</strong></td>
+          <td><span class="hl-key">1 day – &lt;1 month</span></td>
+          <td>≥1 positive symptom; usually stress-triggered; full return to premorbid function</td>
+          <td>Not required</td>
+          <td>Classic: returning soldier, postpartum. Duration &lt;1 month with FULL recovery.</td>
+        </tr>
+        <tr>
+          <td><strong>Schizophreniform Disorder</strong></td>
+          <td><span class="hl-key">1–6 months</span></td>
+          <td>Same Criterion A as schizophrenia; 1/3 recover; 2/3 progress to schizophrenia or schizoaffective</td>
+          <td><strong>NOT required</strong></td>
+          <td>"Between" brief and schizophrenia. No functional decline criterion.</td>
+        </tr>
+        <tr class="td-sch">
+          <td><strong>Schizophrenia</strong></td>
+          <td><span class="hl-key">≥6 months (≥1 month active)</span></td>
+          <td>Full Criterion A–E; continuous disturbance 6 months; functional decline required</td>
+          <td><strong>REQUIRED</strong></td>
+          <td>6 months total, 1 month active. Functional decline REQUIRED.</td>
+        </tr>
+        <tr class="td-eps">
+          <td><strong>Schizoaffective Disorder ★</strong></td>
+          <td>Same as schizophrenia</td>
+          <td>Criterion A schizophrenia PLUS major mood episode; <span class="hl-key">psychosis must occur ≥2 weeks WITHOUT mood episode</span></td>
+          <td>Required</td>
+          <td>Key: psychosis occurs ALONE ≥2 weeks. If only with mood episodes → mood disorder with psychotic features.</td>
+        </tr>
+        <tr>
+          <td><strong>Delusional Disorder</strong></td>
+          <td>≥1 month</td>
+          <td>≥1 delusion; NO hallucinations or disorganized speech; daily functioning OTHERWISE INTACT</td>
+          <td>Function intact (except delusion impact)</td>
+          <td>Functioning is INTACT — they still go to work. One fixed belief is the problem.</td>
+        </tr>
+        <tr class="td-gold">
+          <td><strong>Schizotypal PD</strong></td>
+          <td>Chronic (personality)</td>
+          <td>Eccentric appearance, odd/magical thinking, perceptual distortions, interpersonal awkwardness; CAN have brief psychotic episodes</td>
+          <td>Impaired but stable</td>
+          <td>Cluster A PD on the schizophrenia spectrum. Not schizophrenia — no sustained psychosis.</td>
+        </tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/1nxDn8ayvblsAXmhabw942a8IBFERFOyD " style="width: 50%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <h3 class="subsect" id="d1-schizoaff">7.1 Schizoaffective vs Mood Disorder with Psychosis — Critical Distinction</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>Schizoaffective Disorder</th><th>Bipolar I / MDD with Psychosis</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Psychosis when?</strong></td><td class="td-eps">During mood episodes AND for ≥2 weeks <strong>WITHOUT</strong> a mood episode</td><td class="td-sch">ONLY during mood episodes</td></tr>
+        <tr><td><strong>Mood episodes</strong></td><td>Present for majority of illness; concurrent with psychosis</td><td>Core feature; psychosis is secondary</td></tr>
+        <tr><td><strong>The 2-week rule</strong></td><td>Must have delusions or hallucinations for ≥2 weeks independent of any mood episode</td><td>If psychosis only with mood episodes → NOT schizoaffective</td></tr>
+        <tr><td><strong>Types</strong></td><td>Bipolar type (manic or mixed episode); Depressive type (only MDE)</td><td>Bipolar I with psychotic features; MDD with psychotic features</td></tr>
+        <tr><td><strong>Prognosis</strong></td><td>Better than schizophrenia; worse than pure mood disorder</td><td>Better than schizoaffective</td></tr>
+        <tr><td><strong>Treatment</strong></td><td>Antipsychotic + mood stabilizer/antidepressant</td><td>Antidepressant/mood stabilizer + antipsychotic</td></tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/1BmV93HkcY9Z_l9AngnVfAbhlZKVCzbGp " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <h3 class="subsect" id="d1-delusional">7.2 Delusional Disorder — Subtypes</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Subtype</th><th>Core Belief</th><th>Classic Vignette</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Persecutory</strong></td><td>Being plotted against, followed, or conspired against</td><td>Patient reports neighbors are watching and poisoning food</td></tr>
+        <tr class="td-gold"><td><strong>Erotomanic</strong></td><td>Someone of higher status is in love with them (de Clérambault syndrome)</td><td>Attorney believes a famous senator is secretly in love with her</td></tr>
+        <tr><td><strong>Grandiose</strong></td><td>Has special powers, abilities, or identity</td><td>Patient believes he invented the internet</td></tr>
+        <tr><td><strong>Somatic</strong></td><td>Body is infested, diseased, or abnormal</td><td>Delusional infestation (Ekbom syndrome) — parasites under skin</td></tr>
+        <tr><td><strong>Jealous</strong></td><td>Spouse/partner is unfaithful (Othello syndrome)</td><td>Patient has unfounded belief spouse is cheating despite evidence</td></tr>
+        <tr class="td-gold"><td><strong>Folie à Deux</strong></td><td>Shared Delusional Disorder — delusion shared between two closely associated individuals</td><td>Isolated couple: both convinced FBI is monitoring them; one is the "primary" inducer</td></tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/1t2KPDj4Jk4m3-ZmNjVy34mdLGEyLQJTW " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <!-- SECTION 8 -->
+  <hr class="sec-divider">
+  <h2 class="section-title" id="d1-treatment">8. Treatment of Psychotic Disorders <span class="tag badge-tx">Treatment</span></h2>
+
+  <div class="callout callout-tx">
+    <div class="callout-label">📋 General Treatment Principles</div>
+    <ul class="content-list">
+      <li><strong>First-line:</strong> <span class="hl-key">Atypical (second-generation) antipsychotics</span> for most patients</li>
+      <li><strong>Biopsychosocial approach:</strong> Medications + CBT + Social skills training + Family therapy + Psychoeducation</li>
+      <li><strong>Acute agitation:</strong> Benzodiazepines + antipsychotics (IM haloperidol + lorazepam commonly used)</li>
+      <li><strong>Compliance:</strong> Long-acting injectable (LAI) antipsychotics for poor compliance (e.g., paliperidone palmitate, aripiprazole LAI)</li>
+      <li><strong>Antidepressants</strong> can be added if comorbid depression (common)</li>
+    </ul>
+  </div>
+
+  <h3 class="subsect" id="d1-typical">8.1 Typical (First-Generation) Antipsychotics</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Potency</th><th>Examples</th><th>D2 Blockade</th><th>EPS Risk</th><th>Anti-HAM Effects</th></tr></thead>
+      <tbody>
+        <tr><td class="td-eps"><strong>High-Potency</strong></td><td>Haloperidol, Fluphenazine, Trifluoperazine</td><td>++++</td><td><span class="hl-key">HIGH</span></td><td>Low (less sedation/orthostasis)</td></tr>
+        <tr class="td-gold"><td><strong>Low-Potency</strong></td><td>Chlorpromazine, Thioridazine</td><td>++</td><td>Lower</td><td><span class="hl-key">HIGH anti-HAM: sedation, orthostasis, dry mouth, urinary retention</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-label">⚠ Anti-HAM Side Effects (Low-Potency Typicals)</div>
+    <strong>Anti-H</strong>istaminergic → sedation, weight gain<br>
+    <strong>Anti-α1</strong> adrenergic → orthostatic hypotension, reflex tachycardia<br>
+    <strong>Anti-M</strong>uscarinic → dry mouth, constipation, urinary retention, blurred vision, tachycardia<br>
+    <strong>Specific toxicities:</strong> Chlorpromazine → <span class="hl-key">corneal/lens deposits</span>; Thioridazine → <span class="hl-key">retinal pigmentation (irreversible pigmentary retinopathy)</span>
+  </div>
+
+  <h3 class="subsect" id="d1-atypical">8.2 Atypical (Second-Generation) Antipsychotics</h3>
+  <div class="callout callout-sch">
+    <div class="callout-label">📋 Mechanism: D2 Antagonism + 5-HT2A Antagonism</div>
+    The dual blockade of D2 and <span class="hl-key">5-HT2A receptors</span> accounts for:
+    <ul style="margin-top:6px;padding-left:18px;">
+      <li>Lower EPS risk (5-HT2A antagonism in nigrostriatal → DA release → offsets D2 blockade)</li>
+      <li>Relatively better efficacy for negative symptoms</li>
+      <li>BUT greater metabolic side effects (weight gain, hyperglycemia, dyslipidemia → metabolic syndrome)</li>
+    </ul>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Drug</th><th>Key Feature / Side Effect</th><th>USMLE Niche</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Risperidone / Paliperidone</strong></td><td>Most EPS among atypicals; significant hyperprolactinemia</td><td>Lowest metabolic effects among atypicals; LAI formulation available</td></tr>
+        <tr><td><strong>Olanzapine</strong></td><td>Highest metabolic risk (weight gain, DM, dyslipidemia)</td><td>"Olanzapine makes you olanzafat"</td></tr>
+        <tr><td><strong>Quetiapine</strong></td><td>Significant sedation; moderate metabolic risk</td><td>Often used for insomnia/anxiety (off-label); avoid in narrow-angle glaucoma</td></tr>
+        <tr><td><strong>Aripiprazole</strong></td><td>Partial D2 agonist (unique!); low metabolic and EPS risk</td><td>"Aripiprazole is a partial agonist" — does NOT cause hyperprolactinemia</td></tr>
+        <tr><td><strong>Ziprasidone</strong></td><td>QTc prolongation risk; taken with food for absorption</td><td>QTc monitoring required; lowest weight gain among atypicals</td></tr>
+        <tr class="td-gold"><td><strong>Xanomeline-Trospium (Cobenfy)</strong></td><td>FDA-approved 2024; <span class="hl-key">first non-dopaminergic antipsychotic</span>; M1/M4 muscarinic agonist; trospium prevents peripheral muscarinic SE</td><td>New mechanism: no D2 blockade → no EPS, no tardive dyskinesia, no hyperprolactinemia. May improve cognition.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="subsect" id="d1-clozapine">8.3 Clozapine — Treatment-Resistant Schizophrenia</h3>
+  <div class="callout callout-eps">
+    <div class="callout-label">🚨 Clozapine — Indications & Critical Monitoring</div>
+    <strong>Indications:</strong>
+    <ul style="padding-left:18px;margin:6px 0;">
+      <li>Treatment-resistant schizophrenia (failed ≥2 adequate antipsychotic trials)</li>
+      <li>Persistent suicidality in schizophrenia/schizoaffective disorder</li>
+    </ul>
+    <strong>Mechanism:</strong> Weak D2 antagonism + strong D4, 5-HT2A, M1, H1 antagonism<br>
+    <strong>🚨 Agranulocytosis:</strong> <span class="hl-key">Life-threatening — requires mandatory ANC monitoring</span> (weekly ×6 months → biweekly → monthly). REMS program. <br>
+    <span style="font-family:monospace;font-weight:700;">"Monitor WBCs CloZEly"</span><br>
+    <strong>Other SE:</strong> Weight gain (severe), seizures (dose-dependent), myocarditis, hypersalivation (sialorrhea), sedation, no significant EPS or tardive dyskinesia
+  </div>
+
+  <!-- SECTION 9 -->
+  <hr class="sec-divider">
+  <h2 class="section-title" id="d1-eps">9. Antipsychotic Adverse Effects — ADAPT Framework <span class="tag badge-eps">Safety</span></h2>
+
+  <div class="mnemonic">
+    <div class="mn-label">🧠 Mnemonic — ADAPT (EPS Timeline)</div>
+    <div class="mn-title">Extrapyramidal Symptoms in Order of Onset</div>
+    <div class="mn-body">
+      <span class="mnemonic-letter">A</span>cute Dystonia — <strong>Hours to days</strong> — sustained muscle contractions; oculogyric crisis; torticollis. Rx: <span class="hl-key">Benztropine or Diphenhydramine (IM)</span><br>
+      <span class="mnemonic-letter">D</span>rug-induced Parkinsonism — <strong>Days to weeks</strong> — bradykinesia, tremor, rigidity, shuffling gait. Rx: <span class="hl-key">Benztropine or Amantadine</span><br>
+      <span class="mnemonic-letter">A</span>kathisia — <strong>Days to months</strong> — subjective restlessness, inner urge to move; patient can't sit still. Rx: <span class="hl-key">Propranolol (β-blocker) 1st line; Benzodiazepines; lower dose</span><br>
+      <span class="mnemonic-letter">P</span>rolactinemia — <strong>Weeks to months</strong> — galactorrhea, gynecomastia, amenorrhea, sexual dysfunction<br>
+      <span class="mnemonic-letter">T</span>ardive Dyskinesia — <strong>Months to years</strong> — involuntary choreiform movements; orofacial (lip-smacking, tongue protrusion). Rx: <span class="hl-key">VMAT2 inhibitors: Valbenazine or Deutetrabenazine. Reduce/switch antipsychotic.</span>
+<img src="https://lh3.googleusercontent.com/d/12Ge8QOFwiwx3r4bO6LD33jn3lYkz_33u" style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+    </div>
+  </div>
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💎 EPS Distinction — Must Know</div>
+    <strong>Akathisia vs. Parkinsonism vs. Tardive Dyskinesia:</strong><br>
+    Akathisia = subjective inner restlessness + motor (pacing); patient FEELS restless → Propranolol<br>
+    Parkinsonism = SLOWED movement (bradykinesia, cogwheel rigidity) → Benztropine<br>
+    Tardive Dyskinesia = LATE-onset involuntary movements (orofacial, choreoathetoid); may be irreversible → VMAT2 inhibitor<br>
+    <span class="hl-key">Do NOT give benztropine for TD (anticholinergic may worsen TD)</span>
+  </div>
+
+  <h3 class="subsect" id="d1-nms">9.1 Neuroleptic Malignant Syndrome (NMS) — Psychiatric Emergency</h3>
+
+  <div class="callout callout-eps">
+    <div class="callout-label">🚨 NMS — Life-Threatening Emergency</div>
+    <strong>Cause:</strong> Any antipsychotic (but especially high-potency typicals like haloperidol); also rapid dose increases<br>
+    <strong>Mechanism:</strong> Extreme dopamine blockade in hypothalamus (temperature regulation) + nigrostriatal (rigidity)<br>
+  </div>
+
+  <div class="mnemonic">
+    <div class="mn-label">🧠 Mnemonic — FEVER</div>
+    <div class="mn-title">NMS Features</div>
+    <div class="mn-body">
+      <span class="mnemonic-letter">F</span>ever — hyperthermia (38–40°C or higher)<br>
+      <span class="mnemonic-letter">E</span>ncephalopathy — altered mental status, confusion, decreased consciousness<br>
+      <span class="mnemonic-letter">V</span>itals unstable — tachycardia, labile blood pressure, diaphoresis<br>
+      <span class="mnemonic-letter">E</span>nzymes ↑ — markedly elevated CK (rhabdomyolysis) → myoglobinuria → AKI<br>
+      <span class="mnemonic-letter">R</span>igidity — "lead-pipe" rigidity (vs. cog-wheel in drug-induced Parkinsonism)
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>NMS</th><th>Serotonin Syndrome</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cause</strong></td><td>Antipsychotics (dopamine blockade)</td><td>Serotonergic agents (SSRIs + MAOIs; linezolid; tramadol + SSRI)</td></tr>
+        <tr><td><strong>Onset</strong></td><td>Days to weeks (gradual)</td><td>Hours (rapid — 24 hrs)</td></tr>
+        <tr><td><strong>Rigidity</strong></td><td class="td-eps"><span class="hl-key">Lead-pipe rigidity</span></td><td>Hyperreflexia, myoclonus (NOT lead-pipe)</td></tr>
+        <tr><td><strong>Fever</strong></td><td>Hyperthermia (often severe)</td><td>Hyperthermia (often severe)</td></tr>
+        <tr><td><strong>Reflexes</strong></td><td>Normal or decreased</td><td class="td-sch"><span class="hl-key">Hyperreflexia; clonus</span></td></tr>
+        <tr><td><strong>Treatment</strong></td><td class="td-eps"><span class="hl-key">STOP antipsychotic; Dantrolene + Bromocriptine (DA agonist)</span>; cooling, supportive care</td><td>STOP serotonergic agent; Cyproheptadine (5-HT antagonist); cooling, benzos</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 10 — Q&A -->
+  <hr class="sec-divider">
+  <h2 class="section-title" id="d1-qa">10. Active Learning — Q&A Bank <span class="tag badge-gold">10 Questions</span></h2>
+
+  <p style="margin-bottom:20px;">All questions sourced from Lecture 8a (Schizophrenia & Psychotic Disorders) and Lecture 8b (Antipsychotics & Treatment). Click <strong>Show Answer & Explanation</strong> to reveal the full answer and wrong-answer analysis.</p>
+
+  <!-- MCQ 1 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 1</span><span class="qa-topic">Lecture 8a · Duration-Based Diagnosis — Schizophreniform vs Others</span></div>
+    <div class="qa-stem">
+      <p>A 28-year-old man is brought to the emergency department by his family due to increasingly bizarre behavior over the past 3 months. He claims that television news anchors are sending him secret messages through their broadcasts and believes his thoughts are being broadcasted to others. He has also been observed talking to himself and has stopped attending work. His family reports no significant mood disturbances or history of substance abuse. His symptoms have been present consistently for this 3-month period. Which of the following is the most likely diagnosis?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Brief Psychotic Disorder</li>
+        <li class="qa-opt" data-correct="true">B. Schizophreniform Disorder</li>
+        <li class="qa-opt">C. Schizophrenia</li>
+        <li class="qa-opt">D. Delusional Disorder</li>
+        <li class="qa-opt">E. Schizoaffective Disorder</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer">
+      <span class="answer-tag">✅ B — Schizophreniform Disorder</span>
+      <p><strong>Key reasoning:</strong> This patient has classic positive symptoms — delusions of reference ("news anchors sending secret messages"), thought broadcasting (first-rank Schneiderian symptom), probable auditory hallucinations ("talking to himself"), and functional decline (stopped attending work). Duration = 3 months.</p>
+      <ul>
+        <li><strong>Schizophreniform</strong> = same Criterion A as schizophrenia, but duration <span class="hl-key">1–6 months</span>. At 3 months, this patient does NOT yet meet schizophrenia's ≥6-month threshold.</li>
+        <li><strong>Why not Brief Psychotic?</strong> Brief psychotic disorder lasts &lt;1 month. This patient has had 3 months of symptoms.</li>
+        <li><strong>Why not Schizophrenia?</strong> Requires ≥6 months of continuous disturbance. Only 3 months here.</li>
+        <li><strong>Why not Delusional Disorder?</strong> Delusional disorder = isolated delusion with daily functioning OTHERWISE INTACT. This patient has multiple positive symptoms and functional decline.</li>
+        <li><strong>Why not Schizoaffective?</strong> No mood episodes reported; no evidence of concurrent major depressive or manic episode.</li>
+      </ul>
+      <p><strong>Educational Objective:</strong> The schizophrenia spectrum disorders are differentiated primarily by DURATION: &lt;1 month (Brief) → 1–6 months (Schizophreniform) → ≥6 months (Schizophrenia). Know the timeline cold.</p>
+    </div>
+    <div class="qa-wrong">
+      <span class="wrong-tag">❌ Common Traps</span>
+      <p>The most common error is jumping to Schizophrenia when you see classic positive symptoms. Always calculate the duration first. If duration &lt;6 months → Schizophreniform until proven otherwise. The question explicitly states "3-month period."</p>
+    </div>
+  </div>
+
+  <!-- MCQ 2 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 2</span><span class="qa-topic">Lecture 8a · Symptom Classification & Dopamine Pathways</span></div>
+    <div class="qa-stem">
+      <p>A 45-year-old woman with a long-standing diagnosis of schizophrenia presents with a blunted affect, poverty of speech, and a profound lack of motivation to engage in daily activities or social interactions. Her family notes these symptoms have been persistent despite treatment for her auditory hallucinations, which are currently well-controlled. These symptoms are most accurately described as:</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Positive symptoms, related to mesocortical dopamine hyperactivity</li>
+        <li class="qa-opt">B. Negative symptoms, related to mesolimbic dopamine hypoactivity</li>
+        <li class="qa-opt">C. Positive symptoms, related to mesolimbic dopamine hyperactivity</li>
+        <li class="qa-opt" data-correct="true">D. Negative symptoms, related to mesocortical dopamine hypoactivity</li>
+        <li class="qa-opt">E. Cognitive symptoms, related to nigrostriatal pathway dysfunction</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer">
+      <span class="answer-tag">✅ D — Negative Symptoms / Mesocortical Dopamine Hypoactivity</span>
+      <p><strong>Symptoms identified:</strong> Blunted affect (flat affect), alogia (poverty of speech), and avolition (lack of motivation) = classic 3 of the 5 A's of negative symptoms.</p>
+      <ul>
+        <li><strong>Negative symptoms</strong> → ↓ Dopamine activity in the <span class="hl-key">mesocortical pathway</span> (VTA → prefrontal cortex)</li>
+        <li><strong>Positive symptoms</strong> (hallucinations, delusions) → ↑ DA in the <span class="hl-key">mesolimbic pathway</span> (VTA → limbic/nucleus accumbens)</li>
+        <li>Her hallucinations responded to treatment (D2 blockade in mesolimbic) but negative symptoms persist — because D2 blockade in mesocortical pathway can actually worsen negative symptoms with typical antipsychotics</li>
+      </ul>
+      <p><strong>Why not E?</strong> Nigrostriatal = motor control → D2 blockade there = EPS (parkinsonism, dystonia). Cognitive symptoms are also related to mesocortical but are a distinct domain.</p>
+      <p><strong>Educational Objective:</strong> Master the 4 dopamine pathways. Negative symptoms = mesocortical hypofunction. Atypical antipsychotics (5-HT2A antagonism) have relatively better efficacy for negative symptoms.</p>
+    </div>
+    <div class="qa-wrong">
+      <span class="wrong-tag">❌ Common Traps</span>
+      <p>Confusing MESO-LIMBIC (positive) with MESO-CORTICAL (negative). Memory trick: "LIMbic = LIMited to positive symptoms only." Mesocortical goes to the CORTEX — that's where higher-order, cognitive, and negative functions live.</p>
+    </div>
+  </div>
+
+  <!-- MCQ 3 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 3</span><span class="qa-topic">Lecture 8a · Prognostic Factors in Schizophrenia</span></div>
+    <div class="qa-stem">
+      <p>A 22-year-old male is diagnosed with schizophrenia. His symptoms began insidiously at age 17, primarily with social withdrawal and odd beliefs, which progressed to overt psychosis. He has predominantly negative symptoms and a strong family history of schizophrenia. His premorbid functioning was poor. Based on these factors, what is his likely prognosis?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Good, due to early onset</li>
+        <li class="qa-opt">B. Poor, due to acute onset</li>
+        <li class="qa-opt">C. Good, due to predominantly negative symptoms</li>
+        <li class="qa-opt" data-correct="true">D. Poor, due to gradual onset and predominantly negative symptoms</li>
+        <li class="qa-opt">E. Good, due to strong family history</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer">
+      <span class="answer-tag">✅ D — Poor Prognosis</span>
+      <p>This patient has stacked multiple <strong>poor prognostic factors</strong>:</p>
+      <ul>
+        <li>🔴 <strong>Early onset</strong> (age 17) → poor prognosis</li>
+        <li>🔴 <strong>Gradual/insidious onset</strong> → poor prognosis (vs. acute onset = better)</li>
+        <li>🔴 <strong>Predominantly negative symptoms</strong> → poor prognosis (respond poorly to treatment)</li>
+        <li>🔴 <strong>Poor premorbid functioning</strong> → poor prognosis</li>
+        <li>🔴 <strong>Strong family history</strong> → worse prognosis (high genetic loading)</li>
+        <li>🟢 Good prognosis markers (ABSENT here): female sex, late onset, acute onset, positive symptoms, good premorbid function, social support</li>
+      </ul>
+      <p><strong>Educational Objective:</strong> Know all prognostic factors — USMLE frequently gives a patient profile and asks to predict prognosis. Early + insidious + negative + poor premorbid = worst prognosis profile.</p>
+    </div>
+    <div class="qa-wrong">
+      <span class="wrong-tag">❌ Common Traps</span>
+      <p>Early onset = WORSE prognosis (not better). Strong family history = WORSE prognosis. Students often intuitively reverse these. Also: negative symptoms = worse prognosis because they are treatment-resistant — not better.</p>
+    </div>
+  </div>
+
+  <!-- MCQ 4 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 4</span><span class="qa-topic">Lecture 8a · Delusion Classification — Somatic Delusion</span></div>
+    <div class="qa-stem">
+      <p>A 30-year-old woman presents to her physician convinced that she is infested with parasites crawling under her skin, despite multiple dermatological examinations revealing no evidence of infestation. She has no other psychotic symptoms, her mood is euthymic, and her daily functioning, apart from her distress about the "infestation," is largely intact. This specific belief is best classified as:</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Persecutory delusion</li>
+        <li class="qa-opt">B. Grandiose delusion</li>
+        <li class="qa-opt" data-correct="true">C. Somatic delusion</li>
+        <li class="qa-opt">D. Erotomanic delusion</li>
+        <li class="qa-opt">E. Tactile hallucination</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer">
+      <span class="answer-tag">✅ C — Somatic Delusion (Delusional Infestation / Ekbom Syndrome)</span>
+      <p><strong>Somatic delusion</strong> = a fixed, false belief about bodily function or sensations. Delusional infestation (Ekbom syndrome) is the classic somatic delusion — unwavering belief of being infested by parasites despite no evidence.</p>
+      <p><strong>Why not tactile hallucination (E)?</strong> The question emphasizes the <em>belief</em> of infestation as the core problem. A tactile hallucination = perception of sensation without stimulus. Delusional disorder focuses on the fixed false belief, not the sensory experience. In clinical practice, both may coexist, but on USMLE, the primary feature described is the belief → delusion.</p>
+      <p><strong>Diagnosis here:</strong> Delusional Disorder, Somatic type — she has one fixed delusion, daily functioning is OTHERWISE INTACT (she still functions), no other psychotic symptoms, mood is euthymic.</p>
+      <p><strong>Educational Objective:</strong> Know all delusion subtypes and their classic presentations. Somatic delusions about infestation (Ekbom syndrome) or bodily abnormality are classic USMLE favorites.</p>
+    </div>
+    <div class="qa-wrong">
+      <span class="wrong-tag">❌ Common Traps</span>
+      <p>Choice E (tactile hallucination) is the most common distractor. Remember: the question emphasizes the BELIEF, not a perceived sensation. Also, this presentation matches Delusional Disorder (not schizophrenia) because daily functioning is intact and there are no other psychotic symptoms.</p>
+    </div>
+  </div>
+
+  <!-- MCQ 5 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 5</span><span class="qa-topic">Lecture 8a · Schizoaffective Disorder — The 2-Week Rule</span></div>
+    <div class="qa-stem">
+      <p>A 35-year-old man with a history of bipolar disorder experiences a 3-week period of elevated mood, decreased need for sleep, and racing thoughts, consistent with a manic episode. During this same 3-week period, he also develops auditory hallucinations and delusions of grandeur. His psychiatrist notes that for the past year, even during periods when his mood was stable and euthymic, he has experienced persistent auditory hallucinations for at least 4 weeks. Which diagnosis best fits this clinical picture?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Schizophrenia, paranoid type</li>
+        <li class="qa-opt">B. Bipolar I Disorder with psychotic features</li>
+        <li class="qa-opt" data-correct="true">C. Schizoaffective Disorder, bipolar type</li>
+        <li class="qa-opt">D. Brief Psychotic Disorder</li>
+        <li class="qa-opt">E. Major Depressive Disorder with psychotic features</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer">
+      <span class="answer-tag">✅ C — Schizoaffective Disorder, Bipolar Type</span>
+      <p><strong>The critical rule for schizoaffective disorder:</strong> Psychotic symptoms must occur for <span class="hl-key">≥2 weeks in the ABSENCE of a major mood episode</span> during the overall course of the illness. This patient satisfies both components:</p>
+      <ul>
+        <li>✅ Concurrent manic episode + psychosis (hallucinations + delusions) during the 3-week manic period</li>
+        <li>✅ <strong>Persistent hallucinations for 4 weeks</strong> when mood was euthymic (stable, no mood episode) — this satisfies the ≥2-week standalone psychosis requirement</li>
+      </ul>
+      <p><strong>Why not Bipolar I with psychotic features (B)?</strong> Bipolar I with psychotic features = psychosis occurs ONLY during mood episodes. This patient has psychosis that persists independently of mood episodes (4 weeks euthymic with hallucinations) → Schizoaffective, not Bipolar with psychosis.</p>
+      <p><strong>Why not Schizophrenia?</strong> Note that "paranoid type" no longer exists in DSM-5 (DSM-IV-TR subtype). Also, he has prominent mood episodes that are a major feature of his illness — pointing to schizoaffective over pure schizophrenia.</p>
+      <p><strong>Educational Objective:</strong> The schizoaffective 2-week rule: psychosis must occur for ≥2 weeks without mood episodes. If psychosis only occurs with mood episodes → mood disorder with psychotic features.</p>
+    </div>
+    <div class="qa-wrong">
+      <span class="wrong-tag">❌ Common Traps</span>
+      <p>Choice A says "paranoid type" — this was eliminated in DSM-5 and is immediately recognizable as a wrong answer. Choice B (Bipolar with psychotic features) is correct ONLY if psychosis is always tied to mood episodes. Here, 4 weeks of euthymic hallucinations disqualify Bipolar + psychosis and require schizoaffective diagnosis.</p>
+    </div>
+  </div>
+
+  <!-- MCQ 6 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 6</span><span class="qa-topic">Lecture 8b · Mechanism of Typical Antipsychotics</span></div>
+    <div class="qa-stem">
+      <p>A psychiatrist is treating a patient with schizophrenia who is experiencing significant positive symptoms, including auditory hallucinations and paranoid delusions. The psychiatrist decides to start a first-generation (typical) antipsychotic. What is the primary mechanism of action responsible for the efficacy of this class of medication against these symptoms?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Antagonism of 5-HT2A receptors in the mesocortical pathway</li>
+        <li class="qa-opt">B. Agonism of D2 receptors in the mesolimbic pathway</li>
+        <li class="qa-opt" data-correct="true">C. Antagonism of D2 receptors in the mesolimbic pathway</li>
+        <li class="qa-opt">D. Antagonism of D2 receptors in the nigrostriatal pathway</li>
+        <li class="qa-opt">E. Potentiation of GABAergic transmission</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer">
+      <span class="answer-tag">✅ C — D2 Antagonism in the Mesolimbic Pathway</span>
+      <p><strong>Typical antipsychotics</strong> (haloperidol, chlorpromazine, fluphenazine, etc.) exert their <em>antipsychotic therapeutic effect</em> by blocking <span class="hl-key">D2 receptors in the mesolimbic pathway</span>. Positive symptoms (hallucinations, delusions) are caused by excess dopamine activity in this pathway (VTA → nucleus accumbens).</p>
+      <ul>
+        <li><strong>A</strong> (5-HT2A antagonism in mesocortical) = mechanism of atypical antipsychotics — not typicals</li>
+        <li><strong>B</strong> (D2 agonism) = wrong direction — typical antipsychotics are ANTAGONISTS (blockers)</li>
+        <li><strong>D</strong> (D2 antagonism in nigrostriatal) = also occurs with typicals, but this causes EPS (side effect), NOT the therapeutic benefit</li>
+        <li><strong>E</strong> (GABA potentiation) = benzodiazepines, barbiturates — not antipsychotics</li>
+      </ul>
+      <p><strong>Educational Objective:</strong> Therapeutic effect of typical antipsychotics = D2 blockade in MESOLIMBIC pathway → reduced positive symptoms. D2 blockade in nigrostriatal → EPS (unwanted). Know which pathway produces which effect.</p>
+    </div>
+    <div class="qa-wrong">
+      <span class="wrong-tag">❌ Common Traps</span>
+      <p>Answer D (nigrostriatal D2 blockade) is the most dangerous distractor — it is a real effect of typical antipsychotics but produces the SIDE EFFECT (EPS), not the therapeutic benefit. The therapeutic benefit lives in the MESOLIMBIC pathway. These two are commonly confused.</p>
+    </div>
+  </div>
+
+  <!-- MCQ 7 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 7</span><span class="qa-topic">Lecture 8b · Tardive Dyskinesia — Recognition & Treatment</span></div>
+    <div class="qa-stem">
+      <p>A 55-year-old male patient with chronic schizophrenia has been treated with haloperidol for many years. He presents to his outpatient clinic with involuntary, repetitive movements of his lips, tongue, and jaw (lip-smacking and chewing motions). He is unaware of these movements. Which of the following adverse effects is most likely responsible for these symptoms?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Acute dystonia</li>
+        <li class="qa-opt">B. Akathisia</li>
+        <li class="qa-opt">C. Drug-induced Parkinsonism</li>
+        <li class="qa-opt" data-correct="true">D. Tardive Dyskinesia</li>
+        <li class="qa-opt">E. Neuroleptic Malignant Syndrome</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer">
+      <span class="answer-tag">✅ D — Tardive Dyskinesia (TD)</span>
+      <p><strong>Classic TD presentation:</strong> Long-term typical antipsychotic use (years of haloperidol) + involuntary, repetitive orofacial movements (lip-smacking, chewing, tongue protrusion) + patient is <span class="hl-key">UNAWARE</span> of the movements.</p>
+      <p><strong>ADAPT timeline to distinguish EPS:</strong></p>
+      <ul>
+        <li><strong>A — Acute Dystonia:</strong> Hours to days; sustained painful muscle contractions (torticollis, oculogyric crisis); treated with IM benztropine</li>
+        <li><strong>B — Akathisia:</strong> Days–months; SUBJECTIVE restlessness (inner urge to move, pacing); patient KNOWS they're restless; treated with propranolol</li>
+        <li><strong>C — Drug-induced Parkinsonism:</strong> Days–weeks; slowing, tremor, rigidity; treated with benztropine/amantadine</li>
+        <li><strong>D — Tardive Dyskinesia:</strong> Months–years of antipsychotic exposure; <span class="hl-key">involuntary choreiform movements; orofacial; may be irreversible</span>; treat with VMAT2 inhibitors (valbenazine or deutetrabenazine)</li>
+        <li><strong>E — NMS:</strong> Emergency with fever, rigidity, AMS, elevated CK — totally different presentation</li>
+      </ul>
+      <p><strong>Educational Objective:</strong> Tardive Dyskinesia = late-onset, involuntary orofacial movements from long-term DA blockade (dopamine receptor upregulation). Treatment: switch to lower-potency or atypical; add VMAT2 inhibitor (valbenazine). Do NOT give benztropine (may worsen TD).</p>
+    </div>
+    <div class="qa-wrong">
+      <span class="wrong-tag">❌ Common Traps</span>
+      <p>"Long-term" and "unaware of movements" are the key TD clues. Akathisia is OPPOSITE — patient is very aware and distressed. Parkinsonism causes SLOWING. Benztropine is correct for acute dystonia and parkinsonism but is WRONG for TD (and may worsen it by further reducing cholinergic tone).</p>
+    </div>
+  </div>
+
+  <!-- MCQ 8 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 8</span><span class="qa-topic">Lecture 8b · Atypical Antipsychotics — Mechanism of Advantage</span></div>
+    <div class="qa-stem">
+      <p>A 30-year-old patient with schizophrenia experiences both positive symptoms (hallucinations) and significant negative symptoms (avolition, social withdrawal). Her physician is considering an atypical (second-generation) antipsychotic. Compared to typical antipsychotics, atypical antipsychotics generally offer an advantage in treating negative symptoms due to what additional mechanism of action?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Stronger D2 receptor antagonism</li>
+        <li class="qa-opt" data-correct="true">B. 5-HT2A receptor antagonism</li>
+        <li class="qa-opt">C. Muscarinic receptor agonism</li>
+        <li class="qa-opt">D. Histamine H1 receptor antagonism</li>
+        <li class="qa-opt">E. Alpha-1 adrenergic receptor antagonism</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer">
+      <span class="answer-tag">✅ B — 5-HT2A Receptor Antagonism</span>
+      <p>Atypical antipsychotics have <strong>dual mechanism:</strong> D2 antagonism + <span class="hl-key">5-HT2A antagonism</span>. The 5-HT2A blockade provides advantages over typicals:</p>
+      <ul>
+        <li><strong>Lower EPS risk:</strong> 5-HT2A blockade in the nigrostriatal pathway increases DA release locally → offsets D2 blockade → less EPS</li>
+        <li><strong>Better negative symptoms:</strong> 5-HT2A blockade in the mesocortical pathway releases DA → improves dopamine tone in prefrontal cortex → relatively better negative/cognitive symptoms</li>
+        <li><strong>Why not A (stronger D2)?</strong> Atypicals are actually WEAKER D2 antagonists than high-potency typicals like haloperidol. Less D2 blockade, not more, is part of why they have fewer EPS.</li>
+        <li><strong>C (Muscarinic agonism):</strong> Xanomeline-trospium (Cobenfy) IS a muscarinic agonist (M1/M4) — new 2024 FDA approval. But "adding" muscarinic agonism is not the standard atypical mechanism.</li>
+        <li><strong>D (H1) and E (α1):</strong> These cause SIDE EFFECTS (sedation, orthostasis) — they are not therapeutic mechanisms for negative symptoms.</li>
+      </ul>
+      <p><strong>Educational Objective:</strong> Atypical antipsychotics = D2 + 5-HT2A antagonism. The 5-HT2A component explains lower EPS risk and relatively better effect on negative symptoms compared to typicals.</p>
+    </div>
+    <div class="qa-wrong">
+      <span class="wrong-tag">❌ Common Traps</span>
+      <p>Answer A (stronger D2) is the most common mistake — atypicals are actually weaker D2 antagonists, which is WHY they cause less EPS. Also, H1 antagonism (D) and α1 antagonism (E) cause sedation and orthostasis respectively — these are unwanted side effects, not benefits for negative symptoms.</p>
+    </div>
+  </div>
+
+  <!-- MCQ 9 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 9</span><span class="qa-topic">Lecture 8b · Clozapine — Agranulocytosis Monitoring</span></div>
+    <div class="qa-stem">
+      <p>A 40-year-old patient with treatment-resistant schizophrenia is started on clozapine after failing trials of two other antipsychotic medications. Which of the following potential adverse effects requires regular, close monitoring with this specific medication?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Hyperprolactinemia</li>
+        <li class="qa-opt">B. Acute dystonia</li>
+        <li class="qa-opt" data-correct="true">C. Agranulocytosis</li>
+        <li class="qa-opt">D. Significant weight loss</li>
+        <li class="qa-opt">E. Tardive dyskinesia</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer">
+      <span class="answer-tag">✅ C — Agranulocytosis</span>
+      <p><strong>Clozapine</strong> is indicated for treatment-resistant schizophrenia (failed ≥2 adequate antipsychotic trials). Its most critical and potentially <span class="hl-key">life-threatening side effect is agranulocytosis</span> (severe drop in neutrophil/ANC count → life-threatening infection risk).</p>
+      <p><strong>Monitoring protocol:</strong> Mandatory absolute neutrophil count (ANC) monitoring — Weekly ×26 weeks → Biweekly ×26 weeks → Monthly thereafter. Part of the REMS program. <em>"Monitor WBCs CloZEly"</em></p>
+      <ul>
+        <li><strong>A — Hyperprolactinemia:</strong> Less common with clozapine (vs. typical antipsychotics and risperidone) — not the PRIMARY monitoring concern</li>
+        <li><strong>B — Acute dystonia:</strong> Very low risk with clozapine due to weak D2 binding</li>
+        <li><strong>D — Weight loss:</strong> OPPOSITE — clozapine causes significant weight GAIN (metabolic syndrome)</li>
+        <li><strong>E — Tardive dyskinesia:</strong> Very rare with clozapine (one of its advantages over typicals)</li>
+      </ul>
+      <p><strong>Educational Objective:</strong> Clozapine = treatment-resistant schizophrenia + suicidality. Must-know side effect: agranulocytosis requires mandatory WBC/ANC monitoring. The blood monitoring is the defining safety feature of clozapine use.</p>
+    </div>
+    <div class="qa-wrong">
+      <span class="wrong-tag">❌ Common Traps</span>
+      <p>Students often select metabolic effects (hyperglycemia, weight gain) because they are common with clozapine. However, the question asks what requires "regular, close monitoring" — agranulocytosis is the MOST CRITICAL (life-threatening) and the reason for the mandatory REMS monitoring program specific to clozapine.</p>
+    </div>
+  </div>
+
+  <!-- MCQ 10 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 10</span><span class="qa-topic">Lecture 8b · First-Line Pharmacologic Treatment of Psychosis</span></div>
+    <div class="qa-stem">
+      <p>A 25-year-old female is diagnosed with her first episode of psychosis, characterized by delusions and hallucinations. After ruling out substance-induced or medical causes, schizophrenia is suspected. According to general treatment principles for psychotic disorders, which of the following is considered the mainstay of pharmacologic treatment?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Benzodiazepines</li>
+        <li class="qa-opt">B. Antidepressants (SSRIs)</li>
+        <li class="qa-opt" data-correct="true">C. Antipsychotics</li>
+        <li class="qa-opt">D. Mood stabilizers (e.g., lithium)</li>
+        <li class="qa-opt">E. Electroconvulsive therapy (ECT)</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer">
+      <span class="answer-tag">✅ C — Antipsychotics</span>
+      <p><strong>Antipsychotics</strong> (both typical and atypical) are the cornerstone of pharmacological treatment for all primary psychotic disorders including schizophrenia. For a first episode, <span class="hl-key">atypical (second-generation) antipsychotics are preferred</span> as first-line due to the more favorable side effect profile.</p>
+      <ul>
+        <li><strong>A — Benzodiazepines:</strong> Used ADJUNCTIVELY for acute agitation (IM lorazepam for combative patient in ED) but are NOT the mainstay and have no long-term antipsychotic effect</li>
+        <li><strong>B — SSRIs:</strong> May be added for comorbid depression in schizophrenia patients but are NOT antipsychotic agents</li>
+        <li><strong>D — Mood stabilizers:</strong> First-line for bipolar disorder; may augment in schizoaffective (bipolar type) but are NOT the mainstay for schizophrenia</li>
+        <li><strong>E — ECT:</strong> Reserved for treatment-resistant cases, MDD with psychosis, catatonia, acute suicidality; not first-line for uncomplicated first-episode psychosis</li>
+      </ul>
+      <p><strong>Treatment Pearl:</strong> Complete biopsychosocial approach = antipsychotics + CBT for psychosis + social skills training + family psychoeducation + coordinated specialty care (for first-episode psychosis programs).</p>
+      <p><strong>Educational Objective:</strong> Antipsychotics are the pharmacological mainstay for psychotic disorders. Atypical antipsychotics are preferred first-line for most patients, especially in first-episode psychosis.</p>
+    </div>
+    <div class="qa-wrong">
+      <span class="wrong-tag">❌ Common Traps</span>
+      <p>Benzodiazepines (A) are useful adjuncts for acute agitation but are NOT antipsychotic. This is a frequent distractor. ECT (E) is an important treatment but is reserved for treatment-resistant or emergency situations — not first-line for a stable first-episode presentation.</p>
+    </div>
+  </div>
+
+</div><!-- /doc1 -->
+
+
+<!-- ══════════════════════════════════════════════
+     DOCUMENT 2 — HIGH-YIELD SYNTHESIS
+══════════════════════════════════════════════ -->
+<div id="doc2" class="doc-panel">
+
+  <div class="section-hero">
+    <div class="eyebrow">High-Yield Synthesis · Rapid Review · Flowcharts · Tables</div>
+    <h1>Schizophrenia — High-Yield Summary</h1>
+    <p>Condensed logic-based rapid review for last-minute preparation. Differential diagnosis flowcharts, drug comparison tables, EPS quick-ref, and active learning exercises.</p>
+  </div>
+
+  <!-- DDX FLOWCHART -->
+  <h2 class="section-title" id="d2-ddx">Differential Diagnosis Flowchart <span class="tag badge-sch">DDx</span></h2>
+<img src="https://lh3.googleusercontent.com/d/1DPFKSNkbom4e82SHrPb8tqUJbWRBgzT1" style="width: 100%; border-radius: 10px; margin: 10px 0;"> 
+  <div class="flowchart">
+    <div class="fc-box fc-navy">Patient presents with PSYCHOSIS</div>
+    <div class="fc-arrow">↓</div>
+    <div class="fc-box fc-eps">Step 1: Rule out ORGANIC causes<br><small>Delirium · Substance intoxication/withdrawal · Anti-NMDA encephalitis · CNS tumor · TLE · Metabolic (hypoglycemia, thyroid, Wilson's)</small></div>
+    <div class="fc-arrow">↓</div>
+    <div class="fc-box fc-gold">Step 2: Assess MOOD episodes<br><small>Is there a concurrent or preceding major mood episode (manic or depressive)?</small></div>
+    <div class="fc-arrow">↓</div>
+    <div class="fc-branch">
+      <div class="fc-branch-item">
+        <div class="fc-branch-label">Yes — Mood + Psychosis</div>
+        <div class="fc-box fc-neg" style="font-size:12px;">Does psychosis ALSO occur for ≥2 weeks WITHOUT mood episode?<br><br>
+        <strong>YES →</strong> Schizoaffective Disorder<br>
+        <strong>NO →</strong> Mood disorder with psychotic features (Bipolar I / MDD)</div>
+      </div>
+      <div class="fc-branch-item">
+        <div class="fc-branch-label">No — Psychosis Only</div>
+        <div class="fc-box fc-sch" style="font-size:12px;">Assess DURATION<br><br>
+        &lt;1 month → <strong>Brief Psychotic Disorder</strong><br>
+        1–6 months → <strong>Schizophreniform</strong><br>
+        ≥6 months → <strong>Schizophrenia</strong><br>
+        ≥1 month, function intact, 1 delusion → <strong>Delusional Disorder</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <h2 class="section-title" id="d2-timeline">Psychotic Disorders Duration Timeline <span class="tag badge-gold">Duration</span></h2>
+
+  <div class="dur-timeline">
+    <div class="dur-row"><div class="dur-label">Brief Psychotic Disorder</div><div class="dur-bar-wrap"><div class="dur-bar" style="width:8%;background:var(--eps);"></div></div><div class="dur-val">1 day – &lt;1 month</div></div>
+    <div class="dur-row"><div class="dur-label">Schizophreniform</div><div class="dur-bar-wrap"><div class="dur-bar" style="width:25%;background:var(--warn);"></div></div><div class="dur-val">1 – 6 months</div></div>
+    <div class="dur-row"><div class="dur-label">Schizophrenia</div><div class="dur-bar-wrap"><div class="dur-bar" style="width:75%;background:var(--sch);"></div></div><div class="dur-val">≥6 months</div></div>
+    <div class="dur-row"><div class="dur-label">Schizoaffective</div><div class="dur-bar-wrap"><div class="dur-bar" style="width:75%;background:var(--neg);"></div></div><div class="dur-val">≥6 months + mood</div></div>
+    <div class="dur-row"><div class="dur-label">Delusional Disorder</div><div class="dur-bar-wrap"><div class="dur-bar" style="width:60%;background:var(--eth);"></div></div><div class="dur-val">≥1 month (isolated)</div></div>
+  </div>
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💎 The Duration Rule — Commit to Memory</div>
+    <strong>Brief &lt;1 month → Schizophreniform 1–6 months → Schizophrenia ≥6 months</strong><br>
+    Key difference Schizophreniform vs. Schizophrenia: Functional decline NOT required in schizophreniform<br>
+    Key difference Schizoaffective vs. Mood + Psychosis: ≥2 weeks psychosis WITHOUT mood episode (the 2-week rule)
+  </div>
+
+  <!-- DA PATHWAYS -->
+  <h2 class="section-title" id="d2-pathways">Dopamine Pathway Summary <span class="tag badge-neg">Neurobiology</span></h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Pathway</th><th>Route</th><th>In Schizophrenia</th><th>Antipsychotic D2 Blockade Effect</th></tr></thead>
+      <tbody>
+        <tr><td class="td-sch"><strong>Mesolimbic</strong></td><td>VTA → Limbic/Nucleus Accumbens</td><td>↑ DA → Positive symptoms</td><td>✅ THERAPEUTIC — reduces positive symptoms</td></tr>
+        <tr><td class="td-neg"><strong>Mesocortical</strong></td><td>VTA → Prefrontal Cortex</td><td>↓ DA → Negative + cognitive symptoms</td><td>❌ HARMFUL — can worsen negative symptoms</td></tr>
+        <tr><td class="td-eps"><strong>Nigrostriatal</strong></td><td>Substantia Nigra → Striatum</td><td>Not primarily dysfunctional</td><td>⚠️ EPS side effects (parkinsonism, TD, dystonia)</td></tr>
+        <tr><td class="td-tx"><strong>Tuberoinfundibular</strong></td><td>Hypothalamus → Ant. Pituitary</td><td>Not primarily dysfunctional</td><td>↑ Prolactin → galactorrhea, gynecomastia, amenorrhea</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DRUG COMPARISON -->
+  <h2 class="section-title" id="d2-drugs">Antipsychotic Drug Comparison <span class="tag badge-tx">Pharmacology</span></h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Drug</th><th>Generation</th><th>Key MOA</th><th>High-Yield SE</th><th>USMLE Niche</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Haloperidol</strong></td><td>Typical (high-potency)</td><td>D2 blockade</td><td>HIGH EPS; low anti-HAM</td><td>Standard typical; IM for acute agitation</td></tr>
+        <tr><td><strong>Chlorpromazine</strong></td><td>Typical (low-potency)</td><td>D2 + anti-HAM</td><td>Sedation, orthostasis, corneal deposits</td><td>Low EPS; high anti-HAM; corneal deposits</td></tr>
+        <tr class="td-eps"><td><strong>Thioridazine</strong></td><td>Typical (low-potency)</td><td>D2 + anti-HAM</td><td><span class="hl-key">Retinal pigmentation (irreversible)</span></td><td>Ophthalmologic toxicity = thioridazine</td></tr>
+        <tr><td><strong>Risperidone</strong></td><td>Atypical</td><td>D2 + 5-HT2A</td><td>Most EPS among atypicals; hyperprolactinemia</td><td>LAI available (paliperidone); highest prolactin</td></tr>
+        <tr class="td-neg"><td><strong>Olanzapine</strong></td><td>Atypical</td><td>D2 + 5-HT2A</td><td>Highest metabolic syndrome risk</td><td>"Olanzafat" — weight gain, DM, dyslipidemia</td></tr>
+        <tr><td><strong>Quetiapine</strong></td><td>Atypical</td><td>D2 + 5-HT2A</td><td>Sedation, moderate metabolic risk</td><td>Off-label insomnia; no significant EPS</td></tr>
+        <tr class="td-tx"><td><strong>Aripiprazole</strong></td><td>Atypical</td><td>Partial D2 agonist + 5-HT2A</td><td>Lowest metabolic risk; low EPS</td><td>Partial agonist — does NOT cause hyperprolactinemia</td></tr>
+        <tr><td><strong>Ziprasidone</strong></td><td>Atypical</td><td>D2 + 5-HT2A</td><td><span class="hl-key">QTc prolongation</span>; low weight gain</td><td>Must take with food; QTc monitoring required</td></tr>
+        <tr class="td-eps"><td><strong>Clozapine</strong></td><td>Atypical</td><td>Weak D2 + D4 + 5-HT2A + M1</td><td><span class="hl-key">Agranulocytosis (mandatory ANC monitoring)</span>; seizures; metabolic; myocarditis</td><td>Treatment-resistant; suicidality; NO EPS/TD; WBC monitoring</td></tr>
+        <tr class="td-gold"><td><strong>Xanomeline-Trospium</strong></td><td>Novel (2024)</td><td><span class="hl-key">M1/M4 muscarinic agonist</span> — no D2 blockade</td><td>GI (nausea, vomiting — reduced by trospium)</td><td>First non-dopaminergic antipsychotic; no EPS; no TD; no hyperprolactinemia</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EPS QUICK REF -->
+  <h2 class="section-title" id="d2-eps">EPS & NMS Quick Reference — ADAPT <span class="tag badge-eps">Adverse Effects</span></h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>EPS Type</th><th>Onset</th><th>Presentation</th><th>Treatment</th></tr></thead>
+      <tbody>
+        <tr><td class="td-sch"><strong>Acute Dystonia (A)</strong></td><td>Hours–Days</td><td>Sustained involuntary muscle contractions; torticollis; oculogyric crisis; laryngospasm</td><td><span class="hl-key">Benztropine IM / Diphenhydramine IM</span></td></tr>
+        <tr><td><strong>Drug-induced Parkinsonism (D)</strong></td><td>Days–Weeks</td><td>Bradykinesia, cogwheel rigidity, resting tremor, shuffling gait, masked facies</td><td><span class="hl-key">Benztropine or Amantadine</span></td></tr>
+        <tr><td class="td-gold"><strong>Akathisia (A)</strong></td><td>Days–Months</td><td>Subjective restlessness; inner urge to move; pacing; inability to sit still; PATIENT AWARE</td><td><span class="hl-key">Propranolol (β-blocker) 1st line; BZDs; dose reduction</span></td></tr>
+        <tr><td><strong>Prolactinemia (P)</strong></td><td>Weeks–Months</td><td>Galactorrhea; gynecomastia; amenorrhea; sexual dysfunction</td><td>Switch to aripiprazole; add cabergoline</td></tr>
+        <tr class="td-eps"><td><strong>Tardive Dyskinesia (T)</strong></td><td>Months–Years</td><td>Involuntary choreiform orofacial movements (lip-smacking, tongue protrusion); may be IRREVERSIBLE; PATIENT UNAWARE</td><td><span class="hl-key">VMAT2 inhibitors: Valbenazine or Deutetrabenazine. Reduce/switch Rx. Do NOT give benztropine.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-eps">
+    <div class="callout-label">🚨 NMS vs. Serotonin Syndrome — Critical Comparison</div>
+    <div class="grid-2">
+      <div>
+        <strong>NMS:</strong><br>
+        Cause: Antipsychotics (↓ DA)<br>
+        Onset: Days–weeks<br>
+        Rigidity: Lead-pipe (severe)<br>
+        Reflexes: Normal/↓<br>
+        <span class="hl-key">Rx: STOP drug; Dantrolene + Bromocriptine</span>
+      </div>
+      <div>
+        <strong>Serotonin Syndrome:</strong><br>
+        Cause: Serotonergic drugs (SSRI + MAOI, linezolid, tramadol)<br>
+        Onset: Hours<br>
+        Rigidity: Hyperreflexia + clonus (NOT lead-pipe)<br>
+        Reflexes: <span class="hl-key">Hyperreflexia; clonus</span><br>
+        Rx: STOP drug; Cyproheptadine; cooling; benzos
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGNOSTIC FACTORS -->
+  <h2 class="section-title" id="d2-prognosis">Prognostic Factors Quick Reference <span class="tag badge-gold">Prognosis</span></h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Factor</th><th>Better Prognosis ✅</th><th>Worse Prognosis 🔴</th></tr></thead>
+      <tbody>
+        <tr><td>Sex</td><td class="td-tx">Female</td><td class="td-eps">Male</td></tr>
+        <tr><td>Age of onset</td><td class="td-tx">Late onset</td><td class="td-eps">Early onset (age &lt;25)</td></tr>
+        <tr><td>Mode of onset</td><td class="td-tx">Acute/abrupt</td><td class="td-eps">Gradual/insidious</td></tr>
+        <tr><td>Symptoms</td><td class="td-tx">Predominantly positive</td><td class="td-eps">Predominantly negative</td></tr>
+        <tr><td>Premorbid function</td><td class="td-tx">Good</td><td class="td-eps">Poor</td></tr>
+        <tr><td>Family history</td><td class="td-tx">None</td><td class="td-eps">Strong family history</td></tr>
+        <tr><td>Duration untreated psychosis (DUP)</td><td class="td-tx">Short DUP</td><td class="td-eps">Long DUP</td></tr>
+        <tr><td>Social support</td><td class="td-tx">Married/social support</td><td class="td-eps">Isolated</td></tr>
+        <tr><td>Substance use</td><td class="td-tx">None</td><td class="td-eps">Cannabis + other substances</td></tr>
+        <tr><td>Imaging</td><td class="td-tx">Normal ventricles</td><td class="td-eps">Ventriculomegaly</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- RAPID REVIEW -->
+  <h2 class="section-title" id="d2-rapid">Master Rapid Review <span class="tag badge-eth">All Topics</span></h2>
+  <div class="rapid-review">
+    <div class="rr-title">⚡ Schizophrenia & Psychotic Disorders — Must-Know Facts</div>
+    <ul>
+      <li><span class="hl-key">Schizophrenia DSM-5:</span> ≥2 Criterion A symptoms (≥1 from delusions/hallucinations/disorganized speech); ≥1 month active; ≥6 months total; functional decline; no subtypes in DSM-5</li>
+      <li><span class="hl-key">Positive symptoms</span> = ↑ Mesolimbic DA → respond to D2 blockade (typicals + atypicals)</li>
+      <li><span class="hl-key">Negative symptoms (5 A's)</span> = ↓ Mesocortical DA → respond better to atypicals (5-HT2A antagonism)</li>
+      <li><span class="hl-key">Cognitive symptoms</span> = prefrontal/mesocortical dysfunction; targeted by psychosocial rehab</li>
+      <li><span class="hl-key">Prevalence:</span> 1.5% (FA 2026). Males onset earlier; worse prognosis. MZ twin ~50% concordance.</li>
+      <li><span class="hl-key">Cannabis:</span> adolescent use → ↑ incidence + worsened course (FA 2026 — frequently tested)</li>
+      <li><span class="hl-key">Duration spectrum:</span> Brief &lt;1 month → Schizophreniform 1–6 months → Schizophrenia ≥6 months</li>
+      <li><span class="hl-key">Schizoaffective rule:</span> Psychosis must occur ≥2 weeks WITHOUT a mood episode. If only with mood → mood disorder with psychotic features</li>
+      <li><span class="hl-key">Delusional Disorder:</span> ≥1 month isolated delusion; function OTHERWISE INTACT; no hallucinations or disorganized speech</li>
+      <li><span class="hl-key">Folie à deux</span> = Shared Delusional Disorder — one is the primary inducer</li>
+      <li><span class="hl-key">Glutamate/NMDA:</span> PCP + Ketamine = NMDA antagonists → mimic BOTH positive AND negative symptoms</li>
+      <li><span class="hl-key">EPS ADAPT:</span> Acute Dystonia (hrs) → Parkinsonism (days–wks) → Akathisia (days–months) → Tardive Dyskinesia (months–years)</li>
+      <li><span class="hl-key">Akathisia Rx:</span> Propranolol (β-blocker) first-line. NOT benztropine.</li>
+      <li><span class="hl-key">TD Rx:</span> VMAT2 inhibitors (Valbenazine or Deutetrabenazine). NOT benztropine (worsens TD).</li>
+      <li><span class="hl-key">NMS:</span> FEVER mnemonic; lead-pipe rigidity; ↑CK; treat with dantrolene + bromocriptine. Stop antipsychotic.</li>
+      <li><span class="hl-key">NMS vs Serotonin Syndrome:</span> NMS = lead-pipe rigidity + normal reflexes; SS = hyperreflexia + clonus</li>
+      <li><span class="hl-key">Clozapine:</span> Treatment-resistant schizophrenia (failed ≥2 trials) + suicidality → agranulocytosis = mandatory WBC monitoring (REMS)</li>
+      <li><span class="hl-key">Xanomeline-Trospium (2024):</span> First non-dopaminergic antipsychotic; M1/M4 muscarinic agonist; no EPS, no TD, no hyperprolactinemia</li>
+      <li><span class="hl-key">Anti-HAM</span> (low-potency typicals): Antihistaminergic (sedation) + Anti-α1 (orthostasis) + Antimuscarinic (dry mouth, constipation, urinary retention)</li>
+      <li><span class="hl-key">Chlorpromazine</span> → corneal deposits; <span class="hl-key">Thioridazine</span> → retinal pigmentation (pigmentary retinopathy)</li>
+      <li><span class="hl-key">Aripiprazole:</span> Partial D2 agonist (unique) → no hyperprolactinemia; lowest metabolic risk</li>
+      <li><span class="hl-key">Olanzapine:</span> Highest metabolic risk ("Olanzafat"); Ziprasidone → QTc prolongation</li>
+    </ul>
+  </div>
+
+  <!-- ACTIVE LEARNING -->
+  <h2 class="section-title" id="d2-active">Active Learning — Consolidation Exercises <span class="tag badge-gold">Review</span></h2>
+
+  <div class="active-learning">
+    <div class="al-title">🎯 Active Learning — Do These Without Looking</div>
+    <ol>
+      <li>From memory, draw the 4 dopamine pathways. Label: where each originates and terminates, what happens in schizophrenia (↑ or ↓ DA), and what D2 blockade produces in each pathway (therapeutic vs. side effect).</li>
+      <li>A patient on haloperidol for 14 days develops fever 39°C, severe "lead-pipe" muscle rigidity, altered mental status, CK = 7,800 U/L. Step through your differential (NMS vs. serotonin syndrome). State your treatment algorithm.</li>
+      <li>Construct the duration timeline for all psychotic disorders from memory: 1 day → 1 month → 6 months → chronic. Place each disorder in its correct position. What additional criterion differentiates Schizophreniform from Schizophrenia beyond duration?</li>
+      <li>A patient has auditory hallucinations for 8 months, PLUS a 3-month episode of severe depression during which hallucinations were more intense. For the remaining 5 months, she had hallucinations WITHOUT depression. What is the diagnosis? Apply the schizoaffective 2-week rule.</li>
+      <li>Compare the prognosis of: (a) 19-year-old male with insidious onset and predominantly negative symptoms vs. (b) 27-year-old female with acute onset and predominant delusions/hallucinations. List every prognostic factor that differs.</li>
+      <li>A patient develops lip-smacking after 3 years on haloperidol. What is the diagnosis? What is the treatment? Why should you NOT give benztropine? What monitoring should have been done throughout treatment?</li>
+      <li>Explain why atypical antipsychotics are preferred over typicals using the 4 dopamine pathways — specifically why 5-HT2A antagonism leads to lower EPS and better negative symptom effect.</li>
+    </ol>
+  </div>
+
+  <!-- EPIDEMIOLOGY TABLE -->
+  <h2 class="section-title">Epidemiology Quick Facts <span class="tag badge-gold">Stats</span></h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Disorder</th><th>Lifetime Prevalence</th><th>Sex Ratio</th><th>Peak Onset</th><th>Key Risk Factor</th></tr></thead>
+      <tbody>
+        <tr><td class="td-sch">Schizophrenia</td><td>~1.5% (FA 2026)</td><td>Males ≥ females (males worse prognosis)</td><td>Males: late teens–early 20s; Females: late 20s–30s</td><td>Genetics (MZ twin 50%), cannabis, urban, obstetric complications</td></tr>
+        <tr><td>Schizophreniform</td><td>Lower (~0.2%)</td><td>Equal</td><td>Young adults</td><td>Stress trigger; same risk factors as schizophrenia</td></tr>
+        <tr><td class="td-neg">Schizoaffective</td><td>~0.3%</td><td>Females slightly more</td><td>Young adults</td><td>Family history of mood disorders + schizophrenia</td></tr>
+        <tr><td>Delusional Disorder</td><td>~0.2%</td><td>Females slightly more</td><td>Middle age (40s–50s)</td><td>Social isolation; immigration; hearing loss</td></tr>
+        <tr><td class="td-gold">Brief Psychotic Disorder</td><td>Rare</td><td>Females slightly more</td><td>Late 20s–30s</td><td>Postpartum, severe stress, personality disorder</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /doc2 -->
+
+</main>
+
+<script>
+// ── DOCUMENT SWITCHING ──────────────────────────
+function switchDoc(docId) {
+  document.querySelectorAll('.doc-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.doc-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(docId).classList.add('active');
+  document.getElementById('tab-' + docId).classList.add('active');
+  document.getElementById('nav-doc1').style.display = docId === 'doc1' ? 'block' : 'none';
+  document.getElementById('nav-doc2').style.display = docId === 'doc2' ? 'block' : 'none';
+  window.scrollTo(0, 0);
+}
+
+// ── SCROLL TO SECTION (cross-panel aware) ───────
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  const inDoc1 = !!el.closest('#doc1');
+  const inDoc2 = !!el.closest('#doc2');
+  const doc1Active = document.getElementById('doc1').classList.contains('active');
+
+  // Highlight active nav link
+  document.querySelectorAll('.nav-link').forEach(function(l) { l.classList.remove('active'); });
+  document.querySelectorAll('.nav-link').forEach(function(l) {
+    var oc = l.getAttribute('onclick') || '';
+    if (oc.indexOf("'" + id + "'") !== -1 || oc.indexOf('"' + id + '"') !== -1) {
+      l.classList.add('active');
+    }
+  });
+
+  if (inDoc1 && !doc1Active) {
+    switchDoc('doc1');
+    setTimeout(function() { _doScroll(id); }, 50);
+  } else if (inDoc2 && doc1Active) {
+    switchDoc('doc2');
+    setTimeout(function() { _doScroll(id); }, 50);
+  } else {
+    _doScroll(id);
+  }
+}
+
+function _doScroll(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  // scroll-margin-top:72px on [id] elements handles the fixed topbar offset
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── MCQ OPTION CLICK LOGIC ───────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.qa-options').forEach(optionList => {
+    const block = optionList.closest('.qa-block');
+    const opts = optionList.querySelectorAll('.qa-opt');
+
+    opts.forEach(opt => {
+      opt.addEventListener('click', () => {
+        // Ignore clicks if the block is already answered
+        if (block.classList.contains('answered')) return;
+
+        const isCorrect = opt.dataset.correct === 'true';
+
+        if (isCorrect) {
+          // Correct guess
+          opt.classList.add('correct-selection');
+          block.classList.add('answered');
+          // Also auto-show explanation on correct guess
+          _revealAnswer(block);
+        } else {
+          // Wrong guess — mark only this option red, block stays interactive
+          opt.classList.add('wrong-selection');
+          opt.style.pointerEvents = 'none'; // prevent re-clicking same wrong option
+        }
+      });
+    });
+  });
+});
+
+// ── TOGGLE ANSWER (Show Answer button) ──────────
+function toggleAnswer(btn) {
+  const block = btn.parentElement;
+  const ansDiv = block.querySelector('.qa-answer');
+  const wrongDiv = block.querySelector('.qa-wrong');
+  const isShowing = ansDiv && ansDiv.classList.contains('show');
+
+  if (!isShowing) {
+    // Reveal answer: highlight correct option, lock all options
+    _revealAnswer(block);
+    if (wrongDiv) wrongDiv.classList.add('show');
+    btn.innerHTML = '▲ Hide Answer & Explanation';
+  } else {
+    // Hide answer (but keep selections intact)
+    if (ansDiv) ansDiv.classList.remove('show');
+    if (wrongDiv) wrongDiv.classList.remove('show');
+    btn.innerHTML = '▼ Show Answer & Explanation';
+  }
+}
+
+function _revealAnswer(block) {
+  const ansDiv = block.querySelector('.qa-answer');
+  if (ansDiv) ansDiv.classList.add('show');
+
+  // Mark the correct option with revealed-correct (green outline style, unless user already got it right)
+  const correctOpt = block.querySelector('.qa-opt[data-correct="true"]');
+  if (correctOpt && !correctOpt.classList.contains('correct-selection')) {
+    correctOpt.classList.add('revealed-correct');
+  }
+
+  // Lock the entire block
+  block.classList.add('answered');
+
+  // Update toggle button text
+  const toggleBtn = block.querySelector('.qa-toggle-btn');
+  if (toggleBtn) toggleBtn.innerHTML = '▲ Hide Answer & Explanation';
+}
+
+// ── HIGHLIGHT TOGGLE ────────────────────────────
+function toggleHighlight() {
+  const btn = document.getElementById('hl-btn');
+  document.body.classList.toggle('highlight-on');
+  btn.classList.toggle('active');
+  btn.textContent = document.body.classList.contains('highlight-on') ? '★ HY Highlighted' : '★ Highlight HY';
+}
+
+// ── SEARCH ──────────────────────────────────────
+let searchTimeout = null;
+function handleSearch(query) {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => { performSearch(query.trim()); }, 250);
+}
+
+function performSearch(query) {
+  var resultsEl = document.getElementById('search-results');
+  if (!query || query.length < 2) { resultsEl.style.display = 'none'; return; }
+
+  // Search BOTH panels so results from the inactive panel can also be jumped to
+  var allPanels = document.querySelectorAll('.doc-panel');
+  var results = [];
+
+  allPanels.forEach(function(panel) {
+    var panelId = panel.id; // 'doc1' or 'doc2'
+    var headings = panel.querySelectorAll('h2, h3, .callout, .qa-stem p, .mnemonic');
+    headings.forEach(function(el) {
+      var text = el.textContent;
+      if (text.toLowerCase().indexOf(query.toLowerCase()) !== -1) {
+        var title = (el.tagName && el.tagName.match(/H[23]/))
+          ? el.textContent.slice(0, 60)
+          : el.closest('.qa-block')
+            ? 'Q&A: ' + el.textContent.slice(0, 50)
+            : el.textContent.slice(0, 60);
+        // Find nearest ancestor with an id — use that as scroll target
+        var anchor = el.closest('[id]');
+        // If the element itself has no id, we'll generate a temp one
+        if (!anchor || anchor.id === panelId) {
+          if (!el.id) { el.id = '_sr_' + results.length; }
+          anchor = el;
+        }
+        results.push({ title: title + '...', anchorId: anchor.id, panelId: panelId });
+      }
+    });
+  });
+
+  if (results.length === 0) {
+    resultsEl.innerHTML = '<div class="sr-item"><div class="sr-title">No results found</div></div>';
+  } else {
+    resultsEl.innerHTML = results.slice(0, 8).map(function(r, i) {
+      var docLabel = r.panelId === 'doc1' ? 'Lecture Notes' : 'High Yield';
+      return '<div class="sr-item" onclick="jumpToResult(' + i + ')">' +
+        '<div class="sr-title">' + r.title.replace(/[<>]/g, '') + '</div>' +
+        '<div class="sr-ctx">' + docLabel + '</div>' +
+        '</div>';
+    }).join('');
+    window._searchResults = results;
+  }
+  resultsEl.style.display = 'block';
+}
+
+function jumpToResult(idx) {
+  document.getElementById('search-results').style.display = 'none';
+  if (!window._searchResults || !window._searchResults[idx]) return;
+  var r = window._searchResults[idx];
+  // Switch to the correct panel first if needed, then scroll
+  var doc1Active = document.getElementById('doc1').classList.contains('active');
+  var needsSwitch = (r.panelId === 'doc1' && !doc1Active) || (r.panelId === 'doc2' && doc1Active);
+  if (needsSwitch) {
+    switchDoc(r.panelId);
+    setTimeout(function() { _doScroll(r.anchorId); }, 50);
+  } else {
+    _doScroll(r.anchorId);
+  }
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#search-results') && !e.target.closest('#search-input')) {
+    document.getElementById('search-results').style.display = 'none';
+  }
+});
+
+// ── MOBILE SIDEBAR ──────────────────────────────
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ── ACTIVE NAV LINK ─────────────────────────────
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

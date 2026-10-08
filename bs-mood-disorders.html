@@ -1,0 +1,2355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mood Disorders — Master USMLE Step 1 Resource</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f2137;--navy2:#1a3355;--navy3:#1e3f6b;
+  --gold:#c9952c;--gold2:#f0b429;--gold3:#fff8e7;
+  --mdd:#1e6fb5;--mdd2:#e8f3ff;--mdd3:#b8d9f5;
+  --bip:#6b21a8;--bip2:#f5f0ff;--bip3:#d8b4fe;
+  --tx:#166534;--tx2:#f0fdf4;--tx3:#bbf7d0;
+  --sui:#b91c1c;--sui2:#fef2f2;--sui3:#fecaca;
+  --qa:#92400e;--qa2:#fffbeb;--qa3:#fde68a;
+  --eth:#0f766e;--eth2:#f0fdfa;--eth3:#99f6e4;
+  --warn:#d97706;--warn2:#fffbeb;
+  --gray50:#f9fafb;--gray100:#f3f4f6;--gray200:#e5e7eb;
+  --gray300:#d1d5db;--gray400:#9ca3af;--gray500:#6b7280;
+  --gray700:#374151;--gray800:#1f2937;--gray900:#111827;
+  --white:#ffffff;
+  --sidebar-w:260px;
+  --topbar-h:60px;
+  --shadow:0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.08);
+  --shadow-md:0 4px 16px rgba(0,0,0,.12);
+  --shadow-lg:0 10px 40px rgba(0,0,0,.18);
+  --radius:10px;
+  --radius-sm:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--gray50);color:var(--gray800);font-size:15px;line-height:1.65;overflow-x:hidden;}
+
+/* ── TOP BAR ── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--topbar-h);
+  background:var(--navy);color:white;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px 0 280px;z-index:100;
+  box-shadow:var(--shadow-md);
+  transition:padding .3s;
+}
+#topbar .brand{font-weight:800;font-size:15px;letter-spacing:-.2px;color:var(--gold2);}
+#topbar .subtitle{font-size:12px;color:rgba(255,255,255,.6);margin-left:10px;}
+#topbar .controls{display:flex;gap:10px;align-items:center;}
+#search-input{
+  padding:7px 14px;border-radius:20px;border:none;
+  background:rgba(255,255,255,.12);color:white;font-size:13px;
+  width:240px;outline:none;transition:background .2s;
+  font-family:'Inter',sans-serif;
+}
+#search-input::placeholder{color:rgba(255,255,255,.45);}
+#search-input:focus{background:rgba(255,255,255,.22);}
+.btn{
+  padding:7px 14px;border-radius:20px;border:none;cursor:pointer;
+  font-size:12px;font-weight:600;font-family:'Inter',sans-serif;
+  transition:all .2s;letter-spacing:.3px;
+}
+#hl-btn{background:var(--gold2);color:var(--navy);}
+#hl-btn:hover{background:var(--gold);}
+#hl-btn.active{background:var(--gold3);color:var(--navy);box-shadow:0 0 0 2px var(--gold2);}
+#menu-btn{background:rgba(255,255,255,.15);color:white;display:none;}
+#menu-btn:hover{background:rgba(255,255,255,.25);}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  position:fixed;top:var(--topbar-h);left:0;bottom:0;
+  width:var(--sidebar-w);background:var(--navy2);
+  overflow-y:auto;z-index:90;
+  transition:transform .3s;
+}
+#sidebar::-webkit-scrollbar{width:4px;}
+#sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px;}
+.doc-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.1);}
+.doc-tab{
+  flex:1;padding:14px 8px;text-align:center;cursor:pointer;
+  font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.55);border-bottom:3px solid transparent;
+  transition:all .2s;
+}
+.doc-tab.active{color:var(--gold2);border-bottom-color:var(--gold2);}
+.doc-tab:hover{color:white;}
+.nav-section{padding:12px 0;}
+.nav-section-label{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:rgba(255,255,255,.35);padding:6px 18px;margin-top:4px;
+}
+.nav-link{
+  display:block;padding:8px 18px;font-size:13px;font-weight:500;
+  color:rgba(255,255,255,.65);text-decoration:none;
+  border-left:3px solid transparent;transition:all .15s;
+  cursor:pointer;
+}
+.nav-link:hover{color:white;background:rgba(255,255,255,.06);border-left-color:var(--gold2);}
+.nav-link.active{color:var(--gold2);background:rgba(255,255,255,.08);border-left-color:var(--gold2);}
+.nav-link.sub{padding-left:30px;font-size:12px;}
+
+/* ── MAIN CONTENT ── */
+#main{
+  margin-left:var(--sidebar-w);padding-top:var(--topbar-h);
+  min-height:100vh;
+}
+.doc-panel{display:none;padding:36px 44px 80px;}
+.doc-panel.active{display:block;}
+
+/* ── SECTION HEADINGS ── */
+.section-hero{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 100%);
+  border-radius:var(--radius);padding:32px 36px;margin-bottom:32px;
+  color:white;position:relative;overflow:hidden;
+}
+.section-hero::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:160px;height:160px;border-radius:50%;
+  background:rgba(255,255,255,.04);
+}
+.section-hero .eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold2);margin-bottom:8px;
+}
+.section-hero h1{font-size:30px;font-weight:800;line-height:1.2;margin-bottom:8px;}
+.section-hero p{font-size:14px;color:rgba(255,255,255,.7);max-width:640px;}
+
+h2.section-title{
+  font-size:20px;font-weight:700;color:var(--navy);
+  padding-bottom:10px;border-bottom:2px solid var(--gold2);
+  margin:36px 0 18px;display:flex;align-items:center;gap:10px;
+}
+h2.section-title .tag{
+  font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;
+  letter-spacing:.5px;
+}
+h3.subsect{font-size:16px;font-weight:700;color:var(--navy2);margin:24px 0 12px;}
+h4.sub4{font-size:14px;font-weight:600;color:var(--gray700);margin:18px 0 8px;text-transform:uppercase;letter-spacing:.5px;}
+p{margin-bottom:12px;}
+
+/* ── CALLOUT BOXES ── */
+.callout{border-radius:var(--radius-sm);padding:16px 20px;margin:16px 0;font-size:14px;}
+.callout .callout-label{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;}
+.callout-mdd{background:var(--mdd2);border-left:4px solid var(--mdd);}
+.callout-mdd .callout-label{color:var(--mdd);}
+.callout-bip{background:var(--bip2);border-left:4px solid var(--bip);}
+.callout-bip .callout-label{color:var(--bip);}
+.callout-tx{background:var(--tx2);border-left:4px solid var(--tx);}
+.callout-tx .callout-label{color:var(--tx);}
+.callout-sui{background:var(--sui2);border-left:4px solid var(--sui);}
+.callout-sui .callout-label{color:var(--sui);}
+.callout-warn{background:var(--warn2);border-left:4px solid var(--warn);}
+.callout-warn .callout-label{color:var(--warn);}
+.callout-eth{background:var(--eth2);border-left:4px solid var(--eth);}
+.callout-eth .callout-label{color:var(--eth);}
+.callout-gold{background:var(--gold3);border-left:4px solid var(--gold);}
+.callout-gold .callout-label{color:var(--qa);}
+.callout-pearl{background:linear-gradient(135deg,#fef9ec,#fff8dc);border-left:4px solid var(--gold2);border-radius:var(--radius-sm);}
+.callout-pearl .callout-label{color:var(--qa);}
+
+/* ── MNEMONIC ── */
+.mnemonic{
+  background:var(--gold3);border:2px solid var(--gold2);
+  border-radius:var(--radius);padding:18px 22px;margin:16px 0;
+}
+.mnemonic .mn-label{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--qa);margin-bottom:6px;}
+.mnemonic .mn-title{font-size:17px;font-weight:800;color:var(--navy);margin-bottom:8px;}
+.mnemonic-letter{color:var(--mdd);font-weight:800;font-size:16px;}
+.mnemonic .mn-body{font-size:13.5px;line-height:1.7;}
+
+/* ── TABLES ── */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow);margin:16px 0 24px;}
+table{width:100%;border-collapse:collapse;font-size:13.5px;background:white;}
+thead tr{background:var(--navy);}
+thead th{padding:11px 14px;text-align:left;color:white;font-weight:700;font-size:11.5px;letter-spacing:.3px;}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--gray200);vertical-align:top;line-height:1.5;}
+tbody tr:nth-child(even){background:var(--gray50);}
+tbody tr:hover{background:var(--mdd2);}
+.td-mdd{background:var(--mdd2)!important;color:var(--mdd);font-weight:600;}
+.td-bip{background:var(--bip2)!important;color:var(--bip);font-weight:600;}
+.td-tx{background:var(--tx2)!important;color:var(--tx);font-weight:600;}
+.td-sui{background:var(--sui2)!important;color:var(--sui);font-weight:600;}
+.td-gold{background:var(--gold3)!important;font-weight:600;}
+
+/* ── Q&A BLOCKS ── */
+.qa-block{
+  border:1.5px solid var(--gray200);border-radius:var(--radius);
+  margin:24px 0;overflow:hidden;box-shadow:var(--shadow);
+}
+.qa-header{
+  background:var(--qa2);border-bottom:1px solid var(--qa3);
+  padding:14px 20px;display:flex;align-items:center;gap:12px;
+}
+.qa-num{
+  background:var(--warn);color:white;font-size:11px;font-weight:800;
+  padding:4px 10px;border-radius:20px;letter-spacing:.5px;white-space:nowrap;
+}
+.qa-topic{font-size:12px;color:var(--qa);font-weight:600;letter-spacing:.3px;}
+.qa-stem{padding:18px 20px;background:white;border-bottom:1px solid var(--gray200);}
+.qa-stem p{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:14px;}
+.qa-options{list-style:none;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.qa-opt{font-size:13px;color:var(--gray700);padding:4px 6px;border-radius:4px;cursor:pointer;}
+.qa-opt.correct{background:var(--tx3);color:var(--tx);font-weight:700;border-radius:4px;padding:4px 6px;}
+.qa-toggle-btn{
+  width:100%;padding:11px 20px;background:var(--qa2);border:none;cursor:pointer;
+  font-size:13px;font-weight:700;color:var(--qa);font-family:'Inter',sans-serif;
+  display:flex;align-items:center;gap:8px;transition:background .2s;
+  border-top:1px solid var(--qa3);
+}
+.qa-toggle-btn:hover{background:var(--qa3);}
+.qa-answer{display:none;padding:18px 20px;background:var(--tx2);border-top:1px solid var(--tx3);}
+.qa-answer.show{display:block;}
+.answer-tag{display:inline-block;background:var(--tx);color:white;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;margin-bottom:8px;letter-spacing:.5px;}
+.qa-wrong{background:var(--sui2);border-top:1px solid var(--sui3);padding:14px 20px;display:none;}
+.qa-wrong.show{display:block;}
+.wrong-tag{display:inline-block;background:var(--sui);color:white;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;margin-bottom:6px;}
+.qa-answer p,.qa-wrong p{font-size:13.5px;line-height:1.65;}
+
+/* ── HIGHLIGHT ── */
+.hl-key{background:transparent;border-radius:3px;transition:background .25s;font-weight:600;}
+body.highlight-on .hl-key{background:#fef08a;color:#713f12;}
+
+/* ── SEARCH HIGHLIGHT ── */
+.search-hl{background:#fef08a;border-radius:2px;}
+
+/* ── FLOWCHART ── */
+.flowchart{
+  display:flex;flex-direction:column;align-items:center;gap:0;
+  padding:24px;background:white;border-radius:var(--radius);
+  box-shadow:var(--shadow);margin:20px 0;
+}
+.fc-box{
+  padding:12px 24px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;
+  text-align:center;min-width:280px;max-width:440px;
+  border:2px solid;
+}
+.fc-arrow{font-size:22px;color:var(--gray400);margin:2px 0;line-height:1;}
+.fc-diamond{
+  padding:12px 28px;transform:none;font-size:13px;font-weight:600;
+  text-align:center;min-width:260px;background:var(--gold3);
+  border:2px solid var(--gold2);border-radius:var(--radius-sm);position:relative;
+}
+.fc-branch{display:flex;gap:20px;align-items:flex-start;width:100%;}
+.fc-branch-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:0;}
+.fc-branch-label{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gray500);padding:2px 8px;}
+.fc-mdd{background:var(--mdd2);border-color:var(--mdd);color:var(--mdd);}
+.fc-bip{background:var(--bip2);border-color:var(--bip);color:var(--bip);}
+.fc-tx{background:var(--tx2);border-color:var(--tx);color:var(--tx);}
+.fc-sui{background:var(--sui2);border-color:var(--sui);color:var(--sui);}
+.fc-navy{background:var(--navy);border-color:var(--navy);color:white;}
+
+/* ── GRID LAYOUT ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:16px 0;}
+.card{
+  background:white;border-radius:var(--radius);border:1.5px solid var(--gray200);
+  padding:18px 20px;box-shadow:var(--shadow);
+}
+.card h4{font-size:14px;font-weight:700;margin-bottom:10px;}
+.card ul{padding-left:18px;font-size:13px;}
+.card ul li{margin-bottom:4px;}
+.card.card-mdd{border-color:var(--mdd3);background:var(--mdd2);}
+.card.card-bip{border-color:var(--bip3);background:var(--bip2);}
+.card.card-tx{border-color:var(--tx3);background:var(--tx2);}
+.card.card-sui{border-color:var(--sui3);background:var(--sui2);}
+
+/* ── RAPID REVIEW BOX ── */
+.rapid-review{
+  background:var(--navy);color:white;border-radius:var(--radius);
+  padding:22px 26px;margin:24px 0;
+}
+.rapid-review .rr-title{
+  font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold2);margin-bottom:14px;
+}
+.rapid-review ul{list-style:none;padding:0;}
+.rapid-review ul li{padding:4px 0;font-size:13.5px;color:rgba(255,255,255,.9);}
+.rapid-review ul li::before{content:'→ ';color:var(--gold2);font-weight:700;}
+
+/* ── TIMELINE ── */
+.timeline{position:relative;padding-left:28px;margin:18px 0;}
+.timeline::before{
+  content:'';position:absolute;left:6px;top:0;bottom:0;
+  width:2px;background:var(--gray200);
+}
+.tl-item{position:relative;padding-bottom:20px;}
+.tl-dot{
+  position:absolute;left:-24px;top:4px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--mdd);border:2px solid white;box-shadow:var(--shadow);
+}
+.tl-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray500);margin-bottom:2px;}
+.tl-content{font-size:13.5px;}
+
+/* ── DIFF DX TABLE ── */
+.diff-header{
+  background:var(--navy);color:white;padding:14px 18px;
+  border-radius:var(--radius) var(--radius) 0 0;font-weight:700;font-size:14px;
+}
+.diff-body{background:white;border:1.5px solid var(--gray200);border-top:none;border-radius:0 0 var(--radius) var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.diff-row{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;border-bottom:1px solid var(--gray200);}
+.diff-row:last-child{border-bottom:none;}
+.diff-cell{padding:10px 14px;font-size:13px;}
+.diff-cell:first-child{font-weight:700;background:var(--gray50);}
+
+/* ── PROGRESS INDICATORS ── */
+.severity-bar{display:flex;gap:6px;align-items:center;font-size:12px;}
+.sev-dot{width:10px;height:10px;border-radius:50%;}
+
+/* ── SEARCH RESULTS ── */
+#search-overlay{
+  display:none;position:fixed;top:var(--topbar-h);left:var(--sidebar-w);
+  right:0;bottom:0;background:rgba(0,0,0,.4);z-index:80;
+}
+#search-results{
+  position:fixed;top:calc(var(--topbar-h) + 10px);right:20px;
+  background:white;border-radius:var(--radius);box-shadow:var(--shadow-lg);
+  width:340px;max-height:400px;overflow-y:auto;z-index:200;
+  display:none;
+}
+.sr-item{padding:12px 16px;border-bottom:1px solid var(--gray200);cursor:pointer;font-size:13px;}
+.sr-item:hover{background:var(--gray50);}
+.sr-item .sr-title{font-weight:700;color:var(--navy);margin-bottom:2px;}
+.sr-item .sr-ctx{color:var(--gray500);font-size:12px;}
+
+/* ── DOC 2 specific ── */
+.formula-box{
+  background:linear-gradient(135deg,var(--navy),var(--navy3));
+  color:white;border-radius:var(--radius);padding:18px 22px;margin:14px 0;
+  font-family:'Courier New',monospace;font-size:14px;
+}
+.formula-box .f-label{font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--gold2);margin-bottom:8px;}
+.algo-step{
+  display:flex;align-items:flex-start;gap:14px;padding:14px 0;
+  border-bottom:1px solid var(--gray200);
+}
+.algo-step:last-child{border-bottom:none;}
+.step-num{
+  background:var(--mdd);color:white;width:28px;height:28px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;flex-shrink:0;
+}
+.step-content{font-size:14px;}
+
+/* ── CORRECTIONS BOX ── */
+.corrections-box{
+  background:linear-gradient(135deg,#1a0000,#3b0000);
+  border:2px solid var(--sui);border-radius:var(--radius);
+  padding:20px 24px;margin-bottom:28px;
+}
+.corrections-box .c-title{font-size:11px;font-weight:800;letter-spacing:2px;color:var(--sui);margin-bottom:12px;}
+.corrections-box ul{list-style:none;padding:0;}
+.corrections-box li{color:#ffd0d0;font-size:13.5px;padding:5px 0;padding-left:20px;position:relative;}
+.corrections-box li::before{content:'✗';position:absolute;left:0;color:var(--sui);font-weight:700;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  #topbar{padding-left:20px;}
+  #sidebar{transform:translateX(-100%);}
+  #sidebar.open{transform:translateX(0);}
+  #main{margin-left:0;}
+  #menu-btn{display:block;}
+  .doc-panel{padding:24px 20px 60px;}
+  .grid-2,.grid-3{grid-template-columns:1fr;}
+  .qa-options{grid-template-columns:1fr;}
+  .diff-row{grid-template-columns:1fr 1fr;}
+  #search-input{width:160px;}
+}
+@media(max-width:600px){
+  .section-hero h1{font-size:22px;}
+  #search-input{width:120px;}
+}
+
+/* ── UTILITY ── */
+ul.content-list{padding-left:20px;}
+ul.content-list li{margin-bottom:6px;font-size:14px;}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.3px;}
+.badge-mdd{background:var(--mdd2);color:var(--mdd);}
+.badge-bip{background:var(--bip2);color:var(--bip);}
+.badge-tx{background:var(--tx2);color:var(--tx);}
+.badge-sui{background:var(--sui2);color:var(--sui);}
+.badge-gold{background:var(--gold3);color:var(--qa);}
+strong{color:var(--navy);}
+hr.sec-divider{border:none;border-top:1px solid var(--gray200);margin:32px 0;}
+
+/* ── COMPARISON CARDS ── */
+.compare-card{
+  background:white;border-radius:var(--radius);
+  border:1.5px solid var(--gray200);overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.compare-card .cc-header{
+  padding:12px 16px;font-weight:700;font-size:14px;
+}
+.compare-card .cc-body{padding:14px 16px;font-size:13px;}
+.compare-card ul{padding-left:16px;}
+.compare-card li{margin-bottom:5px;}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div style="display:flex;align-items:center;gap:8px;">
+    <button class="btn" id="menu-btn" onclick="toggleSidebar()">☰</button>
+    <span class="brand">Mood Disorders</span>
+    <span class="subtitle">· USMLE Step 1 Master Resource · 2026</span>
+  </div>
+  <div class="controls">
+    <input type="text" id="search-input" placeholder="🔍  Search notes..." oninput="handleSearch(this.value)">
+    <button class="btn" id="hl-btn" onclick="toggleHighlight()">★ Highlight HY</button>
+  </div>
+</div>
+<div id="search-results"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="doc-tabs">
+    <div class="doc-tab active" onclick="switchDoc('doc1')" id="tab-doc1">Master Lecture Notes</small></div>
+    <div class="doc-tab" onclick="switchDoc('doc2')" id="tab-doc2" style="color: #e67e22; font-weight: bold;">High Yield</div>
+  </div>
+
+  <!-- Doc 1 Nav -->
+  <div id="nav-doc1" class="nav-section">
+    <div class="nav-section-label">Lecture Notes</div>
+    <a class="nav-link" onclick="scrollTo('d1-intro')">Introduction</a>
+    <a class="nav-link" onclick="scrollTo('d1-episodes')">Mood Episodes</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-manic')">Manic Episode</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-hypomanic')">Hypomanic Episode</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-mde')">Major Depressive Episode</a>
+    <a class="nav-link" onclick="scrollTo('d1-mdd')">MDD & Specifiers</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-mdd-atypical')">Atypical Features</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-mdd-seasonal')">Seasonal Pattern</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-mdd-psychotic')">Psychotic Features</a>
+    <a class="nav-link" onclick="scrollTo('d1-postpartum')">Postpartum Disorders</a>
+    <a class="nav-link" onclick="scrollTo('d1-pdd')">Persistent Depressive Disorder</a>
+    <a class="nav-link" onclick="scrollTo('d1-pmdd')">PMDD</a>
+    <a class="nav-link" onclick="scrollTo('d1-bipolar')">Bipolar Disorders</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-bip1')">Bipolar I</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-bip2')">Bipolar II</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-cyclothymia')">Cyclothymic Disorder</a>
+    <a class="nav-link" onclick="scrollTo('d1-suicide')">Suicide Assessment</a>
+    <a class="nav-link" onclick="scrollTo('d1-treatment')">Treatment</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-antidep')">Antidepressants</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-mood-stab')">Mood Stabilizers</a>
+    <a class="nav-link sub" onclick="scrollTo('d1-ect')">ECT</a>
+    <a class="nav-section-label" style="margin-top:12px;">Q&A (MCQ 1–34)</a>
+    <a class="nav-link sub" onclick="scrollTo('qa-mdd-sec')">MDD Questions 1–8</a>
+    <a class="nav-link sub" onclick="scrollTo('qa-pp-sec')">Postpartum Q 9–10</a>
+    <a class="nav-link sub" onclick="scrollTo('qa-pdd-sec')">PDD Q 11</a>
+    <a class="nav-link sub" onclick="scrollTo('qa-bip-sec')">Bipolar Q 12–17</a>
+    <a class="nav-link sub" onclick="scrollTo('qa-tx-sec')">Treatment Q 18–33</a>
+    <a class="nav-link sub" onclick="scrollTo('qa-sui-sec')">Suicide Q 26–28, 34</a>
+  </div>
+<!-- Doc 2 Nav -->
+  <div id="nav-doc2" class="nav-section" style="display:none;">
+    <div class="nav-section-label">High-Yield Synthesis</div>
+    <a class="nav-link" onclick="scrollTo('d2-criteria')">Diagnostic Criteria</a>
+    <a class="nav-link" onclick="scrollTo('d2-flowchart')">Differential Flowchart</a>
+    <a class="nav-link" onclick="scrollTo('d2-comparison')">Episode Comparison</a>
+    <a class="nav-link" onclick="scrollTo('d2-specifiers')">MDD Specifiers</a>
+    <a class="nav-link" onclick="scrollTo('d2-bipolar-table')">Bipolar Spectrum</a>
+    <a class="nav-link" onclick="scrollTo('d2-pharma')">Pharmacology Tables</a>
+    <a class="nav-link" onclick="scrollTo('d2-suicide-algo')">Suicide Algorithm</a>
+    <a class="nav-link" onclick="scrollTo('d2-mnemonics')">Mnemonics Cheat Sheet</a>
+    <a class="nav-link" onclick="scrollTo('d2-rapid')">Rapid Review</a>
+  </div>
+
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+
+<!-- ══════════════════════════════════════════════
+                  Master Lecture Notes
+══════════════════════════════════════════════ -->
+<div id="doc1" class="doc-panel active">
+
+  <div class="section-hero">
+    <div class="eyebrow">· Global Standard Edition <span class="Hero badge">· DSM-5-TR Compliant</span> <span class="badge badge">· USMLE objectives Aligned</span> <span class="badge tag">· USMLE pattern Q&A's Integrated</span></div>
+     <h1>Mood Disorders</h1>
+    <p>By Dr.Sampath Venkataswamy, MD (Psychiatry), MD (Physiology).</p>
+<div class="header-badges">
+    <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;">
+
+      <span class="badge badge-gold">Windsor University School of Medicine</span>
+    </div>
+  </div>
+<main class="content">
+
+</ul>
+</div>
+
+<!-- ── LEARNING OBJECTIVES ── -->
+  <div id="d1-intro" class="callout callout-mdd">
+    <div class="callout-label">📚 Learning Objectives</div>
+    <ul class="content-list">
+      <li>Define mood disorders and their core characteristic: abnormal mood/emotional states causing distress/impairment</li>
+      <li>Identify and distinguish the five <span class="hl-key">mood episodes</span>: manic, hypomanic, major depressive (MDE), mixed features, and dysthymic</li>
+      <li>Diagnose MDD and all specifiers (psychotic, atypical, seasonal, peripartum, with anxious distress)</li>
+      <li>Differentiate postpartum blues from MDD with peripartum onset and postpartum psychosis</li>
+      <li>Diagnose Bipolar I, II, Cyclothymic Disorder, and PMDD with correct DSM-5-TR criteria</li>
+      <li>Apply the <span class="hl-key">SAD PERSONS</span> framework for suicide risk assessment and identify protective factors</li>
+      <li>Select appropriate pharmacotherapy including mood stabilizers, antidepressants, and antipsychotics</li>
+      <li>Identify indications and contraindications for ECT</li>
+      <li>Apply knowledge to USMLE-style clinical vignettes (MCQ 1–34)</li>
+    </ul>
+  </div>
+
+  <!-- INTRODUCTION -->
+  <h2 class="section-title" id="d1-intro-sec">Introduction to Mood Disorders <span class="tag badge-mdd">CORE</span></h2>
+
+  <p><strong>Mood disorders</strong> are characterized by an <span class="hl-key">abnormal range of moods or internal emotional states</span> with loss of control, causing distress and impairment in social and occupational functioning. They represent some of the most prevalent and disabling conditions in medicine, and are heavily tested on USMLE Step 1.</p>
+<img src="https://lh3.googleusercontent.com/d/1oYfykrtapDx-kitP5bZ2aWhiFT9MKiQv " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💡 Step 1 Pearl — Neurobiology</div>
+    The monoamine hypothesis: <span class="hl-key">depression = ↓ serotonin, norepinephrine, dopamine</span>. Most antidepressants increase synaptic availability of one or more of these NTs. The delay to clinical effect (4–6 weeks) is explained by <strong>receptor downregulation</strong>, not the initial NT increase itself.
+<img src="https://lh3.googleusercontent.com/d/1OFJ6TOOjrkrdQSZfY4p2gOW8lsqCUE35" style="width: 30%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <p>The building blocks of all mood disorder diagnoses are <strong>mood episodes</strong>. No single mood episode is itself a diagnosis — the diagnosis depends on which episodes have occurred, their severity, duration, and the pattern over time.</p>
+
+  <hr class="sec-divider">
+
+  <!-- MOOD EPISODES -->
+  <h2 class="section-title" id="d1-episodes">Mood Episodes — The Building Blocks</h2>
+
+  <h3 class="subsect" id="d1-manic">🔴 Manic Episode</h3>
+
+  <p>A <span class="hl-key">manic episode</span> is a distinct period of abnormally and persistently elevated, expansive, OR irritable mood and <strong>increased activity or energy</strong>, lasting <span class="hl-key">≥1 week</span> (or any duration if hospitalization is required).</p>
+
+  <div class="callout callout-warn">
+    <div class="callout-label">⚠ DSM-5-TR Update — Critical Rule</div>
+    Diagnosis requires <strong>≥3 symptoms from DIG FAST</strong> (or <strong>≥4 if mood is only irritable</strong>) causing <strong>marked functional impairment</strong>. Psychotic features (delusions, hallucinations) CAN occur. If psychotic features are present during hypomania → reclassify as MANIA.
+  </div>
+
+  <div class="mnemonic">
+    <div class="mn-label">🧠 Mnemonic — DIG FAST</div>
+    <div class="mn-title">Manic Episode Criteria</div>
+    <div class="mn-body">
+<img src="https://lh3.googleusercontent.com/d/1-SJc60JKMVjruf8D-m_eXFLhlkdiiIXQ " style="width: 100%; border-radius: 10px; margin: 10px 0;"> 
+       <span class="mnemonic-letter">D</span>istractibility<br>
+      <span class="mnemonic-letter">I</span>rresponsibility / Indiscretion (hedonistic, pleasure-seeking without consequences)<br>
+      <span class="mnemonic-letter">G</span>randiosity (inflated self-esteem)<br>
+      <span class="mnemonic-letter">F</span>light of ideas (racing thoughts)<br>
+      <span class="mnemonic-letter">A</span>ctivity increase (goal-directed) / Agitation (psychomotor)<br>
+      <span class="mnemonic-letter">S</span>leep decreased (decreased NEED for sleep — not insomnia)<br>
+      <span class="mnemonic-letter">T</span>alkativeness (pressured speech)
+    </div>
+  </div>
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💎 Clinical Pearl — Decreased Need for Sleep vs. Insomnia</div>
+    In mania, patients feel <em>rested</em> after only 3 hours of sleep — they do NOT feel tired. This is "decreased need" for sleep. In depression/anxiety, patients WANT to sleep but CANNOT. This distinction is frequently tested.
+  </div>
+
+  <h3 class="subsect" id="d1-hypomanic">🟡 Hypomanic Episode</h3>
+
+  <p>A <span class="hl-key">hypomanic episode</span> has the same symptoms as a manic episode but is defined by <strong>key distinctions</strong>:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>MANIC Episode</th><th>HYPOMANIC Episode</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td class="td-sui">≥1 week (or any duration if hospitalized)</td><td class="td-gold">≥4 consecutive days</td></tr>
+        <tr><td>Functional impairment</td><td class="td-sui">Marked impairment required</td><td class="td-gold">NO marked impairment</td></tr>
+        <tr><td>Hospitalization</td><td class="td-sui">May require hospitalization</td><td class="td-gold">NOT required; rarely hospitalized</td></tr>
+        <tr><td>Psychotic features</td><td class="td-sui">CAN occur</td><td class="td-gold">NEVER (if present → reclassify as MANIA)</td></tr>
+        <tr><td>Observable change</td><td>Yes</td><td>Yes — noticeable; often very productive</td></tr>
+        <tr><td>Same DIG FAST symptoms?</td><td>Yes</td><td>Yes (same symptoms, less severe)</td></tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/1-pBJ67OVSCBY9GlfZLivHkOiqh7jJ_B9" style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💎 Step 1 Pearl</div>
+    Patients with hypomanic episodes often describe feeling great — "best version of myself." They may juggle multiple jobs, sleep 3–4 hours and feel refreshed, and be unusually productive. They rarely seek treatment. This is why Bipolar II is often <span class="hl-key">underdiagnosed</span>.
+  </div>
+
+  <h3 class="subsect" id="d1-mde">🔵 Major Depressive Episode (MDE)</h3>
+
+  <p>An MDE requires <span class="hl-key">≥5 of 9 symptoms for ≥2 weeks</span>, and MUST include either <strong>depressed mood</strong> OR <strong>anhedonia</strong> (in children, irritability may substitute for depressed mood).</p>
+
+  <div class="mnemonic">
+    <div class="mn-label">🧠 Mnemonic — SIG E CAPS</div>
+    <div class="mn-title">9 Diagnostic Symptoms of MDE</div>
+    <div class="mn-body">
+      <span class="mnemonic-letter">S</span>leep disturbance (insomnia or hypersomnia)<br>
+      <span class="mnemonic-letter">I</span>nterest ↓ / Anhedonia (loss of pleasure) — MUST HAVE<br>
+      <span class="mnemonic-letter">G</span>uilt or feelings of worthlessness<br>
+      <span class="mnemonic-letter">E</span>nergy ↓ or fatigue<br>
+      <span class="mnemonic-letter">C</span>oncentration ↓ / indecisiveness<br>
+      <span class="mnemonic-letter">A</span>ppetite change (↑ or ↓) / weight change<br>
+      <span class="mnemonic-letter">P</span>sychomotor retardation or agitation<br>
+      <span class="mnemonic-letter">S</span>uicidal ideation (or thoughts of death)<br>
+      + Depressed mood — MUST HAVE<br><br>
+      <em>Need: depressed mood OR anhedonia + ≥4 more = 5 total, for ≥2 weeks</em>
+<img src="https://lh3.googleusercontent.com/d/17Pqtmm6AXqAYvL6WtbArkd_dDS0GJZxC " style="width: 90%; border-radius: 10px; margin: 10px 0;"> 
+    </div>
+  </div>
+
+  <div class="callout callout-mdd">
+    <div class="callout-label">🔬 Sleep Architecture in MDD (High-Yield)</div>
+    <ul class="content-list">
+      <li><span class="hl-key">↓ Slow-wave (deep) sleep</span></li>
+      <li><span class="hl-key">↓ REM latency</span> (enter REM sooner — most tested!)</li>
+      <li><span class="hl-key">↑ REM early</span> in sleep cycle</li>
+      <li><span class="hl-key">↑ Total REM sleep</span></li>
+      <li>Repeated nighttime awakenings</li>
+      <li>Early morning awakening (terminal insomnia)</li>
+<img src="https://lh3.googleusercontent.com/d/1gP4AHO-gtMhKDLU2EXBajYcq_qsRVtpI " style="width: 50%; border-radius: 10px; margin: 10px 0;"> 
+    </ul>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- MDD -->
+  <h2 class="section-title" id="d1-mdd">Major Depressive Disorder (MDD) <span class="tag badge-mdd">MDD</span></h2>
+
+  <p><strong>MDD</strong> is diagnosed when a patient has one or more MDEs AND no history of manic or hypomanic episodes. It is the most common mood disorder and affects approximately <strong>7% of adults</strong> in the US at any given time.</p>
+
+  <div class="callout callout-mdd">
+    <div class="callout-label">📋 DSM-5-TR Criteria Summary</div>
+    <strong>Criterion A:</strong> ≥5/9 SIG E CAPS symptoms for ≥2 weeks (must include depressed mood OR anhedonia)<br>
+    <strong>Criterion B:</strong> Symptoms cause significant distress or functional impairment<br>
+    <strong>Criterion C:</strong> Not due to substances or a medical condition<br>
+    <strong>Criterion D:</strong> Not better explained by a psychotic disorder<br>
+    <strong>Criterion E:</strong> NO history of manic or hypomanic episodes (if present → Bipolar disorder)
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-label">⚠ Critical Rule — Always Screen for Bipolar</div>
+    Before diagnosing MDD, <span class="hl-key">ALWAYS ask about past manic/hypomanic episodes</span>. A patient presenting with depression may have unrecognized Bipolar disorder. Starting antidepressant monotherapy in a bipolar patient can precipitate mania. This is one of the most clinically dangerous errors in psychiatry.
+  </div>
+
+  <h3 class="subsect" id="d1-mdd-atypical">MDD with Atypical Features</h3>
+
+  <div class="callout callout-mdd">
+    <div class="callout-label">📋 Key Features (Most Common Depression Subtype)</div>
+    <ul class="content-list">
+      <li><span class="hl-key">Mood reactivity</span> — mood brightens in response to positive events (pathognomonic feature)</li>
+      <li><span class="hl-key">Hypersomnia</span> (not insomnia — "reversed" vegetative signs)</li>
+      <li><span class="hl-key">Hyperphagia</span> — increased appetite (often carbohydrate craving), weight gain</li>
+      <li><span class="hl-key">Leaden paralysis</span> — heavy, weighty feeling in arms and legs</li>
+      <li><span class="hl-key">Interpersonal rejection sensitivity</span> — long-standing, causes significant distress</li>
+<img src="https://lh3.googleusercontent.com/d/15xGXgd5GR1B9qADF_xt-wvlNu3w_EXB4 " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+    </ul>
+  </div>
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💎 Step 1 Pearl — MAOI for Atypical Depression</div>
+    MAO inhibitors (phenelzine, tranylcypromine) are particularly effective for atypical depression. They are NOT first-line due to dietary restrictions and interaction risks. Remember: SSRIs are first-line. MAOIs are preferred when: (1) treatment-resistant, (2) atypical features present. (See MCQ 30)
+  </div>
+
+  <h3 class="subsect" id="d1-mdd-seasonal">MDD with Seasonal Pattern (Formerly "SAD")</h3>
+
+  <div class="callout callout-mdd">
+    <div class="callout-label">📋 Key Features</div>
+    <ul class="content-list">
+      <li>Full MDE onset in a <span class="hl-key">specific season</span> (usually autumn/winter) and full remission in another season (usually spring/summer)</li>
+      <li>Pattern present for ≥2 consecutive years</li>
+      <li><strong>Atypical features</strong> common (hypersomnia, hyperphagia, weight gain)</li>
+      <li><strong>Treatment:</strong> Standard MDD therapies PLUS <span class="hl-key">light therapy (phototherapy)</span> — 10,000 lux lamp, 20–30 min each morning</li>
+      <li>Mechanism: shortened daylight hours → disrupted circadian rhythm and melatonin dysregulation</li>
+<img src="https://lh3.googleusercontent.com/d/1kS3FzEnbB7zD8fpezQuE3FANnBb4mT1J " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+    </ul>
+  </div>
+
+  <h3 class="subsect" id="d1-mdd-psychotic">MDD with Psychotic Features</h3>
+
+  <p><span class="hl-key">MDD with psychotic features</span> is a <strong>severe subtype</strong> of unipolar MDD in which the patient develops delusions and/or hallucinations <em>exclusively during the depressive episode</em>.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>MDD with Psychotic Features</th><th>Schizoaffective Disorder</th></tr></thead>
+      <tbody>
+        <tr><td>Psychosis timing</td><td class="td-mdd">ONLY during mood episode</td><td class="td-bip">Also occurs for ≥2 weeks WITHOUT mood episode</td></tr>
+        <tr><td>Hallucination type</td><td>Usually mood-congruent (guilt, punishment, worthlessness, nihilism)</td><td>Any type, including mood-incongruent</td></tr>
+        <tr><td>Treatment</td><td class="td-mdd">Antidepressant + antipsychotic OR <strong>ECT</strong></td><td class="td-bip">Antidepressant + antipsychotic (always)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MDD Q&As 1-8 -->
+  <h2 class="section-title" id="qa-mdd-sec">MDD Clinical Questions — MCQ 1–8</h2>
+
+  <!-- MCQ 1 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 1</span><span class="qa-topic">MDD Diagnosis — Ruling Out Alternatives</span></div>
+    <div class="qa-stem">
+      <p>A 35-year-old woman presents with insomnia, fatigue, depressed mood, feelings of worthlessness, weight loss, and poor concentration for the past 5 weeks after losing her job. TSH is 0.9 μU/mL (normal). She drinks wine occasionally and uses marijuana once a month. Which of the following is the most likely diagnosis?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Adjustment disorder with depressed mood</li>
+        <li class="qa-opt">B. Bipolar II disorder</li>
+        <li class="qa-opt">C. Depressive disorder due to another medical condition</li>
+        <li class="qa-opt correct">D. Major depressive disorder ✓</li>
+        <li class="qa-opt">E. Persistent depressive disorder</li>
+        <li class="qa-opt">F. Premenstrual dysphoric disorder</li>
+        <li class="qa-opt">G. Substance-induced depressive disorder</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ D — Major Depressive Disorder</span>
+      <p><strong>Key rule:</strong> Patients with sufficient depressive symptoms are diagnosed with MDD <em>even if there is a clear psychosocial stressor</em> (job loss). ≥5 SIG E CAPS for ≥2 weeks = MDD. The stressor does not change the diagnosis once criteria are met.</p>
+      <p><strong>Why not A (Adjustment disorder)?</strong> Adjustment disorder is only diagnosed when criteria for a specific disorder like MDD are NOT met.</p>
+      <p><strong>Why not C?</strong> Normal TSH rules out hypothyroidism as the cause. Medical cause must be physiologically linked.</p>
+      <p><strong>Why not F (PMDD)?</strong> In PMDD, symptoms must REMIT with onset of menses, confirmed by prospective daily ratings over several cycles.</p>
+      <p><strong>Educational Objective:</strong> MDD is diagnosed based on symptom criteria alone — a precipitating stressor does not prevent the diagnosis.</p>
+    </div>
+    <div class="qa-wrong"><span class="wrong-tag">❌ Common Traps</span><p>Don't let a clear stressor (grief, job loss, divorce) prevent you from diagnosing MDD — DSM-5-TR removed the bereavement exclusion. If criteria are met, diagnose MDD.</p></div>
+  </div>
+
+  <!-- MCQ 2 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 2</span><span class="qa-topic">MDD — Atypical Somatic Presentation</span></div>
+    <div class="qa-stem">
+      <p>A 45-year-old woman presents with fatigue, weight gain, insomnia with early morning awakening, and muscle aches for 2 months. She worries about having cancer. She has stopped exercising and lost interest in family. Laboratory and thyroid tests are normal. Which is the most likely diagnosis?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Depressive disorder due to another medical condition</li>
+        <li class="qa-opt">B. Generalized anxiety disorder</li>
+        <li class="qa-opt">C. Illness anxiety disorder</li>
+        <li class="qa-opt correct">D. Major depressive disorder ✓</li>
+        <li class="qa-opt">E. Somatic symptom disorder</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ D — MDD</span>
+      <p><strong>Key concept:</strong> MDD can present with SOMATIC symptoms (fatigue, sleep disturbance, pain, appetite changes) without the patient reporting "feeling sad." Many patients seek care from primary care physicians for these physical complaints.</p>
+      <p>When medical illness is ruled out, MDD should be high on the differential when somatic symptoms cluster with anhedonia, guilt, or worthlessness.</p>
+      <p><strong>Why not B (GAD)?</strong> GAD requires multiple worries (not just health) for ≥6 months. This patient's anxiety is focused on a possible medical illness.</p>
+      <p><strong>Educational Objective:</strong> MDD can present without a prominent complaint of "depressed mood" — somatic symptoms and anhedonia may be the chief complaint in primary care settings.</p>
+    </div>
+  </div>
+
+  <!-- MCQ 3 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 3</span><span class="qa-topic">MDD vs. Dementia — Pseudodementia</span></div>
+    <div class="qa-stem">
+      <p>A 79-year-old retired professor presents with acute-onset memory problems over the past month: forgetting medications, grandchildren's names, leaving the stove on. He has stopped reading and playing with grandchildren. Also has insomnia, low appetite, decreased energy, and says "I feel worthless since retiring." MoCA = 23/30 (abnormal). Neurological exam is normal. Most likely diagnosis?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Alzheimer disease</li>
+        <li class="qa-opt">B. Dementia with Lewy bodies</li>
+        <li class="qa-opt correct">C. Depression-related cognitive impairment ✓</li>
+        <li class="qa-opt">D. Frontotemporal dementia</li>
+        <li class="qa-opt">E. Normal aging</li>
+        <li class="qa-opt">F. Vascular dementia</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ C — Depression-related Cognitive Impairment (Pseudodementia)</span>
+      <p><strong>Pseudodementia</strong> = reversible cognitive impairment in the context of MDD, mimicking dementia. Key features that distinguish it from true dementia:</p>
+      <ul style="padding-left:18px;font-size:13.5px;line-height:1.8;">
+        <li><strong>Acute onset</strong> (1 month) coinciding with depressive symptoms</li>
+        <li>Patient often says "I don't know" and doesn't try (vs. dementia: confabulation)</li>
+        <li>Treatment of depression → cognitive improvement</li>
+        <li>No focal neurological deficits</li>
+      </ul>
+      <p><strong>True dementia subtypes:</strong> Alzheimer's (memory-prominent, gradual), Lewy body (visual hallucinations, parkinsonism), Frontotemporal (personality changes first), Vascular (stepwise, cerebrovascular history).</p>
+      <p><strong>Educational Objective:</strong> Depression in the elderly can cause reversible cognitive impairment that mimics dementia — always treat the depression before concluding it's dementia.</p>
+    </div>
+  </div>
+
+  <!-- MCQ 4 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 4</span><span class="qa-topic">Antidepressant Onset of Action</span></div>
+    <div class="qa-stem">
+      <p>A 32-year-old man with MDD was started on an SSRI. At 2-week follow-up, mood is "about the same." He initially had nausea and worsening insomnia which have resolved. Drinks 4–5 beers/week. He is discouraged. What is the most likely explanation for lack of response?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Adverse medication effects</li>
+        <li class="qa-opt">B. Comorbid anxiety disorder</li>
+        <li class="qa-opt">C. Concurrent alcohol use</li>
+        <li class="qa-opt correct">D. Duration of treatment ✓</li>
+        <li class="qa-opt">E. Treatment-resistant depression</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ D — Duration of Treatment</span>
+      <p><strong>Key pharmacology fact:</strong> An adequate antidepressant trial is <span class="hl-key">at least 4–6 weeks</span>. Some patients have early partial response within 2 weeks, but full assessment requires 4–6 weeks at therapeutic dose.</p>
+      <p><strong>Treatment-resistant depression (E)</strong> = failure of ≥2 adequate trials. This patient has had only 2 weeks — inadequate duration.</p>
+      <p><strong>Alcohol (C):</strong> 4–5 beers/week is below the threshold for problematic use (>14 drinks/week for men) and unlikely to cause or worsen his depression.</p>
+      <p><strong>Educational Objective:</strong> Always counsel patients that SSRIs take 4–6 weeks for full antidepressant effect. Transient early side effects (nausea, insomnia) should not prompt discontinuation.</p>
+    </div>
+  </div>
+
+  <!-- MCQ 5 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 5</span><span class="qa-topic">MDD with Psychotic Features</span></div>
+    <div class="qa-stem">
+      <p>A 45-year-old man is hospitalized for suicidal ideation. He has been depressed for >1 month, with poor appetite, sleep disturbance, weight loss, and psychomotor agitation. He reports being "responsible for all the evil in the world" and hears a voice telling him he doesn't deserve to live. No psychiatric history. Most likely diagnosis?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Bipolar disorder with psychotic features</li>
+        <li class="qa-opt">B. Delusional disorder</li>
+        <li class="qa-opt correct">C. MDD with psychotic features ✓</li>
+        <li class="qa-opt">D. Schizoaffective disorder</li>
+        <li class="qa-opt">E. Schizophrenia</li>
+        <li class="qa-opt">F. Schizophreniform disorder</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ C — MDD with Psychotic Features</span>
+      <p>The psychotic symptoms (delusion of causing evil = mood-congruent; auditory hallucinations) occur <strong>exclusively within a depressive episode</strong>. This defines MDD with psychotic features.</p>
+      <p><strong>Treatment:</strong> Antidepressant + antipsychotic OR ECT (ECT provides the most rapid response — critical in acutely suicidal patients).</p>
+      <p><strong>Why not D (Schizoaffective)?</strong> Schizoaffective requires psychosis to occur ≥2 weeks in the ABSENCE of a mood episode. Here psychosis only occurs during MDE.</p>
+      <p><strong>Educational Objective:</strong> MDD with psychotic features = psychosis only during MDE + mood-congruent features. Treat with combined antidepressant + antipsychotic or ECT.</p>
+    </div>
+  </div>
+
+  <!-- MCQ 6 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 6</span><span class="qa-topic">MDD in Medical Illness — Nonsomatic Symptoms</span></div>
+    <div class="qa-stem">
+      <p>A 63-year-old woman with metastatic breast cancer has depressed mood, weight loss, low energy, sleep disturbance, and social withdrawal. She no longer looks forward to family visits. No suicidal ideation. Which symptom is MOST indicative of MDD in this patient?</p>
+      <ul class="qa-options">
+        <li class="qa-opt correct">A. Loss of interest in family ✓</li>
+        <li class="qa-opt">B. Low energy</li>
+        <li class="qa-opt">C. Sleep disturbance</li>
+        <li class="qa-opt">D. Thoughts of dying</li>
+        <li class="qa-opt">E. Weight loss</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ A — Loss of Interest in Family</span>
+      <p><strong>Critical concept:</strong> In patients with serious medical illness (cancer, heart failure, etc.), <strong>somatic symptoms of depression overlap</strong> with symptoms of the underlying disease and its treatments. Therefore, somatic symptoms (fatigue, weight loss, sleep disturbance) are less reliable for diagnosing comorbid MDD.</p>
+      <p><strong>NONSOMATIC symptoms are more reliable:</strong> Anhedonia (loss of interest), worthlessness, excessive guilt, and suicidal ideation. Anhedonia — losing interest in family, not looking forward to visits — is the most specific indicator.</p>
+      <p><strong>Why not D?</strong> Thoughts of death are NORMAL in patients facing terminal illness. Suicidal ideation with intent/plan would be concerning.</p>
+      <p><strong>Educational Objective:</strong> Focus on nonsomatic MDD symptoms (anhedonia, worthlessness, guilt) in medically ill patients.</p>
+    </div>
+  </div>
+
+  <!-- MCQ 7 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 7</span><span class="qa-topic">SSRI Sexual Dysfunction → Switch to Bupropion</span></div>
+    <div class="qa-stem">
+      <p>A 43-year-old man with MDD started antidepressant medication. Depressive symptoms mildly improved, but he now has significant decrease in libido and impaired sexual performance. He wants to switch medications. Which drug is most appropriate?</p>
+      <ul class="qa-options">
+        <li class="qa-opt correct">A. Bupropion ✓</li>
+        <li class="qa-opt">B. Citalopram</li>
+        <li class="qa-opt">C. Imipramine</li>
+        <li class="qa-opt">D. Sertraline</li>
+        <li class="qa-opt">E. Trazodone</li>
+        <li class="qa-opt">F. Venlafaxine</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ A — Bupropion</span>
+      <p><strong>SSRIs cause sexual dysfunction in up to 50% of patients</strong> — this is the most common reason for non-adherence. SSRIs affect: libido, arousal, anorgasmia (women), delayed ejaculation (men).</p>
+      <p><strong>Bupropion</strong> (NDRI — NE+DA reuptake inhibitor) does NOT cause sexual dysfunction and does not cause weight gain. Useful for patients with hypersomnia and low energy.</p>
+      <p><strong>Bupropion CONTRAINDICATIONS:</strong> Bulimia nervosa, anorexia nervosa, seizure disorders (↑ seizure threshold lowering at higher doses). See MCQ 21.</p>
+      <p><strong>Other options:</strong> B/D = SSRIs → same problem; C = TCA → also causes sexual dysfunction; E = Trazodone → priapism, sedation; F = SNRI venlafaxine → also causes sexual dysfunction.</p>
+      <p><strong>Educational Objective:</strong> Bupropion is preferred when sexual dysfunction or weight gain are concerns. SSRIs cause sexual dysfunction in up to 50% of patients.</p>
+    </div>
+  </div>
+
+  <!-- MCQ 8 -->
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 8</span><span class="qa-topic">Suicide Risk Assessment — Most Important Factor</span></div>
+    <div class="qa-stem">
+      <p>A 37-year-old woman with recurrent MDD presents after her father's death. She has anhedonia, insomnia, poor concentration. She has been collecting pills and has considered taking them all at once. No prior attempts. Her mother completed suicide at age 40. What is the MOST important factor in assessing her suicide risk?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Family history of suicide</li>
+        <li class="qa-opt">B. Increasing social isolation</li>
+        <li class="qa-opt">C. Lack of sleep</li>
+        <li class="qa-opt correct">D. Medication access ✓</li>
+        <li class="qa-opt">E. Recent bereavement</li>
+        <li class="qa-opt">F. Recurrent episodes of depression</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ D — Medication Access</span>
+      <p>This question tests <strong>acute risk assessment</strong>. The patient has <strong>both ACCESS to means AND a developing plan</strong> (collecting pills, considering taking all at once). This combination of access + plan + intent dramatically elevates IMMEDIATE suicide risk.</p>
+      <p>In acute assessment, <strong>means restriction</strong> is the most immediately actionable risk factor. Removing access to lethal means (medications, firearms) is the single most effective immediate intervention.</p>
+      <p>Family history (A) and recurrent depression (F) are significant chronic risk factors but are NOT modifiable in this immediate moment.</p>
+      <p><strong>Educational Objective:</strong> Access to lethal means combined with a developing plan is a critical immediate risk factor requiring urgent intervention.</p>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- POSTPARTUM -->
+  <h2 class="section-title" id="d1-postpartum">Postpartum Mood Disturbances <span class="tag" style="background:var(--eth2);color:var(--eth);">PERIPARTUM</span></h2>
+
+  <div class="callout callout-eth">
+    <div class="callout-label">📋 DSM-5-TR Definition</div>
+    Onset during pregnancy OR within <span class="hl-key">4 weeks of delivery</span>. Risk ↑ with history of mood disorders. Three distinct conditions on a severity spectrum.
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>Postpartum Blues</th><th>MDD with Peripartum Onset (PPD)</th><th>Postpartum Psychosis</th></tr></thead>
+      <tbody>
+        <tr><td>Incidence</td><td class="td-gold">50–85%</td><td class="td-mdd">10–15%</td><td class="td-sui">0.1–0.2%</td></tr>
+        <tr><td>Onset</td><td>2–3 days post-delivery</td><td>During pregnancy or within 4 weeks</td><td>Within 2 weeks post-delivery</td></tr>
+        <tr><td>Duration</td><td class="td-tx"><strong>Resolves within 2 weeks</strong></td><td>≥2 weeks (meets MDE criteria)</td><td>Acute; medical emergency</td></tr>
+        <tr><td>Core features</td><td>Depressed affect, tearfulness, fatigue, emotional lability</td><td>Depressed mood, anxiety, anhedonia, poor concentration, guilt</td><td>Mood-congruent delusions, hallucinations, thoughts of harming baby or self</td></tr>
+        <tr><td>Suicidal/homicidal thoughts</td><td>None</td><td>Passive (SI without plan)</td><td class="td-sui">YES — may harm baby (infanticide risk)</td></tr>
+        <tr><td>Treatment</td><td class="td-tx">Supportive; follow up</td><td class="td-tx">CBT + SSRIs</td><td class="td-sui">Hospitalization + atypical antipsychotics ± ECT; DO NOT leave alone with infant</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💎 Step 1 Pearl — Postpartum Blues</div>
+    Postpartum blues is <strong>self-limiting</strong> and requires only supportive management. However, women with postpartum blues have an increased risk of progressing to PPD. Always schedule follow-up and screen for suicidal ideation.
+  </div>
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💎 Brexanolone (Zulresso) </div>
+    FDA approved 2019 — <span class="hl-key">first drug specifically approved for postpartum depression</span>. It is a GABA-A receptor positive allosteric modulator (neuroactive steroid/synthetic allopregnanolone). Given as 60-hour IV infusion in certified healthcare facilities. Not in most USMLE basic step 1 content but notable for completeness.
+  </div>
+
+  <!-- MCQ 9–10 -->
+  <h2 class="section-title" id="qa-pp-sec">Postpartum Questions — MCQ 9–10</h2>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 9</span><span class="qa-topic">Postpartum Blues — Appropriate Response</span></div>
+    <div class="qa-stem">
+      <p>A 24-year-old woman calls the office 5 days after uncomplicated delivery of a healthy boy. She reports "emotional ups and downs," tearfulness, exhaustion, and worry about breastfeeding. She has help from her sister and can nap. No suicidal ideation or thoughts of harming the baby. What is the most appropriate response?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. "Your symptoms are normal; call me if they worsen."</li>
+        <li class="qa-opt">B. "Being a new mom is challenging; give yourself time to adjust."</li>
+        <li class="qa-opt">C. "I'm concerned your symptoms may develop into postpartum depression; would you like a counseling referral?"</li>
+        <li class="qa-opt correct">D. "Postpartum hormonal shifts can cause mood changes; I'd like you to come in for an evaluation." ✓</li>
+        <li class="qa-opt">E. "Your symptoms should resolve on their own; let's check in at your 6-week visit."</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ D — Prompt In-Person Evaluation</span>
+      <p><strong>Key concept:</strong> Postpartum blues and PPD have overlapping symptoms. Patients frequently <strong>underreport</strong> depressive symptoms due to shame, guilt, and perceived inadequacy ("I should be happy").</p>
+      <p>The correct approach: <br>1. Validate the experience ("hormonal shifts cause mood changes")<br>2. Screen for safety (no ideation here, but always ask)<br>3. Schedule <strong>in-person evaluation promptly</strong> — face-to-face allows better rapport and disclosure</p>
+      <p><strong>Why not A or B?</strong> Dismissive — "call if worse" delays evaluation of potential PPD.<br><strong>Why not C?</strong> Referring without evaluating first is premature.<br><strong>Why not E?</strong> Delaying to 6-week visit is too long — PPD requires earlier detection.</p>
+      <p><strong>Educational Objective:</strong> Due to underreporting risk and PPD overlap, all patients reporting mood symptoms postpartum need prompt in-person evaluation, not telephone reassurance.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 10</span><span class="qa-topic">Postpartum Depression Diagnosis</span></div>
+    <div class="qa-stem">
+      <p>A 28-year-old woman at 6-week postpartum checkup reports increasing fatigue, anxiety about being a "terrible mother," waking multiple times to check on baby, skipping meals, and frequent tearfulness. She says "I don't know why I keep crying when I should be happy." No suicidal ideation or thoughts of harming baby. Most likely diagnosis?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Acute stress disorder</li>
+        <li class="qa-opt">B. Adjustment disorder</li>
+        <li class="qa-opt">C. Generalized anxiety disorder</li>
+        <li class="qa-opt">D. Normal postpartum reaction</li>
+        <li class="qa-opt correct">E. Postpartum depression ✓</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ E — Postpartum Depression (MDD with Peripartum Onset)</span>
+      <p><strong>PPD is diagnosed using the same MDE criteria</strong> — ≥5 SIG E CAPS for ≥2 weeks: fatigue, tearfulness (depressed mood), appetite changes, sleep disturbance, feelings of worthlessness ("terrible mother"), loss of interest (anxiety about parenting).</p>
+      <p>These symptoms have persisted beyond 2 weeks → not postpartum blues (which peaks at day 5, resolves by 2 weeks).</p>
+      <p>All patients should be screened with the <strong>Edinburgh Postnatal Depression Scale (EPDS)</strong> at the 6-week postpartum visit.</p>
+      <p><strong>Why not D?</strong> Postpartum blues resolves within 2 weeks. This patient's symptoms have persisted at 6 weeks.</p>
+      <p><strong>Educational Objective:</strong> PPD = MDE criteria (≥2 weeks) + peripartum onset. Differentiate from postpartum blues (self-limited, resolves by 2 weeks).</p>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- PDD -->
+  <h2 class="section-title" id="d1-pdd">Persistent Depressive Disorder (Dysthymia) <span class="tag badge-mdd">CHRONIC</span></h2>
+
+  <div class="callout callout-mdd">
+    <div class="callout-label">📋 DSM-5-TR Criteria</div>
+    <ul class="content-list">
+      <li>Depressed mood for <span class="hl-key">most of the day, more days than not, for ≥2 years</span> (≥1 year in children/adolescents)</li>
+      <li>≥2 of: poor appetite/overeating, insomnia/hypersomnia, low energy, low self-esteem, poor concentration, hopelessness</li>
+      <li>No symptom-free period lasting >2 months during the 2 years</li>
+      <li>Full MDE criteria may or may not be met during this period (includes "pure dysthymia" and chronic MDD)</li>
+      <li>No history of manic or hypomanic episodes</li>
+<img src="https://lh3.googleusercontent.com/d/1qpo0kFUDGki1SEYWRv3s5jyn_jXV50yU " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+    </ul>
+  </div>
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💎 Clinical Correlation — Double Depression</div>
+    <strong>Double depression</strong> = PDD + superimposed MDE. The patient has the chronic background of dysthymia PLUS a full-blown depressive episode on top. Prognosis is worse than either alone. Treatment: antidepressants + psychotherapy.
+  </div>
+
+  <!-- PDD Q&A -->
+  <h2 class="section-title" id="qa-pdd-sec">Persistent Depressive Disorder — MCQ 11</h2>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 11</span><span class="qa-topic">Persistent Depressive Disorder vs. MDD</span></div>
+    <div class="qa-stem">
+      <p>A 29-year-old woman reports 3 years of daily exhaustion, persistent unhappiness, loss of interest in jewelry-making, social avoidance, and hopelessness since her business closed. No changes in appetite, sleep, concentration, or suicidal thoughts. PE and labs normal. Most likely diagnosis?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Adjustment disorder with depressed mood</li>
+        <li class="qa-opt">B. Avoidant personality disorder</li>
+        <li class="qa-opt">C. Chronic fatigue syndrome</li>
+        <li class="qa-opt">D. Major depressive disorder</li>
+        <li class="qa-opt correct">E. Persistent depressive disorder ✓</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ E — Persistent Depressive Disorder (Dysthymia)</span>
+      <p><strong>Key distinguishing features:</strong><br>
+      - Duration: 3 years (≥2 years required for PDD)<br>
+      - Depressed mood + loss of interest + hopelessness — but does NOT meet full MDE criteria during the entire 3-year period (no sleep, appetite, concentration changes, no SI)<br>
+      - Chronic, low-grade depression</p>
+      <p><strong>Why not D (MDD)?</strong> MDD requires ≥5/9 SIG E CAPS for ≥2 weeks. This patient has depressed mood + anhedonia + hopelessness = only 2–3 symptoms. This doesn't meet the 5-symptom threshold for an MDE.</p>
+      <p><strong>Why not A?</strong> Adjustment disorder cannot be diagnosed if criteria for another disorder are met (PDD is met here). Also, adjustment disorder resolves within 6 months of stressor ending.</p>
+      <p><strong>Educational Objective:</strong> PDD = chronic low-grade depression for ≥2 years that doesn't meet full MDE criteria. Often associated with "I've always been like this" thinking.</p>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- PMDD -->
+  <h2 class="section-title" id="d1-pmdd">Premenstrual Dysphoric Disorder (PMDD) <span class="tag badge-mdd">DSM-5</span></h2>
+
+  <div class="callout callout-eth">
+    <div class="callout-label">📋 DSM-5-TR Criteria</div>
+    <ul class="content-list">
+      <li>In the majority of menstrual cycles during the <span class="hl-key">last week before menses onset</span></li>
+      <li>≥5 of the following symptoms (must include ≥1 from first four):<br>
+        Core: Marked affective lability, irritability/anger, depressed mood, anxiety/tension<br>
+        Additional: Decreased interest, concentration difficulty, fatigue, appetite change/cravings, hypersomnia/insomnia, feeling overwhelmed, physical symptoms (breast tenderness, bloating)
+      </li>
+      <li>Symptoms <span class="hl-key">remit within a few days after menses onset</span></li>
+      <li>Cause significant distress and functional impairment</li>
+      <li>Must be confirmed by <span class="hl-key">prospective daily ratings over at least 2 cycles</span></li>
+<img src="https://lh3.googleusercontent.com/d/1UNZ9t26qsC258fE4k4c6BuDP-ymQxBmc " style="width: 40%; border-radius: 10px; margin: 10px 0;">
+        </ul>
+  </div>
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💎 Clinical Pearl — PMDD Treatment</div>
+<img src="https://lh3.googleusercontent.com/d/1rUz1D1Ut27hPjGN5KVVPg6iDfRAPJrOf " style="width: 25%; border-radius: 10px; margin: 10px 0;"> 
+    First-line: <strong>SSRIs</strong> (can be used continuously or only during the luteal phase — both effective). Second-line: OCP (drospirenone+ethinyl estradiol combination preferred). Third-line: GnRH agonists for severe cases.
+  </div>
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💎 PMDD vs. MDD Distinction for USMLE</div>
+    Key differentiator: In PMDD, symptoms must <strong>remit with onset of menses</strong>. In MDD or other depression that worsens premenstrually, symptoms do NOT fully resolve. Requires prospective daily ratings — retrospective reporting is insufficient.
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- BIPOLAR -->
+  <h2 class="section-title" id="d1-bipolar">Bipolar & Related Disorders <span class="tag badge-bip">BIPOLAR</span></h2>
+
+  <h3 class="subsect" id="d1-bip1">Bipolar I Disorder</h3>
+
+  <div class="callout callout-bip">
+    <div class="callout-label">📋 DSM-5-TR Criteria</div>
+    <ul class="content-list">
+      <li><span class="hl-key">At least ONE manic episode</span> (± hypomanic or depressive episodes)</li>
+      <li>The manic episode is not better explained by schizoaffective disorder or another psychotic disorder</li>
+      <li>Psychotic features (mood-congruent) may occur during manic OR depressive episodes</li>
+      <li><strong>No depressive episode required</strong> — a patient who has had only mania technically meets criteria for Bipolar I</li>
+<img src="https://lh3.googleusercontent.com/d/17wFPM1A00CfrQFECF5-N0Odps9uW1KQF " style="width: 40%; border-radius: 10px; margin: 10px 0;"> 
+    </ul>
+  </div>
+
+  <div class="callout callout-pearl">
+    <div class="callout-label">💎 Bipolar Genetic Risk (High-Yield)</div>
+<img src="https://lh3.googleusercontent.com/d/1hlktuXTDZ51EioN4D3F5_u4bRSFTeTOD" style="width: 35%; border-radius: 10px; margin: 10px 0;"> 
+    <ul class="content-list">
+      <li>General population: <span class="hl-key">~1%</span></li>
+      <li>1st degree relative: <span class="hl-key">5–10%</span></li>
+      <li>Child with 2 bipolar parents: <span class="hl-key">~60%</span></li>
+      <li>Monozygotic twin: <span class="hl-key">~70%</span> (NOT 100% → environmental factors contribute)</li>
+    </ul>
+    Strong genetic component — strongest of any psychiatric disorder.
+  </div>
+
+  <h3 class="subsect" id="d1-bip2">Bipolar II Disorder</h3>
+
+  <div class="callout callout-bip">
+    <div class="callout-label">📋 Criteria (Requires 2 Types of Episodes)</div>
+    <ul class="content-list">
+      <li><span class="hl-key">At least ONE hypomanic episode</span></li>
+      <li><span class="hl-key">At least ONE major depressive episode</span></li>
+      <li><strong>NO history of manic or mixed episodes</strong> (if a manic episode ever occurs → reclassify as Bipolar I)</li>
+      <li>Psychotic features can occur in MDE but NOT during hypomania</li>
+      <li>High suicide risk, particularly during depressive episodes</li>
+    </ul>
+  </div>
+
+  <div class="callout callout-warn">
+    <div class="callout-label">⚠ Critical Distinction</div>
+    Bipolar II is NOT simply a "milder" form of Bipolar I. Bipolar II has <strong>higher burden of depressive episodes</strong> and significant functional impairment. The suicide risk is comparable to Bipolar I. Never minimize Bipolar II to patients or on USMLE.
+  </div>
+
+  <h3 class="subsect" id="d1-cyclothymia">Cyclothymic Disorder</h3>
+
+  <div class="callout callout-bip">
+    <div class="callout-label">📋 Criteria</div>
+    <ul class="content-list">
+      <li><span class="hl-key">≥2 years</span> (≥1 year in children/adolescents) of numerous periods with hypomanic AND depressive symptoms</li>
+      <li>Neither hypomanic nor depressive symptom sets meet FULL criteria for a hypomanic or major depressive episode</li>
+      <li>Symptoms present for <span class="hl-key">at least half the time</span> with no symptom-free period >2 months</li>
+      <li>Milder version of the bipolar spectrum</li>
+    </ul>
+  </div>
+
+  <!-- Bipolar Q&As 12-17 -->
+  <h2 class="section-title" id="qa-bip-sec">Bipolar Clinical Questions — MCQ 12–17</h2>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 12</span><span class="qa-topic">Bipolar I — Long-Term Maintenance</span></div>
+    <div class="qa-stem">
+      <p>A 27-year-old man presents with 2 weeks of barely sleeping, spending thousands on tools, grandiosity ("architectural masterpiece"), and rapid frenzied speech. History of 2 prior depressive episodes. Which medication is most appropriate for LONG-TERM management?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Bupropion</li>
+        <li class="qa-opt">B. Chlorpromazine</li>
+        <li class="qa-opt">C. Haloperidol</li>
+        <li class="qa-opt">D. Lorazepam</li>
+        <li class="qa-opt">E. Paroxetine</li>
+        <li class="qa-opt correct">F. Valproate ✓</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ F — Valproate</span>
+      <p><strong>Bipolar maintenance options:</strong> Lithium, Valproate, Lamotrigine, Quetiapine (second-generation antipsychotic).</p>
+      <p><strong>AVOID antidepressant monotherapy</strong> in bipolar — risk of precipitating mania (A=bupropion, E=paroxetine are antidepressants).</p>
+      <p><strong>B, C (typical antipsychotics):</strong> Used for acute mania adjunct but NOT for long-term maintenance monotherapy.</p>
+      <p><strong>D (Lorazepam):</strong> Useful as adjunct in acute mania but NOT recommended for maintenance.</p>
+      <p><strong>Educational Objective:</strong> Maintenance treatment of bipolar disorder requires mood stabilizers (lithium, valproate, lamotrigine) or atypical antipsychotics. Antidepressant monotherapy is contraindicated.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 13</span><span class="qa-topic">Screening for Bipolar Before Starting Antidepressant</span></div>
+    <div class="qa-stem">
+      <p>A 30-year-old man with current MDE. Prior depressive episode responded rapidly to sertraline — he "felt really good and energetic" after a few days and discontinued. Prior to initiating pharmacologic treatment, what is MOST important to assess?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Complete blood count</li>
+        <li class="qa-opt">B. Comprehensive metabolic panel</li>
+        <li class="qa-opt">C. Electrocardiogram</li>
+        <li class="qa-opt correct">D. History of mania ✓</li>
+        <li class="qa-opt">E. History of sexual dysfunction</li>
+        <li class="qa-opt">F. Urine toxicology</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ D — History of Mania</span>
+      <p><strong>RED FLAG in this vignette:</strong> The atypically rapid response to sertraline ("felt really good after a few days") strongly suggests <strong>treatment-emergent mania</strong> — a sign of underlying bipolar disorder unmasked by an antidepressant.</p>
+      <p>Before prescribing ANY antidepressant for a depressive episode, screen for:</p>
+      <ul style="padding-left:18px;font-size:13.5px;">
+        <li>Past manic/hypomanic episodes (elevated mood, decreased sleep, grandiosity, racing thoughts, impulsivity)</li>
+        <li>Family history of bipolar disorder</li>
+      </ul>
+      <p>If bipolar is confirmed → use mood stabilizer, NOT antidepressant monotherapy.</p>
+      <p><strong>Educational Objective:</strong> All patients presenting with depression must be screened for bipolar disorder before prescribing antidepressants. Antidepressants can precipitate mania in bipolar patients.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 14</span><span class="qa-topic">Bipolar I — Maintenance with Antisuicidal Benefit</span></div>
+    <div class="qa-stem">
+      <p>A 48-year-old man with current severe MDE (suicidal thoughts, 16 hrs sleep, hypersomnia, weight gain) and history of weeklong periods with extra energy, decreased sleep, and believing he had "superhuman powers to control minds." Most appropriate long-term medication?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Bupropion</li>
+        <li class="qa-opt">B. Clozapine</li>
+        <li class="qa-opt">C. Diazepam</li>
+        <li class="qa-opt">D. Duloxetine</li>
+        <li class="qa-opt">E. Haloperidol</li>
+        <li class="qa-opt correct">F. Lithium ✓</li>
+        <li class="qa-opt">G. Sertraline</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ F — Lithium</span>
+      <p>This patient has Bipolar I (manic + depressive episodes). Lithium is preferred here because:</p>
+      <ol style="padding-left:18px;font-size:13.5px;line-height:1.8;">
+        <li>First-line mood stabilizer for Bipolar I</li>
+        <li>Uniquely reduces suicidal ideation and suicide risk (anti-suicidal properties)</li>
+        <li>Effective for both maintenance and acute mania</li>
+      </ol>
+      <p><strong>Avoid antidepressants (A, D, G)</strong> as monotherapy in bipolar — risk of precipitating mania.</p>
+      <p><strong>Educational Objective:</strong> Lithium is first-line maintenance for Bipolar I and has demonstrated anti-suicidal properties — preferred when suicidality is a concern.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 15</span><span class="qa-topic">Mania — Additional Expected Finding</span></div>
+    <div class="qa-stem">
+      <p>A 28-year-old man abruptly quit his job, placed large gambling bets believing he was "sure to make millions," stayed up most nights writing his autobiography. He's on a "mission to spread understanding." No drug use. What additional finding would MOST likely be present?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Flat affect</li>
+        <li class="qa-opt">B. Low self-esteem</li>
+        <li class="qa-opt">C. Poor hygiene</li>
+        <li class="qa-opt correct">D. Pressured speech ✓</li>
+        <li class="qa-opt">E. Psychomotor slowing</li>
+        <li class="qa-opt">F. Social withdrawal</li>
+        <li class="qa-opt">G. Thought blocking</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ D — Pressured Speech</span>
+      <p>Classic manic episode features: grandiosity, decreased need for sleep, increased goal-directed activity, impulsivity. <strong>Pressured speech</strong> (T in DIG FAST) = increased rate, volume, and production of speech — nearly universal in mania.</p>
+      <p><strong>Why not A, C, G?</strong> Flat affect, poor hygiene, and thought blocking are features of schizophrenia, not mania. Manic patients have intense/labile affect and garish dress but typically maintain hygiene.</p>
+      <p><strong>Why not B, E, F?</strong> Low self-esteem, psychomotor slowing, and social withdrawal are features of depression. Mania = grandiosity, psychomotor agitation, social expansion.</p>
+      <p><strong>Educational Objective:</strong> DIG FAST features of mania — pressured speech (T=Talkativeness) is expected alongside grandiosity and decreased need for sleep.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 16</span><span class="qa-topic">Bipolar II vs. Recurrent MDD</span></div>
+    <div class="qa-stem">
+      <p>A 29-year-old woman with severe depression (hypersomnia 16 hrs/day, weight gain, anhedonia, poor concentration). She has had 2 similar episodes at 23 and 27. Also describes brief past periods (several days) when she was unusually confident, "successfully juggled 3 part-time jobs," felt rested despite 3–4 hrs sleep nightly. Most likely diagnosis?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Adjustment disorder</li>
+        <li class="qa-opt">B. Bipolar I</li>
+        <li class="qa-opt correct">C. Bipolar II ✓</li>
+        <li class="qa-opt">D. Cyclothymic disorder</li>
+        <li class="qa-opt">E. Recurrent MDD</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ C — Bipolar II Disorder</span>
+      <p>History of recurrent MDEs + distinct past periods of elevated mood, increased energy, decreased need for sleep (feels rested on 3–4 hrs) <strong>without marked impairment</strong> = <strong>hypomanic episodes</strong>.</p>
+      <p>Bipolar II = at least 1 hypomanic episode + at least 1 MDE + no manic episodes.</p>
+      <p><strong>Why not Bipolar I?</strong> The past "high" periods did NOT cause marked impairment (she was functional — working 3 jobs). Bipolar I requires marked impairment or hospitalization.</p>
+      <p><strong>Why not E (recurrent MDD)?</strong> The critical step: ALWAYS ask about past hypomanic periods. This patient had them — rule out MDD.</p>
+      <p><strong>Educational Objective:</strong> Hypomanic periods may be experienced as productive "high-functioning" times — always ask about them before diagnosing recurrent MDD.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 17</span><span class="qa-topic">Bipolar I with Psychotic Features</span></div>
+    <div class="qa-stem">
+      <p>A 26-year-old man assaulted restaurant customers, explaining he was trying to "heal their pain." He's been up all night for 10 days writing a 100-page manifesto, hears a voice calling him "God's true son," and believes he'll need to sacrifice his life. Irritable, pacing, rapid loud speech. No prior history, no illicit drugs (alcohol socially). Most likely diagnosis?</p>
+      <ul class="qa-options">
+        <li class="qa-opt correct">A. Bipolar I with psychotic features ✓</li>
+        <li class="qa-opt">B. Bipolar II</li>
+        <li class="qa-opt">C. Brief psychotic disorder</li>
+        <li class="qa-opt">D. Delusional disorder</li>
+        <li class="qa-opt">E. Schizophreniform disorder</li>
+        <li class="qa-opt">F. Substance-induced psychotic disorder</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ A — Bipolar I with Psychotic Features</span>
+      <p>Full manic episode criteria met: elevated/irritable mood, grandiosity, decreased need for sleep (up all night 10 days), goal-directed activity (writing manifesto), pressured speech, marked functional impairment (assault/police).</p>
+      <p>PLUS psychotic features: auditory hallucinations (voice calling him "God's son"), grandiose/religious delusions.</p>
+      <p>Manic episodes CAN include psychotic features without changing to schizophrenia.</p>
+      <p><strong>Why not E (Schizophreniform)?</strong> Schizophreniform/schizophrenia occur in the absence of a clear mood syndrome. Here the psychosis is embedded within the manic episode.</p>
+      <p><strong>Educational Objective:</strong> Manic episodes can occur with psychotic features (mood-congruent grandiose or religious delusions) — this is Bipolar I, not a primary psychotic disorder.</p>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- SUICIDE -->
+  <h2 class="section-title" id="d1-suicide">Suicide Risk Assessment <span class="tag badge-sui">URGENT</span></h2>
+
+  <div class="mnemonic">
+    <div class="mn-label">🧠 Mnemonic — SAD PERSONS</div>
+    <div class="mn-title">Suicide Risk Factors</div>
+    <div class="mn-body">
+      <span class="mnemonic-letter">S</span>ex (male — men die more often; women attempt more often)<br>
+      <span class="mnemonic-letter">A</span>ge (young adult 15–24 OR older adult >75)<br>
+      <span class="mnemonic-letter">D</span>epression or hopelessness<br>
+      <span class="mnemonic-letter">P</span>revious attempt — <strong>HIGHEST single risk factor</strong><br>
+      <span class="mnemonic-letter">E</span>thanol or substance use (disinhibition)<br>
+      <span class="mnemonic-letter">R</span>ational thinking loss (psychosis, delirium)<br>
+      <span class="mnemonic-letter">S</span>ickness (chronic medical illness, pain)<br>
+      <span class="mnemonic-letter">O</span>rganized plan<br>
+      <span class="mnemonic-letter">N</span>o spouse / social support (unmarried, isolated)<br>
+      <span class="mnemonic-letter">S</span>tated future intent
+    </div>
+  </div>
+
+  <div class="callout callout-sui">
+    <div class="callout-label">🚨 Critical Facts — Frequently Tested</div>
+    <ul class="content-list">
+      <li><span class="hl-key">Previous attempt = highest single risk factor</span> — 100× the general population risk within 1 year</li>
+      <li>Most common method in US = <span class="hl-key">firearms</span> — access to guns ↑ risk 3×</li>
+      <li>Women attempt more often; <span class="hl-key">men die more often</span> (more lethal methods)</li>
+      <li>Elderly white males (>75) have the HIGHEST completed suicide rate</li>
+      <li>90% of people who die by suicide have a diagnosable psychiatric disorder at time of death</li>
+      <li>Antidepressants in the first 2–4 weeks may initially increase suicidality risk (especially in adolescents/young adults) — FDA Black Box Warning</li>
+    </ul>
+  </div>
+
+  <div class="callout callout-tx">
+    <div class="callout-label">✅ Protective Factors</div>
+    <ul class="content-list">
+      <li>Effective care for comorbidities</li>
+      <li>Medical, familial, or community connectedness</li>
+      <li>Cultural/religious beliefs discouraging self-harm</li>
+      <li>Strong problem-solving skills</li>
+      <li>Children at home</li>
+      <li>Sobriety</li>
+    </ul>
+  </div>
+
+  <div class="callout callout-eth">
+    <div class="callout-label">⚖ Clinical Ethics — Involuntary Hospitalization</div>
+    A patient may be hospitalized involuntarily (against their will) when they pose an imminent danger to <strong>themselves or others</strong>. Criteria vary by state, but generally require:<br>
+    1. Mental illness present<br>
+    2. Imminent danger to self (suicidal with plan/intent) or others (homicidal)<br>
+    3. Patient lacks capacity to make safe decisions<br>
+    A 72-hour hold (5150 in California) is the most common form. Competency and capacity are different: patients may lack capacity (unable to make this specific decision safely) while remaining legally competent in other areas.
+  </div>
+
+  <!-- Suicide Q&As -->
+  <h2 class="section-title" id="qa-sui-sec">Suicide & Assessment Questions — MCQ 26–28, 34</h2>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 26</span><span class="qa-topic">Strongest Risk Factor for Completed Suicide</span></div>
+    <div class="qa-stem">
+      <p>A 71-year-old woman with MDD, chronic pain, prior psychiatric hospitalizations, and a previous suicide attempt presents with suicidal ideation. She lost her job a year ago, separated from husband 6 months ago, has a family history of completed suicide (father), and owns a firearm in a locked cabinet. She attends AA meetings and has a close relationship with her daughter. Which is the STRONGEST risk factor for completed suicide?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Access to firearms</li>
+        <li class="qa-opt">B. Age</li>
+        <li class="qa-opt">C. Female sex</li>
+        <li class="qa-opt">D. History of childhood trauma</li>
+        <li class="qa-opt">E. History of completed suicide in parent</li>
+        <li class="qa-opt correct">F. History of suicide attempt ✓</li>
+        <li class="qa-opt">G. Major depressive disorder</li>
+        <li class="qa-opt">H. Recent marital separation</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ F — History of Suicide Attempt</span>
+      <p>A previous suicide attempt is the <span class="hl-key">single strongest risk factor for future completed suicide</span>. Patients with prior attempts are 5–6× more likely to attempt again, and 1/100 will complete suicide within 1 year (100× general population risk).</p>
+      <p><strong>Protective factors in this patient:</strong> Child (daughter close by), community connectedness (AA, church), sobriety.</p>
+      <p><strong>Why not A (firearms)?</strong> Firearm access ↑ risk 3× but is not the single strongest predictor. The prior attempt (F) supersedes it.</p>
+      <p><strong>Educational Objective:</strong> Previous suicide attempt is the single strongest predictor of completed suicide — always ask about prior attempts in any depressed patient.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 27</span><span class="qa-topic">Means Restriction — Most Effective Immediate Intervention</span></div>
+    <div class="qa-stem">
+      <p>A 16-year-old boy with suicidal thoughts, daily alcohol use, family stress, school dropout, and Lyme disease. His mother keeps a firearm by her bedside. What is the BEST next step to decrease risk of completed suicide?</p>
+      <ul class="qa-options">
+        <li class="qa-opt correct">A. Advise the mother to lock away her firearm ✓</li>
+        <li class="qa-opt">B. Initiate treatment for depression</li>
+        <li class="qa-opt">C. Provide the mother with assistance at home</li>
+        <li class="qa-opt">D. Start alcohol abuse counseling</li>
+        <li class="qa-opt">E. Support return to high school</li>
+        <li class="qa-opt">F. Treat the patient's Lyme disease</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ A — Lock Away Firearm (Means Restriction)</span>
+      <p><strong>Means restriction is the most immediate, actionable, life-saving intervention</strong> in a patient with suicidal ideation and access to lethal means.</p>
+      <p>Adolescent suicides are often <strong>impulsive</strong> — reducing access to lethal means during an impulsive crisis can prevent death. Firearms are the most lethal suicide method.</p>
+      <p>All other options (B–F) are appropriate interventions but are longer-term or less immediately life-saving.</p>
+      <p><strong>Educational Objective:</strong> Means restriction (especially firearms) is the single most effective immediate intervention for reducing suicide risk. Evaluate access to firearms in all patients with suicidal ideation.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 28</span><span class="qa-topic">ECT — Most Rapid Treatment for Severe MDD</span></div>
+    <div class="qa-stem">
+      <p>A 48-year-old woman with MDD presents with active suicidal ideation and a plan to hang herself, auditory hallucinations saying she's "evil," refusal to eat and drink, and vegetative symptoms. Which treatment would provide the MOST RAPID improvement?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Antipsychotic therapy</li>
+        <li class="qa-opt correct">B. Electroconvulsive therapy ✓</li>
+        <li class="qa-opt">C. Lithium</li>
+        <li class="qa-opt">D. MAOI</li>
+        <li class="qa-opt">E. Psychotherapy</li>
+        <li class="qa-opt">F. SSRI</li>
+        <li class="qa-opt">G. TCA</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ B — Electroconvulsive Therapy (ECT)</span>
+      <p><strong>ECT indications:</strong> Refractory depression, MDD with psychotic features, acute suicidality, catatonia, refusal of food/fluids (life-threatening), rapid response needed.</p>
+      <p>ECT induces a tonic-clonic seizure under anesthesia + neuromuscular blockade → fastest-acting antidepressant treatment.</p>
+      <p>Antidepressants + antipsychotics (A, F, G) take 4–6 weeks to work — too slow for this life-threatening situation.</p>
+      <p><strong>ECT Key Facts:</strong> No absolute contraindications; safe in pregnancy and elderly; amnesia (usually resolves in 6 months) is the main cognitive SE.</p>
+      <p><strong>Educational Objective:</strong> ECT is the fastest-acting treatment for severe, life-threatening MDD — indications include psychotic features, acute suicidality, catatonia, and inability to eat/drink.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 34</span><span class="qa-topic">Depression in Adolescent — Next Step</span></div>
+    <div class="qa-stem">
+      <p>A 16-year-old boy at well-child visit has low appetite, weight loss, stopped playing soccer (anhedonia), difficulty concentrating, fatigue despite 10 hours sleep, and irritability toward parents. Has tried alcohol and marijuana at parties. Vitals and PE normal. What is the MOST appropriate next step?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. ADHD rating scale</li>
+        <li class="qa-opt">B. Ask to speak with parents</li>
+        <li class="qa-opt">C. Check CBC</li>
+        <li class="qa-opt">D. Check thyroid function</li>
+        <li class="qa-opt correct">E. Inquire about suicidal thoughts ✓</li>
+        <li class="qa-opt">F. Urine drug screen</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ E — Screen for Suicidal Ideation</span>
+      <p>This adolescent has multiple MDD symptoms (anhedonia, low appetite, weight loss, fatigue, poor concentration, irritability). In adolescents, irritability can substitute for depressed mood as a core criterion.</p>
+      <p><strong>Safety first:</strong> Before any workup or referral, ALWAYS assess for suicidal ideation in any patient with depression. This is the most critical next step.</p>
+      <p>Suicide is the <strong>2nd leading cause of death in ages 15–24</strong>. Never miss this assessment.</p>
+      <p><strong>Educational Objective:</strong> In any adolescent presenting with depressive symptoms, screening for suicidal ideation is the immediate priority. Note: in adolescents, irritability may manifest instead of sad mood.</p>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- TREATMENT -->
+  <h2 class="section-title" id="d1-treatment">Treatment of Mood Disorders <span class="tag badge-tx">PHARMACOLOGY</span></h2>
+
+  <h3 class="subsect" id="d1-antidep">Antidepressants</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Drug Class</th><th>Examples</th><th>Mechanism</th><th>Key SE / Notes</th><th>Step 1 Pearl</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-mdd">SSRIs<br><em>FIRST-LINE</em></td>
+          <td>Fluoxetine, Sertraline, Escitalopram, Citalopram, Paroxetine, Fluvoxamine</td>
+          <td>Block serotonin reuptake transporter (SERT) → ↑ synaptic 5-HT</td>
+          <td>Sexual dysfunction (most common — up to 50%), GI upset, SIADH, serotonin syndrome, QT prolongation (citalopram), discontinuation syndrome (paroxetine worst — shortest t½)</td>
+          <td>First-line for MDD, anxiety, OCD, PTSD, bulimia. Delay: 4–6 weeks. Black box: ↑ suicidality in <25 yo.</td>
+        </tr>
+        <tr>
+          <td class="td-mdd">SNRIs</td>
+          <td>Venlafaxine, Duloxetine, Levomilnacipran</td>
+          <td>Block SERT + NET → ↑ 5-HT + NE</td>
+          <td>↑ BP (venlafaxine), sexual dysfunction, nausea. Duloxetine: useful for diabetic neuropathy, fibromyalgia.</td>
+          <td>Venlafaxine: dose-dependent ↑ BP, good for GAD/panic/social anxiety. Duloxetine: pain disorders.</td>
+        </tr>
+        <tr>
+          <td class="td-tx">Bupropion<br><em>No sex SE</em></td>
+          <td>Bupropion (Wellbutrin, Zyban)</td>
+          <td>NE + DA reuptake inhibition (NDRI)</td>
+          <td><strong>CONTRAINDICATED:</strong> Seizure disorders, anorexia, bulimia (↑ seizure risk). Also: stimulant SE, insomnia, headache. NO weight gain, NO sexual dysfunction.</td>
+          <td>Preferred when sexual dysfunction or weight gain is concern. Used for smoking cessation (Zyban). Contraindicated in eating disorders.</td>
+        </tr>
+        <tr>
+          <td>Mirtazapine</td>
+          <td>Mirtazapine (Remeron)</td>
+          <td>α2-antagonist → ↑ NE/5-HT release; 5-HT2/5-HT3 antagonist; H1 antagonist</td>
+          <td>Sedation (H1), ↑ appetite/weight gain (useful in wasting), dry mouth. "Mirtazapine makes you munch more and move less."</td>
+          <td>Useful for depressed patients with insomnia, anorexia, or weight loss. No sexual dysfunction.</td>
+        </tr>
+        <tr>
+          <td>Trazodone</td>
+          <td>Trazodone</td>
+          <td>5-HT2 antagonist + weak SERT inhibitor</td>
+          <td>Sedation (used mainly for insomnia), priapism (rare but dangerous), orthostatic hypotension. "TraZZZodone" for sedation.</td>
+          <td>Used mainly for insomnia; high doses needed for antidepressant effect. Remember: priapism.</td>
+        </tr>
+        <tr>
+          <td class="td-sui">MAOIs<br><em>Dangerous</em></td>
+          <td>Phenelzine, Tranylcypromine, Isocarboxazid, Selegiline (MAO-B selective)</td>
+          <td>Inhibit MAO → ↑ all monoamines (DA, NE, 5-HT). Irreversible (except selegiline at low dose).</td>
+          <td><strong>TYRAMINE CRISIS</strong> (aged cheese, cured meats → hypertensive emergency). Serotonin syndrome with SSRIs/TCAs/tramadol/linezolid. <strong>Washout: 2 weeks</strong> before/after SSRIs.</td>
+          <td>Used for treatment-resistant MDD and atypical depression. Wait 2 weeks before switching to serotonergic drugs (irreversible MAO → synthesis needed to regenerate). MAO breaks down tyramine in gut normally.</td>
+        </tr>
+        <tr>
+          <td class="td-sui">TCAs<br><em>Dangerous OD</em></td>
+          <td>Amitriptyline, Nortriptyline, Imipramine, Clomipramine, Doxepin</td>
+          <td>Block SERT + NET. Also: muscarinic, α1, H1 blockade.</td>
+          <td><strong>OD: Na⁺ channel blockade → QRS widening, arrhythmias, fatal</strong>. Anticholinergic (urinary retention, dry mouth, blurred vision). Orthostatic hypotension. Sedation. <strong>Rx for OD: NaHCO₃</strong></td>
+          <td>3° TCAs (amitriptyline) > anticholinergic than 2° TCAs (nortriptyline). Imipramine: nocturnal enuresis. Clomipramine: OCD. Not first-line due to OD risk.</td>
+        </tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/1gYA1zySRgLie49OWGMQ3ONBUfIS-jTzW " style="width: 100%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <!-- Treatment Q&As 18-33 -->
+  <h2 class="section-title" id="qa-tx-sec">Treatment Questions — MCQ 18–25, 29–33</h2>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 18</span><span class="qa-topic">Antidepressant-Induced Mania</span></div>
+    <div class="qa-stem">
+      <p>An 18-year-old woman with depressive symptoms (weight loss, anhedonia, insomnia, poor concentration) is started on a medication. 3 weeks later she presents with mania (no sleep for 3 nights, spent large amounts on plane tickets, plans to "promote world peace"). Her mother has had severe mood swings. What medication was she most likely started on?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Carbamazepine</li>
+        <li class="qa-opt">B. Lamotrigine</li>
+        <li class="qa-opt">C. Lithium</li>
+        <li class="qa-opt">D. Olanzapine</li>
+        <li class="qa-opt correct">E. Sertraline ✓</li>
+        <li class="qa-opt">F. Valproate</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ E — Sertraline (SSRI)</span>
+      <p>She presented with what appeared to be MDD → started on SSRI (most common first-line treatment). 3 weeks later she developed mania → <strong>treatment-emergent mania</strong>.</p>
+      <p><strong>Key rule:</strong> ALL antidepressants (especially SSRIs, TCAs, SNRIs, bupropion) can precipitate mania in susceptible patients — particularly those with unrecognized bipolar disorder. Mother's mood swings suggest family history of bipolar.</p>
+      <p><strong>Why not mood stabilizers (A, B, C, F)?</strong> No known bipolar history at initial presentation → would not be first choice for what appeared to be MDD.</p>
+      <p><strong>Educational Objective:</strong> Antidepressant monotherapy can unmask bipolar disorder by inducing mania. Always screen for bipolar history before prescribing antidepressants.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 19</span><span class="qa-topic">MAOI — Tyramine Hypertensive Crisis</span></div>
+    <div class="qa-stem">
+      <p>A 34-year-old with treatment-resistant MDD presents with sudden severe headache, blurry vision, BP 210/130, HR 110, tremors, diaphoresis after eating "fancy meats and cheeses" at a deli. The medication used to treat his depression affects which step of monoamine neurotransmission?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Binding to postsynaptic monoamine receptors</li>
+        <li class="qa-opt correct">B. Monoamine breakdown ✓</li>
+        <li class="qa-opt">C. Presynaptic nonselective monoamine uptake</li>
+        <li class="qa-opt">D. Presynaptic selective dopamine uptake</li>
+        <li class="qa-opt">E. Presynaptic selective NE uptake</li>
+        <li class="qa-opt">F. Presynaptic selective serotonin uptake</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ B — Monoamine Breakdown</span>
+      <p><strong>Classic MAOI tyramine crisis:</strong> Patient on MAOI + ate tyramine-rich foods (aged cheeses, cured meats, draft beer, wine) → hypertensive emergency.</p>
+      <p>MAO normally breaks down tyramine in the GI tract. When MAO is inhibited → tyramine escapes into circulation → releases NE from presynaptic terminals → ↑↑ sympathetic stimulation → hypertensive crisis.</p>
+      <p><strong>Treatment of hypertensive crisis:</strong> Phentolamine (alpha-blocker) or nitroprusside.</p>
+      <p><strong>MAO = mitochondrial enzyme that breaks down monoamines</strong> → mechanism = monoamine breakdown inhibition.</p>
+      <p><strong>Educational Objective:</strong> MAOIs inhibit the breakdown of monoamines (including tyramine). Patients must avoid tyramine-rich foods to prevent potentially fatal hypertensive crisis.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 20</span><span class="qa-topic">TCA Overdose — Mechanism of Death</span></div>
+    <div class="qa-stem">
+      <p>A 60-year-old man found confused after amitriptyline overdose. In the ED: delirium, visual hallucinations, flushed, seizure, then unconscious. T=37.2°C, BP=90/62, HR=120, dilated pupils, dry skin. ECG: QRS widening + QTc prolongation. Dies despite resuscitation. Which pharmacological effect most likely caused death?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Increased antihistamine effect</li>
+        <li class="qa-opt correct">B. Sodium channel inhibition ✓</li>
+        <li class="qa-opt">C. Synaptic NE accumulation</li>
+        <li class="qa-opt">D. Synaptic serotonin accumulation</li>
+        <li class="qa-opt">E. Uncontrolled presynaptic dopamine release</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ B — Sodium Channel Inhibition</span>
+      <p><strong>TCA overdose → fatal cardiac arrhythmias</strong> via fast Na⁺ channel blockade in cardiac myocytes → QRS widening → arrhythmias → death.</p>
+      <p><strong>Treatment:</strong> NaHCO₃ (sodium bicarbonate) — increases pH (promotes TCA dissociation from channels) + ↑ extracellular Na⁺ (overcomes channel blockade).</p>
+      <div style="font-size:13px;margin-top:8px;">
+        <strong>TCA side effect table:</strong><br>
+        Muscarinic blockade → tachycardia, delirium, dilated pupils, flushing, dry skin<br>
+        Alpha-1 blockade → hypotension<br>
+        <strong>Na⁺ channel blockade → QRS widening, arrhythmias (FATAL)</strong><br>
+        H1 blockade → sedation
+      </div>
+      <p><strong>Educational Objective:</strong> TCA overdose kills via sodium channel blockade → fatal arrhythmias. Treat with NaHCO₃. "Tri-CyCliC's: Convulsions, Coma, Cardiotoxicity."</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 21</span><span class="qa-topic">Bupropion — Seizure Risk with Eating Disorder</span></div>
+    <div class="qa-stem">
+      <p>A 22-year-old college student with MDD is treated with bupropion + psychotherapy. Energy improved. Further history reveals she consumes very little food and exercises excessively (possible eating disorder). Increasing the bupropion dose is considered. What side effect is of PRIMARY concern?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Agranulocytosis</li>
+        <li class="qa-opt">B. Hypertension</li>
+        <li class="qa-opt correct">C. Seizures ✓</li>
+        <li class="qa-opt">D. Sexual dysfunction</li>
+        <li class="qa-opt">E. Stevens-Johnson syndrome</li>
+        <li class="qa-opt">F. Weight gain</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ C — Seizures</span>
+      <p><strong>Bupropion seizure risk factors:</strong><br>
+      1. High doses<br>
+      2. Eating disorders (electrolyte imbalances → ↑ seizure threshold lowering)<br>
+      3. History of seizures</p>
+      <p><strong>Bupropion CONTRAINDICATIONS:</strong> Seizure disorders, anorexia nervosa, bulimia nervosa (this patient likely has one).</p>
+      <p>Bupropion does NOT cause sexual dysfunction (D) or weight gain (F) — advantages over SSRIs. Stevens-Johnson is more a lamotrigine concern (E). Agranulocytosis = clozapine (A).</p>
+      <p><strong>Educational Objective:</strong> Bupropion is contraindicated in patients with bulimia or anorexia due to ↑ seizure risk — especially at higher doses or in the setting of electrolyte imbalances from eating disorder behaviors.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 22</span><span class="qa-topic">Lithium Toxicity — NSAID Interaction</span></div>
+    <div class="qa-stem">
+      <p>A 39-year-old woman on stable lithium for bipolar disorder started taking a new medication after dental extraction. Over the past week: nausea, vomiting, diarrhea, then confusion + coarse tremors + ataxia. Vitals normal. Alert and oriented to self only. Which medication caused lithium toxicity?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Acetaminophen</li>
+        <li class="qa-opt correct">B. Ibuprofen ✓</li>
+        <li class="qa-opt">C. Ondansetron</li>
+        <li class="qa-opt">D. Prednisone</li>
+        <li class="qa-opt">E. Tramadol</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ B — Ibuprofen (NSAID)</span>
+      <p><strong>Lithium toxicity signs:</strong> GI symptoms first (nausea, vomiting, diarrhea) → then neurological (tremor, ataxia, confusion) → severe: coma, cardiac arrhythmias.</p>
+      <p><strong>NSAIDs ↓ renal blood flow → ↓ lithium clearance → ↑ lithium levels → toxicity.</strong></p>
+      <p><strong>Other drugs that increase lithium levels:</strong> Thiazide diuretics, ACE inhibitors, tetracyclines, metronidazole.</p>
+      <p><strong>Why safe alternatives?</strong> Acetaminophen (A) does NOT affect lithium clearance → safe. Ondansetron (C) and tramadol (E) do not impair renal clearance of lithium.</p>
+      <p><strong>Treatment of lithium toxicity:</strong> Discontinue lithium, aggressive IV isotonic saline hydration, consider hemodialysis for severe cases.</p>
+      <p><strong>Educational Objective:</strong> NSAIDs increase lithium levels by decreasing renal clearance — avoid in patients on lithium. Use acetaminophen instead for pain management.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 23</span><span class="qa-topic">Lithium Side Effects — Hypothyroidism</span></div>
+    <div class="qa-stem">
+      <p>A 36-year-old woman with bipolar disorder (history of depressive episodes + one manic episode with grandiosity) on stable long-term medication develops: constipation, dry skin, hair loss, weight gain (2.3 kg in 3 months despite healthy diet), fatigue, BP 110/70, pulse 55/min. Which medication is the culprit?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Carbamazepine</li>
+        <li class="qa-opt">B. Citalopram</li>
+        <li class="qa-opt">C. Clozapine</li>
+        <li class="qa-opt">D. Lamotrigine</li>
+        <li class="qa-opt correct">E. Lithium ✓</li>
+        <li class="qa-opt">F. Risperidone</li>
+        <li class="qa-opt">G. Trazodone</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ E — Lithium</span>
+      <p>This patient's new symptoms are classic <strong>hypothyroidism</strong>: constipation, dry skin, hair loss, weight gain, fatigue, bradycardia (HR 55). Hypothyroidism is a well-known long-term side effect of lithium.</p>
+      <div style="margin-top:8px;padding:10px;background:var(--gold3);border-radius:6px;font-size:13px;">
+        <strong>LiTHIUM side effects mnemonic:</strong><br>
+        <strong>Li</strong>thium → Low Thyroid (hypothyroidism) | Heart (Ebstein anomaly teratogen) | Insipidus (nephrogenic DI) | Unwanted Movements (tremor)
+      </div>
+      <p><strong>Other lithium side effects:</strong> Narrow therapeutic index (0.8–1.2 mEq/L), polyuria (nephrogenic DI), fine tremor, weight gain, acne, leukocytosis. Monitor TFTs and renal function regularly.</p>
+      <p><strong>Educational Objective:</strong> Lithium causes hypothyroidism with long-term use. Monitor thyroid function every 6–12 months in patients on lithium. Also causes nephrogenic diabetes insipidus.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 24</span><span class="qa-topic">Lithium Toxicity — Thiazide Diuretic Interaction</span></div>
+    <div class="qa-stem">
+      <p>A 40-year-old woman on stable lithium for many years develops ataxia and resting tremor after starting a new hypertension medication "several weeks ago." Most likely offending agent?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Amiloride</li>
+        <li class="qa-opt">B. Clonidine</li>
+        <li class="qa-opt">C. Hydralazine</li>
+        <li class="qa-opt correct">D. Hydrochlorothiazide ✓</li>
+        <li class="qa-opt">E. Metoprolol</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ D — Hydrochlorothiazide (Thiazide Diuretic)</span>
+      <p><strong>Thiazide diuretics</strong> increase sodium excretion → the kidney compensates by reabsorbing more sodium in the proximal tubule → lithium (which mimics Na⁺) is also reabsorbed more → <strong>↑ lithium levels → toxicity</strong>.</p>
+      <p>Symptoms: ataxia, tremor, confusion → classic lithium toxicity triad.</p>
+      <p><strong>Amiloride (A)</strong> is actually sometimes USED to treat lithium-induced nephrogenic DI — it is NOT a culprit.</p>
+      <p><strong>Other culprits:</strong> NSAIDs, ACE inhibitors (same principle — ↓ renal clearance of lithium).</p>
+      <p><strong>Educational Objective:</strong> Thiazide diuretics ↑ lithium levels by decreasing renal clearance. Monitor lithium levels closely when adding thiazides, ACE inhibitors, or NSAIDs.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 25</span><span class="qa-topic">Acute Dystonia — Antipsychotic Side Effect</span></div>
+    <div class="qa-stem">
+      <p>A 22-year-old woman with acute mania is given haloperidol (IV). Shortly after, she begins "making weird faces" and sticking out her tongue. No prior medications. Urine drug screen positive for cannabis and opiates. Most likely explanation?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Catatonia</li>
+        <li class="qa-opt">B. Conversion disorder</li>
+        <li class="qa-opt correct">C. Medication reaction ✓</li>
+        <li class="qa-opt">D. Opioid withdrawal</li>
+        <li class="qa-opt">E. Psychotic agitation</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ C — Medication Reaction (Acute Dystonia)</span>
+      <p>Within <strong>hours to days</strong> of haloperidol (high-potency typical antipsychotic) → <strong>acute dystonia</strong>: involuntary muscle spasms, facial grimacing, tongue protrusion, oculogyric crisis, torticollis.</p>
+      <p><strong>Mechanism:</strong> D2 blockade in nigrostriatal pathway → loss of dopaminergic suppression of cholinergic neurons → excess ACh → muscle spasms.</p>
+      <p><strong>Treatment:</strong> Benztropine (anticholinergic) IM or diphenhydramine IM — immediate reversal.</p>
+      <p>This is part of EPS (extrapyramidal symptoms) — the earliest type (hours to days).</p>
+      <p><strong>Educational Objective:</strong> Acute dystonia is an EPS occurring within hours to days of starting high-potency antipsychotics. Treat with anticholinergics (benztropine, diphenhydramine).</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 29</span><span class="qa-topic">SSRI Mechanism — First-Line for MDD</span></div>
+    <div class="qa-stem">
+      <p>A 28-year-old man with several weeks of MDD symptoms (depressed mood, loss of interest, fatigue, sleep and appetite disturbance, poor concentration, passive SI without plan). First-line pharmacotherapy most likely involves which mechanism?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Antagonism of dopamine D2 receptors</li>
+        <li class="qa-opt">B. Antagonism of serotonin 5-HT2 receptors</li>
+        <li class="qa-opt">C. Inhibition of sodium channels</li>
+        <li class="qa-opt correct">D. Inhibition of serotonin transporter ✓</li>
+        <li class="qa-opt">E. Inhibition of monoamine oxidase</li>
+        <li class="qa-opt">F. Potentiation of GABA effects</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ D — Inhibition of Serotonin Transporter (SERT)</span>
+      <p>SSRIs are first-line for MDD. They inhibit SERT (serotonin reuptake transporter) → serotonin remains in synapse longer → therapeutic effect.</p>
+      <p><strong>A (D2 antagonism)</strong> = antipsychotics (not first-line for MDD without psychosis).<br>
+      <strong>B (5-HT2 antagonism)</strong> = trazodone, mirtazapine, atypical antipsychotics.<br>
+      <strong>C (Na⁺ channel)</strong> = TCAs (toxicity effect), carbamazepine.<br>
+      <strong>E (MAO inhibition)</strong> = MAOIs — not first-line.<br>
+      <strong>F (GABA)</strong> = benzodiazepines — not for MDD.</p>
+      <p><strong>Educational Objective:</strong> SSRIs work by inhibiting SERT → ↑ synaptic serotonin. They are the most commonly prescribed first-line antidepressants.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 30</span><span class="qa-topic">Atypical Depression — MAOI Response Predictor</span></div>
+    <div class="qa-stem">
+      <p>A 44-year-old man with treatment-resistant MDD (failed 3 antidepressant trials) has: low mood, increased sleep, increased appetite, feelings of heaviness in arms/legs, oversensitivity to criticism, symptoms for 8 months. Physician considers phenelzine. Which additional symptom would make him MOST likely to respond?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Auditory hallucinations</li>
+        <li class="qa-opt">B. Decreased libido</li>
+        <li class="qa-opt">C. Delusions</li>
+        <li class="qa-opt">D. Memory impairment</li>
+        <li class="qa-opt correct">E. Mood reactivity ✓</li>
+        <li class="qa-opt">F. Rapid speech</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ E — Mood Reactivity</span>
+      <p>This patient already has the hallmarks of <strong>atypical depression</strong>: hypersomnia, hyperphagia, leaden paralysis, rejection sensitivity. The remaining feature of atypical depression is <span class="hl-key">mood reactivity</span> (mood improves with positive events).</p>
+      <p><strong>MAOIs are particularly effective for MDD with atypical features</strong> — superior to other antidepressants for this subtype.</p>
+      <p><strong>Why not A or C?</strong> Psychotic features (hallucinations, delusions) would require adding an antipsychotic — MAOIs alone are not indicated.</p>
+      <p><strong>Why not D?</strong> Memory impairment is a relative contraindication to MAOIs — patients must remember dietary restrictions (tyramine avoidance).</p>
+      <p><strong>Educational Objective:</strong> MAOIs are specifically effective for MDD with atypical features (mood reactivity, hypersomnia, hyperphagia, leaden paralysis, rejection sensitivity).</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 31</span><span class="qa-topic">Most Common SSRI Side Effect</span></div>
+    <div class="qa-stem">
+      <p>A 55-year-old man on sertraline for 4 months for MDD (also on lisinopril for HTN, well-controlled). No tobacco, occasional wine. Normal vitals and PE. Most likely side effect of the antidepressant treatment?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Cardiac arrhythmias</li>
+        <li class="qa-opt">B. Hypertensive crisis</li>
+        <li class="qa-opt">C. Orthostatic hypotension</li>
+        <li class="qa-opt">D. Seizures</li>
+        <li class="qa-opt">E. Serotonin syndrome</li>
+        <li class="qa-opt correct">F. Sexual dysfunction ✓</li>
+        <li class="qa-opt">G. Urinary hesitancy</li>
+        <li class="qa-opt">H. Weight gain</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ F — Sexual Dysfunction</span>
+      <p>Sexual dysfunction is the most common side effect of SSRIs, occurring in <span class="hl-key">up to 50% of patients</span>. Includes: ↓ libido, ↓ arousal, anorgasmia (women), delayed ejaculation (men).</p>
+      <p>It is a leading cause of <strong>non-adherence</strong> to antidepressant treatment. Physicians should proactively ask about sexual dysfunction.</p>
+      <p><strong>Options:</strong><br>
+      A (arrhythmias) = TCA overdose or TCA use.<br>
+      B (hypertensive crisis) = MAOIs + tyramine.<br>
+      C (orthostatic hypotension) + G (urinary hesitancy) = TCAs (anticholinergic + alpha-1 blockade).<br>
+      D (seizures) = bupropion > TCAs.<br>
+      E (serotonin syndrome) = combining serotonergic drugs.<br>
+      H (weight gain) = mirtazapine, TCAs &gt; SSRIs.</p>
+      <p><strong>Educational Objective:</strong> Sexual dysfunction occurs in up to 50% of SSRI-treated patients and is a major cause of non-adherence. Bupropion can be added or substituted.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 32</span><span class="qa-topic">Valproate — Treats Both Seizure & Bipolar</span></div>
+    <div class="qa-stem">
+      <p>A 34-year-old man with childhood epilepsy (generalized seizures) and a prior MDE is brought to the ED with acute mania (no sleep 7 days, writing a 500-page novel about the universe, recently quit his job). Which medication treats BOTH his bipolar disorder AND seizure disorder?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. Aripiprazole</li>
+        <li class="qa-opt">B. Citalopram</li>
+        <li class="qa-opt">C. Levetiracetam</li>
+        <li class="qa-opt">D. Lithium</li>
+        <li class="qa-opt">E. Lorazepam</li>
+        <li class="qa-opt">F. Phenytoin</li>
+        <li class="qa-opt correct">G. Valproate ✓</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ G — Valproate</span>
+      <p><strong>Valproate (valproic acid)</strong> has dual utility:<br>
+      1. <strong>Mood stabilizer</strong> — effective for acute mania and bipolar maintenance<br>
+      2. <strong>Anticonvulsant</strong> — blocks voltage-gated Na⁺ channels + enhances GABA → treats absence, myoclonic, and generalized tonic-clonic seizures. Particularly effective for myoclonic seizures.</p>
+      <p><strong>Lithium (D)</strong> = mood stabilizer but NOT anticonvulsant.<br>
+      <strong>Levetiracetam/Phenytoin (C, F)</strong> = anticonvulsants but NOT mood stabilizers.<br>
+      <strong>Aripiprazole (A)</strong> = atypical antipsychotic; may lower seizure threshold.<br>
+      <strong>Citalopram (B)</strong> = SSRI — contraindicated as monotherapy in bipolar.</p>
+      <p><strong>Educational Objective:</strong> Valproate is unique in treating both bipolar disorder (mood stabilizer) and epilepsy (anticonvulsant) — ideal when a patient has both diagnoses.</p>
+    </div>
+  </div>
+
+  <div class="qa-block">
+    <div class="qa-header"><span class="qa-num">MCQ 33</span><span class="qa-topic">MAOI Washout — Why 2 Weeks?</span></div>
+    <div class="qa-stem">
+      <p>A 56-year-old on phenelzine for severe depression is switching to sertraline. He must wait at least 2 weeks after stopping phenelzine. Which process occurs during this washout to allow sertraline to be started safely?</p>
+      <ul class="qa-options">
+        <li class="qa-opt">A. G-protein coupled receptor internalization</li>
+        <li class="qa-opt">B. Inositol monophosphatase inhibition</li>
+        <li class="qa-opt">C. Monoamine oxidase inhibition</li>
+        <li class="qa-opt">D. Monoamine receptor downregulation</li>
+        <li class="qa-opt">E. Monoamine reuptake inhibition</li>
+        <li class="qa-opt correct">F. Synthesis of monoamine oxidase ✓</li>
+      </ul>
+    </div>
+    <button class="qa-toggle-btn" onclick="toggleAnswer(this)">▼ Show Answer & Explanation</button>
+    <div class="qa-answer"><span class="answer-tag">✅ F — Synthesis of MAO (Regeneration)</span>
+      <p><strong>Phenelzine is an IRREVERSIBLE MAOI</strong> — it forms a covalent bond with MAO, permanently inactivating it. New MAO enzyme must be synthesized to restore function.</p>
+      <p>The 2-week washout period allows the body to synthesize enough new MAO to prevent a dangerous interaction with sertraline (an SSRI).</p>
+      <p>If MAOI + SSRI are combined → <span class="hl-key">serotonin syndrome</span> (potentially fatal): fever, hyperreflexia, clonus, autonomic instability.</p>
+      <p><strong>Fluoxetine requires 5 weeks washout</strong> (longest t½ of SSRIs) when switching FROM fluoxetine TO MAOI.</p>
+      <p><strong>Educational Objective:</strong> The 2-week MAOI washout is needed because phenelzine irreversibly inhibits MAO — body must synthesize new enzyme. Combining MAOI + SSRI causes serotonin syndrome.</p>
+    </div>
+  </div>
+
+  <!-- MOOD STABILIZERS -->
+  <h3 class="subsect" id="d1-mood-stab">Mood Stabilizers</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Drug</th><th>Mechanism</th><th>Uses</th><th>Side Effects</th><th>Key Interactions / Notes</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-bip"><strong>Lithium</strong></td>
+          <td>Modifies second messenger systems (↓ excitatory, ↑ inhibitory); affects G-proteins, adenylyl cyclase</td>
+          <td>Bipolar I (acute mania + maintenance); reduces suicide risk; augment antidepressants</td>
+          <td>Fine tremor, polyuria (nephrogenic DI), hypothyroidism, hyperthyroidism, ↑ Ca²⁺, teratogen (Ebstein anomaly), leukocytosis, acne. Narrow TI (0.8–1.2 mEq/L).</td>
+          <td>AVOID: NSAIDs, thiazides, ACE inhibitors (all ↑ Li levels). Renal excretion — dehydration → toxicity. Toxicity signs: tremor, ataxia, confusion, coma.</td>
+        </tr>
+        <tr>
+          <td class="td-bip"><strong>Valproate</strong></td>
+          <td>Blocks voltage-gated Na⁺ channels + ↑ GABA</td>
+          <td>Bipolar (acute mania + maintenance), seizures (tonic-clonic, absence, myoclonic)</td>
+          <td>Hepatotoxicity, pancreatitis, teratogen (neural tube defects — spina bifida), thrombocytopenia, weight gain, hair loss, tremor, GI upset</td>
+          <td>AVOID in pregnancy (NTDs — supplement folate). Monitor LFTs. Can be used in acute mania (faster onset than lithium).</td>
+        </tr>
+        <tr>
+          <td class="td-bip"><strong>Lamotrigine</strong></td>
+          <td>Blocks voltage-gated Na⁺ channels → ↓ excitatory glutamate release</td>
+          <td>Bipolar (maintenance, especially depressive phases), partial and generalized seizures</td>
+          <td><strong>Stevens-Johnson syndrome (SJS)</strong> — life-threatening rash (1–2%). Slow titration required to minimize rash risk. Headache, diplopia, ataxia.</td>
+          <td>NOT for acute mania. Best evidence for bipolar depression maintenance. Risk of SJS → slow dose titration over weeks to months.</td>
+        </tr>
+        <tr>
+          <td class="td-bip"><strong>Carbamazepine</strong></td>
+          <td>Blocks voltage-gated Na⁺ channels</td>
+          <td>Bipolar (alternative), trigeminal neuralgia, partial and generalized seizures</td>
+          <td>Agranulocytosis, aplastic anemia (rare), hepatotoxicity, SIADH, teratogen (craniofacial, NTD), induces CYP450 (↓ levels of other drugs including itself — autoinduction)</td>
+          <td>CYP450 INDUCER — ↓ effectiveness of many drugs. Monitor CBC (agranulocytosis). SIADH risk. Check for HLA-B*1502 (Asian patients — risk of SJS).</td>
+        </tr>
+      </tbody>
+    </table>
+<img src="https://lh3.googleusercontent.com/d/1BBI4eImNEie9d6keDbJxHW0W-KOMFBth " style="width: 100%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <h3 class="subsect" id="d1-ect">Electroconvulsive Therapy (ECT)</h3>
+<img src="https://lh3.googleusercontent.com/d/1EcogWXsDBdb2mvjmJTa62hz6OznRJ4lc " style="width: 70%; border-radius: 10px; margin: 10px 0;"> 
+  <div class="callout callout-tx">
+    <div class="callout-label">📋 ECT — Complete Clinical Facts</div>
+    <ul class="content-list">
+      <li><strong>Mechanism:</strong> Induces tonic-clonic seizure under general anesthesia and neuromuscular blockade (usually succinylcholine)</li>
+      <li><strong>Indications:</strong> Refractory depression, MDD with psychotic features, acute suicidality with inability to wait for drug effect, catatonia, refusal to eat/drink, severe MDD in pregnancy</li>
+      <li><span class="hl-key">No absolute contraindications</span> (per FA 2026)</li>
+      <li>Safe in <span class="hl-key">pregnancy</span> and the <span class="hl-key">elderly</span></li>
+      <li><strong>Side effects:</strong> Disorientation (post-ictal), headache, partial anterograde + retrograde amnesia (usually resolves within 6 months)</li>
+      <li><strong>Fastest-acting antidepressant treatment</strong> available</li>
+      <li>Typically 6–12 sessions over 2–4 weeks</li>
+    </ul>
+  </div>
+
+</div><!-- End Doc 1 -->
+
+
+<!-- ══════════════════════════════════════════════
+     HIGH-YIELD
+══════════════════════════════════════════════ -->
+<div id="doc2" class="doc-panel">
+
+  <div class="section-hero">
+    <div class="eyebrow">· High-Yield· Rapid Review · 2026</div>
+    <h1>Mood Disorders</h1>
+      By Dr.Sampath Venkataswamy, MD (Psychiatry), MD (Physiology).
+    <p>Logic-based flowcharts, differential diagnosis frameworks, pharmacology tables, and condensed rapid review. Designed for spaced repetition and final-pass review.</p>
+  </div>
+
+  <!-- DIAGNOSTIC CRITERIA SUMMARY -->
+  <h2 class="section-title" id="d2-criteria">Diagnostic Criteria — At a Glance</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Disorder</th><th>Key Episodes Required</th><th>Duration</th><th>Must Have / Must Exclude</th></tr></thead>
+      <tbody>
+        <tr><td class="td-mdd"><strong>MDD</strong></td><td>≥1 MDE</td><td>≥2 weeks per episode</td><td>Must have: depressed mood OR anhedonia + ≥4 more SIG E CAPS. Exclude: manic/hypomanic history, substances, medical cause</td></tr>
+        <tr><td style="background:var(--eth2);color:var(--eth);font-weight:600;"><strong>PDD (Dysthymia)</strong></td><td>Chronic depressed mood (sub-MDE)</td><td>≥2 years (≥1 yr children)</td><td>≥2 additional symptoms; no symptom-free >2 months; no manic/hypomanic episodes</td></tr>
+        <tr><td class="td-bip"><strong>Bipolar I</strong></td><td>≥1 MANIC episode</td><td>≥1 week (manic)</td><td>Must have: at least 1 manic episode. Depressive episode NOT required but common</td></tr>
+        <tr><td class="td-bip"><strong>Bipolar II</strong></td><td>≥1 hypomanic + ≥1 MDE</td><td>Hypomania ≥4 days; MDE ≥2 weeks</td><td>NO manic episode ever (if occurs → reclassify as Bipolar I)</td></tr>
+        <tr><td style="background:var(--bip2);color:#9333ea;font-weight:600;"><strong>Cyclothymia</strong></td><td>Hypo symptoms + depressive symptoms (sub-full-criteria)</td><td>≥2 years</td><td>Symptoms ≥50% of time; no symptom-free >2 months; neither meets full hypomania or MDE criteria</td></tr>
+        <tr><td style="background:var(--eth2);color:var(--eth);font-weight:600;"><strong>PMDD</strong></td><td>Luteal-phase symptoms</td><td>Most menstrual cycles</td><td>Symptoms remit at/after menses; confirmed by prospective daily ratings ≥2 cycles</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DIFFERENTIAL FLOWCHART -->
+  <h2 class="section-title" id="d2-flowchart">Differential Diagnosis Flowchart — Depressed Patient</h2>
+
+  <div class="flowchart">
+    <div class="fc-box fc-navy">Patient presents with depressed mood / low energy / anhedonia</div>
+    <div class="fc-arrow">↓</div>
+    <div class="fc-diamond">Step 1: Rule out MEDICAL CAUSE (hypothyroid, anemia, B12 deficiency, medications, substances)</div>
+    <div class="fc-arrow">↓ Ruled out</div>
+    <div class="fc-diamond">Step 2: SCREEN FOR BIPOLAR — Any history of manic or hypomanic episodes?</div>
+    <div style="display:flex;gap:30px;width:100%;justify-content:center;margin:4px 0;">
+      <div style="display:flex;flex-direction:column;align-items:center;flex:1;max-width:300px;">
+        <div class="fc-branch-label">YES → Bipolar spectrum</div>
+        <div class="fc-arrow">↓</div>
+        <div class="fc-box fc-bip" style="font-size:12px;">Full mania → <strong>Bipolar I</strong><br>Hypomania + MDE → <strong>Bipolar II</strong><br>Sub-threshold ≥2 yr → <strong>Cyclothymia</strong></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;flex:1;max-width:300px;">
+        <div class="fc-branch-label">NO → Depressive spectrum</div>
+        <div class="fc-arrow">↓</div>
+        <div class="fc-diamond" style="font-size:12px;">≥5 SIG E CAPS for ≥2 weeks?</div>
+        <div style="display:flex;gap:14px;width:100%;justify-content:center;margin:4px 0;">
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <div class="fc-branch-label" style="font-size:10px;">YES</div>
+            <div class="fc-box fc-mdd" style="font-size:11px;min-width:140px;"><strong>MDD</strong><br>+ Specifier if applicable</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <div class="fc-branch-label" style="font-size:10px;">NO</div>
+            <div class="fc-diamond" style="font-size:11px;min-width:140px;">Depressed mood ≥2 years?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-arrow">↓</div>
+    <div style="display:flex;gap:20px;width:100%;justify-content:center;">
+      <div class="fc-box fc-mdd" style="min-width:220px;font-size:12px;"><strong>PDD (Dysthymia)</strong><br>≥2 years + sub-MDE</div>
+      <div class="fc-box" style="background:#f5f0ff;border-color:#9333ea;color:#9333ea;min-width:220px;font-size:12px;"><strong>Adjustment Disorder</strong><br>Clear stressor + sub-MDE criteria + <6 months post-stressor</div>
+    </div>
+<img src="https://lh3.googleusercontent.com/d/1httKNdUKcRA4Hz-PjJ41vOk2fcI-X7DK " style="width: 100%; border-radius: 10px; margin: 10px 0;"> 
+  </div>
+
+  <!-- EPISODE COMPARISON -->
+  <h2 class="section-title" id="d2-comparison">Episode Comparison Table</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>Manic Episode</th><th>Hypomanic Episode</th><th>MDE</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Duration</strong></td><td class="td-sui">≥1 week (or any if hospitalized)</td><td class="td-gold">≥4 consecutive days</td><td class="td-mdd">≥2 weeks</td></tr>
+        <tr><td><strong>Impairment</strong></td><td class="td-sui">Marked impairment REQUIRED</td><td class="td-gold">NO marked impairment</td><td class="td-mdd">Significant impairment</td></tr>
+        <tr><td><strong>Hospitalization</strong></td><td class="td-sui">May require</td><td class="td-gold">NOT required</td><td class="td-mdd">May require</td></tr>
+        <tr><td><strong>Psychotic features</strong></td><td class="td-sui">CAN occur</td><td class="td-gold">NEVER (→ reclassify as mania)</td><td class="td-mdd">Can occur (MDD with psychotic features)</td></tr>
+        <tr><td><strong>Observable by others?</strong></td><td>Yes</td><td>Yes (noticeable change)</td><td>Yes</td></tr>
+        <tr><td><strong>DIG FAST symptoms required</strong></td><td>≥3 (≥4 if only irritable)</td><td>≥3 (≥4 if only irritable)</td><td>N/A — SIG E CAPS</td></tr>
+        <tr><td><strong>Associated diagnosis</strong></td><td>Bipolar I</td><td>Bipolar II (+ MDE)</td><td>MDD, Bipolar I, or Bipolar II</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MDD SPECIFIERS -->
+  <h2 class="section-title" id="d2-specifiers">MDD Specifiers — Rapid Reference</h2>
+
+  <div class="grid-2">
+    <div class="card card-mdd">
+      <h4 style="color:var(--mdd)">🟦 Atypical Features (Most Common)</h4>
+      <ul>
+        <li><strong>Mood reactivity</strong> (mood brightens with positives) — pathognomonic</li>
+        <li>Hypersomnia (not insomnia)</li>
+        <li>Hyperphagia + weight gain</li>
+        <li>Leaden paralysis</li>
+        <li>Rejection sensitivity</li>
+      </ul>
+      <div style="margin-top:10px;font-size:12px;color:var(--mdd);font-weight:700;">Rx: SSRIs (1st line), MAOIs (superior but not 1st line)</div>
+    </div>
+    <div class="card card-mdd">
+      <h4 style="color:var(--mdd)">🔵 Psychotic Features</h4>
+      <ul>
+        <li>Delusions + hallucinations ONLY during MDE</li>
+        <li>Usually mood-congruent (guilt, punishment, nihilism)</li>
+        <li>Distinguish: psychosis ONLY during MDE (not independently)</li>
+      </ul>
+      <div style="margin-top:10px;font-size:12px;color:var(--mdd);font-weight:700;">Rx: Antidepressant + antipsychotic OR ECT</div>
+    </div>
+    <div class="card card-mdd">
+      <h4 style="color:var(--mdd)">🌙 Seasonal Pattern (SADs)</h4>
+      <ul>
+        <li>Full MDE every winter, remission every spring/summer</li>
+        <li>≥2 consecutive years pattern</li>
+        <li>Atypical features common (hypersomnia, hyperphagia)</li>
+      </ul>
+      <div style="margin-top:10px;font-size:12px;color:var(--mdd);font-weight:700;">Rx: SSRIs + Phototherapy (10,000 lux lamp)</div>
+    </div>
+    <div class="card" style="border-color:var(--eth3);background:var(--eth2);">
+      <h4 style="color:var(--eth)">🤱 Peripartum Onset</h4>
+      <ul>
+        <li>Onset during pregnancy OR within 4 weeks of delivery</li>
+        <li>Blues (50–85%) → resolves within <strong>2 weeks</strong></li>
+        <li>PPD (10–15%) → ≥2 weeks, meets MDE criteria</li>
+        <li>Psychosis (0.1–0.2%) → hospitalize, antipsychotics ± ECT</li>
+      </ul>
+      <div style="margin-top:10px;font-size:12px;color:var(--eth);font-weight:700;">Rx PPD: CBT + SSRIs (1st line)</div>
+    </div>
+  </div>
+
+  <!-- BIPOLAR SPECTRUM -->
+  <h2 class="section-title" id="d2-bipolar-table">Bipolar Spectrum — Logic Table</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Diagnosis</th><th>Episode Requirements</th><th>Psychosis?</th><th>Functional Impairment</th><th>Treatment</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-bip"><strong>Bipolar I</strong></td>
+          <td>≥1 MANIC episode (+/- MDE or hypomania)</td>
+          <td>CAN occur in mania or MDE</td>
+          <td>Marked (in manic phase)</td>
+          <td>Lithium, valproate, atypical antipsychotics; NO antidepressant monotherapy</td>
+        </tr>
+        <tr>
+          <td class="td-bip"><strong>Bipolar II</strong></td>
+          <td>≥1 HYPOMANIC + ≥1 MDE; NO mania ever</td>
+          <td>NEVER during hypomania; can occur during MDE</td>
+          <td>Not marked during hypomania</td>
+          <td>Lithium, lamotrigine (best for bipolar depression), quetiapine</td>
+        </tr>
+        <tr>
+          <td class="td-bip"><strong>Cyclothymia</strong></td>
+          <td>Hypomanic-like + depressive-like symptoms (sub-threshold) for ≥2 years</td>
+          <td>No</td>
+          <td>Some impairment</td>
+          <td>Psychotherapy + mood stabilizers</td>
+        </tr>
+        <tr>
+          <td class="td-gold"><strong>Rapid cycling</strong></td>
+          <td>≥4 mood episodes in 12 months (any type)</td>
+          <td>Possible</td>
+          <td>Variable</td>
+          <td>Valproate or lamotrigine preferred; antidepressants worsen rapid cycling</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PHARMACOLOGY TABLES -->
+  <h2 class="section-title" id="d2-pharma">Pharmacology — Master Tables</h2>
+
+  <h3 class="subsect">Antidepressant Quick Reference</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Drug</th><th>Class</th><th>Key Pro</th><th>Key Con / SE</th><th>Contraindicated In</th></tr></thead>
+      <tbody>
+        <tr><td class="td-mdd">Sertraline / Escitalopram</td><td>SSRI</td><td>Safest, well-tolerated, versatile</td><td>Sexual dysfunction (50%!), SIADH</td><td>Combination with MAOIs</td></tr>
+        <tr><td class="td-mdd">Fluoxetine</td><td>SSRI</td><td>Longest t½ (5 weeks washout needed before MAOI)</td><td>Activating, weight-neutral/loss</td><td>MAOIs; 5-week washout required</td></tr>
+        <tr><td class="td-mdd">Paroxetine</td><td>SSRI</td><td>Most anticholinergic SSRI; sedating</td><td>Worst discontinuation syndrome (shortest t½)</td><td>Pregnancy (Pregnancy Category D)</td></tr>
+        <tr><td class="td-mdd">Venlafaxine</td><td>SNRI</td><td>Anxiety, neuropathic pain</td><td>↑ BP (dose-dependent)</td><td>Uncontrolled HTN</td></tr>
+        <tr><td class="td-tx">Bupropion</td><td>NDRI</td><td>No sex SE, no weight gain; smoking cessation</td><td>↑ Seizure risk at high doses</td><td>Seizure d/o, bulimia, anorexia</td></tr>
+        <tr><td>Mirtazapine</td><td>NaSSA (α2 ant.)</td><td>Insomnia, weight loss (wasting)</td><td>Weight gain, sedation</td><td>MAOIs</td></tr>
+        <tr><td>Trazodone</td><td>SARI (5-HT2 ant.)</td><td>Insomnia (low-dose)</td><td>Priapism, orthostatic hypotension</td><td>Prolonged QT</td></tr>
+        <tr><td class="td-sui">Phenelzine / Tranylcypromine</td><td>MAOI (irreversible)</td><td>Atypical depression, treatment-resistant</td><td>Tyramine hypertensive crisis; serotonin syndrome</td><td>SSRIs, TCAs, tyramine-rich foods; 2-week washout</td></tr>
+        <tr><td class="td-sui">Amitriptyline / Imipramine</td><td>TCA (3°)</td><td>Chronic pain, enuresis (imipramine)</td><td>Fatal OD (Na⁺ channel block → arrhythmia); anticholinergic</td><td>Post-MI, elderly, suicide risk patients</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="subsect">Mood Stabilizer Quick Reference</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Drug</th><th>Best For</th><th>Key Monitoring</th><th>Unique SE</th><th>Drug Interactions</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-bip"><strong>Lithium</strong></td>
+          <td>Bipolar I maintenance; suicidal patients</td>
+          <td>Serum levels (TI: 0.8–1.2), TFTs, BMP, BUN/Cr q6–12 months</td>
+          <td>Hypothyroidism, nephrogenic DI, Ebstein anomaly (teratogen), fine tremor</td>
+          <td>NSAIDs, thiazides, ACE inhibitors → ↑ Li levels (toxicity)</td>
+        </tr>
+        <tr>
+          <td class="td-bip"><strong>Valproate</strong></td>
+          <td>Acute mania; epilepsy comorbidity; pregnancy alternative? NO — teratogenic</td>
+          <td>LFTs, CBC, valproic acid levels</td>
+          <td>Hepatotoxicity, NTDs (spina bifida — teratogen), thrombocytopenia, weight gain, hair loss, pancreatitis</td>
+          <td>Inhibits metabolism of lamotrigine → ↑ SJS risk with lamotrigine → halve lamotrigine dose</td>
+        </tr>
+        <tr>
+          <td class="td-bip"><strong>Lamotrigine</strong></td>
+          <td>Bipolar depression maintenance; seizures</td>
+          <td>Rash monitoring; slow dose titration</td>
+          <td>Stevens-Johnson Syndrome (SJS) — life-threatening rash; slow titration minimizes risk</td>
+          <td>Valproate ↑ levels (↑ SJS risk); carbamazepine ↓ levels</td>
+        </tr>
+        <tr>
+          <td class="td-bip"><strong>Carbamazepine</strong></td>
+          <td>Bipolar alternative; trigeminal neuralgia; partial seizures</td>
+          <td>CBC (agranulocytosis), LFTs, Na⁺ (SIADH)</td>
+          <td>Agranulocytosis, aplastic anemia (rare), SIADH, SJS (HLA-B*1502 Asians)</td>
+          <td>CYP450 INDUCER → ↓ many drug levels including its own (autoinduction)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SUICIDE ALGORITHM -->
+  <h2 class="section-title" id="d2-suicide-algo">Suicide Risk Algorithm — Clinical Decision Guide</h2>
+
+  <div class="flowchart">
+    <div class="fc-box fc-navy">Patient mentions suicidal ideation or self-harm</div>
+    <div class="fc-arrow">↓</div>
+    <div class="fc-diamond">Step 1: Assess MEANS — Does patient have access to lethal means? (firearms, medications, ropes)</div>
+    <div class="fc-arrow">↓</div>
+    <div class="fc-diamond">Step 2: Assess PLAN — Is there a specific plan? Organized and lethal?</div>
+    <div class="fc-arrow">↓</div>
+    <div class="fc-diamond">Step 3: Assess INTENT — Does patient intend to act on the plan?</div>
+    <div class="fc-arrow">↓</div>
+    <div style="display:flex;gap:20px;width:100%;justify-content:center;">
+      <div style="flex:1;max-width:300px;text-align:center;">
+        <div class="fc-branch-label" style="color:var(--sui);">HIGH RISK (plan + intent + means)</div>
+        <div class="fc-box fc-sui">INVOLUNTARY HOSPITALIZATION<br>Means restriction<br>Psychiatric emergency</div>
+      </div>
+      <div style="flex:1;max-width:300px;text-align:center;">
+        <div class="fc-branch-label" style="color:var(--tx);">LOWER RISK (passive SI, no plan)</div>
+        <div class="fc-box fc-tx">Close follow-up<br>Safety plan<br>Means restriction<br>Treat underlying MDD/bipolar</div>
+      </div>
+    </div>
+    <div class="fc-arrow">↓</div>
+    <div class="fc-box fc-navy">Regardless of level: <strong>MEANS RESTRICTION</strong> (lock away firearms, medications) is always indicated</div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Risk Category</th><th>Clinical Feature</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td class="td-sui">STRONGEST factor</td><td>Previous suicide attempt</td><td>Always hospitalize if present with ideation + plan</td></tr>
+        <tr><td class="td-sui">Immediate risk</td><td>Specific plan + access to means</td><td>Remove access IMMEDIATELY; evaluate for hospitalization</td></tr>
+        <tr><td class="td-sui">High chronic risk</td><td>Male, elderly, white, widowed, isolated</td><td>Screen regularly; social support; follow-up</td></tr>
+        <tr><td class="td-gold">Protective factor</td><td>Children, religion, social connection, sobriety</td><td>Reinforce and strengthen protective factors</td></tr>
+        <tr><td class="td-tx">Modifiable risk</td><td>Alcohol/substance use</td><td>Counseling, treatment for substance use</td></tr>
+        <tr><td class="td-mdd">Treatment</td><td>Acute suicidality requiring rapid response</td><td>ECT — fastest acting; lithium for long-term suicide risk reduction</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MNEMONICS CHEAT SHEET -->
+  <h2 class="section-title" id="d2-mnemonics">Mnemonics Master Reference</h2>
+
+  <div class="grid-2">
+    <div class="mnemonic">
+      <div class="mn-label">🧠 Manic Episode</div>
+      <div class="mn-title">DIG FAST</div>
+      <div class="mn-body">
+        <strong>D</strong>istractibility · <strong>I</strong>rresponsibility (hedonistic) · <strong>G</strong>randiosity<br>
+        <strong>F</strong>light of ideas · <strong>A</strong>ctivity↑/Agitation · <strong>S</strong>leep↓ need · <strong>T</strong>alkativeness (pressured speech)<br><br>
+        <em>Need ≥3 (≥4 if mood only irritable) + ≥1 week + marked impairment</em>
+      </div>
+    </div>
+    <div class="mnemonic">
+      <div class="mn-label">🧠 MDE</div>
+      <div class="mn-title">SIG E CAPS</div>
+      <div class="mn-body">
+        <strong>S</strong>leep · <strong>I</strong>nterest↓/Anhedonia · <strong>G</strong>uilt · <strong>E</strong>nergy↓ · <strong>C</strong>oncentration↓ · <strong>A</strong>ppetite · <strong>P</strong>sychomotor · <strong>S</strong>uicidal ideation<br>+ Depressed mood<br><br>
+        <em>Need ≥5, including depressed mood OR anhedonia, for ≥2 weeks</em>
+      </div>
+    </div>
+    <div class="mnemonic">
+      <div class="mn-label">🧠 Suicide Risk</div>
+      <div class="mn-title">SAD PERSONS</div>
+      <div class="mn-body">
+        <strong>S</strong>ex (male) · <strong>A</strong>ge (young/old) · <strong>D</strong>epression · <strong>P</strong>revious attempt (★ #1) · <strong>E</strong>thanol · <strong>R</strong>ational thinking loss · <strong>S</strong>ickness · <strong>O</strong>rganized plan · <strong>N</strong>o support · <strong>S</strong>tated intent
+      </div>
+    </div>
+    <div class="mnemonic">
+      <div class="mn-label">🧠 Lithium Side Effects</div>
+      <div class="mn-title">LiTHIUM</div>
+      <div class="mn-body">
+        <strong>L</strong>ow <strong>Th</strong>yroid (hypothyroidism) · <strong>H</strong>eart (Ebstein anomaly teratogen) · <strong>I</strong>nsipidus (nephrogenic DI) · <strong>U</strong>nwanted <strong>M</strong>ovements (tremor)<br><br>
+        <em>Also: polyuria, narrow TI, weight gain, acne, leukocytosis</em>
+      </div>
+    </div>
+    <div class="mnemonic">
+      <div class="mn-label">🧠 Atypical Depression</div>
+      <div class="mn-title">MHLLR</div>
+      <div class="mn-body">
+        <strong>M</strong>ood reactivity (pathognomonic) · <strong>H</strong>ypersomnia · <strong>L</strong>eaden paralysis · <strong>L</strong>ong-standing rejection sensitivity · <strong>R</strong>eversed vegetative symptoms (hyperphagia)<br><br>
+        <em>MAOIs superior for this subtype when treatment-resistant</em>
+      </div>
+    </div>
+    <div class="mnemonic">
+      <div class="mn-label">🧠 TCA Overdose</div>
+      <div class="mn-title">Tri-CyCliC's</div>
+      <div class="mn-body">
+        <strong>C</strong>onvulsions · <strong>C</strong>oma · <strong>C</strong>ardiotoxicity (arrhythmias from Na⁺ channel blockade → QRS widening)<br><br>
+        <em>Rx: NaHCO₃ (↑ pH → TCA dissociation from channels; ↑ Na⁺ → overcomes blockade)</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- RAPID REVIEW -->
+  <h2 class="section-title" id="d2-rapid">⚡ Rapid Review — Final Pass</h2>
+
+  <div class="rapid-review">
+    <div class="rr-title">🔑 Must-Know Points — Mood Disorders</div>
+    <ul>
+      <li>Manic episode: DIG FAST ≥3 (≥4 if only irritable), ≥1 week, marked impairment, CAN have psychosis</li>
+      <li>Hypomanic: same as mania but ≥4 days, NO marked impairment, NO hospitalization, NO psychosis</li>
+      <li>MDE: SIG E CAPS ≥5 (including depressed mood OR anhedonia) for ≥2 weeks</li>
+      <li>Bipolar I = ≥1 manic episode | Bipolar II = hypomania + MDE (NO mania)</li>
+      <li>ALWAYS screen for bipolar history before starting antidepressants</li>
+      <li>Antidepressant monotherapy CONTRAINDICATED in bipolar — risk of inducing mania</li>
+      <li>Atypical depression: mood reactivity + hypersomnia + hyperphagia + leaden paralysis + rejection sensitivity</li>
+      <li>Seasonal pattern: phototherapy (10,000 lux) added to standard MDD treatment</li>
+      <li>Postpartum blues: 50–85%, peaks day 3–5, resolves within 2 weeks, supportive only</li>
+      <li>PPD: 10–15%, meets full MDE criteria, treat with CBT + SSRIs</li>
+      <li>Postpartum psychosis: 0.1–0.2%, hospitalize, antipsychotics ± ECT, DO NOT leave alone with infant</li>
+      <li>PDD (Dysthymia): chronic depressed mood ≥2 years, sub-MDE criteria</li>
+      <li>Previous suicide attempt = single strongest predictor of completed suicide</li>
+      <li>Men die more often; women attempt more often</li>
+      <li>Firearms = most common method in US; access ↑ risk 3×</li>
+      <li>SSRIs: first-line for MDD; sexual dysfunction in 50%; onset 4–6 weeks</li>
+      <li>Bupropion: no sex SE, no weight gain; CONTRAINDICATED in eating disorders + seizure disorders</li>
+      <li>MAOIs: tyramine crisis + serotonin syndrome risk; washout 2 weeks before SSRIs</li>
+      <li>TCA overdose → Na⁺ channel blockade → fatal arrhythmia (QRS widening); treat with NaHCO₃</li>
+      <li>Lithium: hypothyroidism, nephrogenic DI, Ebstein anomaly (teratogen), fine tremor; narrow TI</li>
+      <li>NSAIDs + thiazides + ACE inhibitors → ↑ lithium levels (↓ renal clearance)</li>
+      <li>Valproate: NTDs teratogen, hepatotoxicity; dual use: bipolar + seizures</li>
+      <li>Lamotrigine: SJS risk (slow titration); best for bipolar depression maintenance</li>
+      <li>Carbamazepine: CYP450 inducer (↓ other drug levels + autoinduction); SIADH, agranulocytosis</li>
+      <li>ECT: fastest-acting antidepressant; no absolute contraindications; safe in pregnancy + elderly</li>
+      <li>ECT indications: refractory depression, MDD with psychosis, acute suicidality, catatonia, refusal to eat/drink</li>
+      <li>SSRI → MAOI: wait 2 weeks (except fluoxetine → MAOI: wait 5 weeks — longest t½)</li>
+      <li>MAOI → SSRI: wait 2 weeks for MAO synthesis regeneration</li>
+    </ul>
+  </div>
+
+  <!-- BIOSTATISTICS / EPIDEMIOLOGY NOTE -->
+  <h2 class="section-title">Epidemiology Quick Facts</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Disorder</th><th>Lifetime Prevalence</th><th>Sex</th><th>Peak Onset</th><th>Key Risk Factor</th></tr></thead>
+      <tbody>
+        <tr><td class="td-mdd">MDD</td><td>~16% (lifetime); 7% point prevalence</td><td>Women 2:1</td><td>20s–40s</td><td>Family history, chronic illness, social isolation</td></tr>
+        <tr><td class="td-bip">Bipolar I</td><td>~1%</td><td>Equal (M=F)</td><td>Late teens to early 30s</td><td>Genetics (MZ twin 70%); sleep disruption; substance use</td></tr>
+        <tr><td class="td-bip">Bipolar II</td><td>~1%</td><td>Women slightly more</td><td>20s</td><td>Family history; may be preceded by cyclothymia</td></tr>
+        <tr><td>Cyclothymia</td><td>~0.4–1%</td><td>Equal</td><td>Adolescence to early adulthood</td><td>Family history of bipolar</td></tr>
+        <tr><td>PDD</td><td>~3%</td><td>Women 2–3:1</td><td>Childhood, adolescence, early adulthood</td><td>Chronic stressors, personality factors</td></tr>
+        <tr><td>PMDD</td><td>~3–8% of menstruating women</td><td>Women only</td><td>Reproductive years</td><td>Prior PMS, history of depression</td></tr>
+      </tbody>
+    </table>
+  </div>
+<!-- High Yield Visual Differential Section -->
+<div class="visual-differential" style="margin-top: 25px; padding: 25px; background-color: #ffffff; border: 2px solid #e67e22; border-radius: 10px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    
+    <h3 style="color: #e67e22; margin-top: 0; font-size: 20px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <span style="background-color: #e67e22; color: white; padding: 4px 12px; border-radius: 4px; font-weight: bold;">HIGH YIELD</span> 
+        VISUAL DIFFERENTIAL: MOOD & PSYCHOTIC DISORDERS
+    </h3>
+
+    <!-- UPDATED IMAGE TAG FOR HIGH RESOLUTION -->
+    <div style="background: white; padding: 10px; border-radius: 5px; margin: 20px 0;">
+       <img src="https://lh3.googleusercontent.com/d/1PP1M_dXDtLv53dIdX-1gLD2SYV2wTnNr" 
+     alt="Medical Diagram" 
+     style="width: 100%; max-width: 600px; height: auto; display: block; margin: 0 auto; image-rendering: -webkit-optimize-contrast;">
+             
+            
+    </div>
+
+    <div style="text-align: left; background: #fffcf5; padding: 20px; border-left: 5px solid #e67e22; font-size: 15px; line-height: 1.6; color: #2c3e50;">
+        <strong style="font-size: 17px; color: #e67e22;">Educator Note:</strong> Use this graph to distinguish the "Time-Course." 
+        <ul style="margin-top: 10px;">
+            <li><strong>Bipolar I:</strong> Requires at least one <strong>Manic</strong> episode (peaks at the top gold line).</li>
+            <li><strong>Schizoaffective:</strong> Psychosis overlaps with mood episodes but <strong>must occur by itself for &ge; 2 weeks</strong> (observe the pink box on the euthymic line).</li>
+            <li><strong>Bipolar II:</strong> Hypomania + MDE; never reaches full Mania.</li>
+        </ul>
+    </div>
+</div>
+
+</div><!-- End Doc 2 -->
+</main>
+
+<script>
+// ── DOCUMENT SWITCHING ─────────────────────────────
+function switchDoc(docId) {
+  document.querySelectorAll('.doc-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.doc-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(docId).classList.add('active');
+  document.getElementById('tab-' + docId).classList.add('active');
+  document.getElementById('nav-doc1').style.display = docId === 'doc1' ? 'block' : 'none';
+  document.getElementById('nav-doc2').style.display = docId === 'doc2' ? 'block' : 'none';
+  window.scrollTo(0, 0);
+}
+
+// ── SCROLL TO SECTION ──────────────────────────────
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    const topOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--topbar-h')) + 16;
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - topOffset, behavior: 'smooth' });
+  }
+}
+
+// ── TOGGLE ANSWER ──────────────────────────────────
+function toggleAnswer(btn) {
+  const block = btn.parentElement;
+  const ansDiv = block.querySelector('.qa-answer');
+  const wrongDiv = block.querySelector('.qa-wrong');
+  const isShowing = ansDiv && ansDiv.classList.contains('show');
+  if (ansDiv) ansDiv.classList.toggle('show', !isShowing);
+  if (wrongDiv) wrongDiv.classList.toggle('show', !isShowing);
+  btn.textContent = isShowing ? '▼ Show Answer & Explanation' : '▲ Hide Answer & Explanation';
+}
+
+// ── HIGHLIGHT TOGGLE ──────────────────────────────
+function toggleHighlight() {
+  const btn = document.getElementById('hl-btn');
+  document.body.classList.toggle('highlight-on');
+  btn.classList.toggle('active');
+  btn.textContent = document.body.classList.contains('highlight-on') ? '★ HY Highlighted' : '★ Highlight HY';
+}
+
+// ── SEARCH ────────────────────────────────────────
+let searchTimeout = null;
+function handleSearch(query) {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => { performSearch(query.trim()); }, 250);
+}
+
+function performSearch(query) {
+  const resultsEl = document.getElementById('search-results');
+  if (!query || query.length < 2) { resultsEl.style.display = 'none'; return; }
+
+  const activePanel = document.querySelector('.doc-panel.active');
+  const headings = activePanel.querySelectorAll('h2, h3, .callout, .qa-stem p, .mnemonic');
+  const results = [];
+
+  headings.forEach(el => {
+    const text = el.textContent;
+    if (text.toLowerCase().includes(query.toLowerCase())) {
+      const title = el.tagName && el.tagName.match(/H[23]/) ? el.textContent.slice(0,60) : 
+                    el.closest('.qa-block') ? 'Q&A: ' + el.textContent.slice(0,50) : el.textContent.slice(0,60);
+      const parent = el.closest('[id]');
+      results.push({ title: title + '...', id: parent ? parent.id : null, el });
+    }
+  });
+
+  if (results.length === 0) {
+    resultsEl.innerHTML = '<div class="sr-item"><div class="sr-title">No results found</div></div>';
+  } else {
+    resultsEl.innerHTML = results.slice(0, 8).map((r, i) => 
+      `<div class="sr-item" onclick="jumpToResult('r_${i}')">
+        <div class="sr-title">${r.title.replace(/[<>]/g,'')}</div>
+        <div class="sr-ctx">${r.el.tagName || 'Content block'}</div>
+      </div>`
+    ).join('');
+    window._searchResults = results;
+  }
+  resultsEl.style.display = 'block';
+}
+
+function jumpToResult(rKey) {
+  document.getElementById('search-results').style.display = 'none';
+  const idx = parseInt(rKey.split('_')[1]);
+  if (window._searchResults && window._searchResults[idx]) {
+    const el = window._searchResults[idx].el;
+    const topOffset = 80;
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - topOffset, behavior: 'smooth' });
+  }
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#search-results') && !e.target.closest('#search-input')) {
+    document.getElementById('search-results').style.display = 'none';
+  }
+});
+
+// ── MOBILE SIDEBAR ────────────────────────────────
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ── ACTIVE NAV LINK ───────────────────────────────
+const navLinks = document.querySelectorAll('.nav-link');
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
