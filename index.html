@@ -2860,13 +2860,18 @@ a.video-repeat span { font-style: italic; }
         <button class="md-choice-btn" id="lv-anki-toggle" style="width:auto;min-width:260px;margin:0" onclick="lvAnkiToggle()">🧠 Turn on Anki buttons</button>
       </div>
       <div class="lv-row" style="margin-bottom:6px">
-        <a class="lv-btn" href="anki-addon/tracker-anki-link.ankiaddon" download style="text-decoration:none">⬇ Download the add-on</a>
+        <button class="lv-btn pri" onclick="lvAnkiSetup('new')">🧭 Open the setup guide</button>
         <button class="lv-btn" onclick="lvAnkiTest()">🔌 Test connection</button>
+        <a class="lv-btn" href="anki-addon/tracker-anki-link.ankiaddon" download style="text-decoration:none">⬇ Download the add-on</a>
       </div>
       <div id="lv-anki-status"></div>
-      <div class="settings-sec-sub" style="font-size:.85rem">Install: in Anki choose <b>Tools → Add-ons → Install from file…</b>, pick the downloaded file, then restart Anki.</div>
-      <div class="settings-sec-sub" style="font-size:.85rem"><b>Updating the add-on</b> (needed for the card-status tags): in Anki choose <b>Tools → Add-ons</b>, click <b>Tracker Anki Link</b> and press <b>Delete</b>. Then download the new add-on above, choose <b>Install from file…</b>, pick it, and restart Anki. Use <b>Test connection</b> to check it says the add-on is running.</div>
+      <div class="settings-sec-sub" style="font-size:.85rem"><b>New here, or updating?</b> The <b>setup guide</b> walks you through it with pictures and checks the connection for you. Updating means deleting the old add-on in Anki first (the guide shows how).</div>
+      <div class="settings-sec-title" style="font-size:1rem;margin-top:12px">Which flag colour marks your high-yield cards?</div>
+      <div class="settings-sec-sub" style="font-size:.85rem">Pick up to 3. The status tags next to each video only count cards with these flags.</div>
+      <div id="lv-set-flags"></div>
     </div>
+
+    <div id="lv-anki-unhide">Started using Anki? <a onclick="lvAnkiUnhide()">Show the Anki options</a></div>
 
     <div class="settings-sec" id="set-guide">
       <div class="settings-sec-title">6 · 📖 How everything works</div>
@@ -5256,7 +5261,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 49, built: '2026-10-14T22:09:39Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 50, built: '2026-10-14T22:27:59Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5266,7 +5271,13 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
-  { v: [2, 49], title: "Anki buttons now show your card status", items: ["Next to each 🧠 Anki button there is now a small colored tag showing how many of that video's green-flagged cards are still suspended, new, or already in your reviews. Red means all suspended, amber means you're partway through, green means done (a couple of leftover cards still count as done). Only green-flagged cards are counted.","To get it you need the updated Anki add-on. If you already use the Anki button: in Anki go to Tools → Add-ons, click Tracker Anki Link and press Delete. Then in the tracker go to Settings → Anki button and download the new add-on. Back in Anki choose Tools → Add-ons → Install from file…, pick the file you downloaded, and restart Anki. Keep Anki open while you use the tracker.","Haven't used the Anki button yet? Turn it on in Settings → Anki button. The add-on is optional. Without it the button still copies the card search for you to paste into Anki."] },
+  { v: [2, 50], anki: true, title: "Easy Anki setup guide + your own flag colours", items: [
+    "New interactive setup guide with pictures: download the add-on, install it in Anki, and check the connection, all from one window. No more hunting for instructions.",
+    "You can now choose which Anki flag colour(s) count as your high-yield cards (up to 3, or all cards). It no longer assumes green.",
+    "The status tags show up much faster now (they remember the last answer and Anki replies quicker). You need the new add-on file for the flag colours.",
+    { btn: "Open the Anki setup guide", fn: "lvAnkiSetup" }
+  ] },
+  { v: [2, 49], anki: true, title: "Anki buttons now show your card status", items: ["Next to each 🧠 Anki button there is now a small colored tag showing how many of that video's green-flagged cards are still suspended, new, or already in your reviews. Red means all suspended, amber means you're partway through, green means done (a couple of leftover cards still count as done). Only green-flagged cards are counted.","To get it you need the updated Anki add-on. If you already use the Anki button: in Anki go to Tools → Add-ons, click Tracker Anki Link and press Delete. Then in the tracker go to Settings → Anki button and download the new add-on. Back in Anki choose Tools → Add-ons → Install from file…, pick the file you downloaded, and restart Anki. Keep Anki open while you use the tracker.","Haven't used the Anki button yet? Turn it on in Settings → Anki button. The add-on is optional. Without it the button still copies the card search for you to paste into Anki."] },
   { v: [2, 39], title: "Behavioral Sciences: simplified around the 4 midterm guides", items: ["The midterm is covered by four study guides from Dr. Sampath (Life Cycle, Children & Adolescents, Schizophrenia, Mood Disorders). Each now has its own card with the matching Boards & Beyond videos (same order as before), lengths, checkboxes and an Open guide button.", "Anxiety Disorders and Child Abuse videos stay on the midterm list, marked as not covered by the guides. Everything else (final-exam videos, full lecture schedule, optional extras) is collapsed below, nothing removed."] },
   { v: [2, 37], title: "MD4 schedule update (weeks 5–6) + planner fixes", items: ["Updated the Oct 9–16 schedule: Non-inflammatory Diarrhea now Fri 10/9, Antidepressants Mon 10/12 + Tue 10/13, Sedatives & Hypnotics Wed 10/14 + Thu 10/15, SFH on Fri 10/16. The Behavioral Sciences Mood Disorders TBL moved to Tue 10/13 and is tagged MIDTERM.", "Planner now works for CHS303: lecture lengths typed as text are read automatically, so it shows the real remaining videos.", "Planner no longer says 'behind by 74 videos' on a module's first open: the pace baseline resets whenever the video list grows."] },
   { v: [2, 32], title: "Behavioral Sciences: midterm vs final", items: ["Each lecture is tagged MIDTERM (Block 1 exam, Oct 14) or FINAL (Dec 7), with separate video counts, time totals and progress for each."] },
@@ -5294,14 +5305,15 @@ function wnCmp(a, b) { return a[0] !== b[0] ? a[0] - b[0] : a[1] - b[1]; }
 function wnClose(){ const o = document.getElementById('wn-overlay'); if (o) o.remove(); try { localStorage.setItem('md_last_seen_ver', APP_VERSION.major + '.' + APP_VERSION.minor); } catch (e) {} }
 function showWhatsNew(sinceArr, all) {
   const cur = [APP_VERSION.major, APP_VERSION.minor];
-  const list = WHATS_NEW.filter(e => all || (wnCmp(e.v, sinceArr) > 0 && wnCmp(e.v, cur) <= 0));
+  const noAnki = (() => { try { return localStorage.getItem('tracker_anki_prompt_v1') === 'no'; } catch (e) { return false; } })();
+  const list = WHATS_NEW.filter(e => !(noAnki && e.anki)).filter(e => all || (wnCmp(e.v, sinceArr) > 0 && wnCmp(e.v, cur) <= 0));
   if (!list.length) return false;
   if (document.getElementById('wn-overlay')) return true;
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const o = document.createElement('div'); o.id = 'wn-overlay';
   const prev = sinceArr && !all ? 'v' + sinceArr[0] + '.' + sinceArr[1] : '';
   o.innerHTML = '<div id="wn-card" role="dialog" aria-modal="true" aria-label="What\'s new"><div class="wn-hd"><h2>\u2728 ' + (all ? 'Everything that\'s been added' : 'What\'s new') + '</h2><p>' + (all ? 'Newest first.' : 'You updated from ' + prev + ' to v' + cur[0] + '.' + cur[1] + '. Here is everything that is new, newest first.') + '</p></div><div class="wn-body">' +
-    list.map(e => '<div class="wn-ver"><div class="wn-vh"><span class="wn-tag">v' + e.v[0] + '.' + e.v[1] + '</span><span class="wn-vt">' + esc(e.title) + '</span></div><ul>' + e.items.map(i => '<li>' + esc(i) + '</li>').join('') + '</ul></div>').join('') +
+    list.map(e => '<div class="wn-ver"><div class="wn-vh"><span class="wn-tag">v' + e.v[0] + '.' + e.v[1] + '</span><span class="wn-vt">' + esc(e.title) + '</span></div><ul>' + e.items.map(i => typeof i === 'object' ? '<li style="list-style:none;margin-left:-18px"><button type="button" class="wn-btn" onclick="wnClose();window.' + i.fn + '(\'' + (i.arg || 'new') + '\')">' + esc(i.btn) + '</button></li>' : '<li>' + esc(i) + '</li>').join('') + '</ul></div>').join('') +
     '</div><div class="wn-ft"><button type="button" onclick="wnClose()">Got it</button></div></div>';
   o.addEventListener('click', ev => { if (ev.target === o) wnClose(); });
   document.body.appendChild(o);
@@ -10239,6 +10251,94 @@ html.anki-on .lv-aks.on{display:inline-block}
 .lv-aks.load::before{content:"";display:inline-block;width:.7em;height:.7em;margin-right:.45em;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;vertical-align:-.08em;animation:lvspin .7s linear infinite}
 .lv-aks.stale{opacity:.55}
 .lv-aks.off{background:rgba(127,127,127,.15);color:var(--text-faint)}
+#lv-wiz{position:fixed;inset:0;z-index:100005;background:rgba(5,8,16,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:14px}
+#lv-wiz .wz-card{width:min(700px,100%);max-height:94vh;overflow:auto;background:var(--bg-2);color:var(--text);border:1px solid var(--border);border-radius:22px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+#lv-wiz .wz-hd{padding:18px 22px 10px;position:sticky;top:0;background:var(--bg-2);z-index:2;border-bottom:1px solid var(--border)}
+#lv-wiz .wz-top{display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap}
+#lv-wiz h3{margin:0;font-size:1.25rem}
+#lv-wiz .wz-x{background:none;border:0;color:var(--text-dim);font-size:1.5rem;line-height:1;cursor:pointer;padding:2px 8px}
+#lv-wiz .wz-tabs{display:inline-flex;gap:4px;background:rgba(127,127,127,.14);border-radius:99px;padding:3px;margin-top:8px}
+#lv-wiz .wz-tabs button{border:0;background:none;color:var(--text-dim);font:inherit;font-size:.82rem;font-weight:700;padding:5px 12px;border-radius:99px;cursor:pointer}
+#lv-wiz .wz-tabs button.on{background:var(--bg);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.25)}
+#lv-wiz .wz-dots{display:flex;gap:6px;margin-top:12px}
+#lv-wiz .wz-dots i{flex:1;height:5px;border-radius:9px;background:rgba(127,127,127,.25)}
+#lv-wiz .wz-dots i.done{background:#22c55e}
+#lv-wiz .wz-dots i.cur{background:linear-gradient(90deg,#38bdf8,#818cf8)}
+#lv-wiz .wz-body{padding:16px 22px 6px}
+#lv-wiz .wz-step{font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--path)}
+#lv-wiz .wz-body h4{margin:2px 0 6px;font-size:1.35rem}
+#lv-wiz .wz-p{color:var(--text-dim);line-height:1.6;font-size:.95rem;margin:0 0 12px}
+#lv-wiz .wz-p b{color:var(--text)}
+#lv-wiz .wz-ft{display:flex;gap:8px;justify-content:space-between;align-items:center;padding:12px 22px 18px;position:sticky;bottom:0;background:var(--bg-2);border-top:1px solid var(--border)}
+#lv-wiz .wz-ft .r{display:flex;gap:8px;align-items:center}
+#lv-wiz .wz-skip{background:none;border:0;color:var(--text-faint);font:inherit;font-size:.82rem;cursor:pointer;text-decoration:underline}
+#lv-wiz .wz-big{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;box-sizing:border-box;padding:16px;border-radius:16px;font-size:1.1rem;font-weight:800;text-decoration:none;background:linear-gradient(135deg,#38bdf8,#818cf8);color:#071022;border:0;cursor:pointer;font-family:inherit}
+#lv-wiz .wz-big small{display:block;font-size:.75rem;font-weight:600;opacity:.75}
+#lv-wiz .wz-ok{color:#16a34a;font-weight:700;margin-top:8px}
+#lv-wiz .wz-note{font-size:.82rem;color:var(--text-faint);line-height:1.5;margin:10px 0}
+#lv-wiz .wz-cap{font-size:.72rem;color:var(--text-faint);text-align:center;margin:4px 0 12px}
+/* drawn Anki screens */
+.wz-win{background:#f1f2f4;color:#222;border:1px solid #c9ccd2;border-radius:10px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.28);font:13px/1.35 -apple-system,Segoe UI,Roboto,sans-serif;position:relative;margin:6px 0}
+.wz-win .tb{display:flex;align-items:center;gap:6px;padding:7px 10px;background:#e1e3e7;border-bottom:1px solid #c9ccd2;font-weight:600;font-size:12px;color:#444}
+.wz-win .tb i{width:10px;height:10px;border-radius:50%;background:#ff5f57}.wz-win .tb i+i{background:#febc2e}.wz-win .tb i+i+i{background:#28c840}
+.wz-win .tb span{margin-left:8px}
+.wz-win .mb{display:flex;gap:2px;padding:3px 6px;background:#f6f6f7;border-bottom:1px solid #d6d8dc}
+.wz-win .mb span{padding:3px 10px;border-radius:5px}
+.wz-win .hl{outline:3px solid #f59e0b;outline-offset:1px;animation:wzpulse 1.4s ease-in-out infinite;position:relative}
+@keyframes wzpulse{50%{outline-color:rgba(245,158,11,.25)}}
+.wz-win .mb span.hl{background:#fde8b7}
+.wz-menu{position:absolute;left:206px;top:62px;width:210px;background:#fff;border:1px solid #c4c7cc;border-radius:7px;box-shadow:0 6px 18px rgba(0,0,0,.25);padding:4px 0;z-index:2}
+.wz-menu div{padding:4px 14px;display:flex;justify-content:space-between;gap:10px}
+.wz-menu div small{color:#888;font-size:11px}
+.wz-menu div.hl{background:#fde8b7;outline-offset:-2px}
+.wz-deck{height:190px;background:#fff;padding:14px 20px;color:#999}
+.wz-deck b{display:block;color:#bbb;border-bottom:1px solid #eee;padding:4px 0;font-weight:600}
+.wz-dlg{display:flex;min-height:200px}
+.wz-dlg .ls{flex:1;background:#fff;margin:10px;border:1px solid #cfd2d6;border-radius:6px;padding:4px;min-height:180px}
+.wz-dlg .ls div{padding:4px 8px;border-radius:4px;color:#333}
+.wz-dlg .ls div.sel{background:#3b82f6;color:#fff;font-weight:600}
+.wz-dlg .ls div.dim{color:#aaa}
+.wz-dlg .bt{width:170px;padding:10px 12px 10px 0;display:flex;flex-direction:column;gap:6px}
+.wz-dlg .bt span{background:#fff;border:1px solid #c4c7cc;border-radius:6px;padding:5px 8px;text-align:center}
+.wz-dlg .bt span.hl{background:#fff3d6}
+.wz-fp .path{padding:6px 10px;background:#f6f6f7;border-bottom:1px solid #d6d8dc;color:#555}
+.wz-fp .files{background:#fff;padding:6px;min-height:84px}
+.wz-fp .files div{padding:4px 8px;border-radius:4px;color:#888}
+.wz-fp .files div.sel{background:#3b82f6;color:#fff;font-weight:600}
+.wz-fp .ac{display:flex;gap:8px;justify-content:flex-end;padding:8px 10px;background:#f1f2f4}
+.wz-fp .ac span{background:#fff;border:1px solid #c4c7cc;border-radius:6px;padding:4px 18px}
+.wz-fp .ac span.hl{background:#3b82f6;color:#fff;border-color:#3b82f6;outline-color:#f59e0b}
+.wz-msg{padding:18px 20px;display:flex;gap:14px;align-items:flex-start;background:#fff}
+.wz-msg .ic{font-size:28px}
+.wz-msg .ac{margin-left:auto;align-self:flex-end;background:#3b82f6;color:#fff;border-radius:6px;padding:4px 20px}
+.wz-conn{border-radius:14px;padding:14px 16px;margin:6px 0;display:flex;gap:12px;align-items:center;font-weight:700}
+.wz-conn.wait{background:rgba(127,127,127,.14);color:var(--text-dim)}
+.wz-conn.ok{background:rgba(34,197,94,.16);color:#16a34a}
+.wz-conn.old{background:rgba(245,158,11,.16);color:#d97706}
+.wz-conn small{display:block;font-weight:500;color:var(--text-dim)}
+.wz-spin{width:18px;height:18px;border:3px solid currentColor;border-right-color:transparent;border-radius:50%;animation:lvspin .8s linear infinite;flex:none}
+.wz-flags{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px;margin:8px 0}
+.wz-flag{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;border:2px solid var(--border);background:rgba(127,127,127,.08);color:var(--text);font:inherit;font-weight:700;cursor:pointer}
+.wz-flag svg{width:20px;height:20px;flex:none}
+.wz-flag.on{border-color:var(--path);background:rgba(56,189,248,.14)}
+.wz-flag.all{grid-column:1/-1}
+.wz-prev{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:6px 14px;margin:8px 0}
+.wz-prev .rw{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 0;border-bottom:1px solid var(--border);font-size:.9rem}
+.wz-prev .rw:last-child{border:0}
+.wz-prev .rw .n{flex:1;min-width:150px;font-weight:600}
+.wz-prev .lv-aks{display:inline-block;margin:0}
+.wz-prev .fake{font-size:.75rem;padding:3px 9px;border-radius:99px;border:1px solid var(--border);color:var(--text-dim)}
+html.anki-no #set-anki{display:none}
+#lv-anki-unhide{display:none;font-size:.78rem;color:var(--text-faint);margin:6px 2px}
+html.anki-no #lv-anki-unhide{display:block}
+#lv-anki-unhide a{color:var(--text-faint);text-decoration:underline;cursor:pointer}
+.lv-aks.off.fix{cursor:pointer;text-decoration:underline dotted}
+#lv-akchip{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:99990;background:var(--bg-2);color:var(--text);border:1px solid var(--path);border-radius:99px;box-shadow:var(--shadow);padding:8px 8px 8px 16px;display:flex;align-items:center;gap:10px;font-size:.88rem;font-weight:600;max-width:calc(100vw - 24px)}
+#lv-akchip button{font:inherit}
+#lv-akchip .go{background:linear-gradient(135deg,#38bdf8,#818cf8);color:#071022;border:0;border-radius:99px;padding:6px 14px;font-weight:800;cursor:pointer;white-space:nowrap}
+#lv-akchip .no{background:none;border:0;color:var(--text-dim);font-size:1.2rem;cursor:pointer;padding:0 8px}
+.wn-btn{margin:6px 0 2px;padding:8px 14px;border-radius:99px;border:0;background:linear-gradient(135deg,#38bdf8,#818cf8);color:#071022;font:inherit;font-weight:800;cursor:pointer}
+@media (max-width:560px){.wz-menu{left:60px;top:62px}.wz-dlg .bt{width:130px}#lv-akchip{flex-wrap:wrap;border-radius:18px}}
 @keyframes lvshim{to{background-position:-200% 0}}
 @keyframes lvspin{to{transform:rotate(360deg)}}
 html.anki-stat .lv-aks{box-sizing:border-box;flex:none;width:11.5em;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -10252,6 +10352,10 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
   var PORTS = [8766, 8767];
   var ADDON_FILE = 'anki-addon/tracker-anki-link.ankiaddon';
   var KEY = 'tracker_anki_on_v1';
+  var FKEY = 'tracker_anki_flags_v1';
+  function getFlags() { var v = (g(FKEY) || '3').split(',').map(Number).filter(function (x) { return x >= 0 && x <= 7; }); if (v.indexOf(0) >= 0) return [0]; v = v.filter(function (x, i) { return v.indexOf(x) === i; }).slice(0, 3); return v.length ? v : [3]; }
+  function setFlags(a) { s(FKEY, a.join(',')); }
+  function fkey() { return getFlags().join(','); }
   function g(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function s(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
   function esc(t) { return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
@@ -10262,7 +10366,19 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
   }
   function toast(m, ms) { var t = document.getElementById('lv-toast'); if (!t) { t = document.createElement('div'); t.id = 'lv-toast'; document.body.appendChild(t); } t.textContent = m; t.style.display = ''; clearTimeout(t._t); t._t = setTimeout(function () { t.style.display = 'none'; }, ms || 3200); }
 
+  var lastPort = 0;
+  function one(p, path, ms) { var c = new AbortController(), to = setTimeout(function () { c.abort(); }, ms); return fetch('http://127.0.0.1:' + p + path, { signal: c.signal }).then(function (r) { clearTimeout(to); return r; }, function (e) { clearTimeout(to); throw e; }); }
+  /* ask the add-on: try the port that worked last time first, otherwise both ports at once */
+  async function hit(path, ms) {
+    if (lastPort) { try { var r0 = await one(lastPort, path, ms); if (r0.status !== 0) return r0; } catch (e) {} lastPort = 0; }
+    return new Promise(function (res) {
+      var n = 0; PORTS.forEach(function (p) { one(p, path, ms).then(function (r) { lastPort = p; res(r); }, function () { if (++n === PORTS.length) res(null); }); });
+    });
+  }
   async function send(q) {
+    var r = await hit('/open?q=' + encodeURIComponent(q), 1500); return !!(r && r.ok);
+  }
+  async function sendOld(q) {
     for (var i = 0; i < PORTS.length; i++) {
       try {
         var c = new AbortController(), to = setTimeout(function () { c.abort(); }, 1500);
@@ -10286,11 +10402,11 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
       '<div style="color:var(--text-dim);font-size:.92rem;line-height:1.5">The Anki add-on isn\u2019t connected, so I copied this video\u2019s card search to your clipboard.</div>' +
       '<ol><li>Open <b>Anki</b> and click <b>Browse</b></li><li>Click the search bar, paste (<b>Ctrl/\u2318 + V</b>) and press <b>Enter</b></li></ol>' +
       '<code style="display:block;background:rgba(127,127,127,.15);border-radius:10px;padding:10px 12px;font-size:.8rem;word-break:break-all;margin:8px 0;color:var(--text);font-family:ui-monospace,Menlo,Consolas,monospace">' + esc(q) + '</code>' +
-      '<div class="lv-row"><button class="lv-btn pri" data-a="copy">Copy again</button><button class="lv-btn" data-a="x">Close</button></div>' +
+      '<div class="lv-row"><button class="lv-btn pri" data-a="wiz">\ud83e\udde0 Set up the add-on (1 min)</button><button class="lv-btn" data-a="copy">Copy again</button><button class="lv-btn" data-a="x">Close</button></div>' +
       '<details style="margin-top:12px;font-size:.9rem"><summary style="cursor:pointer;font-weight:700">Want it to open Anki automatically? (optional)</summary><ol style="color:var(--text-dim)"><li><a href="' + ADDON_FILE + '" download style="color:var(--path);font-weight:700">Download the add-on</a></li><li>In Anki: <b>Tools \u2192 Add-ons \u2192 Install from file\u2026</b>, pick the file, then restart Anki and keep it open</li></ol></details>' +
       '<div style="margin-top:10px;font-size:.8rem;color:var(--text-faint)">The cards come from the AnKing Step deck, found by each video\u2019s tag.</div></div>';
     document.body.appendChild(o);
-    o.addEventListener('click', function (e) { if (e.target === o || e.target.closest('[data-a=x]')) o.remove(); else if (e.target.closest('[data-a=copy]')) copy(q).then(function () { toast('Copied'); }); });
+    o.addEventListener('click', function (e) { if (e.target === o || e.target.closest('[data-a=x]')) o.remove(); else if (e.target.closest('[data-a=wiz]')) window.lvAnkiSetup('new'); else if (e.target.closest('[data-a=copy]')) copy(q).then(function () { toast('Copied'); }); });
   }
   window.lvAnkiHas = function (id) { return !!AK[id]; };
   window.lvAnki = async function (id) {
@@ -10302,17 +10418,19 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
   function apply() {
     var on = g(KEY) === '1';
     document.documentElement.classList.toggle('anki-on', on);
+    document.documentElement.classList.toggle('anki-no', !on && g('tracker_anki_prompt_v1') === 'no');
     var b = document.getElementById('lv-anki-toggle'); if (b) { b.textContent = on ? '✅ Anki buttons are ON (click to turn off)' : '🧠 Turn on Anki buttons'; b.style.outline = on ? '2px solid var(--path)' : ''; }
   }
+  window.lvAnkiUnhide = function () { s('tracker_anki_prompt_v1', null); apply(); };
   window.lvAnkiToggle = function () { s(KEY, g(KEY) === '1' ? null : '1'); apply(); };
   window.lvAnkiTest = async function () {
     var el = document.getElementById('lv-anki-status'); if (el) el.textContent = 'Checking…';
     var ok = false, ver = 0;
-    for (var i = 0; i < PORTS.length && !ok; i++) { try { var r = await fetch('http://127.0.0.1:' + PORTS[i] + '/ping'); ok = r.ok; if (ok) { try { ver = (await r.json()).v || 0; } catch (e) {} } } catch (e) {} }
+    var r = await hit('/ping', 2000); ok = !!(r && r.ok); if (ok) { try { ver = (await r.json()).v || 0; } catch (e) {} }
     if (el) el.innerHTML = !ok ? '⚠️ Couldn’t reach the add-on. Open Anki and make sure the add-on is installed.' : (ver < 2 ? '✅ Connected, but this is the older add-on. <a href="' + ADDON_FILE + '" download style="color:var(--path);font-weight:700">Download the new one</a> to see which cards are suspended, new or in your reviews (Anki: Tools → Add-ons → Install from file, then restart Anki).' : '✅ Connected. The add-on is running in Anki.');
   };
   apply();
-  document.addEventListener('DOMContentLoaded', apply);
+  document.addEventListener('DOMContentLoaded', function () { apply(); var f = document.getElementById('lv-set-flags'); if (f) renderFlagPicker(f); });
 
   /* a small 🧠 button next to every mapped video link (shown only when turned on) */
   var IDRE = /drive\.google\.com\/file\/d\/([^\/?#]+)/;
@@ -10332,41 +10450,42 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   window.addEventListener('load', run);
 
-  /* card status pill next to each Anki button: only your GREEN-flagged cards count */
+  /* card status pill next to each Anki button: only cards with your chosen flag colour(s) count */
   function statPill(r) {
     if (!r) return null;
     if (!r.t) return { c: '', t: 'no cards found', h: 'No Anki cards were found for this video.' };
-    if (!r.g) return { c: '', t: 'no green cards', h: r.t + ' cards for this video, none flagged green (' + r.ts + ' suspended).' };
+    var FL = getFlags(), fw = FL[0] === 0 ? '' : listWords(FL.map(flagName)), fadj = fw ? fw + '-flagged ' : '';
+    if (!r.g) return { c: '', t: 'no ' + (fw ? fw + ' ' : '') + 'cards', h: r.t + ' cards for this video, none ' + (fw ? 'flagged ' + fw : 'found') + ' (' + r.ts + ' suspended). Change your flag colour in Settings \u2192 Anki button.' };
     var left = r.gs + r.gn, done = r.gr > 0 && (left <= 2 || r.gr / r.g >= 0.9); /* a couple of stragglers = low yield, still counts as done */
     var c = r.gs === r.g ? 'sus' : done ? 'rev' : 'mid', t;
     if (c === 'sus') t = 'all ' + r.g + ' suspended';
     else if (c === 'rev' && !left) t = 'all ' + r.g + ' in reviews';
     else { var p = []; if (r.gs) p.push(r.gs + ' susp'); if (r.gn) p.push(r.gn + ' new'); if (r.gr) p.push(r.gr + ' rev'); t = p.join(' · '); }
-    return { c: c, t: t, h: r.g + ' green-flagged of ' + r.t + ' cards. Suspended: ' + r.gs + ' · New (unsuspended, not studied yet): ' + r.gn + ' · Studied (in your reviews): ' + r.gr };
+    return { c: c, t: t, h: r.g + ' ' + fadj + 'cards of ' + r.t + ' total. Suspended: ' + r.gs + ' · New (unsuspended, not studied yet): ' + r.gn + ' · Studied (in your reviews): ' + r.gr };
   }
   var statBusy = false, statTimer = null;
   async function getStatus(qs) {
-    for (var i = 0; i < PORTS.length; i++) {
-      try {
-        var c = new AbortController(), to = setTimeout(function () { c.abort(); }, 25000);
-        var r = await fetch('http://127.0.0.1:' + PORTS[i] + '/status?' + qs.map(function (q) { return 'q=' + encodeURIComponent(q); }).join('&'), { signal: c.signal });
-        clearTimeout(to);
-        if (r.ok) { var j = await r.json(); if (j && j.r) return j.r; }
-      } catch (e) {}
-    }
+    getStatus.ver = 0;
+    var r = await hit('/status?f=' + fkey() + '&' + qs.map(function (q) { return 'q=' + encodeURIComponent(q); }).join('&'), 25000);
+    if (!r) return null;
+    if (r.ok) { try { var j = await r.json(); getStatus.ver = (j && j.v) || 0; if (j && j.r) return j.r; } catch (e) {} }
+    else if (r.status === 404 || r.status === 400) getStatus.ver = 1;
     return null;
   }
   var statCache = {};
+  var SCK = 'tracker_anki_cache_v1', scT = null;
+  try { statCache = JSON.parse(g(SCK) || '{}') || {}; } catch (e) { statCache = {}; }
+  function saveCache() { clearTimeout(scT); scT = setTimeout(function () { try { var k = Object.keys(statCache); if (k.length > 700) k.slice(0, k.length - 700).forEach(function (x) { delete statCache[x]; }); s(SCK, JSON.stringify(statCache)); } catch (e) {} }, 400); }
   async function refreshStatus() {
     if (statBusy || !document.documentElement.classList.contains('anki-on')) return;
     document.documentElement.classList.add('anki-stat');
     var pills = Array.prototype.filter.call(document.querySelectorAll('.lv-aks'), function (e) { var bt = e.previousElementSibling; return bt && bt.offsetParent !== null; });
-    if (!pills.length) return;
+    if (!pills.length) { if ((refreshStatus.tries = (refreshStatus.tries || 0) + 1) < 8) soonStatus(700); return; }
     var byQ = {}, vh = window.innerHeight || 800;
     pills.forEach(function (e) {
       var q = query(e.dataset.akid); if (!q) return;
       (byQ[q] = byQ[q] || []).push(e);
-      var c = statCache[q];
+      var c = statCache[q + '|' + fkey()];
       if (c) { var d = statPill(c); e.className = 'lv-aks on stale ' + d.c; e.textContent = d.t; e.title = d.h; }
       else { e.className = 'lv-aks on load'; e.textContent = 'checking…'; e.title = 'Asking Anki for this video’s card status…'; }
     });
@@ -10378,27 +10497,183 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
     statBusy = true;
     var failed = false;
     try {
-      for (var i = 0; i < qs.length; i += 6) {
-        var chunk = qs.slice(i, i + 6), res = await getStatus(chunk);
-        if (!res) { failed = true; break; }
+      for (var i = 0; i < qs.length;) {
+        var sz = i === 0 ? 3 : 10, chunk = qs.slice(i, i + sz), res = await getStatus(chunk);
+        i += sz;
+        if (!res) { failed = getStatus.ver === 1 ? 'old' : true; break; }
+        if (getFlags().join() !== '3' && (getStatus.ver || 0) < 3) { failed = 'old'; break; }
         chunk.forEach(function (q, k) {
           var d = statPill(res[k]); if (!d) return;
-          statCache[q] = res[k];
+          statCache[q + '|' + fkey()] = res[k]; saveCache();
           byQ[q].forEach(function (e) { e.className = 'lv-aks on ' + d.c; e.textContent = d.t; e.title = d.h; });
         });
       }
     } finally {
       statBusy = false;
-      if (failed) pills.forEach(function (e) { if (/\bload\b|\bstale\b/.test(e.className)) { e.className = 'lv-aks on off'; e.textContent = 'Anki not responding'; e.title = 'Couldn’t reach Anki. Make sure Anki is open and the add-on is installed.'; } });
+      if (failed === 'old') pills.forEach(function (e) { if (/\bload\b|\bstale\b/.test(e.className)) { e.className = 'lv-aks on off fix'; e.dataset.fix = 'update'; e.textContent = 'Update the add-on (tap)'; e.title = 'Your Anki add-on is the old version, so it can only count green cards. Tap for the 1-minute update guide.'; } });
+      else if (failed) pills.forEach(function (e) { if (/\bload\b|\bstale\b/.test(e.className)) { e.className = 'lv-aks on off fix'; e.dataset.fix = 'new'; e.textContent = 'Anki not responding (tap)'; e.title = 'Couldn’t reach Anki. Make sure Anki is open and the add-on is installed.'; } });
     }
   }
   function soonStatus(ms) { clearTimeout(statTimer); statTimer = setTimeout(refreshStatus, ms || 800); }
   window.lvAnkiRefresh = function () { soonStatus(50); };
-  window.addEventListener('load', function () { soonStatus(1200); });
+  window.addEventListener('load', function () { soonStatus(300); });
   window.addEventListener('focus', function () { soonStatus(600); });
   document.addEventListener('visibilitychange', function () { if (!document.hidden) soonStatus(600); });
   setInterval(function () { if (!document.hidden) refreshStatus(); }, 120000);
   document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.lv-ak, #lv-anki-toggle, summary, .nav-item, [data-panel]')) soonStatus(1500); }, true);
+
+  /* ===== Anki setup guide (interactive) ===== */
+  var FLAGS = [[1, 'red', '#ef4444'], [2, 'orange', '#f97316'], [3, 'green', '#22c55e'], [4, 'blue', '#3b82f6'], [5, 'pink', '#ec4899'], [6, 'turquoise', '#14b8a6'], [7, 'purple', '#a855f7']];
+  function flagSvg(c) { return '<svg viewBox="0 0 24 24"><path d="M5 2v20M5 4h13l-3 4.5 3 4.5H5" fill="' + c + '" stroke="' + c + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>'; }
+  function flagName(n) { for (var i = 0; i < FLAGS.length; i++) if (FLAGS[i][0] === n) return FLAGS[i][1]; return ''; }
+  function listWords(a) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' or ' + a[a.length - 1]; }
+  function renderFlagPicker(host, after) {
+    var cur = getFlags();
+    host.innerHTML = '<div class="wz-flags">' + FLAGS.map(function (f) { return '<button type="button" class="wz-flag' + (cur.indexOf(f[0]) >= 0 ? ' on' : '') + '" data-f="' + f[0] + '">' + flagSvg(f[2]) + f[1].charAt(0).toUpperCase() + f[1].slice(1) + '</button>'; }).join('') +
+      '<button type="button" class="wz-flag all' + (cur[0] === 0 ? ' on' : '') + '" data-f="0">📚 I don’t use flags — count every card</button></div>' +
+      '<div class="wz-note" data-hint></div>';
+    function hint() { var c = getFlags(); host.querySelector('[data-hint]').innerHTML = c[0] === 0 ? 'Every card for a video counts as one you study.' : 'Counting your <b>' + listWords(c.map(flagName)) + '</b>-flagged cards (' + c.length + ' of 3 colours max).'; }
+    hint();
+    host.onclick = function (e) {
+      var b = e.target.closest('[data-f]'); if (!b) return;
+      var n = +b.dataset.f, c = getFlags();
+      if (n === 0) c = [0];
+      else { c = c.filter(function (x) { return x !== 0; }); var i = c.indexOf(n); if (i >= 0) c.splice(i, 1); else { if (c.length >= 3) { toast('You can pick up to 3 colours. Tap one to untick it first.'); return; } c.push(n); } if (!c.length) c = [3]; }
+      setFlags(c); renderFlagPicker(host, after); statCache = {}; saveCache(); if (after) after(); soonStatus(100);
+    };
+  }
+  window.lvAnkiFlagPicker = function (id) { var h = document.getElementById(id); if (h) renderFlagPicker(h); };
+
+  /* drawn pictures of Anki (illustrations, not real screenshots) */
+  var MOCK_MENU = '<div class="wz-win"><div class="tb"><i></i><i></i><i></i><span>Anki — your decks</span></div><div class="mb"><span>File</span><span>Edit</span><span>View</span><span>Go</span><span class="hl">Tools</span><span>Help</span></div><div class="wz-deck"><b>Default</b><b>AnKing Step Deck</b><b>My other deck</b></div>' +
+    '<div class="wz-menu"><div>Study Deck…</div><div>Create Filtered Deck…</div><div>Check Database</div><div class="hl">Add-ons <small>Ctrl/⌘+Shift+A</small></div><div>Manage Note Types…</div><div>Preferences…</div></div></div>';
+  function mockAddons(hl, withOurs) {
+    function b(t, k) { return '<span' + (hl === k ? ' class="hl"' : '') + '>' + t + '</span>'; }
+    return '<div class="wz-win"><div class="tb"><i></i><i></i><i></i><span>Add-ons</span></div><div class="wz-dlg"><div class="ls">' +
+      '<div class="dim">Your other add-ons are listed here</div>' + (withOurs ? '<div class="sel">Tracker Anki Link</div>' : '') + '<div class="dim">…</div></div>' +
+      '<div class="bt">' + b('Get Add-ons…', 'g') + b('Check for Updates', 'u') + b('Install from file…', 'i') + b('Config', 'c') + b('View Files', 'v') + b('Delete', 'd') + '</div></div></div>';
+  }
+  var MOCK_FILE = '<div class="wz-win wz-fp"><div class="tb"><i></i><i></i><i></i><span>Select add-on file</span></div><div class="path">📁 Downloads</div><div class="files"><div>some-other-file.pdf</div><div class="sel">tracker-anki-link.ankiaddon</div></div><div class="ac"><span>Cancel</span><span class="hl">Open</span></div></div>';
+  var MOCK_RESTART = '<div class="wz-win"><div class="tb"><i></i><i></i><i></i><span>Anki</span></div><div class="wz-msg"><div class="ic">✅</div><div><b>Add-on installed.</b><br>Please close Anki completely and open it again so it can start.</div><div class="ac">OK</div></div></div>';
+  function mockRows() {
+    return '<div class="wz-prev"><div class="rw"><span class="n">COPD &amp; Emphysema</span><span class="fake">▶ Sketchy</span><span class="fake">🧠 Anki</span><span class="lv-aks on rev">all 14 in reviews</span></div>' +
+      '<div class="rw"><span class="n">Asthma</span><span class="fake">▶ Sketchy</span><span class="fake">🧠 Anki</span><span class="lv-aks on mid">8 susp · 4 new · 2 rev</span></div>' +
+      '<div class="rw"><span class="n">Lung Carcinoma</span><span class="fake">▶ Sketchy</span><span class="fake">🧠 Anki</span><span class="lv-aks on sus">all 9 suspended</span></div></div>';
+  }
+  var W = { mode: 'new', i: 0, poll: null, dl: false, conn: null };
+  function wsteps() {
+    var s = W.mode === 'update' ? ['remove'] : ['open'];
+    return s.concat(['get', 'install', 'restart', 'test', 'flag', 'done']);
+  }
+  async function pingOnce() {
+    var r = await hit('/ping', 1500); if (!r || !r.ok) return { ok: false, v: 0 };
+    var v = 0; try { v = (await r.json()).v || 0; } catch (e) {} return { ok: true, v: v };
+  }
+  function stopPoll() { if (W.poll) { clearInterval(W.poll); W.poll = null; } }
+  function connHtml(c) {
+    if (!c) return '<div class="wz-conn wait"><div class="wz-spin"></div><div>Looking for Anki…<small>This checks every 2 seconds. It turns green by itself once Anki is open with the add-on.</small></div></div>';
+    if (!c.ok) return '<div class="wz-conn wait"><div class="wz-spin"></div><div>Can’t see Anki yet<small>Is Anki open on this computer? Did you restart it after installing? Still checking every 2 seconds…</small></div></div>';
+    if (c.v < 3) return '<div class="wz-conn old"><div style="font-size:1.4rem">⚠️</div><div>Connected, but it’s the OLD add-on<small>Go back to the first step: remove the old one in Anki, install the new file, and restart Anki.</small></div></div>';
+    return '<div class="wz-conn ok"><div style="font-size:1.4rem">✅</div><div>Connected! The add-on is working<small>Anki and this website can now talk to each other.</small></div></div>';
+  }
+  function wizRender() {
+    var o = document.getElementById('lv-wiz'); if (!o) return;
+    var st = wsteps(), cur = st[W.i], n = st.length, first = W.i === 0, last = W.i === n - 1;
+    stopPoll();
+    var title = '', body = '';
+    var P = function (t) { return '<p class="wz-p">' + t + '</p>'; };
+    if (cur === 'remove') {
+      title = 'Remove the old version first';
+      body = P('You already have an older <b>Tracker Anki Link</b> in Anki. Two copies would clash, so delete the old one first. <b>Your cards and progress are not touched</b> — this only removes the small helper program.') +
+        P('<b>1.</b> Open <b>Anki</b> on your computer.<br><b>2.</b> At the very top of the window click <b>Tools</b>, then <b>Add-ons</b> (the orange glow below shows where).') + MOCK_MENU +
+        P('<b>3.</b> In the list click <b>Tracker Anki Link</b> so it turns blue, then press <b>Delete</b> on the right and confirm.') + mockAddons('d', true) + '<div class="wz-cap">Drawings of Anki — yours may look a little different, but the words are the same.</div>';
+    } else if (cur === 'open') {
+      title = 'Open the Add-ons window in Anki';
+      body = P('Add-ons are small extras for Anki. This one lets the <b>🧠 Anki</b> button on this website open the right cards, and shows you which ones are suspended or already in your reviews.') +
+        P('<b>1.</b> Open the <b>Anki</b> program on your computer (it must be the desktop app — phones can’t use add-ons).<br><b>2.</b> Along the top click <b>Tools</b>, then <b>Add-ons</b>. Shortcut: <b>Ctrl+Shift+A</b> (Mac: <b>⌘+Shift+A</b>).') + MOCK_MENU + '<div class="wz-cap">Drawing of Anki — yours may look a little different.</div>';
+    } else if (cur === 'get') {
+      title = 'Download the add-on file';
+      body = P('This is one tiny file (about 3 KB). Don’t open or unzip it — Anki installs it for you in the next step.') +
+        '<a class="wz-big" id="wz-dl" href="' + ADDON_FILE + '" download="tracker-anki-link.ankiaddon">⬇ Download the add-on<small>tracker-anki-link.ankiaddon</small></a>' +
+        '<div class="wz-ok" id="wz-dlok" style="' + (W.dl ? '' : 'display:none') + '">✓ Downloading — look in your <b>Downloads</b> folder for <b>tracker-anki-link.ankiaddon</b>.</div>' +
+        '<div class="wz-note">Nothing happened? Your browser may be asking permission to download — allow it. If the file ends in <b>.zip</b>, rename it to end in <b>.ankiaddon</b>.</div>';
+    } else if (cur === 'install') {
+      title = 'Install it in Anki';
+      body = P('Back in the <b>Add-ons</b> window in Anki:') +
+        P('<b>1.</b> Click <b>Install from file…</b> on the right.') + mockAddons('i', false) +
+        P('<b>2.</b> A file window opens. Go to your <b>Downloads</b> folder, click <b>tracker-anki-link.ankiaddon</b> and press <b>Open</b>.') + MOCK_FILE +
+        P('<b>3.</b> Anki says the add-on was installed. That’s it for this step.') + '<div class="wz-cap">Drawings of Anki — yours may look a little different.</div>';
+    } else if (cur === 'restart') {
+      title = 'Restart Anki';
+      body = P('Anki only loads new add-ons when it starts, so it needs one restart.') + MOCK_RESTART +
+        P('<b>1.</b> Close Anki <b>completely</b> (Anki menu → Quit, or <b>Ctrl+Q</b> / <b>⌘+Q</b> — not just the red close button on Mac).<br><b>2.</b> Open Anki again.') +
+        '<div class="wz-note"><b>Important:</b> Anki has to stay open while you use this website, because the add-on only runs while Anki is running. Minimising it is fine.</div>';
+    } else if (cur === 'test') {
+      title = 'Check that it’s working';
+      body = P('Anki is open? Great — this page is now looking for the add-on. You don’t need to click anything; it updates by itself.') + '<div id="wz-conn">' + connHtml(W.conn) + '</div>' +
+        '<div class="lv-row"><button class="lv-btn" id="wz-recheck">🔄 Check again now</button></div>' +
+        '<div class="wz-note"><b>Stuck on “Can’t see Anki”?</b> (1) Anki must be open. (2) Restart Anki once more. (3) Use Chrome, Edge or Firefox on the same computer. (4) A VPN or security program can block it — try turning it off for a moment.</div>';
+    } else if (cur === 'flag') {
+      title = 'Which cards do you actually study?';
+      body = P('Every video has lots of cards, but most people only study the <b>high-yield</b> ones, which they mark with a coloured <b>flag</b> in Anki. Pick the flag colour(s) <b>you</b> use — up to three. The little status tags only count cards with those flags, so “all done” means all of <i>your</i> cards.') +
+        '<div id="wz-flags"></div>' +
+        '<div class="wz-note"><b>Not sure?</b> In Anki’s Browse window, a flagged card has a coloured row. To flag cards, select them and press <b>Ctrl/⌘ + 1–7</b> (1 red, 2 orange, 3 green, 4 blue, 5 pink, 6 turquoise, 7 purple). If you never flag, pick “I don’t use flags”. You can change this any time in Settings → Anki button.</div>';
+    } else {
+      title = 'All set! Here’s what you’ll see';
+      body = P('Next to each video’s <b>🧠 Anki</b> button there is now a small status tag. Click the button to open that video’s cards in Anki.') + mockRows() +
+        P('<b>Green</b> = your cards for that video are basically all in your reviews (a couple of leftovers still count as done). <b>Orange</b> = some are still suspended or new — it shows how many. <b>Red</b> = all suspended, so unsuspend them when you reach that video. “new” means unsuspended but not studied yet; “rev” means already in your reviews.') +
+        '<div class="wz-note">Tags refresh by themselves every couple of minutes and when you come back to this tab. Keep Anki open.</div>';
+    }
+    var pct = st.map(function (x, k) { return '<i class="' + (k < W.i ? 'done' : k === W.i ? 'cur' : '') + '"></i>'; }).join('');
+    o.innerHTML = '<div class="wz-card" role="dialog" aria-modal="true" aria-label="Anki setup"><div class="wz-hd"><div class="wz-top"><h3>🧠 Anki setup guide</h3><button class="wz-x" data-w="x" aria-label="Close">×</button></div>' +
+      '<div class="wz-tabs"><button data-mode="new" class="' + (W.mode === 'new' ? 'on' : '') + '">First time</button><button data-mode="update" class="' + (W.mode === 'update' ? 'on' : '') + '">I already have the old add-on</button></div><div class="wz-dots">' + pct + '</div></div>' +
+      '<div class="wz-body"><div class="wz-step">Step ' + (W.i + 1) + ' of ' + n + '</div><h4>' + title + '</h4>' + body + '</div>' +
+      '<div class="wz-ft"><div>' + (first ? '<button class="wz-skip" data-w="x">Close, do this later</button>' : '<button class="lv-btn" data-w="back">← Back</button>') + '</div><div class="r">' +
+      (cur === 'test' ? '<button class="wz-skip" data-w="next">Skip</button>' : '') + (last ? '<button class="lv-btn pri" data-w="fin">Finish</button>' : '<button class="lv-btn pri" data-w="next">Next →</button>') + '</div></div></div>';
+    if (cur === 'flag') renderFlagPicker(document.getElementById('wz-flags'));
+    if (cur === 'test') {
+      var upd = function () { pingOnce().then(function (c) { W.conn = c; var h = document.getElementById('wz-conn'); if (h) h.innerHTML = connHtml(c); if (c.ok && c.v >= 3) stopPoll(); }); };
+      upd(); W.poll = setInterval(function () { if (!document.getElementById('wz-conn')) return stopPoll(); upd(); }, 2000);
+      document.getElementById('wz-recheck').onclick = function () { W.conn = null; document.getElementById('wz-conn').innerHTML = connHtml(null); upd(); };
+    }
+    var dl = document.getElementById('wz-dl'); if (dl) dl.addEventListener('click', function () { W.dl = true; var k = document.getElementById('wz-dlok'); if (k) k.style.display = ''; });
+    var card = o.querySelector('.wz-card'); card.scrollTop = 0;
+  }
+  function wizClose() { stopPoll(); var o = document.getElementById('lv-wiz'); if (o) o.remove(); document.removeEventListener('keydown', wizKey); }
+  function wizKey(e) { if (e.key === 'Escape') wizClose(); }
+  window.lvAnkiSetup = function (mode) {
+    var old = document.getElementById('lv-akm'); if (old) old.remove();
+    var w = document.getElementById('lv-akp'); if (w) w.remove();
+    var chip = document.getElementById('lv-akchip'); if (chip) chip.remove();
+    wizClose();
+    W.mode = mode === 'update' ? 'update' : 'new'; W.i = 0; W.conn = null; W.dl = false;
+    var o = document.createElement('div'); o.id = 'lv-wiz'; document.body.appendChild(o);
+    o.addEventListener('click', function (e) {
+      if (e.target === o) return;
+      var m = e.target.closest('[data-mode]'); if (m) { W.mode = m.dataset.mode; W.i = 0; wizRender(); return; }
+      var b = e.target.closest('[data-w]'); if (!b) return; var a = b.dataset.w, n = wsteps().length;
+      if (a === 'x') wizClose();
+      else if (a === 'back') { W.i = Math.max(0, W.i - 1); wizRender(); }
+      else if (a === 'next') { W.i = Math.min(n - 1, W.i + 1); wizRender(); }
+      else if (a === 'fin') { s(KEY, '1'); apply(); wizClose(); statCache = {}; saveCache(); soonStatus(50); toast('Anki buttons are on 🧠', 2600); }
+    });
+    document.addEventListener('keydown', wizKey);
+    wizRender();
+  };
+  /* reminder chip: Anki buttons are on but the add-on isn't (or is old) */
+  var CKEY = 'tracker_anki_chip_v1';
+  async function chipCheck() {
+    if (!document.documentElement.classList.contains('anki-on') || document.getElementById('lv-wiz') || document.getElementById('lv-akchip')) return;
+    var t = +g(CKEY) || 0; if (Date.now() - t < 3 * 864e5) return;
+    var c = await pingOnce(); if (c.ok && c.v >= 3) return;
+    if (busy()) return;
+    var el = document.createElement('div'); el.id = 'lv-akchip';
+    el.innerHTML = '<span>' + (c.ok ? '🧠 New Anki add-on available' : '🧠 Anki add-on not connected') + '</span><button class="go" data-c="go">' + (c.ok ? 'Update' : 'Set up') + ' (1 min)</button><button class="no" data-c="no" aria-label="Dismiss">×</button>';
+    el.onclick = function (e) { var b = e.target.closest('[data-c]'); if (!b) return; if (b.dataset.c === 'go') window.lvAnkiSetup(c.ok ? 'update' : 'new'); else { s(CKEY, String(Date.now())); el.remove(); } };
+    document.body.appendChild(el);
+  }
+  window.addEventListener('load', function () { setTimeout(chipCheck, 5000); });
+  document.addEventListener('click', function (e) { var p = e.target.closest && e.target.closest('.lv-aks.fix'); if (p) window.lvAnkiSetup(p.dataset.fix || 'new'); });
 
   /* one-time "Do you use Anki?" prompt for everyone after this update */
   var PKEY = 'tracker_anki_prompt_v1';
@@ -10424,19 +10699,11 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
   }
   function step2No(o) {
     s(PKEY, 'no');
-    o.querySelector('.lv-card').innerHTML = '<h3 style="margin:0 0 6px;font-size:1.2rem">No worries! 👍</h3><div style="color:var(--text-dim);line-height:1.55">Nothing changes for you and you won’t be asked again. If you start using Anki later, you can turn the feature on in <b>Settings → Anki button</b>.</div><div class="lv-row" style="margin-top:16px"><button class="lv-btn pri" data-x="1">Got it</button></div>';
+    o.querySelector('.lv-card').innerHTML = '<h3 style="margin:0 0 6px;font-size:1.2rem">No worries! 👍</h3><div style="color:var(--text-dim);line-height:1.55">Nothing changes for you and you won’t be asked again. If you start using Anki later, you can turn the feature on at the bottom of <b>Settings</b> (\u201cStarted using Anki?\u201d).</div><div class="lv-row" style="margin-top:16px"><button class="lv-btn pri" data-x="1">Got it</button></div>';
     o.addEventListener('click', function (e) { if (e.target.closest('[data-x]')) o.remove(); });
   }
   function step2Yes(o) {
-    s(PKEY, 'yes'); s(KEY, '1'); apply();
-    o.querySelector('.lv-card').innerHTML =
-      '<h3 style="margin:0 0 6px;font-size:1.3rem">🧠 New: Anki button on every video</h3>' +
-      '<div style="color:var(--text-dim);line-height:1.6;margin-bottom:14px">After you watch a video, click its <b>🧠 Anki</b> button and Anki’s card browser shows <b>exactly the cards for that video</b>, so you can review right after watching. It uses the <b>AnKing Step deck</b> (the cards are found by each video’s tag: Sketchy, Pathoma, Bootcamp and more). I’ve turned the buttons on for you.</div>' +
-      '<div style="border:2px solid var(--path);border-radius:14px;padding:14px;margin-bottom:10px;background:rgba(34,211,238,.07)"><div style="font-weight:800;margin-bottom:4px">⭐ Preferred: install the add-on (about 1 minute, once)</div><div style="color:var(--text-dim);font-size:.9rem;line-height:1.55">Much easier: one click and the cards open straight in Anki, no copying or pasting.<ol style="margin:8px 0 10px 20px;padding:0"><li>Download the add-on below</li><li>In Anki: <b>Tools → Add-ons → Install from file…</b> and pick the file</li><li>Restart Anki and keep it open while you study</li></ol></div><a class="lv-btn pri" href="' + ADDON_FILE + '" download style="display:inline-block;text-decoration:none">⬇ Download the add-on</a></div>' +
-      '<div style="border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px"><div style="font-weight:800;margin-bottom:4px">📋 Or skip the add-on: copy search</div><div style="color:var(--text-dim);font-size:.9rem;line-height:1.55">Without the add-on, the button copies that video’s search to your clipboard. In Anki click <b>Browse</b>, paste (<b>Ctrl/⌘ + V</b>) into the search bar and press <b>Enter</b>. Works with no setup, just one extra step.</div></div>' +
-      '<div style="color:var(--text-faint);font-size:.8rem;margin-bottom:12px">You can turn the buttons off or test the connection any time in Settings → Anki button.</div>' +
-      '<div class="lv-row"><button class="lv-btn pri" data-x="1">Done</button></div>';
-    o.addEventListener('click', function (e) { if (e.target.closest('[data-x]')) o.remove(); });
+    s(PKEY, 'yes'); s(KEY, '1'); apply(); o.remove(); window.lvAnkiSetup('new');
   }
   var pt = null, tries = 0;
   function tick() {
