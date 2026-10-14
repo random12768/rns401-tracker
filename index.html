@@ -5261,7 +5261,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 51, built: '2026-10-14T22:31:50Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 53, built: '2026-10-14T22:44:25Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5272,9 +5272,9 @@ function verLabel(v) {
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
   { v: [2, 50], anki: true, title: "Easy Anki setup guide + your own flag colours", items: [
-    "New interactive setup guide with pictures: download the add-on, install it in Anki, and check the connection, all from one window. No more hunting for instructions.",
+    "New interactive setup guide with pictures. The add-on is now on AnkiWeb, so you install it by pasting a short code in Anki (Tools → Add-ons → Get Add-ons) and it updates itself from then on. The guide also checks the connection for you.",
     "You can now choose which Anki flag colour(s) count as your high-yield cards (up to 3, or all cards). It no longer assumes green.",
-    "The status tags show up much faster now (they remember the last answer and Anki replies quicker). You need the new add-on file for the flag colours.",
+    "The status tags show up much faster now (they remember the last answer and Anki replies quicker). Flag colours need the newest add-on, so if you installed the old file, use the guide to swap it for the AnkiWeb one.",
     { btn: "Open the Anki setup guide", fn: "lvAnkiSetup" }
   ] },
   { v: [2, 49], anki: true, title: "Anki buttons now show your card status", items: ["Next to each 🧠 Anki button there is now a small colored tag showing how many of that video's green-flagged cards are still suspended, new, or already in your reviews. Red means all suspended, amber means you're partway through, green means done (a couple of leftover cards still count as done). Only green-flagged cards are counted.","To get it you need the updated Anki add-on. If you already use the Anki button: in Anki go to Tools → Add-ons, click Tracker Anki Link and press Delete. Then in the tracker go to Settings → Anki button and download the new add-on. Back in Anki choose Tools → Add-ons → Install from file…, pick the file you downloaded, and restart Anki. Keep Anki open while you use the tracker.","Haven't used the Anki button yet? Turn it on in Settings → Anki button. The add-on is optional. Without it the button still copies the card search for you to paste into Anki."] },
@@ -10553,6 +10553,8 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
       '<div class="dim">Your other add-ons are listed here</div>' + (withOurs ? '<div class="sel">Tracker Anki Link</div>' : '') + '<div class="dim">…</div></div>' +
       '<div class="bt">' + b('Get Add-ons…', 'g') + b('Check for Updates', 'u') + b('Install from file…', 'i') + b('Config', 'c') + b('View Files', 'v') + b('Delete', 'd') + '</div></div></div>';
   }
+  var CODE = '570994072';
+  var MOCK_CODE = '<div class="wz-win"><div class="tb"><i></i><i></i><i></i><span>Install Add-on</span></div><div class="wz-msg" style="flex-direction:column;gap:8px"><div>To browse add-ons, please click the Browse button below. When you\u2019ve found an add-on you like, please paste its code below.</div><div style="display:flex;gap:8px;width:100%;align-items:center"><span>Code:</span><span class="hl" style="flex:1;background:#fff;border:1px solid #9aa0a8;border-radius:5px;padding:4px 8px;font-weight:700;letter-spacing:.04em">' + CODE + '</span></div><div style="display:flex;gap:8px;align-self:flex-end"><span style="background:#fff;border:1px solid #c4c7cc;border-radius:6px;padding:4px 16px">Cancel</span><span class="hl" style="background:#3b82f6;color:#fff;border-radius:6px;padding:4px 20px">OK</span></div></div></div>';
   var MOCK_FILE = '<div class="wz-win wz-fp"><div class="tb"><i></i><i></i><i></i><span>Select add-on file</span></div><div class="path">📁 Downloads</div><div class="files"><div>some-other-file.pdf</div><div class="sel">tracker-anki-link.ankiaddon</div></div><div class="ac"><span>Cancel</span><span class="hl">Open</span></div></div>';
   var MOCK_RESTART = '<div class="wz-win"><div class="tb"><i></i><i></i><i></i><span>Anki</span></div><div class="wz-msg"><div class="ic">✅</div><div><b>Add-on installed.</b><br>Please close Anki completely and open it again so it can start.</div><div class="ac">OK</div></div></div>';
   function mockRows() {
@@ -10563,7 +10565,7 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
   var W = { mode: 'new', i: 0, poll: null, dl: false, conn: null };
   function wsteps() {
     var s = W.mode === 'update' ? ['remove'] : ['open'];
-    return s.concat(['get', 'install', 'restart', 'test', 'flag', 'done']);
+    return s.concat(['get', 'restart', 'test', 'flag', 'done']);
   }
   async function pingOnce() {
     var r = await hit('/ping', 1500); if (!r || !r.ok) return { ok: false, v: 0 };
@@ -10573,7 +10575,7 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
   function connHtml(c) {
     if (!c) return '<div class="wz-conn wait"><div class="wz-spin"></div><div>Looking for Anki…<small>This checks every 2 seconds. It turns green by itself once Anki is open with the add-on.</small></div></div>';
     if (!c.ok) return '<div class="wz-conn wait"><div class="wz-spin"></div><div>Can’t see Anki yet<small>Is Anki open on this computer? Did you restart it after installing? Still checking every 2 seconds…</small></div></div>';
-    if (c.v < 3) return '<div class="wz-conn old"><div style="font-size:1.4rem">⚠️</div><div>Connected, but it’s the OLD add-on<small>Go back to the first step: remove the old one in Anki, install the new file, and restart Anki.</small></div></div>';
+    if (c.v < 3) return '<div class="wz-conn old"><div style="font-size:1.4rem">⚠️</div><div>Connected, but it’s the OLD add-on<small>Go back to step 1: delete the old add-on in Anki, then install it again with the code, and restart Anki.</small></div></div>';
     return '<div class="wz-conn ok"><div style="font-size:1.4rem">✅</div><div>Connected! The add-on is working<small>Anki and this website can now talk to each other.</small></div></div>';
   }
   function wizRender() {
@@ -10586,26 +10588,21 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
       title = 'Remove the old version first';
       body = P('You already have an older <b>Tracker Anki Link</b> in Anki. Two copies would clash, so delete the old one first. <b>Your cards and progress are not touched</b> — this only removes the small helper program.') +
         P('<b>1.</b> Open <b>Anki</b> on your computer.<br><b>2.</b> At the very top of the window click <b>Tools</b>, then <b>Add-ons</b> (the orange glow below shows where).') + MOCK_MENU +
-        P('<b>3.</b> In the list click <b>Tracker Anki Link</b> so it turns blue, then press <b>Delete</b> on the right and confirm.') + mockAddons('d', true) + '<div class="wz-cap">Drawings of Anki — yours may look a little different, but the words are the same.</div>';
+        P('<b>3.</b> In the list click <b>Tracker Anki Link</b> so it turns blue, then press <b>Delete</b> on the right and confirm. (Next step installs the new version with a code.)') + mockAddons('d', true) + '<div class="wz-cap">Drawings of Anki — yours may look a little different, but the words are the same.</div>';
     } else if (cur === 'open') {
       title = 'Open the Add-ons window in Anki';
       body = P('Add-ons are small extras for Anki. This one lets the <b>🧠 Anki</b> button on this website open the right cards, and shows you which ones are suspended or already in your reviews.') +
         P('<b>1.</b> Open the <b>Anki</b> program on your computer (it must be the desktop app — phones can’t use add-ons).<br><b>2.</b> Along the top click <b>Tools</b>, then <b>Add-ons</b>. Shortcut: <b>Ctrl+Shift+A</b> (Mac: <b>⌘+Shift+A</b>).') + MOCK_MENU + '<div class="wz-cap">Drawing of Anki — yours may look a little different.</div>';
     } else if (cur === 'get') {
-      title = 'Download the add-on file';
-      body = P('This is one tiny file (about 3 KB). Don’t open or unzip it — Anki installs it for you in the next step.') +
-        '<a class="wz-big" id="wz-dl" href="' + ADDON_FILE + '" download="tracker-anki-link.ankiaddon">⬇ Download the add-on<small>tracker-anki-link.ankiaddon</small></a>' +
-        '<div class="wz-ok" id="wz-dlok" style="' + (W.dl ? '' : 'display:none') + '">✓ Downloading — look in your <b>Downloads</b> folder for <b>tracker-anki-link.ankiaddon</b>.</div>' +
-        '<div class="wz-note">Nothing happened? Your browser may be asking permission to download — allow it. If the file ends in <b>.zip</b>, rename it to end in <b>.ankiaddon</b>.</div>';
-    } else if (cur === 'install') {
-      title = 'Install it in Anki';
-      body = P('Back in the <b>Add-ons</b> window in Anki:') +
-        P('<b>1.</b> Click <b>Install from file…</b> on the right.') + mockAddons('i', false) +
-        P('<b>2.</b> A file window opens. Go to your <b>Downloads</b> folder, click <b>tracker-anki-link.ankiaddon</b> and press <b>Open</b>.') + MOCK_FILE +
-        P('<b>3.</b> Anki says the add-on was installed. That’s it for this step.') + '<div class="wz-cap">Drawings of Anki — yours may look a little different.</div>';
+      title = 'Get the add-on from AnkiWeb (just paste a code)';
+      body = P('Anki can install add-ons by itself from a short code. This one is on AnkiWeb, so there is <b>no file to download</b>, and Anki will keep it <b>updated automatically</b> from now on.') +
+        P('<b>1.</b> Copy the code:') + '<button type="button" class="wz-big" id="wz-code" style="font-size:1.6rem;letter-spacing:.08em">' + CODE + '<small id="wz-codehint">Tap to copy the code</small></button>' +
+        P('<b>2.</b> In Anki\u2019s <b>Add-ons</b> window (Tools \u2192 Add-ons), click <b>Get Add-ons\u2026</b> on the right.') + mockAddons('g', false) +
+        P('<b>3.</b> Paste the code (<b>Ctrl/\u2318 + V</b>) into the box and press <b>OK</b>. Anki downloads and installs it.') + MOCK_CODE + '<div class="wz-cap">Drawings of Anki \u2014 yours may look a little different.</div>' +
+        '<details style="margin-top:6px"><summary style="cursor:pointer;font-weight:700;font-size:.9rem">Code not working? Install from a file instead</summary><div class="wz-p" style="margin-top:8px"><a class="lv-btn" href="' + ADDON_FILE + '" download="tracker-anki-link.ankiaddon" style="text-decoration:none;display:inline-block">\u2b07 Download the add-on file</a><br><br>In the Add-ons window click <b>Install from file\u2026</b>, pick <b>tracker-anki-link.ankiaddon</b> from your Downloads folder and press <b>Open</b>.</div>' + mockAddons('i', false) + MOCK_FILE + '</details>';
     } else if (cur === 'restart') {
       title = 'Restart Anki';
-      body = P('Anki only loads new add-ons when it starts, so it needs one restart.') + MOCK_RESTART +
+      body = P('Anki only starts a new add-on when it opens, so it needs one restart.') + MOCK_RESTART +
         P('<b>1.</b> Close Anki <b>completely</b> (Anki menu → Quit, or <b>Ctrl+Q</b> / <b>⌘+Q</b> — not just the red close button on Mac).<br><b>2.</b> Open Anki again.') +
         '<div class="wz-note"><b>Important:</b> Anki has to stay open while you use this website, because the add-on only runs while Anki is running. Minimising it is fine.</div>';
     } else if (cur === 'test') {
@@ -10626,7 +10623,7 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
     }
     var pct = st.map(function (x, k) { return '<i class="' + (k < W.i ? 'done' : k === W.i ? 'cur' : '') + '"></i>'; }).join('');
     o.innerHTML = '<div class="wz-card" role="dialog" aria-modal="true" aria-label="Anki setup"><div class="wz-hd"><div class="wz-top"><h3>🧠 Anki setup guide</h3><button class="wz-x" data-w="x" aria-label="Close">×</button></div>' +
-      '<div class="wz-tabs"><button data-mode="new" class="' + (W.mode === 'new' ? 'on' : '') + '">First time</button><button data-mode="update" class="' + (W.mode === 'update' ? 'on' : '') + '">I already have the old add-on</button></div><div class="wz-dots">' + pct + '</div></div>' +
+      '<div class="wz-tabs"><button data-mode="new" class="' + (W.mode === 'new' ? 'on' : '') + '">First time</button><button data-mode="update" class="' + (W.mode === 'update' ? 'on' : '') + '">I installed the old version before</button></div><div class="wz-dots">' + pct + '</div></div>' +
       '<div class="wz-body"><div class="wz-step">Step ' + (W.i + 1) + ' of ' + n + '</div><h4>' + title + '</h4>' + body + '</div>' +
       '<div class="wz-ft"><div>' + (first ? '<button class="wz-skip" data-w="x">Close, do this later</button>' : '<button class="lv-btn" data-w="back">← Back</button>') + '</div><div class="r">' +
       (cur === 'test' ? '<button class="wz-skip" data-w="next">Skip</button>' : '') + (last ? '<button class="lv-btn pri" data-w="fin">Finish</button>' : '<button class="lv-btn pri" data-w="next">Next →</button>') + '</div></div></div>';
@@ -10636,6 +10633,7 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
       upd(); W.poll = setInterval(function () { if (!document.getElementById('wz-conn')) return stopPoll(); upd(); }, 2000);
       document.getElementById('wz-recheck').onclick = function () { W.conn = null; document.getElementById('wz-conn').innerHTML = connHtml(null); upd(); };
     }
+    var cb = document.getElementById('wz-code'); if (cb) cb.onclick = function () { copy(CODE).then(function () { var k = document.getElementById('wz-codehint'); if (k) k.textContent = '\u2713 Copied! Now paste it in Anki'; }); };
     var dl = document.getElementById('wz-dl'); if (dl) dl.addEventListener('click', function () { W.dl = true; var k = document.getElementById('wz-dlok'); if (k) k.style.display = ''; });
     var card = o.querySelector('.wz-card'); card.scrollTop = 0;
   }
