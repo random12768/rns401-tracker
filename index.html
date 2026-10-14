@@ -5261,7 +5261,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 50, built: '2026-10-14T22:27:59Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 51, built: '2026-10-14T22:31:50Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -10326,7 +10326,7 @@ html.anki-on .lv-aks.on{display:inline-block}
 .wz-prev .rw{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 0;border-bottom:1px solid var(--border);font-size:.9rem}
 .wz-prev .rw:last-child{border:0}
 .wz-prev .rw .n{flex:1;min-width:150px;font-weight:600}
-.wz-prev .lv-aks{display:inline-block;margin:0}
+.wz-prev .lv-aks{display:inline-block;margin:0;width:auto!important;max-width:none!important;overflow:visible!important}
 .wz-prev .fake{font-size:.75rem;padding:3px 9px;border-radius:99px;border:1px solid var(--border);color:var(--text-dim)}
 html.anki-no #set-anki{display:none}
 #lv-anki-unhide{display:none;font-size:.78rem;color:var(--text-faint);margin:6px 2px}
