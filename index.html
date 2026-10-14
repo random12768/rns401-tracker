@@ -5261,7 +5261,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 54, built: '2026-10-14T22:48:59Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 55, built: '2026-10-14T22:49:14Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -10341,10 +10341,10 @@ html.anki-no #lv-anki-unhide{display:block}
 @media (max-width:560px){.wz-menu{left:60px;top:62px}.wz-dlg .bt{width:130px}#lv-akchip{flex-wrap:wrap;border-radius:18px}}
 @keyframes lvshim{to{background-position:-200% 0}}
 @keyframes lvspin{to{transform:rotate(360deg)}}
-html.anki-stat .lv-aks{box-sizing:border-box;flex:none;width:11.5em;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html.anki-stat .lv-aks{box-sizing:border-box;flex:none;width:15.5em;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 html.anki-stat .lv-ak{flex:none}
 html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
-@media (max-width:640px){html.anki-stat .lv-aks{width:auto;max-width:11.5em}html.anki-stat .vid-sub .sk-group{flex-wrap:wrap}}
+@media (max-width:640px){html.anki-stat .lv-aks{width:auto;max-width:15.5em}html.anki-stat .vid-sub .sk-group{flex-wrap:wrap}}
 </style>
 <script>
 (function () {
@@ -10457,10 +10457,9 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
     var FL = getFlags(), fw = FL[0] === 0 ? '' : listWords(FL.map(flagName)), fadj = fw ? fw + '-flagged ' : '';
     if (!r.g) return { c: '', t: 'no ' + (fw ? fw + ' ' : '') + 'cards', h: r.t + ' cards for this video, none ' + (fw ? 'flagged ' + fw : 'found') + ' (' + r.ts + ' suspended). Change your flag colour in Settings \u2192 Anki button.' };
     var left = r.gs + r.gn, done = r.gr > 0 && (left <= 2 || r.gr / r.g >= 0.9); /* a couple of stragglers = low yield, still counts as done */
-    var c = r.gs === r.g ? 'sus' : done ? 'rev' : 'mid', t;
-    if (c === 'sus') t = 'all ' + r.g + ' suspended';
-    else if (c === 'rev' && !left) t = 'all ' + r.g + ' in reviews';
-    else { var p = []; if (r.gs) p.push(r.gs + ' susp'); if (r.gn) p.push(r.gn + ' new'); if (r.gr) p.push(r.gr + ' rev'); t = p.join(' · '); }
+    var c = r.gs === r.g ? 'sus' : done ? 'rev' : 'mid', t = r.gr + '/' + r.g + ' in reviews';
+    if (c === 'sus') t = '0/' + r.g + ' \u00b7 all suspended';
+    else if (r.gn || r.gs) { if (r.gn) t += ' \u00b7 ' + r.gn + ' new'; if (r.gs) t += ' \u00b7 ' + r.gs + ' susp'; }
     return { c: c, t: t, h: r.g + ' ' + fadj + 'cards of ' + r.t + ' total. Suspended: ' + r.gs + ' · New (unsuspended, not studied yet): ' + r.gn + ' · Studied (in your reviews): ' + r.gr };
   }
   var statBusy = false, statTimer = null;
@@ -10520,7 +10519,7 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
   window.addEventListener('focus', function () { soonStatus(600); });
   document.addEventListener('visibilitychange', function () { if (!document.hidden) soonStatus(600); });
   setInterval(function () { if (!document.hidden) refreshStatus(); }, 120000);
-  document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.lv-ak, #lv-anki-toggle, summary, .nav-item, [data-panel]')) soonStatus(1500); }, true);
+  document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.lv-ak, #lv-anki-toggle, summary, .nav-item, [data-panel]')) soonStatus(250); }, true);
 
   /* ===== Anki setup guide (interactive) ===== */
   var FLAGS = [[1, 'red', '#ef4444'], [2, 'orange', '#f97316'], [3, 'green', '#22c55e'], [4, 'blue', '#3b82f6'], [5, 'pink', '#ec4899'], [6, 'turquoise', '#14b8a6'], [7, 'purple', '#a855f7']];
