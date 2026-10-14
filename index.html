@@ -2865,6 +2865,7 @@ a.video-repeat span { font-style: italic; }
       </div>
       <div id="lv-anki-status"></div>
       <div class="settings-sec-sub" style="font-size:.85rem">Install: in Anki choose <b>Tools → Add-ons → Install from file…</b>, pick the downloaded file, then restart Anki.</div>
+      <div class="settings-sec-sub" style="font-size:.85rem"><b>Updating the add-on</b> (needed for the card-status tags): in Anki choose <b>Tools → Add-ons</b>, click <b>Tracker Anki Link</b> and press <b>Delete</b>. Then download the new add-on above, choose <b>Install from file…</b>, pick it, and restart Anki. Use <b>Test connection</b> to check it says the add-on is running.</div>
     </div>
 
     <div class="settings-sec" id="set-guide">
@@ -5255,7 +5256,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 48, built: '2026-10-14T22:00:15Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 49, built: '2026-10-14T22:09:39Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5265,6 +5266,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 49], title: "Anki buttons now show your card status", items: ["Next to each 🧠 Anki button there is now a small colored tag showing how many of that video's green-flagged cards are still suspended, new, or already in your reviews. Red means all suspended, amber means you're partway through, green means done (a couple of leftover cards still count as done). Only green-flagged cards are counted.","To get it you need the updated Anki add-on. If you already use the Anki button: in Anki go to Tools → Add-ons, click Tracker Anki Link and press Delete. Then in the tracker go to Settings → Anki button and download the new add-on. Back in Anki choose Tools → Add-ons → Install from file…, pick the file you downloaded, and restart Anki. Keep Anki open while you use the tracker.","Haven't used the Anki button yet? Turn it on in Settings → Anki button. The add-on is optional. Without it the button still copies the card search for you to paste into Anki."] },
   { v: [2, 39], title: "Behavioral Sciences: simplified around the 4 midterm guides", items: ["The midterm is covered by four study guides from Dr. Sampath (Life Cycle, Children & Adolescents, Schizophrenia, Mood Disorders). Each now has its own card with the matching Boards & Beyond videos (same order as before), lengths, checkboxes and an Open guide button.", "Anxiety Disorders and Child Abuse videos stay on the midterm list, marked as not covered by the guides. Everything else (final-exam videos, full lecture schedule, optional extras) is collapsed below, nothing removed."] },
   { v: [2, 37], title: "MD4 schedule update (weeks 5–6) + planner fixes", items: ["Updated the Oct 9–16 schedule: Non-inflammatory Diarrhea now Fri 10/9, Antidepressants Mon 10/12 + Tue 10/13, Sedatives & Hypnotics Wed 10/14 + Thu 10/15, SFH on Fri 10/16. The Behavioral Sciences Mood Disorders TBL moved to Tue 10/13 and is tagged MIDTERM.", "Planner now works for CHS303: lecture lengths typed as text are read automatically, so it shows the real remaining videos.", "Planner no longer says 'behind by 74 videos' on a module's first open: the pace baseline resets whenever the video list grows."] },
   { v: [2, 32], title: "Behavioral Sciences: midterm vs final", items: ["Each lecture is tagged MIDTERM (Block 1 exam, Oct 14) or FINAL (Dec 7), with separate video counts, time totals and progress for each."] },
@@ -10233,6 +10235,16 @@ html.anki-on .lv-aks.on{display:inline-block}
 .lv-aks.sus{background:rgba(239,68,68,.15);color:#ef4444}
 .lv-aks.mid{background:rgba(245,158,11,.18);color:#d97706}
 .lv-aks.rev{background:rgba(34,197,94,.18);color:#16a34a}
+.lv-aks.load{background:linear-gradient(90deg,rgba(127,127,127,.12) 25%,rgba(127,127,127,.32) 50%,rgba(127,127,127,.12) 75%);background-size:200% 100%;animation:lvshim 1.1s linear infinite;color:var(--text-dim)}
+.lv-aks.load::before{content:"";display:inline-block;width:.7em;height:.7em;margin-right:.45em;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;vertical-align:-.08em;animation:lvspin .7s linear infinite}
+.lv-aks.stale{opacity:.55}
+.lv-aks.off{background:rgba(127,127,127,.15);color:var(--text-faint)}
+@keyframes lvshim{to{background-position:-200% 0}}
+@keyframes lvspin{to{transform:rotate(360deg)}}
+html.anki-stat .lv-aks{box-sizing:border-box;flex:none;width:11.5em;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html.anki-stat .lv-ak{flex:none}
+html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
+@media (max-width:640px){html.anki-stat .lv-aks{width:auto;max-width:11.5em}html.anki-stat .vid-sub .sk-group{flex-wrap:wrap}}
 </style>
 <script>
 (function () {
@@ -10297,7 +10309,7 @@ html.anki-on .lv-aks.on{display:inline-block}
     var el = document.getElementById('lv-anki-status'); if (el) el.textContent = 'Checking…';
     var ok = false, ver = 0;
     for (var i = 0; i < PORTS.length && !ok; i++) { try { var r = await fetch('http://127.0.0.1:' + PORTS[i] + '/ping'); ok = r.ok; if (ok) { try { ver = (await r.json()).v || 0; } catch (e) {} } } catch (e) {} }
-    if (el) el.innerHTML = !ok ? '⚠️ Couldn’t reach the add-on. Open Anki and make sure the add-on is installed.' : (ver < 2 && typeof isAdminUser === 'function' && isAdminUser() ? '✅ Connected, but this is the older add-on. <a href="' + ADDON_FILE + '" download style="color:var(--path);font-weight:700">Download the new one</a> to see which cards are suspended, new or in your reviews (Anki: Tools → Add-ons → Install from file, then restart Anki).' : '✅ Connected. The add-on is running in Anki.');
+    if (el) el.innerHTML = !ok ? '⚠️ Couldn’t reach the add-on. Open Anki and make sure the add-on is installed.' : (ver < 2 ? '✅ Connected, but this is the older add-on. <a href="' + ADDON_FILE + '" download style="color:var(--path);font-weight:700">Download the new one</a> to see which cards are suspended, new or in your reviews (Anki: Tools → Add-ons → Install from file, then restart Anki).' : '✅ Connected. The add-on is running in Anki.');
   };
   apply();
   document.addEventListener('DOMContentLoaded', apply);
@@ -10325,10 +10337,11 @@ html.anki-on .lv-aks.on{display:inline-block}
     if (!r) return null;
     if (!r.t) return { c: '', t: 'no cards found', h: 'No Anki cards were found for this video.' };
     if (!r.g) return { c: '', t: 'no green cards', h: r.t + ' cards for this video, none flagged green (' + r.ts + ' suspended).' };
-    var c = r.gs === r.g ? 'sus' : (r.gs || r.gn) ? 'mid' : 'rev', t;
+    var left = r.gs + r.gn, done = r.gr > 0 && (left <= 2 || r.gr / r.g >= 0.9); /* a couple of stragglers = low yield, still counts as done */
+    var c = r.gs === r.g ? 'sus' : done ? 'rev' : 'mid', t;
     if (c === 'sus') t = 'all ' + r.g + ' suspended';
-    else if (c === 'rev') t = 'all ' + r.g + ' in reviews';
-    else { var p = []; if (r.gs) p.push(r.gs + ' suspended'); if (r.gn) p.push(r.gn + ' new'); if (r.gr) p.push(r.gr + ' in reviews'); t = p.join(' · '); }
+    else if (c === 'rev' && !left) t = 'all ' + r.g + ' in reviews';
+    else { var p = []; if (r.gs) p.push(r.gs + ' susp'); if (r.gn) p.push(r.gn + ' new'); if (r.gr) p.push(r.gr + ' rev'); t = p.join(' · '); }
     return { c: c, t: t, h: r.g + ' green-flagged of ' + r.t + ' cards. Suspended: ' + r.gs + ' · New (unsuspended, not studied yet): ' + r.gn + ' · Studied (in your reviews): ' + r.gr };
   }
   var statBusy = false, statTimer = null;
@@ -10343,25 +10356,41 @@ html.anki-on .lv-aks.on{display:inline-block}
     }
     return null;
   }
+  var statCache = {};
   async function refreshStatus() {
     if (statBusy || !document.documentElement.classList.contains('anki-on')) return;
-    if (!(typeof isAdminUser === 'function' && isAdminUser())) return; /* admin-only while testing */
+    document.documentElement.classList.add('anki-stat');
     var pills = Array.prototype.filter.call(document.querySelectorAll('.lv-aks'), function (e) { var bt = e.previousElementSibling; return bt && bt.offsetParent !== null; });
     if (!pills.length) return;
-    var byQ = {};
-    pills.forEach(function (e) { var q = query(e.dataset.akid); if (q) (byQ[q] = byQ[q] || []).push(e); });
-    var qs = Object.keys(byQ); if (!qs.length) return;
+    var byQ = {}, vh = window.innerHeight || 800;
+    pills.forEach(function (e) {
+      var q = query(e.dataset.akid); if (!q) return;
+      (byQ[q] = byQ[q] || []).push(e);
+      var c = statCache[q];
+      if (c) { var d = statPill(c); e.className = 'lv-aks on stale ' + d.c; e.textContent = d.t; e.title = d.h; }
+      else { e.className = 'lv-aks on load'; e.textContent = 'checking…'; e.title = 'Asking Anki for this video’s card status…'; }
+    });
+    /* rows on screen first, so they fill in first */
+    var qs = Object.keys(byQ).sort(function (a, b) {
+      function y(q) { var r = byQ[q][0].getBoundingClientRect(); return (r.bottom < -50 || r.top > vh + 50) ? 1e6 + Math.abs(r.top) : Math.abs(r.top); }
+      return y(a) - y(b);
+    });
     statBusy = true;
+    var failed = false;
     try {
-      for (var i = 0; i < qs.length; i += 30) {
-        var chunk = qs.slice(i, i + 30), res = await getStatus(chunk);
-        if (!res) break;
+      for (var i = 0; i < qs.length; i += 6) {
+        var chunk = qs.slice(i, i + 6), res = await getStatus(chunk);
+        if (!res) { failed = true; break; }
         chunk.forEach(function (q, k) {
           var d = statPill(res[k]); if (!d) return;
+          statCache[q] = res[k];
           byQ[q].forEach(function (e) { e.className = 'lv-aks on ' + d.c; e.textContent = d.t; e.title = d.h; });
         });
       }
-    } finally { statBusy = false; }
+    } finally {
+      statBusy = false;
+      if (failed) pills.forEach(function (e) { if (/\bload\b|\bstale\b/.test(e.className)) { e.className = 'lv-aks on off'; e.textContent = 'Anki not responding'; e.title = 'Couldn’t reach Anki. Make sure Anki is open and the add-on is installed.'; } });
+    }
   }
   function soonStatus(ms) { clearTimeout(statTimer); statTimer = setTimeout(refreshStatus, ms || 800); }
   window.lvAnkiRefresh = function () { soonStatus(50); };
