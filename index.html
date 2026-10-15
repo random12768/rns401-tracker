@@ -5261,7 +5261,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 55, built: '2026-10-14T22:49:14Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 56, built: '2026-10-15T01:36:05Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -10709,6 +10709,21 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
     if (ready() && !busy()) { clearInterval(pt); askStep1(); }
   }
   if (!g(PKEY)) { pt = setInterval(tick, 2500); }
+  /* everyone who already uses Anki gets the new setup guide once (unless their add-on is already the new version) */
+  var SKEY = 'tracker_anki_setup_v2', st2 = null, stries = 0;
+  async function setupTick() {
+    if (g(SKEY) || g(PKEY) === 'no') { clearInterval(st2); return; }
+    if (!g(PKEY) && g(KEY) !== '1') return; /* not answered yet: the Do-you-use-Anki prompt handles them */
+    if (++stries > 400) { clearInterval(st2); return; }
+    if (!(ready() && !busy())) return;
+    clearInterval(st2);
+    var c = await pingOnce();
+    if (c.ok && c.v >= 3) { s(SKEY, '1'); return; }
+    if (busy()) { stries = 0; st2 = setInterval(setupTick, 2500); return; }
+    s(SKEY, '1'); s(KEY, '1'); apply();
+    window.lvAnkiSetup(c.ok ? 'update' : 'new');
+  }
+  if (!g(SKEY) && g(PKEY) !== 'no') { st2 = setInterval(setupTick, 2500); }
 })();
 </script>
 
