@@ -5325,7 +5325,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 59, built: '2026-10-16T14:24:44Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 60, built: '2026-10-16T14:32:21Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5335,6 +5335,9 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 60], title: "The tracker now remembers where you were", items: [
+    "When you refresh the page or the tracker updates itself, you now land back on the same tab, sub-tab and scroll position instead of the home screen."
+  ] },
   { v: [2, 59], title: "New for GHS402 Module Exam 2: blueprint coverage + 3 new videos", items: [
     "MD4 students: open GHS402 → Microbiology. Under the daily table there is now an Exam Blueprint table for Module Exam 2 (GI & Hepatobiliary Infections). It lists every blueprint topic, how many questions it is worth (Essential, Important or Acceptable), and the exact videos that cover it.",
     "Topics with no video are flagged in orange so you know to use First Aid or the slides instead. 22 of the 24 topics have a video. Still missing: Bacteroides fragilis (no video exists) and CMV (not added yet).",
@@ -10798,5 +10801,68 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
 })();
 </script>
 
+<script>
+/* Remember where you were: tab, sub-tab and scroll position survive refreshes and auto-updates */
+(function () {
+  var KEY = 'tracker_nav_v1', st = {};
+  try { st = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+  if (!st.subs) st.subs = {};
+  var restoring = true;
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  function curTab() { var b = document.querySelector('.tab-btn.active'); return b ? b.dataset.tab : null; }
+  function skey() { return curTab() + '|' + (st.subs[curTab()] || ''); }
+  var oT = window.switchTab, oS = window.switchSubTab;
+  window.switchTab = function (tab) {
+    var r = oT.apply(this, arguments);
+    if (!restoring) { var t = curTab(); if (t && t !== 'admin') { st.tab = t; st.sem = (typeof currentSemester !== 'undefined') ? currentSemester : st.sem; save(); } }
+    return r;
+  };
+  window.switchSubTab = function (sub) {
+    var r = oS.apply(this, arguments);
+    if (!restoring) {
+      var btn = document.querySelector('.module-subtab-btn[data-sub="' + sub + '"]');
+      var pan = btn && btn.closest('.tab-panel');
+      if (pan && pan.classList.contains('active')) { st.subs[pan.id.replace('panel-', '')] = sub; save(); }
+    }
+    return r;
+  };
+  var timer;
+  window.addEventListener('scroll', function () {
+    if (restoring) return;
+    clearTimeout(timer);
+    timer = setTimeout(function () { st.y = st.y || {}; st.y[skey()] = Math.round(window.scrollY); save(); }, 250);
+  }, { passive: true });
+  function visible(el) { return el && el.style.display !== 'none' && getComputedStyle(el).display !== 'none'; }
+  function restore() {
+    try {
+      var semNow = (typeof currentSemester !== 'undefined') ? currentSemester : null;
+      if (st.tab && (!st.sem || st.sem === semNow)) {
+        var tb = document.querySelector('.tab-btn[data-tab="' + st.tab + '"]');
+        if (visible(tb)) {
+          oT(st.tab);
+          var sub = st.subs[st.tab];
+          if (sub) {
+            var sb = document.querySelector('.module-subtab-btn[data-sub="' + sub + '"]');
+            if (sb && visible(sb) && sb.closest('#panel-' + st.tab)) oS(sub);
+          }
+        }
+      }
+    } catch (e) { console.warn('nav restore', e); }
+    var y = (st.y || {})[skey()];
+    var tries = 0, ok = 0, iv = setInterval(function () {
+      tries++;
+      if (y && document.documentElement.scrollHeight > y + innerHeight * 0.5 && Math.abs(window.scrollY - y) > 4) window.scrollTo(0, y);
+      if (y && Math.abs(window.scrollY - y) <= 4) ok++;
+      if (!y || ok >= 3 || tries >= 24) { clearInterval(iv); restoring = false; }
+    }, 300);
+    document.addEventListener('wheel', function () { clearInterval(iv); restoring = false; }, { once: true, passive: true });
+    document.addEventListener('touchstart', function () { clearInterval(iv); restoring = false; }, { once: true, passive: true });
+  }
+  function go() { setTimeout(restore, 350); }
+  if (document.readyState === 'complete') go(); else window.addEventListener('load', go);
+  /* a click on a tab/sub-tab during the restore window counts as the user's own choice */
+  document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.tab-btn,.module-subtab-btn')) restoring = false; }, true);
+})();
+</script>
 </body>
 </html>
