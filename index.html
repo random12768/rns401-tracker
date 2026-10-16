@@ -2963,7 +2963,6 @@ a.video-repeat span { font-style: italic; }
 </div>
 
 <!-- New-version bar -->
-<div id="update-bar" style="display:none;"><span>✨ New version found. Updating automatically when you pause (your place and progress are kept).</span> <button onclick="location.reload()">Update now</button></div>
 
 <div class="tabbar">
   <button class="tab-btn active" data-tab="overview" data-sem="all" onclick="switchTab('overview')"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Overview</button>
@@ -5474,7 +5473,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 65, built: '2026-10-16T19:14:14Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 66, built: '2026-10-16T19:15:48Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5486,7 +5485,7 @@ function verLabel(v) {
 const WHATS_NEW = [
   { v: [2, 65], title: "Updates now install by themselves", items: [
     "The tracker checks for a new version every 5 minutes and when you come back to the tab. When one is found it installs automatically as soon as you pause for about 30 seconds (or right away if the tab is in the background). It never interrupts typing or an open popup.",
-    "You stay on the same tab, sub-tab and scroll position, and your checkmarks and progress are kept. You can still tap Update now if you do not want to wait."
+    "You stay on the same tab, sub-tab and scroll position, and your checkmarks and progress are kept."
   ] },
   { v: [2, 63], title: "GHS402: Pharmacology exam blueprint with the drugs for each topic", items: [
     "MD4 students: open GHS402 → Pharmacology. Under the daily table there is now an Exam Blueprint for the GHS II summative exam (Antipsychotics 7, Sedatives & hypnotics 7, Antidepressants & bipolar 6, Alcohol & substance abuse 5, Antiemetics 4, Peptic ulcer drugs 3, Diarrhea & constipation 2).",
@@ -9612,11 +9611,11 @@ function checkForUpdate(manual) {
   return fetch(_updUrl(), { method: 'HEAD', cache: 'no-store' }).then(function (res) {
     var sig = _updSig(res);
     if (_updBase === null) { _updBase = sig; if (manual && st) st.textContent = '✅ You\'re on the latest version.'; return; }
-    if (sig !== _updBase && sig !== '|') { _updPending = true; showUpdateBar(); if (manual && st) st.innerHTML = '✨ New version found. It will install by itself when you pause, or <button class="md-choice-btn" style="margin-top:8px;" onclick="location.reload()">🔄 update now</button>'; }
+    if (sig !== _updBase && sig !== '|') { _updPending = true; showUpdateBar(); if (manual && st) { st.textContent = '✨ New version found. Installing in the background…'; setTimeout(function () { location.reload(); }, 1500); } }
     else if (manual && st) st.textContent = '✅ You\'re on the latest version.';
   }).catch(function () { if (manual && st) st.textContent = 'Couldn\'t check right now (offline?).'; });
 }
-function showUpdateBar() { var b = document.getElementById('update-bar'); if (b) b.style.display = 'flex'; }
+function showUpdateBar() { /* silent: updates install in the background, no banner */ }
 function dismissUpdateBar() { _barDismissed = true; var b = document.getElementById('update-bar'); if (b) b.style.display = 'none'; }
 function _modalOpen() { return Array.prototype.some.call(document.querySelectorAll('.md-modal-overlay'), function (o) { return o.style.display === 'flex'; }); }
 function _typing() { var a = document.activeElement; return a && (a.tagName === 'TEXTAREA' || (a.tagName === 'INPUT' && a.type === 'text') || a.isContentEditable); }
