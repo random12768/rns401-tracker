@@ -1999,6 +1999,22 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   @keyframes needsflash { 0% { background: rgba(245,158,11,0.35); } 100% { background: rgba(245,158,11,0.07); } }
   .needs-tag { margin-left:8px; font-size:0.68em; font-weight:800; color:#1c1917; background:#fbbf24; padding:2px 8px; border-radius:999px; vertical-align:middle; }
   .settings-nav a.needs { background:#f59e0b; color:#1c1917; }
+
+  /* Settings: grouped layout */
+  .settings-nav { flex-direction:column; gap:5px; }
+  .snav-g { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+  .snav-l { font-size:0.66em; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--text-faint); min-width:44px; }
+  .settings-nav a.active { background:#6366f1; color:#fff; }
+  html[data-theme="light"] .settings-nav a.active { background:#0369a1; color:#fff; }
+  html.anki-no .settings-nav a[onclick*="set-anki"] { display:none; }
+  .settings-group { margin:0 0 6px; }
+  .settings-group-h { display:flex; align-items:baseline; flex-wrap:wrap; gap:8px; padding:18px 20px 6px; border-bottom:2px solid rgba(99,102,241,0.35); background:rgba(99,102,241,0.06); }
+  .settings-group-h .sg-ico { font-size:1.15em; }
+  .settings-group-h .sg-name { font-weight:900; font-size:1.12em; letter-spacing:.01em; }
+  .settings-group-h .sg-sub { font-size:0.8em; color:var(--text-faint); }
+  .settings-group .settings-sec:last-child { border-bottom:none; }
+  html[data-theme="light"] .settings-group-h { border-bottom-color:rgba(3,105,161,0.3); background:rgba(3,105,161,0.05); }
+  @media (max-width:640px){ .settings-nav{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 14px;} .settings-nav::-webkit-scrollbar{display:none} .snav-g{display:contents} .snav-l{display:none} .settings-nav a{white-space:nowrap;flex:0 0 auto} }
   .settings-sec { scroll-margin-top: 118px; }
 
 
@@ -2715,20 +2731,15 @@ a.video-repeat span { font-style: italic; }
   <div class="md-modal-box settings-box settings-box-wide">
     <div class="settings-head"><div class="md-modal-title" style="margin:0;">⚙️ Settings &amp; Setup Guide</div><button class="settings-x" onclick="closeSettingsModal()" aria-label="Close settings">✕</button></div>
     <div class="settings-nav">
-      <a href="#" onclick="event.preventDefault();settingsScroll('set-year')">1 · Your year</a>
-      <a href="#" onclick="event.preventDefault();settingsScroll('set-pdf')">2 · Connect PDFs</a>
-      <a href="#" onclick="event.preventDefault();settingsScroll('set-anat')">3 · Anatomy order</a>
-      <a href="#" onclick="event.preventDefault();settingsScroll('set-update')">4 · Updates</a>
-      <a href="#" onclick="event.preventDefault();settingsScroll('set-theme')">5 · Appearance</a>
-      <a href="#" onclick="event.preventDefault();settingsScroll('set-guide')">6 · How it all works</a>
-      <a href="#" onclick="event.preventDefault();settingsScroll('set-tour')">🎬 Tutorial</a>
-      <a href="#" data-set-video="1" onclick="event.preventDefault();settingsScroll('set-video')">🎞 Video source</a>
-      <a href="#" onclick="event.preventDefault();settingsScroll('set-anki')">🧠 Anki button</a>
-      <a href="#" onclick="event.preventDefault();settingsScroll('set-contact')">💬 Contact</a>
+      <div class="snav-g"><span class="snav-l">Setup</span><a href="#" onclick="event.preventDefault();settingsScroll('set-year')">🎓 Your year</a><a href="#" onclick="event.preventDefault();settingsScroll('set-pdf')">📚 PDFs</a><a href="#" onclick="event.preventDefault();settingsScroll('set-anat')">🦴 Anatomy order</a></div>
+      <div class="snav-g"><span class="snav-l">Tools</span><a href="#" data-set-video="1" onclick="event.preventDefault();settingsScroll('set-video')">🎞 Video source</a><a href="#" onclick="event.preventDefault();settingsScroll('set-anki')">🧠 Anki</a></div>
+      <div class="snav-g"><span class="snav-l">App</span><a href="#" onclick="event.preventDefault();settingsScroll('set-theme')">🌓 Appearance</a><a href="#" onclick="event.preventDefault();settingsScroll('set-update')">🔄 Updates</a></div>
+      <div class="snav-g"><span class="snav-l">Help</span><a href="#" onclick="event.preventDefault();settingsScroll('set-tour')">🎬 Tutorial</a><a href="#" onclick="event.preventDefault();settingsScroll('set-guide')">📖 How it works</a><a href="#" onclick="event.preventDefault();settingsScroll('set-contact')">💬 Contact</a></div>
     </div>
 
+    <div class="settings-group" id="sg-setup"><div class="settings-group-h"><span class="sg-ico">🚀</span><span class="sg-name">Setup</span><span class="sg-sub">Do these once so the tracker fits you</span></div>
     <div class="settings-sec" id="set-year">
-      <div class="settings-sec-title">1 · Which MD year are you in?</div>
+      <div class="settings-sec-title">🎓 Which MD year are you in?</div>
       <div class="settings-sec-sub">This picks which module tabs, class schedule and overview you see. You can switch any time.</div>
       <div class="settings-year-row">
         <button class="md-choice-btn settings-sem-btn" data-sem="MD1" onclick="applySemesterChoice('MD1')">MD1</button>
@@ -2738,7 +2749,7 @@ a.video-repeat span { font-style: italic; }
     </div>
 
     <div class="settings-sec settings-pdf-section" id="set-pdf">
-      <div class="settings-sec-title">2 · 📚 Connect your PDFs <span class="settings-pdf-status" id="settings-pdf-status"></span></div>
+      <div class="settings-sec-title">📚 Connect your PDFs <span class="settings-pdf-status" id="settings-pdf-status"></span></div>
       <div class="settings-sec-sub">
         The tracker doesn't contain the textbooks (they're copyrighted) — <b>you connect your own copy once</b>. After that, every page badge in the tracker
         (<b>📖 First Aid</b>, <b>🩻 Mehlman</b>, <b>💯 100 Concepts</b>, <b>📄 Bootcamp notes</b>, <b>🃏 Lippincott card</b>, <b>📓 Pathoma</b>) opens your PDF in a new tab <b>right at that page</b>.
@@ -2799,7 +2810,7 @@ a.video-repeat span { font-style: italic; }
     </div>
 
     <div class="settings-sec" id="set-anat">
-      <div class="settings-sec-title">3 · 🦴 MSK101 Anatomy study order</div>
+      <div class="settings-sec-title">🦴 MSK101 Anatomy study order</div>
       <div class="settings-sec-sub">Choose how the Anatomy tab lists your Bootcamp videos. Your ticks are kept separately for each style, so switching never loses progress.</div>
       <div class="settings-year-row">
         <button class="md-choice-btn settings-order-btn" data-order="lecture" onclick="setAnatOrder('lecture')">📅 Lecture order</button>
@@ -2807,37 +2818,9 @@ a.video-repeat span { font-style: italic; }
       </div>
       <div class="settings-sec-sub" style="margin-top:8px;"><b>Lecture order</b> follows what the professor teaches each day (best for staying in sync with class, SGDs and labs). <b>Bootcamp order</b> is one flat list of videos in the order Bootcamp teaches them (best if you'd rather learn topic-by-topic at your own pace). <a href="#" onclick="event.preventDefault();showAnatOrderChooser(true)">See the pros &amp; cons</a></div>
     </div>
-
-    <div class="settings-sec" id="set-update">
-      <div class="settings-sec-title">4 · 🔄 Updates</div>
-      <div class="settings-sec-sub">This tracker is updated often. It <b>checks for a new version every 5 minutes</b> while it's open and installs it by itself in the background, as soon as you pause for about 30 seconds (or right away if the tab is in the background). You stay on the same tab and scroll position, and your progress is saved automatically, so nothing is lost.</div>
-      <div class="settings-sec-sub" style="margin:8px 0;"><b>You are on version:</b> <span id="app-version-line">—</span></div>
-      <button class="md-choice-btn" style="margin-bottom:8px;" onclick="showWhatsNew(null,true)">✨ See what’s new</button>
-      <button class="md-choice-btn" onclick="checkForUpdate(true)">🔄 Check for updates now</button> <span id="update-status" class="settings-sec-sub"></span>
     </div>
 
-    <div class="settings-sec" id="set-theme">
-      <div class="settings-sec-title">5 · 🌓 Appearance</div>
-      <div class="settings-sec-sub">Pick light or dark, or let the tracker follow your device. This is saved on this device.</div>
-      <div class="settings-year-row">
-        <button class="md-choice-btn theme-opt" data-theme-opt="system" onclick="setTheme('system')">💻 Match my device</button>
-        <button class="md-choice-btn theme-opt" data-theme-opt="light" onclick="setTheme('light')">☀️ Light</button>
-        <button class="md-choice-btn theme-opt" data-theme-opt="dark" onclick="setTheme('dark')">🌙 Dark</button>
-      </div>
-    </div>
-
-    <div class="settings-sec" id="set-contact">
-      <div class="settings-sec-title">💬 Contact</div>
-      <div class="settings-sec-sub">Found a bug, a mismatched video, or have a question? Message Maninder on WhatsApp: <b>+1 416-998-4470</b>.</div>
-      <a class="md-choice-btn" style="display:inline-block;text-decoration:none;margin-bottom:8px;" href="https://wa.me/14169984470?text=Hi%20Maninder%2C%20about%20the%20tracker%3A%20" target="_blank" rel="noopener">💬 Open WhatsApp</a>
-    </div>
-
-    <div class="settings-sec" id="set-tour">
-      <div class="settings-sec-title">🎬 Tutorial</div>
-      <div class="settings-sec-sub">A quick interactive tour of everything in the tracker: lectures, videos, First Aid pages, the planner and more. It takes about a minute.</div>
-      <button class="md-choice-btn" style="margin-bottom:8px;" onclick="startTour()">▶ Start the tutorial</button>
-    </div>
-
+    <div class="settings-group" id="sg-tools"><div class="settings-group-h"><span class="sg-ico">🛠</span><span class="sg-name">Study tools</span><span class="sg-sub">Where videos open and the Anki shortcut</span></div>
     <div class="settings-sec" id="set-video">
       <div class="settings-sec-title">🎞 Video source</div>
       <div class="settings-sec-sub">Choose where the 🎬 video links open. Use <b>Local folder</b> if you have the videos saved on your computer: pick the folder once and every link plays straight from it in the tracker. Works in Chrome and Edge on a computer.</div>
@@ -2872,9 +2855,37 @@ a.video-repeat span { font-style: italic; }
     </div>
 
     <div id="lv-anki-unhide">Started using Anki? <a onclick="lvAnkiUnhide()">Show the Anki options</a></div>
+    </div>
+
+    <div class="settings-group" id="sg-app"><div class="settings-group-h"><span class="sg-ico">🎨</span><span class="sg-name">Appearance &amp; updates</span><span class="sg-sub">How the tracker looks and stays current</span></div>
+    <div class="settings-sec" id="set-theme">
+      <div class="settings-sec-title">🌓 Appearance</div>
+      <div class="settings-sec-sub">Pick light or dark, or let the tracker follow your device. This is saved on this device.</div>
+      <div class="settings-year-row">
+        <button class="md-choice-btn theme-opt" data-theme-opt="system" onclick="setTheme('system')">💻 Match my device</button>
+        <button class="md-choice-btn theme-opt" data-theme-opt="light" onclick="setTheme('light')">☀️ Light</button>
+        <button class="md-choice-btn theme-opt" data-theme-opt="dark" onclick="setTheme('dark')">🌙 Dark</button>
+      </div>
+    </div>
+
+    <div class="settings-sec" id="set-update">
+      <div class="settings-sec-title">🔄 Updates</div>
+      <div class="settings-sec-sub">This tracker is updated often. It <b>checks for a new version every 5 minutes</b> while it's open and installs it by itself in the background, as soon as you pause for about 30 seconds (or right away if the tab is in the background). You stay on the same tab and scroll position, and your progress is saved automatically, so nothing is lost.</div>
+      <div class="settings-sec-sub" style="margin:8px 0;"><b>You are on version:</b> <span id="app-version-line">—</span></div>
+      <button class="md-choice-btn" style="margin-bottom:8px;" onclick="showWhatsNew(null,true)">✨ See what’s new</button>
+      <button class="md-choice-btn" onclick="checkForUpdate(true)">🔄 Check for updates now</button> <span id="update-status" class="settings-sec-sub"></span>
+    </div>
+    </div>
+
+    <div class="settings-group" id="sg-help"><div class="settings-group-h"><span class="sg-ico">🙋</span><span class="sg-name">Help</span><span class="sg-sub">Learn the tracker or get in touch</span></div>
+    <div class="settings-sec" id="set-tour">
+      <div class="settings-sec-title">🎬 Tutorial</div>
+      <div class="settings-sec-sub">A quick interactive tour of everything in the tracker: lectures, videos, First Aid pages, the planner and more. It takes about a minute.</div>
+      <button class="md-choice-btn" style="margin-bottom:8px;" onclick="startTour()">▶ Start the tutorial</button>
+    </div>
 
     <div class="settings-sec" id="set-guide">
-      <div class="settings-sec-title">6 · 📖 How everything works</div>
+      <div class="settings-sec-title">📖 How everything works</div>
       <div class="settings-sec-sub">Tap a topic to expand it.</div>
       <details class="guide-det" open><summary>🏠 Overview tab</summary><div>Shows the module you're in <b>right now</b> (based on today's date), this week's class schedule in colour, exam countdowns, and progress cards for the module. It's your daily starting point.</div></details>
       <details class="guide-det"><summary>📅 Planner tab</summary><div>A monthly calendar for planning your study. Days with an SGD 👥, TBL 🧩 or exam 🚨 from the class timetable are badged so you can see heavy days at a glance.</div></details>
@@ -2885,6 +2896,13 @@ a.video-repeat span { font-style: italic; }
       <details class="guide-det" id="guide-det-qbank"><summary>❓ Alan's Q Bank</summary><div>Alan's Q Bank is a practice-question bank with detailed explanations for every answer. The explanations combine material from UWorld, Robbins and Rubin's, and other trusted sources, so you learn why each option is right or wrong, not only which one to pick. You can highlight text, flag questions and keep notes on each one. Your answers are saved in this browser.</div></details>
       <details class="guide-det"><summary>☁️ Saving your progress</summary><div>Everything you tick or type saves automatically in <b>this browser</b>. To keep progress across devices, use <b>Sign in with Google</b> (top of the page) — then it syncs to the cloud. Clearing your browser data without signing in erases local progress.</div></details>
       <details class="guide-det"><summary>💡 Quick tips</summary><div><ul class="settings-mini"><li>New here? Do <b>2 · Connect PDFs</b> first — it makes every page badge work.</li><li>Not sure what to study today? Open <b>Overview</b> → this week's schedule, then jump into your module tab.</li><li>If something looks out of date, use <b>4 · Check for updates now</b>.</li></ul></div></details>
+    </div>
+
+    <div class="settings-sec" id="set-contact">
+      <div class="settings-sec-title">💬 Contact</div>
+      <div class="settings-sec-sub">Found a bug, a mismatched video, or have a question? Message Maninder on WhatsApp: <b>+1 416-998-4470</b>.</div>
+      <a class="md-choice-btn" style="display:inline-block;text-decoration:none;margin-bottom:8px;" href="https://wa.me/14169984470?text=Hi%20Maninder%2C%20about%20the%20tracker%3A%20" target="_blank" rel="noopener">💬 Open WhatsApp</a>
+    </div>
     </div>
     <button class="md-modal-close" onclick="closeSettingsModal()">Close</button>
   </div>
@@ -5473,7 +5491,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 67, built: '2026-10-16T19:19:16Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 68, built: '2026-10-16T19:26:11Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5483,6 +5501,10 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 68], title: "Settings, reorganized", items: [
+    "Settings are now grouped into Setup (your year, PDFs, anatomy order), Study tools (video source, Anki), Appearance & updates, and Help (tutorial, how it works, contact).",
+    "The menu at the top highlights where you are as you scroll, and on phones it is one swipeable row so it takes less space. Nothing was removed."
+  ] },
   { v: [2, 65], title: "Updates now install by themselves", items: [
     "The tracker checks for a new version every 5 minutes and when you come back to the tab. When one is found it installs automatically as soon as you pause for about 30 seconds (or right away if the tab is in the background). It never interrupts typing or an open popup.",
     "You stay on the same tab, sub-tab and scroll position, and your checkmarks and progress are kept."
@@ -9444,7 +9466,24 @@ function connectPdfChoose() {
   else if (kind === 'hypharm') { pendingHyPharmPage = page; pickHyPharmPdf(); }
   else { pendingExtraPdf = { kind: kind, page: page }; pickExtraPdf(kind); }
 }
-function settingsScroll(id) { var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+function _settingsOffset() { var hd = document.querySelector('#settings-modal-overlay .settings-head'), nv = document.querySelector('#settings-modal-overlay .settings-nav'); return (hd ? hd.offsetHeight : 0) + (nv ? nv.offsetHeight : 0) + 10; }
+function settingsScroll(id) { var el = document.getElementById(id); if (!el) return; el.style.scrollMarginTop = _settingsOffset() + 'px'; window._setNavLock = Date.now(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); _settingsMarkActive(id); }
+function _settingsMarkActive(id) {
+  var nav = document.querySelector('#settings-modal-overlay .settings-nav'), act = null;
+  document.querySelectorAll('#settings-modal-overlay .settings-nav a').forEach(function (a) { var on = (a.getAttribute('onclick') || '').indexOf("'" + id + "'") > -1; a.classList.toggle('active', on); if (on) act = a; });
+  if (nav && act && nav.scrollWidth > nav.clientWidth) { var l = act.offsetLeft - nav.offsetLeft, r = l + act.offsetWidth; if (l < nav.scrollLeft || r > nav.scrollLeft + nav.clientWidth) nav.scrollTo({ left: Math.max(0, l - 16), behavior: 'smooth' }); }
+}
+(function () {
+  var t = null;
+  document.addEventListener('scroll', function (e) {
+    var box = e.target; if (!box || !box.closest || !box.closest('#settings-modal-overlay')) return; if (Date.now() - (window._setNavLock || 0) < 1200) return;
+    clearTimeout(t); t = setTimeout(function () {
+      var off = _settingsOffset(), top = box.getBoundingClientRect ? box.getBoundingClientRect().top : 0, cur = null;
+      document.querySelectorAll('#settings-modal-overlay .settings-sec[id]').forEach(function (s) { if (s.offsetParent !== null && s.getBoundingClientRect().top - top <= off + 20) cur = s.id; });
+      if (cur) _settingsMarkActive(cur);
+    }, 60);
+  }, true);
+})();
 function openSettingsTo(id) { openSettingsModal(); setTimeout(function () { settingsScroll(id); }, 60); }
 
 /* ---- anatomy study order ---- */
@@ -9580,6 +9619,9 @@ function updateSettingsNeeds(pdfNeeds) {
   var _open = window.openSettingsModal;
   window.openSettingsModal = function () {
     var r = _open.apply(this, arguments);
+    try { var _sem = (typeof currentSemester !== 'undefined' && currentSemester) || localStorage.getItem('wusom_semester_v1') || 'MD4', _md1 = _sem === 'MD1';
+      var _sa = document.getElementById('set-anat'); if (_sa) _sa.style.display = _md1 ? '' : 'none';
+      document.querySelectorAll('.settings-nav a[onclick*="set-anat"]').forEach(function (a) { a.style.display = _md1 ? '' : 'none'; }); } catch (e) {}
     updateSettingsBadge();
     setTimeout(function () {
       var first = document.querySelector('#settings-modal-overlay .settings-sec.needs-config');
