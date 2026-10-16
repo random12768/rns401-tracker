@@ -2810,7 +2810,7 @@ a.video-repeat span { font-style: italic; }
 
     <div class="settings-sec" id="set-update">
       <div class="settings-sec-title">4 · 🔄 Updates</div>
-      <div class="settings-sec-sub">This tracker is updated often. It <b>checks for a new version every hour</b> while it's open. When one is ready you'll see a "New version available" bar; if you've been idle for about 10 minutes it refreshes itself (your progress is saved automatically, so nothing is lost).</div>
+      <div class="settings-sec-sub">This tracker is updated often. It <b>checks for a new version every 5 minutes</b> while it's open and installs it by itself in the background, as soon as you pause for about 30 seconds (or right away if the tab is in the background). You stay on the same tab and scroll position, and your progress is saved automatically, so nothing is lost.</div>
       <div class="settings-sec-sub" style="margin:8px 0;"><b>You are on version:</b> <span id="app-version-line">—</span></div>
       <button class="md-choice-btn" style="margin-bottom:8px;" onclick="showWhatsNew(null,true)">✨ See what’s new</button>
       <button class="md-choice-btn" onclick="checkForUpdate(true)">🔄 Check for updates now</button> <span id="update-status" class="settings-sec-sub"></span>
@@ -5473,7 +5473,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 66, built: '2026-10-16T19:15:48Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 67, built: '2026-10-16T19:19:16Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
