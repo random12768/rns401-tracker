@@ -5325,7 +5325,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 58, built: '2026-10-16T14:22:03Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 59, built: '2026-10-16T14:24:44Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5335,6 +5335,12 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 59], title: "New for GHS402 Module Exam 2: blueprint coverage + 3 new videos", items: [
+    "MD4 students: open GHS402 → Microbiology. Under the daily table there is now an Exam Blueprint table for Module Exam 2 (GI & Hepatobiliary Infections). It lists every blueprint topic, how many questions it is worth (Essential, Important or Acceptable), and the exact videos that cover it.",
+    "Topics with no video are flagged in orange so you know to use First Aid or the slides instead. 22 of the 24 topics have a video. Still missing: Bacteroides fragilis (no video exists) and CMV (not added yet).",
+    "Added to the daily Microbiology list: Hepatitis D (Deltaviruses), Hepatitis E (Hepevirus) and Candida albicans (thrush and esophagitis). Total micro video time is now 4h 3m.",
+    "Phone fix: the blueprint tables are now readable on small screens (RNS401 one too)."
+  ] },
   { v: [2, 50], anki: true, title: "Easy Anki setup guide + your own flag colours", items: [
     "New interactive setup guide with pictures. The add-on is now on AnkiWeb, so you install it by pasting a short code in Anki (Tools → Add-ons → Get Add-ons) and it updates itself from then on. The guide also checks the connection for you.",
     "You can now choose which Anki flag colour(s) count as your high-yield cards (up to 3, or all cards). It no longer assumes green.",
