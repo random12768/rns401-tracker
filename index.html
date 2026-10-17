@@ -1483,6 +1483,8 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
     transition: all 0.2s ease;
   }
   #gate-signin-btn { background: #4285F4; border-color: #4285F4; color: #fff; font-weight: 700; }
+  .gate-remember { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 14px auto 2px; padding: 10px 14px; max-width: 360px; font-size: .92rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border, #30363d); border-radius: 12px; color: var(--text); background: rgba(127,127,127,.08); user-select: none; -webkit-tap-highlight-color: transparent; }
+  .gate-remember input { width: 20px; height: 20px; accent-color: #4285F4; flex: 0 0 auto; }
   #gate-signin-btn:hover { background: #3367d6; box-shadow: 0 0 20px -4px rgba(66,133,244,0.7); transform: translateY(-1px); }
   .auth-gate-note { color: var(--text-faint); font-size: 0.85em; margin-top: 10px; }
 
@@ -2661,6 +2663,7 @@ a.video-repeat span { font-style: italic; }
         <h1 class="auth-welcome-title">Welcome to the Tracker for Windsor University School of Medicine</h1>
         <p class="auth-welcome-tag">Your whole module in one place, so you always know what to study next.</p>
         <button id="gate-signin-btn" onclick="signInWithGoogle()">Sign in with Google to get started</button>
+        <label class="gate-remember"><input type="checkbox" id="gate-remember" checked onchange="setRemember(this.checked)"><span>Keep me signed in on this device</span></label>
         <div class="auth-welcome-used"><span class="dot"></span>Used by 30+ Windsor students</div>
         <div class="auth-gate-note" id="gate-note"></div>
         <div class="auth-welcome-start">
@@ -5684,7 +5687,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 72, built: '2026-10-17T21:49:24Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 73, built: '2026-10-17T22:39:29Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5694,6 +5697,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 73], title: "Fixed the page refreshing over and over", items: ["The automatic update check now compares version numbers instead of server headers, and never reloads twice for the same update."] },
   { v: [2, 72], title: "GI pathology: teacher's topic list", items: ["The GHS402 pathology blueprint now highlights every topic on the list your teacher sent with a ⭐, and the topics that were missing (erosion vs ulceration, D/D of hematemesis, viral hepatitis mutations, steatohepatitis, D/D of hepatitis and cirrhosis, chronic inflammation and cancer risk, and Down syndrome GI associations) were added."] },
   { v: [2, 71], qb: true, title: "Q Bank moved to secure storage", items: ["The Q Bank questions are now kept in secure storage that only approved accounts can read, instead of public files."] },
   { v: [2, 70], title: "Hep D and Hep E videos marked optional", items: ["The Pixorize videos for Hepatitis D and E are now labelled optional extras. Use First Aid and the slides as your main source; parts are also covered in the Sketchy Hep A, B and C videos."] },
@@ -6656,6 +6660,8 @@ function initFirebase() {
     firebase.initializeApp(FIREBASE_CONFIG);
     fbAuth = firebase.auth();
     fbDb = firebase.firestore();
+    try { var _rc = document.getElementById('gate-remember'); if (_rc) _rc.checked = rememberPref(); } catch (e) {}
+    applyPersistence();
     fbAuth.onAuthStateChanged(onAuthChange);
     setSyncStatus('signed out — progress is only saving to this browser');
   } catch (e) {
@@ -6667,6 +6673,13 @@ function initFirebase() {
   }
 }
 
+/* "Keep me signed in": on (default) = stay signed in on this device after you close the app; off = signed out when the tab/app is closed. Set ahead of time so the sign-in popup can open straight from your tap (phones block popups that wait). */
+function rememberPref() { try { return localStorage.getItem('tracker_remember_v1') !== '0'; } catch (e) { return true; } }
+function applyPersistence() {
+  if (!fbAuth) return Promise.resolve();
+  try { var P = firebase.auth.Auth.Persistence; return fbAuth.setPersistence(rememberPref() ? P.LOCAL : P.SESSION).catch(function (e) { console.warn('persistence', e); }); } catch (e) { return Promise.resolve(); }
+}
+function setRemember(on) { try { localStorage.setItem('tracker_remember_v1', on ? '1' : '0'); } catch (e) {} applyPersistence(); }
 function signInWithGoogle() {
   if (!firebaseReady()) { alert('Cloud sync is not set up in this file yet — paste your Firebase config into FIREBASE_CONFIG first.'); return; }
   const provider = new firebase.auth.GoogleAuthProvider();
@@ -9849,16 +9862,24 @@ var _updBase = null, _updPending = false, _lastActive = Date.now(), _lastCheck =
 ['pointerdown', 'keydown', 'scroll', 'touchstart', 'wheel'].forEach(function (ev) { window.addEventListener(ev, function () { _lastActive = Date.now(); }, { passive: true, capture: true }); });
 function _updUrl() { return location.href.split('#')[0].split('?')[0]; }
 function _updSig(res) { return (res.headers.get('etag') || '') + '|' + (res.headers.get('last-modified') || ''); }
+function _verCmp(a, b) { return ((a.major | 0) - (b.major | 0)) || ((a.minor | 0) - (b.minor | 0)); }
+var _updTarget = '';
+function _updMarkTry() { try { sessionStorage.setItem('tracker_upd_try', JSON.stringify({ k: _updTarget, t: Date.now() })); } catch (e) {} }
+function _updRecentlyTried(k) { try { var o = JSON.parse(sessionStorage.getItem('tracker_upd_try') || 'null'); return !!(o && o.k === k && Date.now() - o.t < 15 * 60 * 1000); } catch (e) { return false; } }
+/* Compares the version number inside this page with the version published in version.json (not HTTP headers, which differ between servers and caused endless reloads). It also never reloads twice for the same new version within 15 minutes, so a slow cache can never trap the page in a reload loop. */
 function checkForUpdate(manual) {
   var st = document.getElementById('update-status');
   if (location.protocol !== 'http:' && location.protocol !== 'https:') { if (manual && st) st.textContent = 'Update checks only work on the live website.'; return Promise.resolve(); }
   _lastCheck = Date.now();
   if (manual && st) st.textContent = 'Checking…';
-  return fetch(_updUrl(), { method: 'HEAD', cache: 'no-store' }).then(function (res) {
-    var sig = _updSig(res);
-    if (_updBase === null) { _updBase = sig; if (manual && st) st.textContent = '✅ You\'re on the latest version.'; return; }
-    if (sig !== _updBase && sig !== '|') { _updPending = true; showUpdateBar(); if (manual && st) { st.textContent = '✨ New version found. Installing in the background…'; setTimeout(function () { location.reload(); }, 1500); } }
-    else if (manual && st) st.textContent = '✅ You\'re on the latest version.';
+  return fetch(new URL('version.json', location.href).href + '?_=' + Date.now(), { cache: 'no-store' }).then(function (res) { return res.json(); }).then(function (v) {
+    if (!v || typeof v.minor !== 'number') throw new Error('bad version file');
+    var k = v.major + '.' + v.minor;
+    if (_verCmp(v, APP_VERSION) > 0) {
+      _updTarget = k;
+      if (manual) { if (st) st.textContent = '✨ New version found. Installing in the background…'; _updMarkTry(); setTimeout(function () { location.reload(); }, 1500); }
+      else if (!_updRecentlyTried(k)) { _updPending = true; showUpdateBar(); }
+    } else if (manual && st) st.textContent = '✅ You\'re on the latest version.';
   }).catch(function () { if (manual && st) st.textContent = 'Couldn\'t check right now (offline?).'; });
 }
 function showUpdateBar() { /* silent: updates install in the background, no banner */ }
@@ -9873,7 +9894,7 @@ setInterval(function () {
 /* Apply a pending update by itself: right away if the tab is in the background, otherwise once you have paused ~30s (never while typing or a popup is open). Tab, sub-tab and scroll position are restored after the reload. */
 function _autoApplyUpdate() {
   if (!_updPending || _modalOpen() || _typing()) return;
-  if (document.visibilityState === 'hidden' || Date.now() - _lastActive >= IDLE_RELOAD_MS) { try { if (document.activeElement) document.activeElement.blur(); } catch (e) {} location.reload(); }
+  if (document.visibilityState === 'hidden' || Date.now() - _lastActive >= IDLE_RELOAD_MS) { try { if (document.activeElement) document.activeElement.blur(); } catch (e) {} _updPending = false; _updMarkTry(); location.reload(); }
 }
 document.addEventListener('visibilitychange', function () {
   if (document.visibilityState === 'hidden') { _autoApplyUpdate(); return; }
