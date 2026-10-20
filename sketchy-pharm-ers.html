@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERS403 Sketchy Pharm — MD4</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel2: #1e222b;
+    --border: #2a2f3a;
+    --text: #e7e9ee;
+    --muted: #9aa3b2;
+    --accent: #4f8cff;
+    --accent2: #7fd858;
+    --done-bg: rgba(127, 216, 88, 0.08);
+    --done-border: rgba(127, 216, 88, 0.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+  }
+  #sidebar {
+    width: 300px;
+    flex-shrink: 0;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    transition: width .18s ease, min-width .18s ease;
+  }
+  #sidebar-inner {
+    width: 300px;
+    height: 100%;
+    overflow-y: auto;
+    padding: 16px 12px;
+  }
+  body.sidebar-collapsed #sidebar {
+    width: 0;
+    min-width: 0;
+    border-right: none;
+  }
+  #sidebar-toggle {
+    position: sticky;
+    top: 16px;
+    align-self: flex-start;
+    flex-shrink: 0;
+    width: 22px;
+    height: 44px;
+    margin-left: -1px;
+    margin-top: 16px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+  #sidebar-toggle:hover {
+    color: var(--text);
+    background: var(--panel2);
+  }
+  #sidebar-toggle svg {
+    transition: transform .18s ease;
+  }
+  body.sidebar-collapsed #sidebar-toggle svg {
+    transform: rotate(180deg);
+  }
+  #sidebar h1 {
+    font-size: 15px;
+    margin: 4px 4px 2px;
+    color: var(--text);
+  }
+  #sidebar .sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0 4px 14px;
+  }
+  #progress {
+    margin: 0 4px 14px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  #progress-bar-outer {
+    height: 6px;
+    background: var(--panel2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent2);
+    width: 0%;
+    transition: width .2s ease;
+  }
+  #search-box {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--panel2);
+    color: var(--text);
+    font-size: 13px;
+    margin-bottom: 12px;
+    outline: none;
+  }
+  #search-box:focus {
+    border-color: var(--accent);
+  }
+  #nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-item {
+    margin-bottom: 2px;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--text);
+    padding: 7px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.3;
+  }
+  .nav-link:hover {
+    background: var(--panel2);
+  }
+  .nav-link.active {
+    background: rgba(79, 140, 255, 0.15);
+    color: var(--accent);
+  }
+  .nav-num {
+    color: var(--muted);
+    font-size: 11px;
+    min-width: 18px;
+  }
+  .nav-check {
+    accent-color: var(--accent2);
+    cursor: pointer;
+  }
+  .nav-item.done .nav-text {
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+  .nav-item.hidden {
+    display: none;
+  }
+  #main {
+    flex: 1;
+    padding: 24px 20px 80px;
+    max-width: 1500px;
+  }
+  #main-header {
+    margin-bottom: 28px;
+  }
+  #main-header h1 {
+    font-size: 26px;
+    margin: 0 0 6px;
+  }
+  #main-header p {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 640px;
+    line-height: 1.5;
+  }
+  .org-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+    scroll-margin-top: 20px;
+  }
+  .org-section.hidden {
+    display: none;
+  }
+  .org-section.reviewed {
+    background: var(--done-bg);
+    border-color: var(--done-border);
+  }
+  .org-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .org-header h2 {
+    font-size: 18px;
+    margin: 0;
+  }
+  .reviewed-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    user-select: none;
+  }
+  .reviewed-toggle input {
+    accent-color: var(--accent2);
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+  }
+  .org-body {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .org-body:has(.legend-wrap:only-child) {
+    display: block;
+  }
+  .scene-wrap {
+    flex: 1 1 42%;
+    min-width: 0;
+    position: sticky;
+    top: 12px;
+    align-self: flex-start;
+  }
+  .scene-wrap img {
+    width: 100%;
+    display: block;
+    margin: 0;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: zoom-in;
+  }
+  .fullscreen-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: rgba(15, 17, 21, 0.75);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.85;
+    z-index: 2;
+  }
+  .fullscreen-btn:hover {
+    opacity: 1;
+    background: rgba(15, 17, 21, 0.95);
+    border-color: var(--accent);
+  }
+  #lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 7, 10, 0.92);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    cursor: zoom-out;
+  }
+  #lightbox.open {
+    display: flex;
+  }
+  #lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    cursor: default;
+  }
+  #lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--panel2);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 101;
+  }
+  #lightbox-close:hover {
+    background: var(--panel);
+    border-color: var(--accent);
+  }
+  .legend-wrap {
+    flex: 1 1 58%;
+    min-width: 0;
+  }
+  .legend-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .legend-list li {
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.45;
+    padding: 7px 9px;
+    background: var(--panel2);
+    border-radius: 7px;
+  }
+  .legend-list li.empty {
+    color: var(--muted);
+    font-style: italic;
+  }
+  .legend-list .num {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #0b0d11;
+    font-weight: 700;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .legend-list .txt {
+    flex: 1;
+  }
+  @media (max-width: 900px) {
+    .org-body {
+      flex-direction: column;
+    }
+    .scene-wrap {
+      position: relative;
+      top: 0;
+      flex-basis: auto;
+      width: 100%;
+    }
+    .scene-wrap img {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .legend-wrap {
+      flex-basis: auto;
+      width: 100%;
+    }
+  }
+  @media (max-width: 860px) {
+    body { flex-direction: column; }
+    #sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+      max-height: 40vh;
+    }
+    #main { padding: 20px 16px 60px; }
+  }
+  .snap { margin: 0 0 14px; padding: 10px 14px; border: 1px solid var(--done-border); background: var(--done-bg); border-radius: 10px; } .snap-hd { font-weight: 700; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--accent2); margin-bottom: 4px; } .snap ul { margin: 0; padding-left: 18px; } .snap li { margin: 3px 0; font-size: 14px; } .pearl { display: block; margin-top: 4px; color: #f5c842; font-size: 0.93em; } .unsure { display: inline-block; margin-left: 8px; padding: 0 7px; border-radius: 999px; font-size: 11px; background: rgba(245,200,66,.18); color: #f5c842; }
+  .orig-legend { margin-top: 12px; } .orig-legend summary { cursor: pointer; color: var(--muted); font-size: 13px; } .legend-img { width: 100%; height: auto; margin-top: 8px; background: #fff; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<aside id="sidebar">
+  <div id="sidebar-inner">
+    <h1>ERS403 — Sketchy Pharm</h1>
+    <p class="sub">MD4 · 8 videos</p>
+    <div id="progress">
+      <span id="progress-text">0 / 8 reviewed</span>
+      <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    </div>
+    <input type="text" id="search-box" placeholder="Search drugs...">
+    <ul id="nav-list">
+<li class="nav-item" data-name="bisphosphonates, raloxifene, denosumab, calcitonin"><a href="#org-e1" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-e1" onclick="event.stopPropagation()"><span class="nav-num">1</span><span class="nav-text">Bisphosphonates, Raloxifene, Denosumab, Calcitonin</span></a></li>
+<li class="nav-item" data-name="teriparatide, vitamin d, cinacalcet, sevelamer"><a href="#org-e2" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-e2" onclick="event.stopPropagation()"><span class="nav-num">2</span><span class="nav-text">Teriparatide, Vitamin D, Cinacalcet, Sevelamer</span></a></li>
+<li class="nav-item" data-name="insulin, sulfonylureas, meglitinides, glp-1 agonists, dpp-4 inhibitors"><a href="#org-e3" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-e3" onclick="event.stopPropagation()"><span class="nav-num">3</span><span class="nav-text">Insulin, Sulfonylureas, Meglitinides, GLP-1 Agonists, DPP-4 Inhibitors</span></a></li>
+<li class="nav-item" data-name="metformin, thiazolidinediones, pramlintide, sglt2 inhibitors"><a href="#org-e4" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-e4" onclick="event.stopPropagation()"><span class="nav-num">4</span><span class="nav-text">Metformin, Thiazolidinediones, Pramlintide, SGLT2 Inhibitors</span></a></li>
+<li class="nav-item" data-name="adh, ddavp, adh receptor antagonists"><a href="#org-e5" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-e5" onclick="event.stopPropagation()"><span class="nav-num">5</span><span class="nav-text">ADH, DDAVP, ADH Receptor Antagonists</span></a></li>
+<li class="nav-item" data-name="growth hormone, mecasermin, octreotide, pegvisomant"><a href="#org-e6" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-e6" onclick="event.stopPropagation()"><span class="nav-num">6</span><span class="nav-text">Growth Hormone, Mecasermin, Octreotide, Pegvisomant</span></a></li>
+<li class="nav-item" data-name="glucocorticoids"><a href="#org-e7" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-e7" onclick="event.stopPropagation()"><span class="nav-num">7</span><span class="nav-text">Glucocorticoids</span></a></li>
+<li class="nav-item" data-name="propylthiouracil, methimazole, levothyroxine"><a href="#org-e8" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-e8" onclick="event.stopPropagation()"><span class="nav-num">8</span><span class="nav-text">Propylthiouracil, Methimazole, Levothyroxine</span></a></li>
+    </ul>
+  </div>
+</aside>
+<button id="sidebar-toggle" title="Collapse sidebar" aria-label="Collapse sidebar">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+</button>
+
+<main id="main">
+  <div id="main-header">
+    <h1>ERS403 Sketchy Pharm Pictures</h1>
+    <p style="margin:-4px 0 10px;"><a href="index.html" style="color:#4f8cff;text-decoration:none;font-size:13px;">&larr; Back to Master Tracker</a></p>
+    <p>Every video from the ERS403 Pharm list (MD4): the Sketchy mnemonic scene, an exam snapshot, and a corrected, expanded explanation of every numbered icon. Open the original legend picture under any video to compare. Check off videos as you review them — progress is saved in this browser. Use the search box to jump to a specific drug class. Click the expand icon on an image to view it full screen.</p>
+  </div>
+  
+        <section class="org-section" id="org-e1" data-name="bisphosphonates, raloxifene, denosumab, calcitonin">
+      <div class="org-header">
+        <h2>1. Bisphosphonates, Raloxifene, Denosumab, Calcitonin</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-e1">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/76c91045247762dc1f4af0c97bcb3505.webp" alt="Bisphosphonates, Raloxifene, Denosumab, Calcitonin Sketchy scene 1" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: bisphosphonates (alendronate, risedronate, ibandronate, zoledronate, pamidronate), raloxifene (SERM), denosumab (anti-RANKL mAb), calcitonin; teriparatide is anabolic (PTH analog).</li><li>Mechanism: bisphosphonates - pyrophosphate analogs that bind hydroxyapatite and induce osteoclast apoptosis; raloxifene - estrogen agonist in bone; denosumab - blocks RANKL; calcitonin - inhibits osteoclasts.</li><li>Indications: postmenopausal and glucocorticoid-induced osteoporosis, Paget disease, hypercalcemia of malignancy, bone metastases.</li><li>Adverse effects: bisphosphonates - esophagitis, osteonecrosis of jaw, atypical femur fractures, hypocalcemia; raloxifene - DVT/PE, hot flashes; denosumab - hypocalcemia, infections.</li><li>Buzzwords: take alendronate fasting with water, stay upright 30 minutes; raloxifene lowers breast cancer risk; RANKL-RANK-OPG axis; PTH continuous causes resorption, pulsatile builds bone.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Fresh piece of calcified chalk:</b> Osteoporosis therapy: bisphosphonates, SERMs (raloxifene), denosumab and calcitonin inhibit bone resorption, modestly increasing bone mineral density and reducing fractures (teriparatide is anabolic).</span></li>
+<li><span class="num">2</span><span class="txt"><b>Osteo-builders:</b> Osteoblasts build bone (secrete osteoid, express RANKL, ALP).</span></li>
+<li><span class="num">3</span><span class="txt"><b>Destructive class:</b> Osteoclasts resorb bone (derived from monocyte/macrophage lineage; activated via RANKL-RANK).</span></li>
+<li><span class="num">4</span><span class="txt"><b>DONATE:</b> "-dronate" suffix: bisphosphonates (alendronate, risedronate, ibandronate, zoledronate, pamidronate) are first-line for osteoporosis.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Two P coins:</b> Bisphosphonates are structural analogs of pyrophosphate (P-C-P backbone, resistant to hydrolysis).</span></li>
+<li><span class="num">6</span><span class="txt"><b>Large T-rex appetite:</b> Bisphosphonates bind avidly to hydroxyapatite at sites of active bone remodeling.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Classmate stuck in donation box:</b> Osteoclasts take up bisphosphonate during resorption, which impairs their adherence (ruffled border) and function.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Class waiting to enter:</b> Osteoclast precursors are recruited and differentiate under RANKL/M-CSF signalling.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Preventing class from entering:</b> Bisphosphonates decrease osteoclast precursor development and recruitment.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Classmate's popping balloon:</b> Bisphosphonates induce osteoclast apoptosis (nitrogen-containing ones inhibit farnesyl pyrophosphate synthase).</span></li>
+<li><span class="num">11</span><span class="txt"><b>Elevated calci-yum icecream:</b> Bisphosphonates (zoledronate, pamidronate) treat acute hypercalcemia by inhibiting bone resorption.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Massive calcified rock with metastatic crab fossils:</b> Hypercalcemia of malignancy (PTHrP, osteolytic metastases) is treated acutely with IV fluids, calcitonin and bisphosphonates.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Disorganized bone display:</b> Paget disease of bone (excess osteoclast resorption then disorganized bone) is treated with bisphosphonates; calcitonin is an alternative.<span class="pearl">⭐ Alkaline phosphatase is elevated in Paget disease.</span></span></li>
+<li><span class="num">14</span><span class="txt"><b>Corroded neck:</b> Oral bisphosphonates cause esophagitis, esophageal ulcers and reflux; take with a full glass of water, upright for 30 minutes, empty stomach; avoid in esophageal disorders.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Crumbling jaw bone:</b> Bisphosphonates (and denosumab) rarely cause osteonecrosis of the jaw (especially high-dose IV, with dental procedures) and atypical femoral fractures.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Falling calci-yum icecream:</b> Calcitonin lowers serum calcium and can cause hypocalcemia.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Falling calci-yum icecream:</b> Bisphosphonates can cause hypocalcemia (correct vitamin D and calcium deficiency first); denosumab does as well.</span></li>
+<li><span class="num">18</span><span class="txt"><b>Female symbol:</b> Estrogen replacement prevents postmenopausal bone loss but is not first line because of risks (breast cancer, VTE, stroke, endometrial cancer if unopposed).</span></li>
+<li><span class="num">19</span><span class="txt"><b>Female guarding class entrance:</b> Estrogen inhibits osteoclast differentiation and promotes osteoclast apoptosis; estrogen loss at menopause drives bone loss.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Relax:</b> Raloxifene is a selective estrogen receptor modulator (SERM) used to treat and prevent postmenopausal osteoporosis.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Relaxing the waiting classmates:</b> Raloxifene is an agonist in bone (inhibiting osteoclast differentiation), but an antagonist in breast and uterus (reducing breast cancer risk, no endometrial hyperplasia); adverse effects include hot flashes, VTE/DVT and stroke.<span class="pearl">⭐ Raloxifene: bone and lipids yes; endometrium no, but VTE risk.</span></span></li>
+<li><span class="num">22</span><span class="txt"><b>PthD:</b> Parathyroid hormone (PTH) has dual effects: continuous elevation causes net bone resorption, while intermittent dosing (teriparatide) is anabolic.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Convincing osteo-builder to give crank-drill:</b> PTH stimulates osteoblasts and stromal cells to express RANKL (and M-CSF), which activates osteoclasts.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Crank-drill:</b> RANKL (receptor activator of nuclear factor kappa-B ligand) is the osteoblast-derived signal that drives osteoclast formation and activation; osteoprotegerin (OPG) is its decoy receptor.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Active classmate with crank-drill:</b> RANKL binding RANK on osteoclasts and precursors increases their differentiation and activity.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Dino suit man grabbing crank-drill:</b> Denosumab is a monoclonal antibody against RANKL, inhibiting osteoclast formation and function; treats osteoporosis (SC every 6 months) and bone metastases.<span class="pearl">⭐ Stopping denosumab causes rebound fractures; hypocalcemia risk.</span></span></li>
+<li><span class="num">27</span><span class="txt"><b>Antibody spikes:</b> Denosumab is a human IgG2 monoclonal antibody ("-mab").</span></li>
+<li><span class="num">28</span><span class="txt"><b>Curator toning it down:</b> Calcitonin (secreted by thyroid parafollicular C cells) "tones down" calcium by inhibiting resorption; limited efficacy in osteoporosis, weaker than bisphosphonates.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Curator grabbing classmate:</b> Calcitonin directly inhibits osteoclast activity (binding calcitonin receptors), decreasing bone resorption; also analgesic for acute vertebral fractures.</span></li>
+<li><span class="num">30</span><span class="txt"><b>Calci-yum ice cream pouring down flank:</b> Calcitonin promotes renal calcium excretion, lowering serum calcium.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/2640dccc4ae55fdf798ae1951f9503dd.webp" alt="Bisphosphonates, Raloxifene, Denosumab, Calcitonin original legend 1" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-e2" data-name="teriparatide, vitamin d, cinacalcet, sevelamer">
+      <div class="org-header">
+        <h2>2. Teriparatide, Vitamin D, Cinacalcet, Sevelamer</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-e2">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/62d95e3bc8d6ef424ab65f4df5150b8e.webp" alt="Teriparatide, Vitamin D, Cinacalcet, Sevelamer Sketchy scene 1" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: teriparatide (PTH 1-34), abaloparatide, vitamin D (cholecalciferol, ergocalciferol, calcitriol, paricalcitol), cinacalcet (calcimimetic), sevelamer (phosphate binder).</li><li>Mechanism: intermittent PTH is anabolic to bone; calcitriol increases intestinal and renal Ca/P absorption; cinacalcet activates the parathyroid calcium-sensing receptor to lower PTH; sevelamer binds intestinal phosphate.</li><li>Indications: severe osteoporosis (teriparatide), rickets/osteomalacia/hypoparathyroidism/CKD (vitamin D), secondary hyperparathyroidism (cinacalcet), hyperphosphatemia in CKD (sevelamer).</li><li>Adverse effects: hypercalcemia (teriparatide, vitamin D), osteosarcoma warning with teriparatide, hypocalcemia and QT prolongation (cinacalcet), GI upset (sevelamer).</li><li>Buzzwords: pulsatile PTH builds bone, continuous PTH resorbs bone; CKD means low calcitriol, high phosphate, high PTH; Chvostek and Trousseau signs indicate hypocalcemia.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Osteo-builders:</b> Osteoblasts build bone; their function and maturation are stimulated by intermittent teriparatide and by vitamin D (calcitriol), increasing bone mineral density.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Destructive classmates:</b> Osteoclasts resorb bone; they are activated indirectly by PTH and calcitriol via osteoblast-derived RANKL, increasing bone resorption and turnover.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Released calcified bones:</b> Osteoclast activity releases calcium from bone into the circulation.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Released P fossil:</b> Osteoclast resorption also releases phosphate from bone.</span></li>
+<li><span class="num">5</span><span class="txt"><b>PthD paleontologist:</b> Parathyroid hormone (PTH) raises serum calcium and lowers serum phosphate.</span></li>
+<li><span class="num">6</span><span class="txt"><b>PthD lab:</b> The parathyroid glands (chief cells) secrete PTH.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Calcified bone receiving:</b> The calcium-sensing receptor (CaSR) on parathyroid chief cells senses extracellular calcium (a Gq-coupled receptor).</span></li>
+<li><span class="num">8</span><span class="txt"><b>PthD stuck behind bones:</b> High serum calcium activates CaSR and inhibits PTH synthesis and secretion; low calcium stimulates PTH.<span class="pearl">⭐ Negative feedback: high Ca2+ suppresses PTH; high phosphate and low calcitriol raise it.</span></span></li>
+<li><span class="num">9</span><span class="txt"><b>PthD convincing osteo-builder to give up crank-drill:</b> PTH binds PTH1 receptors on osteoblasts, stimulating release of RANKL (and M-CSF), which activates osteoclasts.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Classmate receiving crank-drill:</b> RANKL binds RANK on osteoclasts and precursors, increasing differentiation and bone resorption.</span></li>
+<li><span class="num">11</span><span class="txt"><b>PthD teaching osteo-builders:</b> Continuous (high-level) PTH exposure directly stimulates osteoblasts but indirectly activates osteoclasts, producing net bone resorption.</span></li>
+<li><span class="num">12</span><span class="txt"><b>PthD gathering bones and dropping P fossils:</b> In the kidney, PTH increases calcium reabsorption (distal tubule) and decreases phosphate reabsorption in the proximal tubule (phosphaturia).</span></li>
+<li><span class="num">13</span><span class="txt"><b>1-head added to Calci-TRON:</b> Renal 1-alpha-hydroxylase converts 25-hydroxyvitamin D (calcidiol) to 1,25-dihydroxyvitamin D (calcitriol), the active form.</span></li>
+<li><span class="num">14</span><span class="txt"><b>PthD adding final piece to Calci-TRON:</b> PTH upregulates 1-alpha-hydroxylase, increasing calcitriol production.</span></li>
+<li><span class="num">15</span><span class="txt"><b>PthD teaching assistant (TA):</b> Teriparatide is recombinant PTH 1-34 (abaloparatide is a PTHrP analog), given by daily SC injection.</span></li>
+<li><span class="num">16</span><span class="txt"><b>TA teaching osteo-builders:</b> Intermittent (daily pulsatile) teriparatide stimulates osteoblast maturation and bone formation, an anabolic effect, in contrast to continuous PTH which causes resorption.<span class="pearl">⭐ Pulsatile PTH builds bone; continuous PTH resorbs bone.</span></span></li>
+<li><span class="num">17</span><span class="txt"><b>Fresh piece of calcified chalk:</b> Teriparatide treats severe osteoporosis (increases bone density and decreases vertebral fractures), especially in high fracture risk or after bisphosphonate failure.</span></li>
+<li><span class="num">18</span><span class="txt"><b>TA gathering bones and dropping P fossils:</b> Like PTH, teriparatide increases renal calcium reabsorption and phosphate excretion.</span></li>
+<li><span class="num">19</span><span class="txt"><b>TA adding final piece to Calci-TRON:</b> Teriparatide increases 1-alpha-hydroxylase activity and calcitriol synthesis.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Solar D3 battery:</b> Vitamin D3 (cholecalciferol) comes from UVB conversion of 7-dehydrocholesterol in skin and from animal sources (dairy, fish).</span></li>
+<li><span class="num">21</span><span class="txt"><b>Earth-friendly D2 battery:</b> Vitamin D2 (ergocalciferol) comes from plant sources and supplements.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Robot body added to D battery in liver-barrow:</b> Hepatic 25-hydroxylase converts vitamin D to 25-hydroxyvitamin D (calcidiol), the storage form measured clinically.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Calci-TRON gathering bones and fossils from dump site:</b> Calcitriol increases renal reabsorption of calcium and phosphate.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Calci-TRON gathering bones and fossils from GI truck:</b> Calcitriol increases intestinal absorption of calcium and phosphate (via calbindin), the main way it raises serum calcium.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Calci-TRONI delivering crank-drills:</b> Calcitriol stimulates osteoblasts to release RANKL, activating osteoclasts and mobilizing calcium and phosphate from bone.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Calci-TRON collapsing PthD lab:</b> Calcitriol inhibits PTH synthesis by the parathyroid gland (negative feedback); used in secondary hyperparathyroidism of CKD.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Calci-TRON teaching osteo-builders:</b> Calcitriol also promotes osteoblast maturation and bone mineralization (increased bone formation).</span></li>
+<li><span class="num">28</span><span class="txt"><b>Fresh piece of calcified chalk:</b> Vitamin D (with calcium) is used for prevention and treatment of osteoporosis, particularly in deficiency.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Calci-TRON stabilizing rickety tower:</b> Vitamin D treats rickets (children) and osteomalacia (adults) by restoring bone mineralization.</span></li>
+<li><span class="num">30</span><span class="txt"><b>Calci-TRON stabilizing broken kidney:</b> In chronic kidney disease, the kidney cannot make calcitriol (low 1-alpha-hydroxylase), so calcitriol or analogs (paricalcitol) prevent hypocalcemia and secondary hyperparathyroidism.</span></li>
+<li><span class="num">31</span><span class="txt"><b>Scaly knee and elbow pads:</b> Topical vitamin D analogs (calcipotriene) treat plaque psoriasis by inhibiting keratinocyte proliferation.</span></li>
+<li><span class="num">32</span><span class="txt"><b>Calci-TRON saving falling calcified bones:</b> Calcitriol is used for long-term management of hypocalcemia, such as hypoparathyroidism (the OCR's hypothyroidism likely means hypoparathyroidism).<span class="unsure" title="Source was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">33</span><span class="txt"><b>Falling PthD:</b> Hypocalcemia is commonly caused by hypoparathyroidism, with decreased PTH leading to decreased renal calcitriol production, calcium reabsorption and bone resorption.</span></li>
+<li><span class="num">34</span><span class="txt"><b>Undone bowtie on PthD:</b> Thyroid surgery (thyroidectomy) can damage or remove parathyroid glands, causing hypoparathyroidism and postoperative hypocalcemia.</span></li>
+<li><span class="num">35</span><span class="txt"><b>Shaking structure:</b> Severe hypocalcemia can cause seizures and prolonged QT.</span></li>
+<li><span class="num">36</span><span class="txt"><b>Tense fist:</b> Hypocalcemia increases neuromuscular excitability: perioral/acral paresthesias, muscle cramps, laryngospasm, trismus and tetany (Chvostek and Trousseau signs).<span class="pearl">⭐ Chvostek = facial twitch; Trousseau = carpal spasm with BP cuff.</span></span></li>
+<li><span class="num">37</span><span class="txt"><b>Raised calci-yum ice cream:</b> Teriparatide and vitamin D can cause hypercalcemia (stones, bones, groans, psychiatric overtones); teriparatide is also avoided in Paget disease, prior skeletal radiation and bone metastases because of osteosarcoma concern.</span></li>
+<li><span class="num">38</span><span class="txt"><b>Calculator at the calcified bone receptor:</b> Cinacalcet, a calcimimetic, allosterically activates the parathyroid calcium-sensing receptor, increasing its sensitivity to calcium and decreasing PTH secretion.<span class="pearl">⭐ Adverse effects: hypocalcemia, nausea, QT prolongation.</span></span></li>
+<li><span class="num">39</span><span class="txt"><b>Calculating pile of calcified bones:</b> Cinacalcet treats secondary hyperparathyroidism in CKD on dialysis, parathyroid carcinoma and refractory primary hyperparathyroidism hypercalcemia.</span></li>
+<li><span class="num">40</span><span class="txt"><b>Shoveling fossils in the GI truck:</b> Sevelamer is a non-calcium phosphate-binding polymer that binds dietary phosphate in the gut, decreasing absorption (also lowers LDL).</span></li>
+<li><span class="num">41</span><span class="txt"><b>Shoveling pile of fossils:</b> Sevelamer (and lanthanum, calcium acetate) treats hyperphosphatemia of chronic kidney disease, preventing secondary hyperparathyroidism and vascular calcification; GI upset is the main adverse effect.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/3d3b5a80c9d1ea7c19475f0f52a09055.webp" alt="Teriparatide, Vitamin D, Cinacalcet, Sevelamer original legend 1" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-e3" data-name="insulin, sulfonylureas, meglitinides, glp-1 agonists, dpp-4 inhibitors">
+      <div class="org-header">
+        <h2>3. Insulin, Sulfonylureas, Meglitinides, GLP-1 Agonists, DPP-4 Inhibitors</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-e3">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/b91e864937223f194a77d1695bc724ce.webp" alt="Insulin, Sulfonylureas, Meglitinides, GLP-1 Agonists, DPP-4 Inhibitors Sketchy scene 1" loading="lazy" class="scene-img"><img src="sketchy-pharm-img/05b925938c94c3b7e7bac27d18b54029.webp" alt="Insulin, Sulfonylureas, Meglitinides, GLP-1 Agonists, DPP-4 Inhibitors Sketchy scene 2" loading="lazy" class="scene-img" style="margin-top:10px"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: insulins (rapid: lispro/aspart/glulisine; short: regular; intermediate: NPH; long: glargine/detemir/degludec), sulfonylureas, meglitinides, GLP-1 agonists (-tide), DPP-4 inhibitors (-gliptin), metformin, TZDs, SGLT2 inhibitors (-gliflozin).</li><li>Mechanisms: insulin activates a receptor tyrosine kinase (GLUT4 insertion); sulfonylureas/meglitinides close beta-cell K-ATP channels; GLP-1 agonists mimic incretin; DPP-4 inhibitors prevent incretin breakdown; metformin reduces hepatic gluconeogenesis; TZDs are PPAR-gamma agonists; SGLT2i cause glycosuria.</li><li>Key indications: metformin first-line for type 2 DM; insulin for type 1, DKA, hyperkalemia (regular IV) and advanced type 2; GLP-1 agonist or SGLT2i preferred with ASCVD, HF or CKD.</li><li>Key adverse effects: hypoglycemia and weight gain (insulin, sulfonylureas); lactic acidosis and B12 deficiency (metformin); HF, edema, fractures (TZDs); genitourinary infections and euglycemic DKA (SGLT2i); pancreatitis and thyroid C-cell tumor warning (GLP-1 agonists).</li><li>Buzzwords/antidotes: C-peptide (high with secretagogues, low with exogenous insulin); chlorpropamide disulfiram-like reaction; treat hypoglycemia with glucose/dextrose or glucagon; check K+ before insulin in DKA; A1c goal below 7% for most adults.</li></ul></div>
+          <ol class="legend-list"><li class="part-hd" style="list-style:none;margin:10px 0 2px;font-weight:700;color:var(--accent2)">Part 1 · Insulin, Sulfonylureas, Meglitinides, GLP-1 Agonists, DPP-4 Inhibitors (picture 1)</li>
+<li><span class="num">1</span><span class="txt"><b>Welcome INSIDE mat:</b> Insulin is the anabolic, storage hormone of the body, promoting uptake and storage of glucose, fat and amino acids.</span></li>
+<li><span class="num">2</span><span class="txt"><b>LangerHansel:</b> The islets of Langerhans of the pancreas contain beta cells (insulin), alpha cells (glucagon) and delta cells (somatostatin).</span></li>
+<li><span class="num">3</span><span class="txt"><b>Beta-2 tuba:</b> Pancreatic beta cells synthesize insulin; secretion is stimulated by glucose (main), amino acids, GLP-1/GIP incretins, vagal input and sympathetic beta-2 stimulation (alpha-2 stimulation inhibits it).</span></li>
+<li><span class="num">4</span><span class="txt"><b>LangerHansel's candy:</b> Glucose is the most potent stimulant of insulin secretion; oral glucose gives a bigger response than IV via incretins.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Closed gate around banana candy flowers:</b> Glucose uptake (GLUT2) raises beta-cell ATP, which closes ATP-sensitive K+ channels (Kir6.2/SUR1).</span></li>
+<li><span class="num">6</span><span class="txt"><b>Gretel rushing in on calci-yum icecream flower:</b> Closing the K+ channels depolarizes the beta cell, opening voltage-gated Ca2+ channels; Ca2+ influx triggers exocytosis of insulin.<span class="pearl">⭐ Sulfonylureas exploit this exact step.</span></span></li>
+<li><span class="num">7</span><span class="txt"><b>C wrapper:</b> C-peptide is cleaved from proinsulin in secretory granules and released in equimolar amounts with insulin; it indicates endogenous insulin production (low in exogenous insulin administration, high in insulinoma or sulfonylurea use).<span class="pearl">⭐ Hypoglycemia with high C-peptide = insulinoma or sulfonylurea; low C-peptide = exogenous insulin.</span></span></li>
+<li><span class="num">8</span><span class="txt"><b>Tyrosine tire swing:</b> The insulin receptor is a receptor tyrosine kinase; insulin binding autophosphorylates the receptor and activates IRS-1/PI3K-Akt and MAPK pathways.</span></li>
+<li><span class="num">9</span><span class="txt"><b>4 on open door:</b> Insulin promotes insertion of GLUT4 into the membrane of skeletal muscle and adipose tissue, increasing glucose uptake; brain, RBCs, and beta cells use insulin-independent transporters.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Full liver candy jar:</b> In the liver, insulin increases glycogenesis, glycolysis and lipogenesis and decreases glycogenolysis and gluconeogenesis.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Glycogen glazed ham:</b> In muscle, insulin increases glycogen synthesis and protein synthesis (amino acid uptake) while decreasing proteolysis.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Full fatty donut jar:</b> In adipose tissue, insulin stimulates lipoprotein lipase, triglyceride storage and decreases hormone-sensitive lipase (lipolysis).</span></li>
+<li><span class="num">13</span><span class="txt"><b>Girls And Lads:</b> Rapid-acting insulin analogs: Glulisine, Aspart, Lispro; given right before or with meals (prandial/bolus).</span></li>
+<li><span class="num">14</span><span class="txt"><b>Tall immediate peak:</b> Rapid-acting analogs have onset about 15 minutes, peak 1-2 hours and short duration (3-5 hours).</span></li>
+<li><span class="num">15</span><span class="txt"><b>Birds nibbling the peak:</b> These analogs blunt the postprandial glucose spike and are used for mealtime bolus and in insulin pumps.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Rest Now:</b> Regular insulin is short-acting; NPH (neutral protamine Hagedorn) is intermediate-acting.<span class="pearl">⭐ Regular insulin is the only IV insulin.</span></span></li>
+<li><span class="num">17</span><span class="txt"><b>Delayed peak:</b> Regular insulin: onset 30-60 minutes, peak 2-4 hours, duration 5-8 hours; NPH: onset 1-2 hours, peak 4-12 hours, duration 12-18 hours (more delayed than regular).</span></li>
+<li><span class="num">18</span><span class="txt"><b>Ivy under "R":</b> Regular insulin is the only formulation given intravenously (also SC) and is used in hospitalized patients and emergencies.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Ivy next to eaten banana:</b> IV regular insulin (with glucose to prevent hypoglycemia) is used to treat hyperkalemia by shifting K+ into cells.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Candy key:</b> Diabetic ketoacidosis (DKA), a complication of insulin deficiency (type 1) with hyperglycemia, ketosis, anion-gap metabolic acidosis, vomiting, polyuria and Kussmaul respirations.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Ivy next to candy key:</b> DKA is treated with IV fluids, IV regular insulin infusion and electrolyte (K+) replacement; check K+ before insulin because insulin drives K+ into cells and can cause hypokalemia.<span class="pearl">⭐ Start insulin only when K+ is above 3.3 mEq/L.</span></span></li>
+<li><span class="num">22</span><span class="txt"><b>Eaten banana candy:</b> Insulin lowers serum K+ by increasing Na+/K+ ATPase activity in skeletal muscle, driving K+ into cells.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Don't Go:</b> Long-acting insulin analogs: Detemir and Glargine (also degludec) provide basal insulin.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Flat roof:</b> Glargine and detemir (and degludec) have prolonged duration and a relatively flat (peakless) profile, providing basal coverage; glargine has no peak and should not be mixed with other insulins.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Falling candy:</b> Hypoglycemia is the most common adverse effect of insulin, presenting with adrenergic symptoms (tachycardia, palpitations, sweating, tremor, anxiety) and neuroglycopenia (confusion, seizure, coma).</span></li>
+<li><span class="num">26</span><span class="txt"><b>Sulfa egg laying swan:</b> Sulfonylureas (glyburide, glipizide, glimepiride, tolbutamide) are structurally related to sulfonamides; cross-reactivity with sulfa-antibiotic allergy is rare but a labeled caution.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Sulfa swan lake behind CLOSED banana gate:</b> Sulfonylureas bind the SUR1 subunit of the beta-cell ATP-sensitive K+ channel, closing it, causing depolarization, Ca2+ influx and insulin release (insulin secretagogue).</span></li>
+<li><span class="num">28</span><span class="txt"><b>Mother swan in a maid outfit:</b> 1st-generation sulfonylureas (tolbutamide, chlorpropamide, tolazamide; "-amide" names) are rarely used today; chlorpropamide has a very long duration of action.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Goslings riding on mother's back:</b> 2nd-generation sulfonylureas (glyburide, glipizide, glimepiride; "gli-" prefix) are more potent, require smaller doses and are more commonly used; glyburide and glimepiride are long-acting.</span></li>
+<li><span class="num">30</span><span class="txt"><b>Short zig-zagging gosling:</b> Glipizide has the shortest duration of action of the 2nd-generation agents and a lower hypoglycemia risk; preferred in renal impairment and the elderly.<span class="pearl">⭐ Glyburide has active metabolites - avoid in renal failure.</span></span></li>
+<li><span class="num">31</span><span class="txt"><b>Gliding:</b> "-glinide" suffix: meglitinides (repaglinide, nateglinide).</span></li>
+<li><span class="num">32</span><span class="txt"><b>Gliding goose behind CLOSED banana gate:</b> Meglitinides close the beta-cell ATP-sensitive K+ channel at a different binding site on SUR1, stimulating short-acting insulin release; given before meals to cover postprandial glucose.</span></li>
+<li><span class="num">33</span><span class="txt"><b>C wrapper:</b> Because they stimulate endogenous insulin secretion, sulfonylureas and meglitinides raise C-peptide levels along with insulin.</span></li>
+<li><span class="num">34</span><span class="txt"><b>Father gliding goose can't lay eggs:</b> Meglitinides are not sulfonamide derivatives, so they can be used in patients with sulfa/sulfonylurea allergy.</span></li>
+<li><span class="num">35</span><span class="txt"><b>Falling candy:</b> Sulfonylureas and meglitinides can cause hypoglycemia (more with long-acting sulfonylureas, especially with renal impairment, missed meals, or elderly patients).</span></li>
+<li><span class="num">36</span><span class="txt"><b>Fat old hag:</b> Insulin secretagogues cause weight gain from increased insulin levels.</span></li>
+<li><span class="num">37</span><span class="txt"><b>"Do not drink" next to mother sulfonylurea swan:</b> 1st-generation sulfonylureas, especially chlorpropamide, can cause a disulfiram-like reaction with alcohol (flushing, nausea); chlorpropamide also causes SIADH.</span></li>
+<li><span class="num">38</span><span class="txt"><b>2 fingers:</b> Sulfonylureas and meglitinides are used only for type 2 diabetes, because they require functioning beta cells.</span></li>
+<li><span class="num">39</span><span class="txt"><b>ExenaTIDE detergent:</b> "-tide" suffix: GLP-1 receptor agonists (exenatide, liraglutide, dulaglutide, semaglutide).</span></li>
+<li><span class="num">40</span><span class="txt"><b>Gulp activated by hag:</b> GLP-1 receptor agonists mimic the incretin GLP-1: they increase glucose-dependent insulin release, decrease glucagon release, slow gastric emptying and increase satiety (weight loss).<span class="pearl">⭐ Exenatide was derived from Gila monster saliva (exendin-4).</span></span></li>
+<li><span class="num">41</span><span class="txt"><b>4 DRIPPING laundry items:</b> DPP-4 inhibitors block dipeptidyl peptidase-4, the enzyme that degrades GLP-1 and GIP, prolonging their action.</span></li>
+<li><span class="num">42</span><span class="txt"><b>Clipped in clothespins:</b> "-gliptin" suffix: DPP-4 inhibitors (sitagliptin, saxagliptin, linagliptin, alogliptin).</span></li>
+<li><span class="num">43</span><span class="txt"><b>Endogenous gulps:</b> DPP-4 inhibitors raise endogenous GLP-1 (and GIP) levels, increasing glucose-dependent insulin release, decreasing glucagon and gastric emptying (weight-neutral effects).</span></li>
+<li><span class="num">44</span><span class="txt"><b>Falling empty glucagon packets:</b> GLP-1 agonists and DPP-4 inhibitors decrease glucagon secretion, lowering hepatic glucose output.</span></li>
+<li><span class="num">45</span><span class="txt"><b>Sealed gastric container:</b> These agents slow gastric emptying, contributing to satiety and reduced postprandial glucose; GI side effects follow, particularly with GLP-1 agonists.</span></li>
+<li><span class="num">46</span><span class="txt"><b>Clothespin clipping nose:</b> DPP-4 inhibitors may increase risk of nasopharyngitis and upper respiratory tract infections.</span></li>
+<li><span class="num">47</span><span class="txt"><b>Squeezing pancreas sponge:</b> GLP-1 agonists (and DPP-4 inhibitors) are associated with acute pancreatitis; avoid in patients with a history of pancreatitis. GLP-1 agonists are also contraindicated with a personal or family history of medullary thyroid carcinoma or MEN2.<span class="pearl">⭐ Boxed warning: thyroid C-cell tumors with liraglutide/semaglutide.</span></span></li>
+<li><span class="num">48</span><span class="txt"><b>Candies NOT falling:</b> GLP-1 agonists and DPP-4 inhibitors have a low risk of hypoglycemia because their insulin effect is glucose-dependent (risk rises when combined with sulfonylureas or insulin).</span></li>
+<li><span class="num">49</span><span class="txt"><b>2 fingers:</b> GLP-1 agonists and DPP-4 inhibitors are used for type 2 diabetes and need residual beta-cell function.</span></li>
+<li><span class="num">50</span><span class="txt"><b>C wrapper:</b> These drugs increase endogenous insulin release and so raise C-peptide levels.</span></li>
+<li class="part-hd" style="list-style:none;margin:10px 0 2px;font-weight:700;color:var(--accent2)">Part 2 · Diabetes Management (picture 2)</li>
+<li><span class="num">1</span><span class="txt"><b>"seasonA1 Candy" sign:</b> Measure hemoglobin A1c (reflects average glucose over about 3 months) every 3 months when therapy is being adjusted or targets are unmet, and every 6 months when stable.</span></li>
+<li><span class="num">2</span><span class="txt"><b>7-shaped car spoiler:</b> The A1c goal for most nonpregnant adults with type 1 or type 2 diabetes is below 7%.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Happy child with 6.5 car:</b> A stricter goal of about 6.5% or lower may be appropriate for healthier patients (short disease duration, no significant comorbidities, low hypoglycemia risk, treated with lifestyle or metformin).</span></li>
+<li><span class="num">4</span><span class="txt"><b>Eating thin end of vascular snake at the 6.5 car:</b> Intensive glycemic control reduces microvascular complications (retinopathy, neuropathy, nephropathy), but macrovascular complications (MI, stroke) are best reduced with BP control, statins, smoking cessation, weight loss and lifestyle modification.<span class="pearl">⭐ Microvascular: glucose control; macrovascular: BP and lipids.</span></span></li>
+<li><span class="num">5</span><span class="txt"><b>Old, sickly hag behind "8" wheel wagon:</b> A looser A1c goal of below 8% is used in patients with limited life expectancy, history of severe hypoglycemia, advanced complications or multiple comorbidities.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Prize "INSIDE" egg:</b> Insulin is the mainstay of type 1 diabetes treatment and is used in type 2 diabetes when oral/non-insulin agents fail.</span></li>
+<li><span class="num">7</span><span class="txt"><b>"INSIDE" egg on scale highlighted 0.2-0.4:</b> For a newly diagnosed type 1 diabetic, initial total daily insulin dose is weight-based (about 0.2-0.4 units/kg/day in the early honeymoon phase; later requirements approach about 0.5-1 unit/kg/day).<span class="unsure" title="Source was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">8</span><span class="txt"><b>Basal half of egg with "long lasting" jawbreaker:</b> About 50% of the total daily dose is basal insulin: long-acting glargine or detemir (once or twice daily) or degludec (once daily).</span></li>
+<li><span class="num">9</span><span class="txt"><b>Nutty Peanut sun + Hazelnut moon bar:</b> NPH (intermediate-acting) can provide the basal dose, divided into morning and evening injections (about two-thirds in the morning is sometimes used; typically split evenly or per regimen).<span class="unsure" title="Source was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">10</span><span class="txt"><b>Eating out of top half of egg:</b> The other 50% of the total daily dose is prandial (bolus) insulin: rapid-acting (lispro, aspart, glulisine) or short-acting regular insulin given before meals.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Fast candy pump:</b> Insulin pumps provide continuous subcutaneous infusion of rapid-acting insulin (basal rate plus meal boluses), allowing flexible dosing in type 1 diabetes.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Mystery ratio candy bucket:</b> Premixed insulins (Humalog Mix 75/25, Novolin 70/30) combine intermediate and rapid/short-acting insulin, typically given twice daily before meals; convenient but less flexible.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Escaping kid doing pull up:</b> Type 2 diabetes management begins with lifestyle changes: diet, exercise and weight loss.</span></li>
+<li><span class="num">14</span><span class="txt"><b>"Start" at the metaphor:</b> Metformin (oral) is the preferred first-line agent for type 2 diabetes, started at diagnosis along with lifestyle changes (unless contraindicated).</span></li>
+<li><span class="num">15</span><span class="txt"><b>Metaphor:</b> Metformin is a biguanide: it inhibits hepatic gluconeogenesis (via AMPK activation and mitochondrial effects) and increases peripheral insulin sensitivity.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Double down doors on A1C cottage:</b> Metformin lowers A1c by about 1-2%.</span></li>
+<li><span class="num">17</span><span class="txt"><b>NOT fallen candies above metaphor:</b> Metformin does not cause hypoglycemia when used alone because it does not stimulate insulin secretion.</span></li>
+<li><span class="num">18</span><span class="txt"><b>Thin metaphor kid:</b> Metformin promotes weight loss or weight neutrality.<span class="pearl">⭐ Metformin and SGLT2i/GLP-1 favor weight loss; insulin, sulfonylureas, TZDs cause gain.</span></span></li>
+<li><span class="num">19</span><span class="txt"><b>Nauseated from candy:</b> Common metformin side effects are GI: nausea, vomiting, diarrhea, abdominal discomfort and metallic taste; reduced by slow titration and extended-release forms.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Cracked kidney with spoiled milk:</b> Metformin is contraindicated in severe renal impairment (eGFR below 30) because of the risk of lactic acidosis; also avoid in alcohol abuse, liver disease, heart failure with hypoperfusion, sepsis, and around IV contrast in at-risk patients.<span class="pearl">⭐ Hold metformin for contrast studies in renal impairment.</span></span></li>
+<li><span class="num">21</span><span class="txt"><b>Empty bag of cobalt blue poppers:</b> Long-term metformin use can cause vitamin B12 (cobalamin) deficiency; monitor levels periodically.</span></li>
+<li><span class="num">22</span><span class="txt"><b>"S3ND H3LP" after the metaphor:</b> If the A1c goal is not met after about 3 months of metformin, add a second agent; if still unmet after another 3 months, add a third (sulfonylurea, thiazolidinedione, DPP-4 inhibitor, SGLT2 inhibitor, GLP-1 agonist or insulin). Begin dual therapy at diagnosis if A1c is above 9%.<span class="unsure" title="Source was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">23</span><span class="txt"><b>Smaller single down door on A1C cottage:</b> Most add-on classes lower A1c by about 0.7-1% (TZDs, DPP-4 inhibitors, SGLT2 inhibitors, GLP-1 agonists); exceptions are sulfonylureas (about 1-2%) and insulin (about 0.5-2.5% or more).</span></li>
+<li><span class="num">24</span><span class="txt"><b>Mother Goose's sulfur eggs:</b> Sulfonylureas are inexpensive and rapidly effective oral secretagogues that require some residual beta-cell function.</span></li>
+<li><span class="num">25</span><span class="txt"><b>2nd gen. gosling making short zig-zags:</b> Glipizide is a short-acting 2nd-generation sulfonylurea.</span></li>
+<li><span class="num">26</span><span class="txt"><b>2nd gen. goslings riding long neck:</b> Glimepiride and glyburide (glibenclamide) are long-acting 2nd-generation sulfonylureas.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Sulfur eggs above double down doors:</b> Sulfonylureas lower A1c by about 1-2%.</span></li>
+<li><span class="num">28</span><span class="txt"><b>Portly witch with fallen candies next to sulfur eggs:</b> Sulfonylureas cause weight gain and hypoglycemia, more commonly with long-acting agents.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Fallen candy hitting long neck:</b> Long-acting sulfonylureas (glyburide, glimepiride) carry a higher risk of hypoglycemia, particularly in the elderly and renal impairment; glipizide is safer in these groups.</span></li>
+<li><span class="num">30</span><span class="txt"><b>Dandelions in the glitter zone:</b> Thiazolidinediones (pioglitazone, rosiglitazone) are PPAR-gamma agonists that increase insulin sensitivity, increase peripheral glucose utilization and decrease hepatic glucose production; rosiglitazone is avoided because of cardiovascular risk (pioglitazone also linked to bladder cancer).<span class="pearl">⭐ "-glitazone" = PPAR-gamma; slow onset (weeks).</span></span></li>
+<li><span class="num">31</span><span class="txt"><b>NOT fallen candies above glitter path:</b> TZDs do not cause hypoglycemia when used alone.</span></li>
+<li><span class="num">32</span><span class="txt"><b>Portly kid on glitter path:</b> TZDs cause weight gain (fluid retention and fat redistribution).</span></li>
+<li><span class="num">33</span><span class="txt"><b>In danger with failing heart balloon:</b> TZDs cause fluid retention/edema and can precipitate heart failure; contraindicated in NYHA class III-IV heart failure.</span></li>
+<li><span class="num">34</span><span class="txt"><b>Fractured bone column:</b> TZDs increase fracture risk (especially in women) by decreasing bone formation; avoid in patients with osteoporosis or high fracture risk. They also require liver function monitoring in some labels.</span></li>
+<li><span class="num">35</span><span class="txt"><b>FLossin' out the "Salty GLucose Co" kernels:</b> SGLT2 inhibitors (empagliflozin, canagliflozin, dapagliflozin; "-gliflozin") block glucose and sodium reabsorption in the proximal tubule, causing glycosuria and lowering glucose independent of insulin.</span></li>
+<li><span class="num">36</span><span class="txt"><b>Thin flossing witch arm:</b> SGLT2 inhibitors promote weight loss (urinary calorie loss) and modestly lower blood pressure.</span></li>
+<li><span class="num">37</span><span class="txt"><b>NOT fallen candy above flossin' witch:</b> SGLT2 inhibitors have a low hypoglycemia risk when used alone.</span></li>
+<li><span class="num">38</span><span class="txt"><b>Urinary tract glass:</b> SGLT2 inhibitors increase genitourinary infections (vulvovaginal candidiasis, balanitis, UTI), and rarely Fournier gangrene and euglycemic DKA.<span class="pearl">⭐ Euglycemic DKA is a classic SGLT2i adverse effect.</span></span></li>
+<li><span class="num">39</span><span class="txt"><b>Empty glasses:</b> Osmotic diuresis from glycosuria causes volume depletion, orthostatic hypotension and an initial rise in creatinine; caution with diuretics.</span></li>
+<li><span class="num">40</span><span class="txt"><b>"GLP"ing syringe witch with "exena-TIDE" and "luTIDE" detergents:</b> GLP-1 receptor agonists (exenatide, liraglutide, dulaglutide, semaglutide) are injectable (semaglutide also oral) agents that enhance glucose-dependent insulin secretion, suppress glucagon and slow gastric emptying.</span></li>
+<li><span class="num">41</span><span class="txt"><b>"GLP"ing witch's thin arm:</b> GLP-1 agonists promote weight loss through satiety and delayed gastric emptying.</span></li>
+<li><span class="num">42</span><span class="txt"><b>NOT fallen candy above "GLP"ing witch:</b> GLP-1 agonists do not cause hypoglycemia on their own.</span></li>
+<li><span class="num">43</span><span class="txt"><b>Nauseated squirrel:</b> GLP-1 agonists commonly cause nausea, vomiting and diarrhea, usually improving over time.</span></li>
+<li><span class="num">44</span><span class="txt"><b>Pancreatic sponge:</b> GLP-1 agonists may be associated with acute pancreatitis (avoid with prior pancreatitis); also contraindicated with medullary thyroid carcinoma/MEN2.</span></li>
+<li><span class="num">45</span><span class="txt"><b>Coronary crown on Salty GLucose Co bag:</b> Empagliflozin (and canagliflozin, dapagliflozin) reduce major cardiovascular events, heart failure hospitalization and CKD progression; preferred in patients with ASCVD, HF or CKD.</span></li>
+<li><span class="num">46</span><span class="txt"><b>Coronary crown on "LuTIDE" detergent bottle:</b> Liraglutide (and semaglutide, dulaglutide) reduce major adverse cardiovascular events; preferred in patients with established ASCVD.</span></li>
+<li><span class="num">47</span><span class="txt"><b>4 DriPPing clothespins:</b> DPP-4 inhibitors (sitagliptin, saxagliptin, linagliptin, alogliptin) are oral agents that prevent breakdown of endogenous GLP-1/GIP, enhancing glucose-dependent insulin secretion and decreasing glucagon.</span></li>
+<li><span class="num">48</span><span class="txt"><b>NOT fallen candy above DriPPs:</b> DPP-4 inhibitors do not cause hypoglycemia and are weight neutral.</span></li>
+<li><span class="num">49</span><span class="txt"><b>Pancreatic sponge under DriPPs:</b> DPP-4 inhibitors have been associated with pancreatitis (avoid with history); saxagliptin and alogliptin carry heart failure warnings.</span></li>
+<li><span class="num">50</span><span class="txt"><b>Irresistible "INSIDE" egg:</b> Most type 2 diabetics eventually need exogenous insulin as beta-cell function declines ("burnout"); add it to metformin or when multiple agents fail, and consider early insulin if A1c is above 9-10% or symptomatic.</span></li>
+<li><span class="num">51</span><span class="txt"><b>"INSIDE" egg next to 2.5 fence posts:</b> Insulin can lower A1c by about 0.5-2.5% or more, with no maximum dose effect.</span></li>
+<li><span class="num">52</span><span class="txt"><b>"Begin here" with .1-.2 on the scale:</b> Start by adding basal insulin (intermediate or long-acting) to metformin at about 0.1-0.2 units/kg/day as a single daily injection; as beta-cell function declines add prandial bolus doses (regular or rapid-acting).</span></li>
+<li><span class="num">53</span><span class="txt"><b>Portly witch next to "INSIDE" egg:</b> Insulin therapy causes weight gain, a major cause of noncompliance; encourage lifestyle changes.</span></li>
+<li><span class="num">54</span><span class="txt"><b>Fallen candy next to "INSIDE" egg:</b> Insulin therapy may cause hypoglycemia, more commonly with prandial (bolus) insulin and regular/NPH.</span></li>
+<li><span class="num">55</span><span class="txt"><b>Hypoglycemic "70" gargoyle:</b> Hypoglycemia is defined as plasma glucose below 70 mg/dL (symptoms often at lower thresholds in nondiabetics, below about 55).</span></li>
+<li><span class="num">56</span><span class="txt"><b>Altered, trembling, and sweating:</b> Hypoglycemia causes sympathetic (adrenergic) symptoms - tremor, palpitations, anxiety, diaphoresis - and neuroglycopenic symptoms such as confusion, seizure and coma.<span class="pearl">⭐ Beta blockers can mask adrenergic signs (hypoglycemia unawareness).</span></span></li>
+<li><span class="num">57</span><span class="txt"><b>Stabbing with "Glucagon" and swinging in with "Dexter-Os":</b> Severe hypoglycemia (unable to take oral) is treated with IM/SC/intranasal glucagon or IV dextrose; mild hypoglycemia is treated with 15 g fast-acting carbohydrate (glucose tablets, juice, hard candy) and rechecking in 15 minutes.</span></li>
+
+<li><span class="num">58</span><span class="txt"><b>Check the "seasonA1 Candy":</b> In hospitalized patients with diabetes, obtain an A1c if none is available from the previous 3 months.</span></li>
+<li><span class="num">59</span><span class="txt"><b>"Avoid down arrow":</b> In hospitalized patients with diabetes, avoid hypoglycemia; targets are typically blood glucose about 140-180 mg/dL.</span></li>
+<li><span class="num">60</span><span class="txt"><b>Throwing away the candy pills:</b> In hospitalized diabetics discontinue most oral agents (insulin is preferred) because of changing diet, risk of contrast/renal injury and acute illness; oral agents may be continued only in well-controlled patients eating a normal diet.</span></li>
+<li><span class="num">61</span><span class="txt"><b>Reduced size gingerbread home and "INSIDE" egg:</b> Hospitalized patients may continue their home insulin regimen, often reduced by 25-50% to avoid hypoglycemia.</span></li>
+<li><span class="num">62</span><span class="txt"><b>Discarding half the reduced size egg at the "DO NOT EAT" sign:</b> For NPO patients (or uncertain oral intake), withhold prandial insulin and give a reduced basal dose (about 50-75% of usual, i.e. 25-50% reduction).</span></li>
+<li><span class="num">63</span><span class="txt"><b>New "INSULIN" egg weight of .3-.6:</b> For a new inpatient insulin regimen, total daily dose is about 0.3-0.6 units/kg/day (lower in underweight or elderly, higher in obese); give 50% as basal and 50% as prandial boluses, holding boluses if NPO.</span></li>
+<li><span class="num">64</span><span class="txt"><b>Correcting the scale:</b> Add a correctional (sliding) scale of rapid-acting insulin before meals (AC) and at bedtime (HS) based on blood glucose, in addition to basal-bolus doses; sliding scale alone is not recommended.</span></li>
+<li><span class="num">65</span><span class="txt"><b>24 hour sun:</b> Adjust daily insulin needs by totaling the insulin given over the previous 24 hours (basal + bolus + correctional); half becomes the new basal dose and half the new bolus dose.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend pictures</summary><img src="sketchy-pharm-img/cccdf14e0db76f65500cd9c7f8405e41.webp" alt="Insulin, Sulfonylureas, Meglitinides, GLP-1 Agonists, DPP-4 Inhibitors original legend 1" loading="lazy" class="legend-img"><img src="sketchy-pharm-img/728fa970303632209bd42889f0f50e37.webp" alt="Insulin, Sulfonylureas, Meglitinides, GLP-1 Agonists, DPP-4 Inhibitors original legend 2" loading="lazy" class="legend-img"><img src="sketchy-pharm-img/f5e1f349daf5bd3e0edfcfdcc7cd5e38.webp" alt="Insulin, Sulfonylureas, Meglitinides, GLP-1 Agonists, DPP-4 Inhibitors original legend 3" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-e4" data-name="metformin, thiazolidinediones, pramlintide, sglt2 inhibitors">
+      <div class="org-header">
+        <h2>4. Metformin, Thiazolidinediones, Pramlintide, SGLT2 Inhibitors</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-e4">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/cd0cebed61fd9199e1940aba499d22ce.webp" alt="Metformin, Thiazolidinediones, Pramlintide, SGLT2 Inhibitors Sketchy scene 1" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: metformin (biguanide), pioglitazone/rosiglitazone (TZDs), pramlintide (amylin analog), acarbose/miglitol (alpha-glucosidase inhibitors), canagliflozin/dapagliflozin/empagliflozin (SGLT2 inhibitors).</li><li>Mechanisms: metformin - AMPK activation, decreased hepatic gluconeogenesis; TZDs - PPAR-gamma agonists; pramlintide - decreases glucagon and gastric emptying; acarbose - blocks brush border disaccharidases; SGLT2i - block proximal tubule glucose reabsorption.</li><li>Indications: type 2 diabetes (metformin first-line; pramlintide also type 1); SGLT2i also for heart failure and CKD; metformin for PCOS.</li><li>Adverse effects: metformin - lactic acidosis, GI upset, B12 deficiency; TZDs - edema, HF, weight gain, fractures; pramlintide - severe hypoglycemia with insulin; acarbose - flatulence; SGLT2i - UTI, candidiasis, volume depletion, euglycemic DKA.</li><li>Buzzwords: no hypoglycemia as monotherapy (metformin, TZD, acarbose, SGLT2i); TZDs contraindicated in class III-IV HF; metformin contraindicated at eGFR below 30; hypoglycemia on acarbose needs glucose, not sucrose.</li></ul></div>
+          <ol class="legend-list">
+<li><span class="num">1</span><span class="txt"><b>2nd grade:</b> Metformin, thiazolidinediones, pramlintide, alpha-glucosidase inhibitors and SGLT2 inhibitors are used for type 2 diabetes (pramlintide also type 1); most need residual beta-cell function or act independently of endogenous insulin.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Metaphor:</b> Metformin, a biguanide, is the first-line oral agent for type 2 diabetes.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Bitten mitochondrial candy:</b> Metformin inhibits mitochondrial glycerophosphate dehydrogenase (and complex I), shifting redox state and decreasing hepatic gluconeogenesis.</span></li>
+<li><span class="num">4</span><span class="txt"><b>AMPKandy:</b> Metformin activates AMP-activated protein kinase (AMPK), decreasing hepatic gluconeogenesis and increasing insulin sensitivity and glucose uptake in muscle.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Stopping candy release from liver bag:</b> The main effect of metformin is decreased hepatic glucose production (gluconeogenesis).<span class="pearl">⭐ Metformin works without stimulating insulin secretion, so no hypoglycemia.</span></span></li>
+<li><span class="num">6</span><span class="txt"><b>INSIDE open candy box:</b> Metformin increases peripheral insulin sensitivity (reduces insulin resistance); it is useful in PCOS as well.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Spilled sour milk:</b> Metformin can cause lactic acidosis (rare, but a boxed warning) by inhibiting mitochondrial lactate metabolism.<span class="pearl">⭐ Contraindicated in severe renal impairment, hepatic disease, alcohol abuse.</span></span></li>
+<li><span class="num">8</span><span class="txt"><b>Cracked kidney tray:</b> Renal insufficiency (eGFR below 30) decreases metformin clearance and increases risk of lactic acidosis.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Nauseated:</b> Metformin causes GI effects: anorexia, nausea, vomiting, diarrhea, abdominal discomfort; long-term use can also cause vitamin B12 deficiency.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Skinny kid:</b> Metformin is weight neutral or causes modest weight loss.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Glitter:</b> "-glitazone" suffix: thiazolidinediones (pioglitazone, rosiglitazone).</span></li>
+<li><span class="num">12</span><span class="txt"><b>PPARy in circle:</b> Thiazolidinediones are agonist ligands of PPAR-gamma, a nuclear receptor that regulates gene transcription of insulin-responsive genes, primarily in adipose tissue.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Turtle neck:</b> PPAR-gamma activation upregulates adiponectin (adipokine), increasing insulin sensitivity and fatty acid oxidation.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Elevated fatty donut jar:</b> TZDs promote adipocyte differentiation and increase the number of small, insulin-sensitive adipocytes.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Eating fatty donut:</b> TZDs increase fatty acid uptake and triglyceride storage in adipose tissue and promote fatty acid oxidation, lowering circulating free fatty acids and triglycerides.</span></li>
+<li><span class="num">16</span><span class="txt"><b>4 on open door:</b> TZDs upregulate GLUT4 expression, increasing peripheral glucose uptake.</span></li>
+<li><span class="num">17</span><span class="txt"><b>INSIDE open candy box:</b> Net effect of TZDs: improved insulin sensitivity in muscle, fat and liver (less hepatic gluconeogenesis).<span class="pearl">⭐ Onset is slow (weeks).</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Fat belly:</b> TZDs cause weight gain (fluid retention and increased subcutaneous fat).</span></li>
+<li><span class="num">19</span><span class="txt"><b>Baggy pants:</b> TZDs cause fluid retention and peripheral edema (increased renal sodium reabsorption).</span></li>
+<li><span class="num">20</span><span class="txt"><b>Crushed failing heart balloon:</b> TZD-induced fluid retention can precipitate or worsen heart failure; contraindicated in NYHA class III-IV heart failure.<span class="pearl">⭐ Rosiglitazone also carries increased MI risk; pioglitazone linked to bladder cancer.</span></span></li>
+<li><span class="num">21</span><span class="txt"><b>Fractured chair leg:</b> TZDs reduce bone mineral density and increase risk of distal extremity fractures, especially in women.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Amy and Lynn:</b> Pramlintide is an injectable analog of amylin (islet amyloid polypeptide, co-secreted with insulin from beta cells); it decreases glucagon, slows gastric emptying and increases satiety.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Closed gastric water cooler:</b> Pramlintide slows gastric emptying, blunting postprandial glucose peaks.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Falling empty glucagon packets:</b> Pramlintide suppresses postprandial glucagon secretion.</span></li>
+<li><span class="num">25</span><span class="txt"><b>1 and 2:</b> Pramlintide is an adjunct to mealtime insulin in both type 1 and type 2 diabetes.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Eaten cupcake:</b> Pramlintide is given before meals to control the postprandial glucose spike.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Falling candy:</b> Pramlintide can cause severe hypoglycemia, especially when co-administered with insulin (reduce the insulin dose).<span class="pearl">⭐ Boxed warning: severe hypoglycemia.</span></span></li>
+<li><span class="num">28</span><span class="txt"><b>Nauseated:</b> Pramlintide commonly causes nausea, vomiting and anorexia (weight loss).</span></li>
+<li><span class="num">29</span><span class="txt"><b>"Monosaccharide free":</b> Inhibiting intestinal alpha-glucosidase prevents breakdown of disaccharides and oligosaccharides into absorbable monosaccharides.</span></li>
+<li><span class="num">30</span><span class="txt"><b>A-Carb wigglers:</b> Acarbose and miglitol are alpha-glucosidase inhibitors.</span></li>
+<li><span class="num">31</span><span class="txt"><b>Brush border flags:</b> Alpha-glucosidase inhibitors act on enzymes (sucrase, maltase, glucoamylase) at the small intestinal brush border.</span></li>
+<li><span class="num">32</span><span class="txt"><b>Delayed bag opening:</b> Carbohydrate digestion and absorption are delayed and spread further along the small intestine.</span></li>
+<li><span class="num">33</span><span class="txt"><b>Eaten cupcake:</b> These agents blunt the postprandial glucose spike (taken with the first bite of a meal).</span></li>
+<li><span class="num">34</span><span class="txt"><b>Leaky bathroom puddle:</b> Undigested carbohydrate reaching the colon is fermented by bacteria, causing flatulence, diarrhea and abdominal pain; hypoglycemia must be treated with glucose (not sucrose) if on these drugs.<span class="pearl">⭐ Treat hypoglycemia with glucose, not table sugar, in patients on acarbose.</span></span></li>
+<li><span class="num">35</span><span class="txt"><b>Flossing:</b> "-gliflozin" suffix: SGLT2 inhibitors (canagliflozin, dapagliflozin, empagliflozin, ertugliflozin).</span></li>
+<li><span class="num">36</span><span class="txt"><b>Salty Glucose Co.:</b> SGLT2 in the proximal tubule reabsorbs about 90% of filtered glucose; inhibition produces glycosuria and lowers plasma glucose independent of insulin.</span></li>
+<li><span class="num">37</span><span class="txt"><b>Pro Cart Track:</b> SGLT2 inhibitors act at the proximal convoluted tubule of the nephron.</span></li>
+<li><span class="num">38</span><span class="txt"><b>Bladder cup:</b> SGLT2 inhibitors increase risk of urinary tract infections and genital mycotic infections because of glycosuria.<span class="pearl">⭐ Rare: Fournier gangrene and euglycemic DKA.</span></span></li>
+<li><span class="num">39</span><span class="txt"><b>Snow hitting crotch:</b> SGLT2 inhibitors increase risk of vulvovaginal candidiasis (and balanitis in men).</span></li>
+<li><span class="num">40</span><span class="txt"><b>Canada:</b> Candida albicans, the opportunistic yeast that causes candidiasis.</span></li>
+<li><span class="num">41</span><span class="txt"><b>Fainting:</b> SGLT2 inhibitors cause osmotic diuresis, volume depletion and hypotension (orthostasis); they also reduce blood pressure and cardiorenal events.</span></li>
+<li><span class="num">42</span><span class="txt"><b>Cracked kidney tray:</b> SGLT2 inhibitors have reduced glycemic efficacy and are avoided in significant renal insufficiency (low eGFR), though empagliflozin/dapagliflozin are used for CKD/HF benefit at lower eGFR.</span></li>
+</ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/9c58fba354ea59c502fdd97d800f3f2b.webp" alt="Metformin, Thiazolidinediones, Pramlintide, SGLT2 Inhibitors original legend 1" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-e5" data-name="adh, ddavp, adh receptor antagonists">
+      <div class="org-header">
+        <h2>5. ADH, DDAVP, ADH Receptor Antagonists</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-e5">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/beb761f4d0e9b2657e2c4dfdeb8fa143.webp" alt="ADH, DDAVP, ADH Receptor Antagonists Sketchy scene 1" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: desmopressin (DDAVP), vasopressin (ADH); V2 antagonists (vaptans): conivaptan (IV), tolvaptan (oral); demeclocycline for SIADH.</li><li>Mechanism: ADH V1 (Gq) = vasoconstriction; V2 (Gs, cAMP) = aquaporin-2 insertion in collecting duct and release of vWF and factor VIII. DDAVP is V2-selective.</li><li>Indications: DDAVP for central DI, mild hemophilia A, von Willebrand disease (not type 3), nocturnal enuresis; vasopressin for septic shock/variceal bleeding; vaptans for SIADH hyponatremia.</li><li>Nephrogenic DI treated with thiazides, amiloride (lithium DI), NSAIDs. Adverse: DDAVP hyponatremia; vaptans overly rapid Na+ correction (osmotic demyelination), tolvaptan hepatotoxicity.</li><li>Buzzwords: central DI responds to DDAVP, nephrogenic DI does not; SIADH = euvolemic hyponatremia with high urine osmolality; '-vaptan' = V2 blocker; demeclocycline causes nephrogenic DI.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Collecting duct:</b> The collecting duct (principal cells) is the main renal site of action of antidiuretic hormone (ADH, vasopressin).</span></li>
+<li><span class="num">2</span><span class="txt"><b>Hydrating waterboy:</b> ADH (vasopressin) is the hormone that retains free water; released in response to high plasma osmolality or hypovolemia.<span class="pearl">⭐ ADH is made in the supraoptic and paraventricular nuclei of the hypothalamus.</span></span></li>
+<li><span class="num">3</span><span class="txt"><b>Posterior water jug:</b> ADH is synthesized in the hypothalamus but stored and released from the posterior pituitary (neurohypophysis).</span></li>
+<li><span class="num">4</span><span class="txt"><b>V1 receptor (Q-shaped green):</b> ADH activates V1 receptors, which are Gq-coupled: phospholipase C -&gt; IP3 + DAG -&gt; increased intracellular Ca2+.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Constricted golf club:</b> V1 activation on vascular smooth muscle causes vasoconstriction and raises blood pressure (hence the name vasopressin).<span class="pearl">⭐ Vasopressin is used as a pressor in septic shock.</span></span></li>
+<li><span class="num">6</span><span class="txt"><b>V2 receptor (S-shaped green):</b> ADH activates V2 receptors, which are Gs-coupled: adenylyl cyclase -&gt; increased cAMP -&gt; PKA.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Translocation of pure water:</b> V2 activation on the basolateral membrane of collecting duct principal cells causes insertion of aquaporin-2 channels into the apical membrane, so free water is reabsorbed and urine is concentrated.<span class="pearl">⭐ V2 = 2 = water (aquaporin-2); V1 = vasoconstriction.</span></span></li>
+<li><span class="num">8</span><span class="txt"><b>Endothelial tile:</b> Extrarenal V2 receptors are found on vascular endothelium.</span></li>
+<li><span class="num">9</span><span class="txt"><b>von Willebrand pool table:</b> V2 activation on vascular endothelium causes release of von Willebrand factor (vWF) from Weibel-Palade bodies.</span></li>
+<li><span class="num">10</span><span class="txt"><b>8-ball:</b> V2 activation on vascular endothelium also causes release of factor VIII (carried by vWF).</span></li>
+<li><span class="num">11</span><span class="txt"><b>Insipidus fountain:</b> Diabetes insipidus (DI) = polyuria with dilute urine and polydipsia due to lack of ADH action; plasma osmolality and serum Na+ tend to be high.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Dehydrating kidney sand trap:</b> Nephrogenic DI: the kidney is resistant to ADH, so ADH levels are normal or high.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Ignoring waterboy:</b> Nephrogenic DI occurs when the collecting duct does not respond appropriately to ADH (V2 receptor or aquaporin-2 defect, or drug-induced).<span class="pearl">⭐ Water deprivation test: urine stays dilute after desmopressin in nephrogenic DI.</span></span></li>
+<li><span class="num">14</span><span class="txt"><b>Lift-ium balloons:</b> Lithium is the classic drug cause of nephrogenic DI (enters principal cells via ENaC and impairs ADH signaling/aquaporin-2 expression).<span class="pearl">⭐ Other causes: demeclocycline, hypercalcemia, hypokalemia.</span></span></li>
+<li><span class="num">15</span><span class="txt"><b>Chloro-thighs:</b> Thiazide diuretics treat nephrogenic DI: volume depletion increases proximal Na+/water reabsorption, so less fluid reaches the collecting duct and urine output falls (paradoxical effect).</span></li>
+<li><span class="num">16</span><span class="txt"><b>Almond cart (amiloride):</b> Amiloride (K+-sparing ENaC blocker) treats nephrogenic DI, especially lithium-induced.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Falling lift-ium balloon man:</b> Amiloride treats lithium-induced DI by blocking ENaC entry of Li+ into collecting duct cells, reducing intracellular lithium.<span class="pearl">⭐ Amiloride is the drug of choice for lithium nephrogenic DI.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Fire extinguisher:</b> NSAIDs (e.g. indomethacin) treat nephrogenic DI by decreasing prostaglandin-mediated GFR/renal blood flow and prostaglandin antagonism of ADH, which reduces urine volume.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Dehydrating brain sand trap:</b> Central DI: the brain/pituitary fails to make or release enough ADH (e.g. head trauma, neurosurgery, tumor, hypophysitis).</span></li>
+<li><span class="num">20</span><span class="txt"><b>Absent waterboys:</b> Central DI occurs when the hypothalamic-pituitary axis does not release adequate ADH; urine osmolality rises after desmopressin.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Waterboy entering exogenously:</b> Exogenous ADH replacement treats central DI.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Desert-mobile:</b> Desmopressin acetate (DDAVP), a long-acting synthetic ADH analog, is the treatment of choice for central DI (intranasal, oral, or IV/SC).</span></li>
+<li><span class="num">23</span><span class="txt"><b>V-2 engine:</b> DDAVP is highly selective for the V2 receptor with minimal V1 pressor activity.<span class="pearl">⭐ Because it spares V1, DDAVP causes little vasoconstriction.</span></span></li>
+<li><span class="num">24</span><span class="txt"><b>Scratched von Willebrand felt:</b> DDAVP treats von Willebrand disease (types 1 and some 2A) by releasing stored vWF from endothelium.<span class="pearl">⭐ DDAVP is ineffective in type 3 vWD (no vWF stores).</span></span></li>
+<li><span class="num">25</span><span class="txt"><b>Bruised with mucosal bleeding:</b> Von Willebrand disease (deficient or defective vWF; most common inherited bleeding disorder) causes easy bruising and mucosal bleeding (epistaxis, menorrhagia); platelet-type bleeding with prolonged bleeding time.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Missing 8-ball in A-frame:</b> DDAVP treats mild hemophilia A by releasing factor VIII from vascular endothelium.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Bleeding knee joint:</b> Hemophilia A (X-linked recessive factor VIII deficiency) causes hemarthrosis and prolonged bleeding after minor procedures; PTT is prolonged with normal PT and bleeding time.</span></li>
+<li><span class="num">28</span><span class="txt"><b>Wet mattress:</b> DDAVP treats nocturnal enuresis by decreasing nighttime urine production.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Falling salty peanut shells:</b> DDAVP can cause hyponatremia (water retention); counsel on fluid restriction.<span class="pearl">⭐ Hyponatremia and seizures are the main DDAVP toxicity.</span></span></li>
+<li><span class="num">30</span><span class="txt"><b>Bulging venous golf clubs:</b> Vasopressin (or its analog terlipressin) is useful in esophageal variceal bleeding: V1-mediated splanchnic vasoconstriction lowers portal pressure.<span class="pearl">⭐ Octreotide is more commonly used first-line for variceal bleeding.</span></span></li>
+<li><span class="num">31</span><span class="txt"><b>Brain-shaped water hazard:</b> Syndrome of inappropriate ADH secretion (SIADH): euvolemic hyponatremia with concentrated urine; causes include small cell lung cancer, CNS disease, pulmonary disease, and drugs (carbamazepine, SSRIs, cyclophosphamide).</span></li>
+<li><span class="num">32</span><span class="txt"><b>Over-hydrating waterboy:</b> SIADH is caused by excess ADH production or release, producing free water retention, low serum osmolality and inappropriately high urine osmolality.</span></li>
+<li><span class="num">33</span><span class="txt"><b>Vaporizer:</b> The '-vaptan' suffix denotes ADH (vasopressin) receptor antagonists: conivaptan (IV, V1a/V2) and tolvaptan (oral, selective V2), used for SIADH and euvolemic or hypervolemic hyponatremia (e.g. heart failure).</span></li>
+<li><span class="num">34</span><span class="txt"><b>Wet pants:</b> Vaptans block V2 and promote aquaresis (excretion of free water without electrolyte loss), correcting hyponatremia.</span></li>
+<li><span class="num">35</span><span class="txt"><b>Elevated peanuts hitting head:</b> Overly rapid correction with vaptans can cause overcorrection (hypernatremia) and central pontine myelinolysis / osmotic demyelination (dysarthria, dysphagia, quadriparesis, locked-in state).<span class="pearl">⭐ Limit Na+ correction to under 8-10 mEq/L per 24 h; tolvaptan can also be hepatotoxic.</span></span></li>
+<li><span class="num">36</span><span class="txt"><b>Bicycle (demeclocycline):</b> Demeclocycline, a tetracycline that induces nephrogenic DI, treats SIADH when fluid restriction fails (vaptans are an alternative); do not use in pregnancy or children (teeth/bone effects).</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/d1a72320ae9bed4d9b5703e88e511933.webp" alt="ADH, DDAVP, ADH Receptor Antagonists original legend 1" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-e6" data-name="growth hormone, mecasermin, octreotide, pegvisomant">
+      <div class="org-header">
+        <h2>6. Growth Hormone, Mecasermin, Octreotide, Pegvisomant</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-e6">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/b6a9bcec9effcdce604c252f48c38fc6.webp" alt="Growth Hormone, Mecasermin, Octreotide, Pegvisomant Sketchy scene 1" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: somatropin (recombinant GH), mecasermin (IGF-1), octreotide/lanreotide (somatostatin analogs), pegvisomant (GH receptor antagonist), cabergoline/bromocriptine (D2 agonists).</li><li>Mechanism: GH acts via JAK2/STAT receptor and IGF-1; octreotide inhibits GH and GI hormones via somatostatin receptors; pegvisomant blocks the GH receptor; D2 agonists suppress GH secretion.</li><li>Indications: GH deficiency, Turner and Prader-Willi syndromes, CKD (GH); Laron syndrome (mecasermin); acromegaly, carcinoid, VIPoma, glucagonoma, insulinoma, variceal bleeding (octreotide).</li><li>Adverse effects: GH - glucose intolerance, edema, SCFE, pseudotumor cerebri; mecasermin - hypoglycemia; octreotide - gallstones, steatorrhea, bradycardia; pegvisomant - elevated LFTs.</li><li>Buzzwords: IGF-1 for screening acromegaly, GH fails to suppress on glucose tolerance test; octreotide is a splanchnic vasoconstrictor; pegvisomant monitor IGF-1 not GH.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Magic growing beans:</b> Growth hormone (GH, somatotropin) is a peptide hormone that promotes linear growth and metabolic effects.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Front of pituitary sack:</b> GH is secreted by somatotrophs of the anterior pituitary, stimulated by GHRH and ghrelin, inhibited by somatostatin; secretion peaks in sleep.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Tire swing:</b> The GH receptor is a cytokine-type receptor associated with JAK2 tyrosine kinase, signaling through STAT (JAK/STAT pathway).</span></li>
+<li><span class="num">4</span><span class="txt"><b>Growing "welcome INSIDE" mat:</b> Insulin-like growth factor 1 (IGF-1, somatomedin C) mediates many growth-promoting effects of GH and is a screening test for GH excess.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Tall growing vine:</b> IGF-1 stimulates cartilage and long bone growth at the epiphyseal plates (pubertal growth spurt).</span></li>
+<li><span class="num">6</span><span class="txt"><b>Sprouting from liver rock:</b> GH stimulates hepatic production of IGF-1, which gives negative feedback on GH.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Striated muscle leaf:</b> GH is anabolic in muscle (increased protein synthesis, amino acid uptake).</span></li>
+<li><span class="num">8</span><span class="txt"><b>Falling fatty donut jar:</b> GH is catabolic in adipose tissue (lipolysis) and is diabetogenic (raises glucose, insulin resistance).</span></li>
+<li><span class="num">9</span><span class="txt"><b>Short kid:</b> Recombinant GH (somatropin) treats pediatric GH deficiency and idiopathic short stature (controversial) as well as adult GH deficiency; adverse effects include glucose intolerance, edema, slipped capital femoral epiphysis, scoliosis and pseudotumor cerebri.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Padre Willi:</b> GH therapy increases growth and improves body composition in Prader-Willi syndrome.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Turning "X" girl:</b> GH therapy increases final height in Turner syndrome (45,XO); also used in chronic kidney disease and SHOX deficiency.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Sermon:</b> Mecasermin is recombinant human IGF-1 for growth failure due to severe primary IGF-1 deficiency (Laron syndrome, GH receptor defect or GH antibodies).<span class="pearl">⭐ Mecasermin works when GH therapy fails because the GH receptor is defective.</span></span></li>
+<li><span class="num">13</span><span class="txt"><b>Falling candy:</b> Mecasermin can cause hypoglycemia (IGF-1 has insulin-like effects); give with food.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Giant:</b> A GH-secreting pituitary adenoma causes acromegaly in adults (enlarged hands, feet, jaw, coarse features, glucose intolerance, cardiomyopathy) and gigantism in children before epiphyseal closure; diagnosed with elevated IGF-1 and failure of GH suppression on oral glucose tolerance test.<span class="pearl">⭐ First-line treatment is transsphenoidal surgery.</span></span></li>
+<li><span class="num">15</span><span class="txt"><b>Octagon stop sign:</b> Octreotide, a somatostatin analog (also lanreotide), inhibits GH secretion; it treats acromegaly and gigantism when surgery is not curative.</span></li>
+<li><span class="num">16</span><span class="txt"><b>VIP only:</b> Octreotide treats VIPoma (watery diarrhea, hypokalemia, achlorhydria) by inhibiting VIP release.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Customers only:</b> Octreotide treats carcinoid syndrome (flushing, diarrhea, wheezing from serotonin, usually with hepatic metastases of a midgut tumor).</span></li>
+<li><span class="num">18</span><span class="txt"><b>Big "welcome INSIDE" mat:</b> Octreotide inhibits insulin release and treats insulinoma (and sulfonylurea-induced hypoglycemia).</span></li>
+<li><span class="num">19</span><span class="txt"><b>Giant glucagon packet:</b> Octreotide treats glucagonoma (necrolytic migratory erythema, hyperglycemia, weight loss).</span></li>
+<li><span class="num">20</span><span class="txt"><b>Giant gas tank:</b> Octreotide reduces gastrin release and treats gastrinoma (Zollinger-Ellison), though PPIs are first-line.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Exposed variceal pipes:</b> Octreotide controls acute variceal bleeding by causing splanchnic vasoconstriction (reduced portal blood flow and variceal pressure).<span class="pearl">⭐ Used in acute variceal hemorrhage with endoscopy.</span></span></li>
+<li><span class="num">22</span><span class="txt"><b>Nauseated:</b> Octreotide causes GI effects: nausea, vomiting, abdominal pain, diarrhea.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Yellow stool:</b> Octreotide decreases pancreatic enzyme secretion and gallbladder contractility, causing steatorrhea and cholelithiasis (gallstones); also bradycardia and hypo/hyperglycemia.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Burglar with broomstick:</b> Cabergoline and bromocriptine are D2 receptor agonists that paradoxically suppress GH secretion in acromegaly (mainly in mixed GH-prolactin tumors) and are also first-line for prolactinoma.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Double rope ladder:</b> D2 dopamine receptors are Gi-coupled (decrease cAMP) on pituitary lactotrophs and some somatotrophs; their activation inhibits hormone secretion.</span></li>
+<li><span class="num">26</span><span class="txt"><b>ANTS on the tire swing:</b> Pegvisomant is a GH receptor antagonist (pegylated GH analog) that blocks JAK/STAT signaling and lowers IGF-1; treats acromegaly (monitor IGF-1 and LFTs).<span class="pearl">⭐ Pegvisomant lowers IGF-1 but not GH levels.</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/c74cf5a910c85bc87e3e237058c3bb9a.webp" alt="Growth Hormone, Mecasermin, Octreotide, Pegvisomant original legend 1" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-e7" data-name="glucocorticoids">
+      <div class="org-header">
+        <h2>7. Glucocorticoids</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-e7">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/a166d8d6052663e776eecd87ab2db073.webp" alt="Glucocorticoids Sketchy scene 1" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: hydrocortisone, prednisone, prednisolone, methylprednisolone, dexamethasone, betamethasone, fludrocortisone (mostly mineralocorticoid).</li><li>Mechanism: bind the cytoplasmic glucocorticoid receptor which translocates to the nucleus; inhibit PLA2 and NF-kappaB, decreasing prostaglandins, leukotrienes and cytokines; reduce lymphocytes and eosinophils.</li><li>Indications: asthma/COPD flares, autoimmune and inflammatory diseases, transplant rejection, allergic reactions, adrenal insufficiency, cerebral edema, antenatal lung maturation (betamethasone).</li><li>Adverse effects: Cushing syndrome, hyperglycemia, osteoporosis/AVN, skin thinning, myopathy, hypertension, hypokalemia, psychosis, cataracts, peptic ulcer, immunosuppression, adrenal suppression with abrupt withdrawal.</li><li>Buzzwords: neutrophilia with lymphopenia and eosinopenia; taper to avoid adrenal crisis; screen for latent TB; stress-dose steroids perioperatively.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Stone:</b> "-sone" and "-solone" suffixes mark glucocorticoids (prednisone, prednisolone, methylprednisolone, dexamethasone, hydrocortisone, betamethasone); fludrocortisone is primarily a mineralocorticoid.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Adrenal cap:</b> Cortisol, the endogenous glucocorticoid, is released from the zona fasciculata of the adrenal cortex under ACTH control.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Moon face:</b> Glucocorticoid drugs mimic cortisol; the moon face represents both the drug class and its Cushingoid side effects.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Moon scepter in outer circle:</b> The glucocorticoid receptor is an intracellular (cytoplasmic) nuclear-receptor-family protein bound to heat-shock proteins until ligand binding.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Activated scepter in inner circle:</b> Ligand-bound receptor translocates to the nucleus and binds glucocorticoid response elements, altering gene transcription (transactivation and transrepression).</span></li>
+<li><span class="num">6</span><span class="txt"><b>Inhibited cataPuLt A2:</b> Glucocorticoids induce lipocortin (annexin-1) and inhibit phospholipase A2, blocking release of arachidonic acid from membrane phospholipids.<span class="pearl">⭐ Steroids act upstream of NSAIDs: inhibit PLA2.</span></span></li>
+<li><span class="num">7</span><span class="txt"><b>AA frame of catapult A2:</b> By blocking PLA2, glucocorticoids prevent formation of arachidonic acid, the substrate for both prostaglandin and leukotriene synthesis.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Inhibited pro-slugger bat:</b> Glucocorticoids reduce inflammatory prostaglandins, in part by decreasing COX-2 expression.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Inhibited lacrosse stick:</b> Glucocorticoids reduce leukotriene production (lipoxygenase pathway) via decreased arachidonic acid substrate.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Inhibited N-Flame Krossbow:</b> Glucocorticoids inhibit the transcription factor NF-kappaB, reducing expression of cytokines (IL-1, IL-2, TNF-alpha) and adhesion molecules.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Inhibited T-knight and antibody archer:</b> Reduced cytokine production (especially IL-2) prevents activation and proliferation of T cells and subsequently B cells, producing immunosuppression.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Blocked adhesion of first responders:</b> Glucocorticoids decrease neutrophil adhesion molecule expression (L-selectin, integrins), causing demargination from vessel walls and reduced migration to inflammation.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Crowded first responders:</b> Demargination increases circulating neutrophils (neutrophilia, with increased marrow release) while neutrophil function is impaired.<span class="pearl">⭐ Steroids cause neutrophilia but lymphopenia and eosinopenia.</span></span></li>
+<li><span class="num">14</span><span class="txt"><b>Falling T-knight, helper T-squire, and antibody archer:</b> Glucocorticoids reduce circulating T and B lymphocyte counts (lymphopenia) via redistribution and apoptosis.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Helper T-squire lowest:</b> CD4 helper T cells are most strongly reduced, increasing opportunistic infection risk.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Falling eo-slingshot:</b> Glucocorticoids decrease peripheral eosinophils (eosinopenia) via apoptosis and redistribution.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Eclipsed inflammatory sun:</b> Glucocorticoids treat inflammatory disorders: asthma/COPD exacerbations, rheumatoid arthritis, gout flare, IBD, allergic reactions, cerebral edema.</span></li>
+<li><span class="num">18</span><span class="txt"><b>Cracked antibodies:</b> Glucocorticoids are immunosuppressants for transplant rejection prevention and autoimmune diseases (SLE, vasculitis, ITP, autoimmune hemolytic anemia) and for lymphoid malignancies.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Locked welcome inside mat:</b> Glucocorticoids induce insulin resistance and hyperglycemia (can unmask or worsen diabetes).</span></li>
+<li><span class="num">20</span><span class="txt"><b>Liver bag producing candy:</b> Glucocorticoids stimulate hepatic gluconeogenesis (PEPCK, glucose-6-phosphatase), raising blood glucose.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Sugar-filled liver jar:</b> Glucocorticoids increase hepatic glycogen storage (glycogen synthase) while promoting gluconeogenesis.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Cracked moon:</b> Adrenal insufficiency (primary, such as Addison disease with ACTH high and hyperpigmentation, or secondary) results from inadequate cortisol; treated with glucocorticoid replacement.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Fainted druid:</b> Acute adrenal insufficiency (adrenal crisis) causes hypotension, circulatory shock and death if untreated; precipitated by stress, infection or abrupt steroid withdrawal.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Falling candy:</b> Cortisol deficiency causes hypoglycemia (impaired gluconeogenesis).</span></li>
+<li><span class="num">25</span><span class="txt"><b>Exogenous moon face:</b> Exogenous glucocorticoids (IV hydrocortisone or dexamethasone) treat adrenal crisis; stress-dose steroids are used in patients on chronic therapy facing surgery or severe illness.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Shriveled adrenal hat:</b> Chronic exogenous steroid use suppresses CRH and ACTH (negative feedback), causing adrenal atrophy (secondary adrenal insufficiency); therefore taper rather than abruptly stop.<span class="pearl">⭐ ACTH low, cortisol low, no hyperpigmentation, aldosterone intact.</span></span></li>
+<li><span class="num">27</span><span class="txt"><b>Falling meat:</b> Glucocorticoids promote proteolysis (muscle protein catabolism), providing amino acids for gluconeogenesis.</span></li>
+<li><span class="num">28</span><span class="txt"><b>Falling fatty donut jar:</b> Glucocorticoids promote lipolysis in peripheral adipose, although central fat is redistributed.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Cushion:</b> Iatrogenic Cushing syndrome from chronic glucocorticoid use produces fat redistribution, muscle weakness, skin thinning, osteoporosis, hypertension, hyperglycemia and immunosuppression.</span></li>
+<li><span class="num">30</span><span class="txt"><b>Moon face:</b> Moon facies due to facial fat deposition.</span></li>
+<li><span class="num">31</span><span class="txt"><b>Fat belly:</b> Central (truncal) obesity with a buffalo hump.</span></li>
+<li><span class="num">32</span><span class="txt"><b>Thin arms:</b> Steroid myopathy: proximal muscle wasting and weakness.</span></li>
+<li><span class="num">33</span><span class="txt"><b>Thin striped fabric:</b> Inhibited fibroblast proliferation and collagen synthesis causes skin thinning, purple striae, easy bruising and impaired wound healing.</span></li>
+<li><span class="num">34</span><span class="txt"><b>Fractured osteoporotic altar:</b> Glucocorticoids reduce bone formation and increase resorption, causing osteoporosis, fractures and avascular necrosis of the femoral head; prevent with calcium, vitamin D and bisphosphonates.</span></li>
+<li><span class="num">35</span><span class="txt"><b>Cracked head:</b> Glucocorticoid-induced psychiatric effects: mood changes, insomnia, mania, psychosis and depression.</span></li>
+<li><span class="num">36</span><span class="txt"><b>Banana peel:</b> Glucocorticoids with mineralocorticoid activity can cause hypokalemia, sodium and water retention, hypertension and metabolic alkalosis (most with hydrocortisone and fludrocortisone).</span></li>
+<li><span class="num">37</span><span class="txt"><b>Cane:</b> Glucocorticoids cause immunosuppression with increased risk of infection (bacterial, fungal, viral).</span></li>
+<li><span class="num">38</span><span class="txt"><b>Pulmonary cacti:</b> Glucocorticoids can reactivate latent infections such as TB (screen before chronic therapy), and can cause Pneumocystis pneumonia (prophylaxis with TMP-SMX).<span class="pearl">⭐ Other adverse effects: cataracts, peptic ulcers (with NSAIDs), pancreatitis.</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/f18c40444dd367d7614a99adac8d1e3c.webp" alt="Glucocorticoids original legend 1" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-e8" data-name="propylthiouracil, methimazole, levothyroxine">
+      <div class="org-header">
+        <h2>8. Propylthiouracil, Methimazole, Levothyroxine</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-e8">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/29026699880454fd3456a8b8bc42f678.webp" alt="Propylthiouracil, Methimazole, Levothyroxine Sketchy scene 1" loading="lazy" class="scene-img"><img src="sketchy-pharm-img/0aa2c79e6137ca93008fd8c88ce50b2f.webp" alt="Propylthiouracil, Methimazole, Levothyroxine Sketchy scene 2" loading="lazy" class="scene-img" style="margin-top:10px"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: propylthiouracil (PTU), methimazole (carbimazole), levothyroxine (T4), liothyronine (T3); adjuncts: beta blockers, glucocorticoids, iodide, radioiodine, perchlorate.</li><li>Mechanism: thionamides inhibit thyroid peroxidase (oxidation, organification, coupling); PTU also inhibits peripheral 5'-deiodinase (T4 to T3); levothyroxine replaces T4.</li><li>Indications: Graves' disease and toxic nodular goiter (thionamides, radioiodine, surgery), thyroid storm (beta blocker, PTU, iodide, steroids), hypothyroidism (levothyroxine).</li><li>Adverse effects: rash, agranulocytosis, aplastic anemia; PTU - hepatotoxicity, ANCA vasculitis; methimazole - first-trimester teratogen; levothyroxine overdose - iatrogenic hyperthyroidism, AF, bone loss.</li><li>Pregnancy: PTU first trimester, methimazole afterward; radioiodine contraindicated; thyroid storm - thionamide before iodide; radioiodine eventually causes hypothyroidism.</li></ul></div>
+          <ol class="legend-list"><li class="part-hd" style="list-style:none;margin:10px 0 2px;font-weight:700;color:var(--accent2)">Part 1 · Propylthiouracil, Methimazole, Levothyroxine (picture 1)</li>
+<li><span class="num">1</span><span class="txt"><b>Evil follicu-LAIR:</b> The thyroid follicular cell is the site of iodide uptake and thyroid hormone synthesis; follicles are lined by follicular cells around a colloid-filled lumen.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Salty sodium peanuts entering lair:</b> The sodium-iodide symporter (NIS) on the basolateral membrane cotransports 2 Na+ with 1 I- into the follicular cell (secondary active transport, driven by Na+/K+ ATPase).</span></li>
+<li><span class="num">3</span><span class="txt"><b>Iodide vial smuggled in with salty peanuts:</b> NIS concentrates iodide inside the follicular cell (also in salivary glands, stomach and breast); this is the basis of radioiodine therapy and uptake studies.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Follicu-LAIR truck lumen:</b> The follicular lumen (colloid) stores thyroid hormone precursors as iodinated thyroglobulin.</span></li>
+<li><span class="num">5</span><span class="txt"><b>TransPOrter:</b> Thyroid peroxidase (TPO), at the apical membrane, catalyzes iodide oxidation, organification and coupling.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Rusty oxidized transport truck:</b> TPO oxidizes iodide (I-) to reactive iodine (I0/I+) using hydrogen peroxide.</span></li>
+<li><span class="num">7</span><span class="txt"><b>"Thyro-global" truck:</b> Thyroglobulin is a tyrosine-rich glycoprotein in the follicular lumen that is the scaffold for thyroid hormone synthesis.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Organic foods transporter truck:</b> TPO catalyzes organification: iodination of tyrosine residues on thyroglobulin to form MIT and DIT.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Coupled tyres of transport truck:</b> TPO couples iodinated tyrosines: DIT + DIT forms T4 and MIT + DIT forms T3.<span class="pearl">⭐ TPO is the target of thionamides.</span></span></li>
+<li><span class="num">10</span><span class="txt"><b>Time bomb prep table in the follicu-LAIR:</b> Iodinated thyroglobulin is endocytosed and cleaved by lysosomal proteases, releasing T4 (major product) and T3 into the circulation.</span></li>
+<li><span class="num">11</span><span class="txt"><b>T4 time bomb:</b> Thyroxine (T4, tetraiodothyronine) is the main secreted hormone, a prohormone with a long half-life (about 7 days).</span></li>
+<li><span class="num">12</span><span class="txt"><b>T3 time bomb:</b> Triiodothyronine (T3) is the more potent, biologically active form with a shorter half-life.</span></li>
+<li><span class="num">13</span><span class="txt"><b>T4 detonator in the periphery:</b> Peripheral 5'-deiodinase converts T4 to active T3 (inhibited by PTU, propranolol and glucocorticoids).</span></li>
+<li><span class="num">14</span><span class="txt"><b>Sensitive to catfish:</b> Thyroid hormone upregulates beta-adrenergic receptors, increasing sensitivity to catecholamines (tachycardia, tremor).</span></li>
+<li><span class="num">15</span><span class="txt"><b>Falling henchman sensitive to catfish in the periphery:</b> Same concept: increased beta-adrenergic receptor number in peripheral tissues explains the hyperadrenergic features and why beta blockers are effective.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Anxious henchman with big bowtie:</b> Hyperthyroidism causes a hypermetabolic and hyperadrenergic state: tachycardia, palpitations, insomnia, anxiety, tremor, heat intolerance, weight loss, diarrhea.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Bulging infrared goggles:</b> Graves' ophthalmopathy: autoantibody-driven inflammation causes glycosaminoglycan accumulation and retro-orbital connective tissue expansion, causing exophthalmos.<span class="pearl">⭐ Graves' eye disease is not treated by thionamides.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Radioactive vial:</b> Radioactive iodine (I-131) is taken up via NIS and destroys thyroid tissue; definitive therapy for Graves' disease and toxic nodules.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Undone bowtie:</b> Radioiodine ablation commonly results in permanent hypothyroidism needing lifelong levothyroxine.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Anxious radioactive henchman:</b> Radiation thyroiditis releases preformed hormone, transiently worsening hyperthyroidism (pretreat with thionamide/beta blocker).</span></li>
+<li><span class="num">21</span><span class="txt"><b>Bulging radioactive goggles:</b> Radioiodine can worsen Graves' ophthalmopathy (especially in smokers); give prophylactic glucocorticoids.</span></li>
+<li><span class="num">22</span><span class="txt"><b>"PTU!" agent firing at the transporter:</b> Propylthiouracil (a thionamide) inhibits TPO, blocking oxidation, organification and coupling of iodine, thereby decreasing thyroid hormone synthesis.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Evil math equations striking transporter:</b> Methimazole (thionamide) also inhibits TPO; carbimazole is its prodrug.</span></li>
+<li><span class="num">24</span><span class="txt"><b>"PTU!" agent firing at the bomb trigger:</b> PTU additionally inhibits peripheral 5'-deiodinase, decreasing conversion of T4 to T3 (methimazole does not).<span class="pearl">⭐ Only PTU blocks peripheral T4-to-T3 conversion.</span></span></li>
+<li><span class="num">25</span><span class="txt"><b>Silenced bugle gun pointed at catfish tank:</b> Beta blockers (propranolol, atenolol) treat the adrenergic symptoms of hyperthyroidism (tachycardia, tremor, anxiety).</span></li>
+<li><span class="num">26</span><span class="txt"><b>Silenced bugle gun pointed at trigger:</b> Propranolol (nonselective) also inhibits 5'-deiodinase, decreasing peripheral T4-to-T3 conversion.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Moon face death coaster blocking trigger:</b> High-dose glucocorticoids inhibit peripheral 5'-deiodinase and reduce T4-to-T3 conversion.</span></li>
+<li><span class="num">28</span><span class="txt"><b>Moon face death coaster hitting goggles:</b> Glucocorticoids treat Graves' ophthalmopathy by reducing orbital inflammation.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Thwarted Dr. Storm:</b> Thyroid storm treatment: beta blockers (sympathetic blockade, propranolol), thionamide (PTU), then iodide after thionamide, and glucocorticoids; the last three also block T4 to T3 conversion (PTU, propranolol, steroids).</span></li>
+<li><span class="num">30</span><span class="txt"><b>Broken liver beaker:</b> PTU can cause severe hepatotoxicity and liver failure (boxed warning), so it is reserved for first trimester pregnancy, thyroid storm and methimazole intolerance.<span class="pearl">⭐ PTU: liver. Methimazole: fetus.</span></span></li>
+<li><span class="num">31</span><span class="txt"><b>Chemical spots:</b> Thionamides commonly cause pruritic maculopapular rash (most common adverse effect).</span></li>
+<li><span class="num">32</span><span class="txt"><b>Self destruct sand timer:</b> Both thionamides can cause agranulocytosis (check CBC and counsel to report fever or sore throat).</span></li>
+<li><span class="num">33</span><span class="txt"><b>Plastic chew bones:</b> Thionamides can also cause aplastic anemia (bone marrow suppression).</span></li>
+<li><span class="num">34</span><span class="txt"><b>Guard wolf:</b> Thionamides can cause drug-induced lupus.</span></li>
+<li><span class="num">35</span><span class="txt"><b>Inflamed leash:</b> PTU (more than methimazole) can cause ANCA-positive (p-ANCA) vasculitis.</span></li>
+<li><span class="num">36</span><span class="txt"><b>Tarantula:</b> Methimazole is a first-trimester teratogen (aplasia cutis, choanal atresia, tracheoesophageal fistula), so PTU is used in the first trimester then switch to methimazole.</span></li>
+<li><span class="num">37</span><span class="txt"><b>Fat, cold, fatigued mixologist:</b> Hypothyroidism: fatigue, lethargy, weakness, cold intolerance, weight gain, constipation, bradycardia, dry brittle hair, myxedema, low BMR.</span></li>
+<li><span class="num">38</span><span class="txt"><b>Mixing cold drinks:</b> Severe untreated hypothyroidism can progress to myxedema coma: stupor, hypothermia, hypoventilation, hypotension, hypoglycemia, hyponatremia; treat with IV levothyroxine and hydrocortisone.</span></li>
+<li><span class="num">39</span><span class="txt"><b>Synthetic T4 time bombs:</b> Levothyroxine, synthetic T4, treats hypothyroidism and is converted peripherally to T3.</span></li>
+<li><span class="num">40</span><span class="txt"><b>Anxious agent taking cover:</b> Excess levothyroxine causes iatrogenic hyperthyroidism (tachycardia, tremor, bone loss).</span></li>
+<li><span class="num">41</span><span class="txt"><b>Obstructive box of anions:</b> Perchlorate, pertechnetate and thiocyanate competitively inhibit the sodium-iodide symporter, reducing iodide uptake; used to block uptake of radioactive iodine after accidental exposure and in iodine-induced hyperthyroidism.</span></li>
+<li class="part-hd" style="list-style:none;margin:10px 0 2px;font-weight:700;color:var(--accent2)">Part 2 · Hyperthyroidism SOAP (picture 2)</li>
+<li><span class="num">1</span><span class="txt"><b>Big red bowtie:</b> Hyperthyroidism is characterized by elevated thyroid hormone (T4 and/or T3) levels.</span></li>
+<li><span class="num">2</span><span class="txt"><b>"4:00" time bombs:</b> Elevated free T4 is the typical laboratory finding in hyperthyroidism.</span></li>
+<li><span class="num">3</span><span class="txt"><b>"3:59" time bombs:</b> Elevated T3 (T3 toxicosis) may be seen with normal T4 in early Graves' or toxic nodules.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Nervous-looking woman:</b> Nervousness and anxiety are classic chief complaints due to increased adrenergic sensitivity.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Red face looking away from fire:</b> Heat intolerance from increased thermogenesis and basal metabolic rate.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Beads of sweat:</b> Diaphoresis from increased heat production.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Thin, ravenous dog biting dress:</b> Weight loss despite increased appetite due to increased basal metabolic rate.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Woman shaking:</b> Palpitations from increased heart rate and contractility.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Brown "mud" puddles:</b> Hyperdefecation (frequent stools or diarrhea) from increased GI motility.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Weak, shaky arm:</b> Proximal muscle weakness (difficulty raising arms or rising from a chair).</span></li>
+<li><span class="num">11</span><span class="txt"><b>Irregular pools of blood:</b> Oligomenorrhea or amenorrhea with anovulation and decreased fertility.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Swirly eyes:</b> Psychiatric symptoms: insomnia, agitation, psychosis, depression.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Young woman being dragged into grave:</b> Graves' disease is the most common cause of hyperthyroidism, usually in younger women.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Antibody-shaped neck electrodes:</b> Graves' disease is caused by stimulating anti-TSH receptor IgG antibodies (type II hypersensitivity) that cause excess hormone synthesis and secretion.<span class="pearl">⭐ TSH-receptor-stimulating antibodies (TRAb/TSI).</span></span></li>
+<li><span class="num">15</span><span class="txt"><b>Box of antibody-shaped tools:</b> Graves' disease is associated with other autoimmune diseases (vitiligo, pernicious anemia, type 1 diabetes, MS).</span></li>
+<li><span class="num">16</span><span class="txt"><b>Older woman by many differently-sized graves:</b> Toxic multinodular goiter is a common cause in older women (and iodine-deficient regions).</span></li>
+<li><span class="num">17</span><span class="txt"><b>Multiple differently-sized graves:</b> Toxic multinodular goiter: multiple autonomously functioning nodules producing thyroid hormone independent of TSH.</span></li>
+<li><span class="num">18</span><span class="txt"><b>Single giant grave with an "add" sign:</b> Toxic adenoma: a single autonomous hyperfunctioning nodule (often TSHR or Gs-alpha activating mutation).</span></li>
+<li><span class="num">19</span><span class="txt"><b>Man with flaming red bowtie:</b> Thyroiditis can cause transient hyperthyroidism from release of preformed hormone.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Sine wave-shaped gate:</b> Thyroiditis often follows a triphasic course: thyrotoxic, hypothyroid, then recovery.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Woman statue underneath cute baby statue:</b> Subacute (de Quervain) granulomatous thyroiditis: post-viral inflammation with a painful tender thyroid after a URI, elevated ESR.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Statue of woman blowing nose:</b> Preceding viral upper respiratory infection in subacute thyroiditis.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Statue of woman shushing:</b> Silent (painless) lymphocytic thyroiditis is a variant of autoimmune thyroiditis causing transient hyperthyroidism without pain.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Baby statue:</b> Postpartum thyroiditis occurs within a year of childbirth (painless, lymphocytic).</span></li>
+<li><span class="num">25</span><span class="txt"><b>Cancer crab:</b> Ectopic hyperthyroidism from functioning metastatic follicular thyroid cancer.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Ovary-shaped mushrooms:</b> Struma ovarii: ovarian teratoma containing functioning thyroid tissue causing hyperthyroidism with low RAIU in the neck.</span></li>
+<li><span class="num">27</span><span class="txt"><b>T4 synthetic explosives:</b> Exogenous hyperthyroidism from excess levothyroxine (iatrogenic or factitious); thyroglobulin is low.</span></li>
+<li><span class="num">28</span><span class="txt"><b>Contrasty yin-yang:</b> Iodine-induced hyperthyroidism (Jod-Basedow phenomenon) after an iodine load such as IV contrast or amiodarone.</span></li>
+<li><span class="num">29</span><span class="txt"><b>"Mi Amigo":</b> Amiodarone, high in iodine content, can cause hyperthyroidism (or hypothyroidism) and direct thyroid cell toxicity.</span></li>
+<li><span class="num">30</span><span class="txt"><b>Heart-shaped watch running out of control:</b> Sinus tachycardia is the most common vital sign abnormality.</span></li>
+<li><span class="num">31</span><span class="txt"><b>Irregularly irregular signal:</b> Atrial fibrillation, especially in older patients with hyperthyroidism.</span></li>
+<li><span class="num">32</span><span class="txt"><b>Steam coming out of ears:</b> Systolic hypertension with a widened pulse pressure from increased contractility and reduced systemic vascular resistance.</span></li>
+<li><span class="num">33</span><span class="txt"><b>Shaky hand:</b> Fine tremor from increased adrenergic activity.</span></li>
+<li><span class="num">34</span><span class="txt"><b>Statue's eyes looking downward:</b> Lid lag (and eyelid retraction) occurs in all causes of hyperthyroidism from sympathetic overactivity; true exophthalmos is specific to Graves'.</span></li>
+<li><span class="num">35</span><span class="txt"><b>Reflex hammer:</b> Hyperreflexia with brisk deep tendon reflexes.</span></li>
+<li><span class="num">36</span><span class="txt"><b>Smooth metal collar around neck:</b> Graves' disease: diffusely enlarged, nontender thyroid, sometimes with a bruit.</span></li>
+<li><span class="num">37</span><span class="txt"><b>Multiple knots on headscarf:</b> Toxic multinodular goiter: nontender irregularly enlarged gland with multiple nodules.</span></li>
+<li><span class="num">38</span><span class="txt"><b>Single large, round design:</b> Toxic adenoma: single discrete nontender nodule.</span></li>
+<li><span class="num">39</span><span class="txt"><b>Painful, flaming bowtie:</b> Subacute thyroiditis: tender, diffusely enlarged thyroid.</span></li>
+<li><span class="num">40</span><span class="txt"><b>Protruding goggles:</b> Graves' ophthalmopathy: proptosis, diplopia, impaired convergence and corneal irritation from orbital tissue expansion (inflammation of extraocular muscles and fat).</span></li>
+<li><span class="num">41</span><span class="txt"><b>Big shin-high boots:</b> Pretibial myxedema: bilateral nonpitting edema/plaques over the shins from dermal glycosaminoglycan accumulation (pathognomonic for Graves').</span></li>
+<li><span class="num">42</span><span class="txt"><b>Tiny red bowtie:</b> Suppressed (low) TSH is the most sensitive test for primary hyperthyroidism.</span></li>
+<li><span class="num">43</span><span class="txt"><b>Time bomb set to "4:00" atop gravestone:</b> High free T4 confirms overt hyperthyroidism.</span></li>
+<li><span class="num">44</span><span class="txt"><b>Time bomb set to "4:00" resting on ground:</b> Low TSH with normal free T4 and T3 indicates subclinical hyperthyroidism.</span></li>
+<li><span class="num">45</span><span class="txt"><b>Top hat with red "add" sign:</b> Central (TSH-induced) hyperthyroidism, such as a TSH-secreting pituitary adenoma, shows high free T4 with inappropriately normal or high TSH.</span></li>
+<li><span class="num">46</span><span class="txt"><b>Top hat with red arrow pointing up:</b> Same concept: TSH not appropriately suppressed despite elevated free T4 (also resistance-to-thyroid-hormone differential).</span></li>
+<li><span class="num">47</span><span class="txt"><b>Antibody-shaped neck electrodes:</b> Positive TSH receptor antibodies (TRAb/TSI) confirm Graves' disease.</span></li>
+<li><span class="num">48</span><span class="txt"><b>Radioactive green vial:</b> 24-hour radioactive iodine uptake (RAIU) distinguishes causes of thyrotoxicosis: high or normal uptake means new hormone synthesis, low uptake means release or extrinsic hormone.</span></li>
+<li><span class="num">49</span><span class="txt"><b>Green glow on collar:</b> Graves' disease: diffusely increased RAIU.</span></li>
+<li><span class="num">50</span><span class="txt"><b>Green radioactive liquid on multiple gravestones:</b> Toxic multinodular goiter: multiple patchy areas of increased uptake.</span></li>
+<li><span class="num">51</span><span class="txt"><b>Radioactive green vial held high above single giant gravestone:</b> Toxic adenoma: a single hot nodule with suppression of surrounding tissue.</span></li>
+<li><span class="num">52</span><span class="txt"><b>Broken empty vial:</b> Low RAIU hyperthyroidism: thyroiditis (subacute, silent, postpartum) or ectopic/exogenous sources (struma ovarii, metastatic thyroid cancer, factitious thyrotoxicosis, iodine-induced).</span></li>
+<li><span class="num">53</span><span class="txt"><b>Muted beta-bugles:</b> Start beta blockers (propranolol, atenolol) for symptom control in most patients as soon as hyperthyroidism is diagnosed.</span></li>
+<li><span class="num">54</span><span class="txt"><b>Pistol:</b> Thionamides (methimazole, PTU) are initial therapy in Graves' disease for mild disease, older patients or when definitive therapy is delayed or contraindicated, including pregnancy.</span></li>
+<li><span class="num">55</span><span class="txt"><b>Math on chalkboard:</b> Methimazole is the preferred thionamide generally (once daily, less hepatotoxic); PTU is preferred in the first trimester of pregnancy.</span></li>
+
+<li><span class="num">56</span><span class="txt"><b>001 shooting PTU pistol in front of pregnant woman:</b> PTU is the therapy of choice in the first trimester of pregnancy because methimazole is teratogenic then; switch to methimazole afterwards to avoid PTU hepatotoxicity.</span></li>
+<li><span class="num">57</span><span class="txt"><b>Sand timer with granules of white sand:</b> All thionamides carry a risk of agranulocytosis.</span></li>
+<li><span class="num">58</span><span class="txt"><b>Case of green vials:</b> Radioactive iodine is the definitive therapy of choice for most nonpregnant patients with hyperthyroidism.</span></li>
+<li><span class="num">59</span><span class="txt"><b>T4 synthetic explosive:</b> Most patients treated with radioiodine eventually become hypothyroid and need levothyroxine.</span></li>
+<li><span class="num">60</span><span class="txt"><b>Moon face-shaped discs knocking off protruding goggles:</b> Give oral glucocorticoids to prevent worsening of Graves' ophthalmopathy with radioiodine therapy (especially in smokers or those with existing eye disease).</span></li>
+<li><span class="num">61</span><span class="txt"><b>Red X taped over case of green vials next to pregnant woman:</b> Radioiodine is contraindicated in pregnancy (fetal thyroid ablation) and breastfeeding.</span></li>
+<li><span class="num">62</span><span class="txt"><b>Scalpel-shaped post:</b> Thyroidectomy is preferred for large or obstructive goiter, moderate to severe Graves' ophthalmopathy, suspected malignancy, or pregnant patients allergic to thionamides.</span></li>
+<li><span class="num">63</span><span class="txt"><b>Extra-large knot on bowtie:</b> Large goiter with compressive symptoms favors surgery.</span></li>
+<li><span class="num">64</span><span class="txt"><b>Extra-long protruding goggles:</b> Active moderate to severe ophthalmopathy favors surgery over radioiodine.</span></li>
+<li><span class="num">65</span><span class="txt"><b>Doctor Storm wearing big red bowtie:</b> Thyroid storm is a rare, life-threatening exacerbation of thyrotoxicosis with multisystem decompensation.</span></li>
+<li><span class="num">66</span><span class="txt"><b>Pilot with big red bowtie:</b> Thyroid storm occurs in undiagnosed or inadequately treated hyperthyroidism and is precipitated by an acute stressor (surgery, trauma, infection, iodine load, childbirth).</span></li>
+<li><span class="num">67</span><span class="txt"><b>Trigger on pilot's joystick:</b> The precipitating event (surgery, trauma, infection, iodine load) triggers decompensation.</span></li>
+<li><span class="num">68</span><span class="txt"><b>Swirly eyes on picture of Dr. Storm:</b> Altered mental status (agitation, delirium, psychosis, stupor, coma) is characteristic of thyroid storm.</span></li>
+<li><span class="num">69</span><span class="txt"><b>Fire aboard helicopter:</b> Hyperpyrexia (often above 38.5 C, up to 41 C) is common.<span class="pearl">⭐ Fever distinguishes storm from simple thyrotoxicosis.</span></span></li>
+<li><span class="num">70</span><span class="txt"><b>Doctor Storm's heart-shaped watch spinning out of control:</b> Severe tachycardia, often out of proportion to fever.</span></li>
+<li><span class="num">71</span><span class="txt"><b>Vibrating cell phone with heart on screen:</b> Tachyarrhythmias such as atrial fibrillation are frequent.</span></li>
+<li><span class="num">72</span><span class="txt"><b>Floppy heart balloon:</b> Thyroid storm can cause high-output heart failure.</span></li>
+<li><span class="num">73</span><span class="txt"><b>Lightning bolts:</b> Thyroid storm can progress to hypotension, shock and cardiovascular collapse.</span></li>
+<li><span class="num">74</span><span class="txt"><b>Muted beta bugle-shaped gun:</b> Give beta blockers (propranolol preferred because it also blocks T4-to-T3 conversion) immediately.</span></li>
+<li><span class="num">75</span><span class="txt"><b>Pistol making "PTU" sounds:</b> Start thionamides (PTU preferred, also blocks peripheral conversion) to block new hormone synthesis.</span></li>
+<li><span class="num">76</span><span class="txt"><b>Top secret math papers:</b> Methimazole can be used as an alternative thionamide.</span></li>
+<li><span class="num">77</span><span class="txt"><b>\ODIDE crate:</b> Give iodide (potassium iodide, Lugol solution) at least 1 hour AFTER the thionamide to block thyroid hormone release (Wolff-Chaikoff effect) and avoid providing substrate for new synthesis.<span class="pearl">⭐ Thionamide first, iodide one hour later.</span></span></li>
+<li><span class="num">78</span><span class="txt"><b>Moon-faced discs:</b> IV glucocorticoids (hydrocortisone) reduce peripheral T4-to-T3 conversion and treat possible relative adrenal insufficiency.</span></li>
+<li><span class="num">79</span><span class="txt"><b>Agent holding on to ivy:</b> Glucocorticoids are given IV in thyroid storm; also provide supportive care (cooling, fluids, treat precipitant, avoid aspirin because it displaces T4 from binding proteins).</span></li>
+<li class="part-hd" style="list-style:none;margin:10px 0 2px;font-weight:700;color:var(--accent2)">Part 3 · Propylthiouracil, Methimazole, Levothyroxine, newer version (no picture in your Sketchy library; see the original legend picture below)</li>
+<li><span class="num">1</span><span class="txt"><b>"PTU! PTU!":</b> Propylthiouracil (PTU) is a thionamide (thioamide) antithyroid drug.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Evil Math:</b> Methimazole is a thionamide; carbimazole is a prodrug converted to methimazole.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Shot TransPOrter bag:</b> Thionamides inhibit thyroid peroxidase (TPO), blocking iodide organification and coupling.</span></li>
+<li><span class="num">4</span><span class="txt"><b>T4:00 timer:</b> TPO is required for T4 synthesis.</span></li>
+<li><span class="num">5</span><span class="txt"><b>T3:00 timer:</b> TPO is required for T3 synthesis.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Hyper-giant red bow tie:</b> Hyperthyroidism, including Graves' disease, is the indication for thionamides.</span></li>
+<li><span class="num">7</span><span class="txt"><b>"PTU!":</b> PTU (but not methimazole) decreases peripheral conversion of T4 to T3 by inhibiting 5'-deiodinase.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Peripherally converting Timer 4:00 to Timer 3:00:</b> Same: PTU blocks peripheral T4-to-T3 conversion, giving a faster effect.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Stormy clouds:</b> PTU is indicated in thyroid storm because it blocks both synthesis and peripheral conversion.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Scalpel + radioactive beaker:</b> Thionamides are used as pretreatment before thyroidectomy or radioiodine ablation to render the patient euthyroid and reduce risk of thyroid storm.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Big goggles blocking "PTU!" bullet:</b> Thionamides do not treat Graves' ophthalmopathy (exophthalmos); it may even persist or worsen independent of hormone levels.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Rashy splash:</b> Pruritic maculopapular rash is the most common adverse effect; others include urticaria, lupus-like reaction, fever, nausea, vomiting, arthralgias and, for PTU, ANCA vasculitis.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Falling sand granules:</b> Agranulocytosis is the most severe hematologic adverse effect of both drugs; counsel to report fever or sore throat.</span></li>
+<li><span class="num">14</span><span class="txt"><b>"PTU!" breaking liver beaker:</b> PTU causes hepatotoxicity and liver failure; it is rarely used except in first trimester pregnancy and thyroid storm.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Tarantula on the math board:</b> Methimazole is a first-trimester teratogen (aplasia cutis congenita, choanal atresia).</span></li>
+<li><span class="num">16</span><span class="txt"><b>Baby with teeny red bowtie:</b> Both drugs cross the placenta and can cause fetal/neonatal hypothyroidism and goiter (use the lowest effective dose).</span></li>
+<li><span class="num">17</span><span class="txt"><b>Radioactive I-shaped beakers:</b> Radioactive iodine (I-131) is used for thyroid ablation in hyperthyroidism (and thyroid cancer remnant ablation).</span></li>
+<li><span class="num">18</span><span class="txt"><b>Burning through bow tie-shaped bench:</b> I-131 emits beta particles that destroy thyroid parenchyma.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Giant red bowtie near radioactive beakers:</b> Radioiodine is used for Graves' disease and toxic nodular goiter.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Permanent lab bench damage:</b> Radioiodine results in permanent hypothyroidism requiring lifelong levothyroxine.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Throat punch:</b> Radioiodine can cause radiation thyroiditis (neck pain, swelling, tenderness) with transient worsening of hyperthyroidism; prevent with thionamide pretreatment and beta blockers.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Bulging eyes:</b> Radioiodine can worsen ophthalmopathy; prevent with glucocorticoids.</span></li>
+<li><span class="num">23</span><span class="txt"><b>"I died":</b> Iodide solutions (potassium iodide, Lugol) inhibit thyroid hormone release and synthesis (Wolff-Chaikoff effect), are not used alone for chronic therapy (escape phenomenon), can reduce gland vascularity before surgery and protect the thyroid in radiation exposure.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Packing peanuts:</b> Anion inhibitors (perchlorate, pertechnetate, thiocyanate) competitively inhibit NIS and reduce iodide uptake; rarely used.</span></li>
+<li><span class="num">25</span><span class="txt"><b>I-shaped beaker:</b> Competition with iodide at the sodium-iodide symporter reduces iodide entry into follicular cells.</span></li>
+<li><span class="num">26</span><span class="txt"><b>"T-4" + Synthetic explosive bomb:</b> Levothyroxine is synthetic T4, converted to T3 in peripheral tissues.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Untied bowtie:</b> Levothyroxine is indicated for all forms of hypothyroidism (Hashimoto thyroiditis, post-ablation, post-thyroidectomy).</span></li>
+<li><span class="num">28</span><span class="txt"><b>Long tapering fuse:</b> Levothyroxine has a long half-life (about 7 days), so once-daily dosing, taken on an empty stomach.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Bow on head:</b> Monitor TSH regularly (about 6-8 weeks after dose changes) to titrate dose.</span></li>
+<li><span class="num">30</span><span class="txt"><b>Adjustment knobs:</b> Levothyroxine absorption is decreased by iron, calcium, antacids, PPIs, bile acid sequestrants; estrogen and SERMs raise TBG, and pregnancy raises requirement, so dose adjustment is often needed.</span></li>
+<li><span class="num">31</span><span class="txt"><b>Shaking + sweating + too close to synthetic bomb:</b> Over-replacement causes subclinical or overt hyperthyroidism: heat intolerance, diaphoresis, tremor, tachycardia, arrhythmias, and bone loss.</span></li>
+<li><span class="num">32</span><span class="txt"><b>"T-3" synthetic bomb + very short fuse:</b> Liothyronine (synthetic T3) is rarely used because of its short half-life, causing wide swings in hormone levels; reserved for myxedema coma or short-term needs.</span></li>
+<li><span class="num">33</span><span class="txt"><b>Moon-face throwing stars:</b> Glucocorticoids treat Graves' exophthalmopathy and prevent worsening with radioiodine.</span></li>
+<li><span class="num">34</span><span class="txt"><b>Knocking off goggles:</b> Glucocorticoids reduce inflammation of orbital tissue.</span></li>
+<li><span class="num">35</span><span class="txt"><b>Muted beta bugles:</b> Beta blockers reduce symptoms of hyperthyroidism (tachycardia, tremor).</span></li>
+<li><span class="num">36</span><span class="txt"><b>Catfish:</b> Sensitivity to catecholamines is increased in hyperthyroidism due to increased beta-receptor expression.</span></li>
+<li><span class="num">37</span><span class="txt"><b>Shooting at peripheral bomb converter:</b> Propranolol (and other beta blockers at high dose) inhibits peripheral conversion of T4 to T3.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend pictures</summary><img src="sketchy-pharm-img/2d477333798bc266b1bc2600b0587479.webp" alt="Propylthiouracil, Methimazole, Levothyroxine original legend 1" loading="lazy" class="legend-img"><img src="sketchy-pharm-img/7a67193b610b210c28f56c878a00c76f.webp" alt="Propylthiouracil, Methimazole, Levothyroxine original legend 2" loading="lazy" class="legend-img"><img src="sketchy-pharm-img/481db73172a91bc73135ae8b45fa2540.webp" alt="Propylthiouracil, Methimazole, Levothyroxine original legend 3" loading="lazy" class="legend-img"><img src="sketchy-pharm-img/c2a2a71d42cee499fb634fa5c8639b13.webp" alt="Propylthiouracil, Methimazole, Levothyroxine original legend 4" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    
+</main>
+
+<div id="lightbox">
+  <button id="lightbox-close" aria-label="Close full screen view">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = "ers403_sketchypharm_reviewed_v1";
+
+  function loadReviewed() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+  function saveReviewed(obj) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); } catch (e) {}
+  }
+
+  var reviewed = loadReviewed();
+  var navChecks = document.querySelectorAll(".nav-check");
+  var sectionChecks = document.querySelectorAll(".reviewed-check");
+  var total = 8;
+
+  function applyState(id, isReviewed) {
+    var navCheck = document.querySelector('.nav-check[data-target="' + id + '"]');
+    var sectionCheck = document.querySelector('.reviewed-check[data-target="' + id + '"]');
+    var navItem = navCheck ? navCheck.closest(".nav-item") : null;
+    var section = document.getElementById(id);
+    if (navCheck) navCheck.checked = isReviewed;
+    if (sectionCheck) sectionCheck.checked = isReviewed;
+    if (navItem) navItem.classList.toggle("done", isReviewed);
+    if (section) section.classList.toggle("reviewed", isReviewed);
+  }
+
+  function updateProgress() {
+    var count = Object.keys(reviewed).filter(function(k) { return reviewed[k]; }).length;
+    document.getElementById("progress-text").textContent = count + " / " + total + " reviewed";
+    var pct = total ? Math.round((count / total) * 100) : 0;
+    document.getElementById("progress-bar-inner").style.width = pct + "%";
+  }
+
+  function setReviewed(id, val) {
+    reviewed[id] = val;
+    saveReviewed(reviewed);
+    applyState(id, val);
+    updateProgress();
+  }
+
+  Object.keys(reviewed).forEach(function(id) {
+    if (reviewed[id]) applyState(id, true);
+  });
+  updateProgress();
+
+  navChecks.forEach(function(cb) {
+    cb.addEventListener("change", function() {
+      setReviewed(cb.getAttribute("data-target"), cb.checked);
+    });
+  });
+  sectionChecks.forEach(function(cb) {
+    cb.addEventListener("change", function() {
+      setReviewed(cb.getAttribute("data-target"), cb.checked);
+    });
+  });
+
+  // Search / filter
+  var searchBox = document.getElementById("search-box");
+  var navItems = document.querySelectorAll(".nav-item");
+  var sections = document.querySelectorAll(".org-section");
+
+  searchBox.addEventListener("input", function() {
+    var q = searchBox.value.trim().toLowerCase();
+    navItems.forEach(function(li) {
+      var name = li.getAttribute("data-name") || "";
+      li.classList.toggle("hidden", q.length > 0 && name.indexOf(q) === -1);
+    });
+    sections.forEach(function(sec) {
+      var name = sec.getAttribute("data-name") || "";
+      sec.classList.toggle("hidden", q.length > 0 && name.indexOf(q) === -1);
+    });
+  });
+
+  // Sidebar collapse
+  var SIDEBAR_KEY = "ghs402_sketchypharm_sidebar_collapsed_v1";
+  var sidebarToggle = document.getElementById("sidebar-toggle");
+  function setSidebarCollapsed(collapsed) {
+    document.body.classList.toggle("sidebar-collapsed", collapsed);
+    sidebarToggle.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
+    sidebarToggle.title = collapsed ? "Expand sidebar" : "Collapse sidebar";
+    try { localStorage.setItem(SIDEBAR_KEY, collapsed ? "1" : "0"); } catch (e) {}
+  }
+  try {
+    if (localStorage.getItem(SIDEBAR_KEY) === "1") setSidebarCollapsed(true);
+  } catch (e) {}
+  sidebarToggle.addEventListener("click", function() {
+    setSidebarCollapsed(!document.body.classList.contains("sidebar-collapsed"));
+  });
+
+  // Fullscreen image lightbox
+  var lightbox = document.getElementById("lightbox");
+  var lightboxImg = document.getElementById("lightbox-img");
+  var lightboxClose = document.getElementById("lightbox-close");
+
+  function openLightbox(src, alt) {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt || "";
+    lightbox.classList.add("open");
+  }
+  function closeLightbox() {
+    lightbox.classList.remove("open");
+    lightboxImg.src = "";
+  }
+
+  document.querySelectorAll(".fullscreen-btn").forEach(function(btn) {
+    btn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      var img = btn.parentElement.querySelector(".scene-img");
+      if (img) openLightbox(img.src, img.alt);
+    });
+  });
+  document.querySelectorAll(".scene-img").forEach(function(img) {
+    img.addEventListener("click", function() {
+      openLightbox(img.src, img.alt);
+    });
+  });
+  lightboxClose.addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", function(e) {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape" && lightbox.classList.contains("open")) closeLightbox();
+  });
+
+  // Active nav link highlighting on scroll
+  var navLinks = document.querySelectorAll(".nav-link");
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      var link = document.querySelector('.nav-link[href="#' + entry.target.id + '"]');
+      if (!link) return;
+      if (entry.isIntersecting) {
+        navLinks.forEach(function(l) { l.classList.remove("active"); });
+        link.classList.add("active");
+      }
+    });
+  }, { rootMargin: "-10% 0px -70% 0px" });
+  sections.forEach(function(sec) { observer.observe(sec); });
+})();
+</script>
+
+</body>
+</html>

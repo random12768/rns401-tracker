@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RNS401 Sketchy Pharm — MD4</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel2: #1e222b;
+    --border: #2a2f3a;
+    --text: #e7e9ee;
+    --muted: #9aa3b2;
+    --accent: #4f8cff;
+    --accent2: #7fd858;
+    --done-bg: rgba(127, 216, 88, 0.08);
+    --done-border: rgba(127, 216, 88, 0.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+  }
+  #sidebar {
+    width: 300px;
+    flex-shrink: 0;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    transition: width .18s ease, min-width .18s ease;
+  }
+  #sidebar-inner {
+    width: 300px;
+    height: 100%;
+    overflow-y: auto;
+    padding: 16px 12px;
+  }
+  body.sidebar-collapsed #sidebar {
+    width: 0;
+    min-width: 0;
+    border-right: none;
+  }
+  #sidebar-toggle {
+    position: sticky;
+    top: 16px;
+    align-self: flex-start;
+    flex-shrink: 0;
+    width: 22px;
+    height: 44px;
+    margin-left: -1px;
+    margin-top: 16px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+  #sidebar-toggle:hover {
+    color: var(--text);
+    background: var(--panel2);
+  }
+  #sidebar-toggle svg {
+    transition: transform .18s ease;
+  }
+  body.sidebar-collapsed #sidebar-toggle svg {
+    transform: rotate(180deg);
+  }
+  #sidebar h1 {
+    font-size: 15px;
+    margin: 4px 4px 2px;
+    color: var(--text);
+  }
+  #sidebar .sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0 4px 14px;
+  }
+  #progress {
+    margin: 0 4px 14px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  #progress-bar-outer {
+    height: 6px;
+    background: var(--panel2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  #progress-bar-inner {
+    height: 100%;
+    background: var(--accent2);
+    width: 0%;
+    transition: width .2s ease;
+  }
+  #search-box {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--panel2);
+    color: var(--text);
+    font-size: 13px;
+    margin-bottom: 12px;
+    outline: none;
+  }
+  #search-box:focus {
+    border-color: var(--accent);
+  }
+  #nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-item {
+    margin-bottom: 2px;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--text);
+    padding: 7px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.3;
+  }
+  .nav-link:hover {
+    background: var(--panel2);
+  }
+  .nav-link.active {
+    background: rgba(79, 140, 255, 0.15);
+    color: var(--accent);
+  }
+  .nav-num {
+    color: var(--muted);
+    font-size: 11px;
+    min-width: 18px;
+  }
+  .nav-check {
+    accent-color: var(--accent2);
+    cursor: pointer;
+  }
+  .nav-item.done .nav-text {
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+  .nav-item.hidden {
+    display: none;
+  }
+  #main {
+    flex: 1;
+    padding: 24px 20px 80px;
+    max-width: 1500px;
+  }
+  #main-header {
+    margin-bottom: 28px;
+  }
+  #main-header h1 {
+    font-size: 26px;
+    margin: 0 0 6px;
+  }
+  #main-header p {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 640px;
+    line-height: 1.5;
+  }
+  .org-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+    scroll-margin-top: 20px;
+  }
+  .org-section.hidden {
+    display: none;
+  }
+  .org-section.reviewed {
+    background: var(--done-bg);
+    border-color: var(--done-border);
+  }
+  .org-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .org-header h2 {
+    font-size: 18px;
+    margin: 0;
+  }
+  .reviewed-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    user-select: none;
+  }
+  .reviewed-toggle input {
+    accent-color: var(--accent2);
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+  }
+  .org-body {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .org-body:has(.legend-wrap:only-child) {
+    display: block;
+  }
+  .scene-wrap {
+    flex: 1 1 42%;
+    min-width: 0;
+    position: sticky;
+    top: 12px;
+    align-self: flex-start;
+  }
+  .scene-wrap img {
+    width: 100%;
+    display: block;
+    margin: 0;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: zoom-in;
+  }
+  .fullscreen-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: rgba(15, 17, 21, 0.75);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.85;
+    z-index: 2;
+  }
+  .fullscreen-btn:hover {
+    opacity: 1;
+    background: rgba(15, 17, 21, 0.95);
+    border-color: var(--accent);
+  }
+  #lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 7, 10, 0.92);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    cursor: zoom-out;
+  }
+  #lightbox.open {
+    display: flex;
+  }
+  #lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    cursor: default;
+  }
+  #lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--panel2);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 101;
+  }
+  #lightbox-close:hover {
+    background: var(--panel);
+    border-color: var(--accent);
+  }
+  .legend-wrap {
+    flex: 1 1 58%;
+    min-width: 0;
+  }
+  .legend-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .legend-list li {
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.45;
+    padding: 7px 9px;
+    background: var(--panel2);
+    border-radius: 7px;
+  }
+  .legend-list li.empty {
+    color: var(--muted);
+    font-style: italic;
+  }
+  .legend-list .num {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #0b0d11;
+    font-weight: 700;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .legend-list .txt {
+    flex: 1;
+  }
+  @media (max-width: 900px) {
+    .org-body {
+      flex-direction: column;
+    }
+    .scene-wrap {
+      position: relative;
+      top: 0;
+      flex-basis: auto;
+      width: 100%;
+    }
+    .scene-wrap img {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .legend-wrap {
+      flex-basis: auto;
+      width: 100%;
+    }
+  }
+  @media (max-width: 860px) {
+    body { flex-direction: column; }
+    #sidebar {
+      width: 100%;
+      height: auto;
+      position: relative;
+      max-height: 40vh;
+    }
+    #main { padding: 20px 16px 60px; }
+  }
+  .snap { margin: 0 0 14px; padding: 10px 14px; border: 1px solid var(--done-border); background: var(--done-bg); border-radius: 10px; } .snap-hd { font-weight: 700; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--accent2); margin-bottom: 4px; } .snap ul { margin: 0; padding-left: 18px; } .snap li { margin: 3px 0; font-size: 14px; } .pearl { display: block; margin-top: 4px; color: #f5c842; font-size: 0.93em; } .unsure { display: inline-block; margin-left: 8px; padding: 0 7px; border-radius: 999px; font-size: 11px; background: rgba(245,200,66,.18); color: #f5c842; }
+  .orig-legend { margin-top: 12px; } .orig-legend summary { cursor: pointer; color: var(--muted); font-size: 13px; } .legend-img { width: 100%; height: auto; margin-top: 8px; background: #fff; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<aside id="sidebar">
+  <div id="sidebar-inner">
+    <h1>RNS401 — Sketchy Pharm</h1>
+    <p class="sub">MD4 · 11 videos</p>
+    <div id="progress">
+      <span id="progress-text">0 / 11 reviewed</span>
+      <div id="progress-bar-outer"><div id="progress-bar-inner"></div></div>
+    </div>
+    <input type="text" id="search-box" placeholder="Search drugs...">
+    <ul id="nav-list">
+<li class="nav-item" data-name="asthma therapy"><a href="#org-r1" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-r1" onclick="event.stopPropagation()"><span class="nav-num">1</span><span class="nav-text">Asthma Therapy</span></a></li>
+<li class="nav-item" data-name="antihistamines"><a href="#org-r2" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-r2" onclick="event.stopPropagation()"><span class="nav-num">2</span><span class="nav-text">Antihistamines</span></a></li>
+<li class="nav-item" data-name="opioids, naloxone, naltrexone"><a href="#org-r3" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-r3" onclick="event.stopPropagation()"><span class="nav-num">3</span><span class="nav-text">Opioids, Naloxone, Naltrexone</span></a></li>
+<li class="nav-item" data-name="broad-spectrum antiepileptics"><a href="#org-r4" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-r4" onclick="event.stopPropagation()"><span class="nav-num">4</span><span class="nav-text">Broad-Spectrum Antiepileptics</span></a></li>
+<li class="nav-item" data-name="carbamazepine, oxcarbazepine, phenytoin, tiagabine, vigabatrin"><a href="#org-r5" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-r5" onclick="event.stopPropagation()"><span class="nav-num">5</span><span class="nav-text">Carbamazepine, Oxcarbazepine, Phenytoin, Tiagabine, Vigabatrin</span></a></li>
+<li class="nav-item" data-name="ethosuximide"><a href="#org-r6" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-r6" onclick="event.stopPropagation()"><span class="nav-num">6</span><span class="nav-text">Ethosuximide</span></a></li>
+<li class="nav-item" data-name="gabapentin &amp; pregabalin"><a href="#org-r7" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-r7" onclick="event.stopPropagation()"><span class="nav-num">7</span><span class="nav-text">Gabapentin &amp; Pregabalin</span></a></li>
+<li class="nav-item" data-name="iv anesthetics"><a href="#org-r8" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-r8" onclick="event.stopPropagation()"><span class="nav-num">8</span><span class="nav-text">IV Anesthetics</span></a></li>
+<li class="nav-item" data-name="inhaled anesthetics &amp; dantrolene"><a href="#org-r9" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-r9" onclick="event.stopPropagation()"><span class="nav-num">9</span><span class="nav-text">Inhaled Anesthetics &amp; Dantrolene</span></a></li>
+<li class="nav-item" data-name="parkinsonism drugs"><a href="#org-r10" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-r10" onclick="event.stopPropagation()"><span class="nav-num">10</span><span class="nav-text">Parkinsonism Drugs</span></a></li>
+<li class="nav-item" data-name="alzheimer&#x27;s disease medications"><a href="#org-r11" class="nav-link"><input type="checkbox" class="nav-check" data-target="org-r11" onclick="event.stopPropagation()"><span class="nav-num">11</span><span class="nav-text">Alzheimer's Disease Medications</span></a></li>
+    </ul>
+  </div>
+</aside>
+<button id="sidebar-toggle" title="Collapse sidebar" aria-label="Collapse sidebar">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+</button>
+
+<main id="main">
+  <div id="main-header">
+    <h1>RNS401 Sketchy Pharm Pictures</h1>
+    <p style="margin:-4px 0 10px;"><a href="index.html" style="color:#4f8cff;text-decoration:none;font-size:13px;">&larr; Back to Master Tracker</a></p>
+    <p>Every video from the RNS401 Pharm list (MD4): the Sketchy mnemonic scene, an exam snapshot, and a corrected, expanded explanation of every numbered icon. Open the original legend picture under any video to compare. Check off videos as you review them — progress is saved in this browser. Use the search box to jump to a specific drug class. Click the expand icon on an image to view it full screen.</p>
+  </div>
+  
+        <section class="org-section" id="org-r1" data-name="asthma therapy">
+      <div class="org-header">
+        <h2>1. Asthma Therapy</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-r1">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/7478c73f3d0f5a8cef2a417b2ffb0ae3.webp" alt="Asthma Therapy Sketchy scene 1" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: SABA (albuterol, terbutaline), LABA (salmeterol, formoterol), inhaled corticosteroids (beclomethasone, budesonide, fluticasone), LTRA (montelukast, zafirlukast), zileuton, theophylline, cromolyn, omalizumab, ipratropium.</li><li>Mechanisms: beta-2 agonism raises cAMP (bronchodilation); steroids block inflammation; LTRAs block CysLT1; zileuton inhibits 5-lipoxygenase; theophylline inhibits PDE and blocks adenosine; omalizumab binds free IgE; cromolyn stabilizes mast cells.</li><li>Use: SABA for acute relief; ICS is the mainstay controller; add LABA (never alone), LTRA, theophylline or omalizumab; exacerbation: SABA, ipratropium, systemic steroids, epinephrine/terbutaline.</li><li>Adverse effects: SABA - tremor, tachycardia, hypokalemia; ICS - oral candidiasis, dysphonia; zileuton - hepatotoxicity; theophylline - narrow therapeutic index, arrhythmia, seizures; montelukast - neuropsychiatric effects.</li><li>Buzzwords: aspirin-exacerbated respiratory disease (COX blockade shifts to leukotrienes; use LTRA), LTD4 most potent bronchoconstrictor, cromolyn is prophylaxis only, omalizumab for allergic IgE-mediated asthma.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Dilated beta 2 tuba:</b> Selective beta-2 agonists (albuterol, levalbuterol) activate Gs, increase cAMP and relax bronchial smooth muscle, relieving bronchoconstriction (rescue therapy).</span></li>
+<li><span class="num">2</span><span class="txt"><b>ROL call:</b> The "-terol" suffix (albuterol, salmeterol, formoterol, pirbuterol) marks selective beta-2 agonists.</span></li>
+<li><span class="num">3</span><span class="txt"><b>"Do not disturb":</b> Terbutaline is a selective beta-2 agonist that treats bronchoconstriction; it also relaxes the uterus (tocolysis, "do not disturb" the pregnancy) and is a subcutaneous option in severe asthma.<span class="pearl">⭐ Beta-2 agonists cause hypokalemia, tremor and tachycardia.</span></span></li>
+<li><span class="num">4</span><span class="txt"><b>Inhaler:</b> Short-acting beta-2 agonists are delivered by metered-dose inhaler or nebulizer for acute symptom relief (rescue inhaler).</span></li>
+<li><span class="num">5</span><span class="txt"><b>Moon face:</b> Inhaled corticosteroids (beclomethasone, budesonide, fluticasone) are first-line daily maintenance (controller) therapy for persistent asthma.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Moon eclipsing inflammatory sun:</b> Corticosteroids reduce airway inflammation by decreasing cytokine production, eosinophil/inflammatory cell infiltration and mucus, and increase beta-2 receptor expression.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Canadian snow:</b> Represents Candida albicans, a fungal opportunistic pathogen.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Snow cone tongue:</b> Inhaled corticosteroids can cause oropharyngeal candidiasis (thrush) and hoarseness; use a spacer and rinse the mouth after use.</span></li>
+<li><span class="num">9</span><span class="txt"><b>AA league:</b> Arachidonic acid (AA), released from membrane phospholipids by phospholipase A2, is the precursor of both prostanoids (via COX) and leukotrienes (via LOX).</span></li>
+<li><span class="num">10</span><span class="txt"><b>Lacrosse Coach Lox:</b> 5-lipoxygenase (5-LOX) converts arachidonic acid to leukotrienes.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Lacrosse players:</b> Leukotrienes LTB4, LTC4, LTD4 and LTE4 are important inflammatory mediators in asthma and allergy.</span></li>
+<li><span class="num">12</span><span class="txt"><b>B4 attracting first-responders:</b> LTB4 is a chemoattractant for neutrophils and other inflammatory cells.</span></li>
+<li><span class="num">13</span><span class="txt"><b>First responders:</b> Neutrophils, the first inflammatory cells recruited to injury, are chemotactically attracted by LTB4.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Constricted lacrosse stick bronchi:</b> The cysteinyl leukotrienes LTC4, LTD4 and LTE4 cause bronchoconstriction, increased vascular permeability and mucus production.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Lacrosse goal CysLT1:</b> Cysteinyl leukotriene receptor 1 (CysLT1) binds LTD4, the most potent bronchoconstrictor leukotriene.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Monte the broadcaster:</b> "-lukast" suffix: montelukast and zafirlukast are CysLT1 (LTD4) receptor antagonists.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Blocked D4 shot:</b> Leukotriene receptor antagonists are alternative or add-on therapy for mild persistent asthma and especially useful in aspirin-induced asthma and allergic rhinitis; they are used for prophylaxis, not acute attacks.<span class="pearl">⭐ Montelukast has a boxed warning for neuropsychiatric events.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Dilated scarf:</b> Blocking CysLT1 receptors reduces bronchoconstriction, causing bronchodilation and less inflammation.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Open mouth:</b> Leukotriene receptor antagonists are given orally.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Godzilla falling on Coach Lox:</b> Zileuton directly inhibits 5-lipoxygenase, blocking synthesis of all leukotrienes; an alternative therapy for mild persistent asthma.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Liver spot:</b> Zileuton can cause hepatotoxicity (monitor LFTs); it also inhibits CYP1A2 (raising theophylline levels).</span></li>
+<li><span class="num">22</span><span class="txt"><b>ASA umpire grabbing Coach Cox:</b> Aspirin and NSAIDs inhibit COX, shunting arachidonic acid to the LOX pathway and increasing leukotriene production, which causes aspirin-exacerbated respiratory disease (asthma, nasal polyps, aspirin sensitivity).<span class="pearl">⭐ Treat AERD with LTRAs or zileuton and avoid NSAIDs.</span></span></li>
+<li><span class="num">23</span><span class="txt"><b>Salute formation:</b> Salmeterol and formoterol are long-acting beta-2 agonists (LABA) added to ICS for moderate-to-severe persistent asthma.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Long tapering flag:</b> LABAs have a long duration of action (12 hours) due to lipophilic tails that anchor in the cell membrane.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Inhaler:</b> LABAs are used as daily controller inhalers, always combined with an inhaled corticosteroid because LABA monotherapy increases asthma-related death.<span class="pearl">⭐ Never use LABA alone in asthma.</span></span></li>
+<li><span class="num">26</span><span class="txt"><b>Higher moon face:</b> Higher-dose inhaled corticosteroids are used in moderate-to-severe persistent asthma, with potential systemic effects at high doses.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Xanthine energy drink:</b> Methylxanthines (theophylline) are alternative add-on therapy for persistent asthma (and COPD) when other agents fail; rarely used due to toxicity.</span></li>
+<li><span class="num">28</span><span class="txt"><b>"flyin":</b> Theophylline is the prototypical methylxanthine drug (aminophylline is its IV form).</span></li>
+<li><span class="num">29</span><span class="txt"><b>Caffeine:</b> Methylxanthines are chemically related to caffeine and theobromine.</span></li>
+<li><span class="num">30</span><span class="txt"><b>"Don't phoster disinterest":</b> Methylxanthines inhibit phosphodiesterase (preventing cAMP breakdown) and block adenosine receptors.</span></li>
+<li><span class="num">31</span><span class="txt"><b>"Camping":</b> Increased cAMP in airway smooth muscle causes bronchodilation.</span></li>
+<li><span class="num">32</span><span class="txt"><b>Open mouth:</b> Theophylline is administered orally (sustained-release); aminophylline can be given IV.</span></li>
+<li><span class="num">33</span><span class="txt"><b>Shaking kid:</b> Methylxanthines cause CNS stimulation: nervousness, insomnia, tremor, and at toxic levels seizures.</span></li>
+<li><span class="num">34</span><span class="txt"><b>Holding up heart watch:</b> Methylxanthines cause tachycardia and arrhythmias (cardiac stimulation); toxicity includes nausea, vomiting, seizures and ventricular arrhythmias.<span class="pearl">⭐ Narrow therapeutic index requires drug level monitoring.</span></span></li>
+<li><span class="num">35</span><span class="txt"><b>Chrome bumper hitting energy drinks:</b> Theophylline is metabolized by hepatic CYP450 (CYP1A2), so inhibitors (ciprofloxacin, erythromycin, cimetidine, zileuton) raise levels and inducers (smoking, rifampin) lower them.</span></li>
+<li><span class="num">36</span><span class="txt"><b>Bee hive:</b> Mast cell degranulation is key in the pathogenesis of allergic (atopic) asthma, releasing histamine, leukotrienes and prostaglandins.</span></li>
+<li><span class="num">37</span><span class="txt"><b>IgE gun shooting hive:</b> Allergen binding to IgE bound to FcepsilonRI on mast cells causes cross-linking, degranulation and release of mediators (histamine, leukotrienes).</span></li>
+<li><span class="num">38</span><span class="txt"><b>Limousine:</b> Omalizumab, a recombinant humanized anti-IgE monoclonal antibody ("-zumab"), is add-on therapy for moderate-to-severe persistent allergic asthma with elevated IgE.<span class="pearl">⭐ Risk of anaphylaxis.</span></span></li>
+<li><span class="num">39</span><span class="txt"><b>Grabbing end of IgE gun:</b> Omalizumab binds the Fc portion of free IgE, preventing it from binding mast cell FcepsilonRI and thereby preventing mast cell sensitization and degranulation.</span></li>
+<li><span class="num">40</span><span class="txt"><b>Lynn's bee control:</b> Cromolyn sodium is a mast cell stabilizer used for prophylaxis of asthma, allergic rhinitis and allergic conjunctivitis.</span></li>
+<li><span class="num">41</span><span class="txt"><b>Bee sedating smoke:</b> Cromolyn sodium prevents mast cell degranulation and histamine release; it is ineffective for acute attacks and has little systemic toxicity.<span class="pearl">⭐ Prophylaxis only, not for acute asthma.</span></span></li>
+<li><span class="num">42</span><span class="txt"><b>Beta-2 tuba:</b> Inhaled short-acting beta-2 agonists (albuterol), often repeated or nebulized, are first-line for acute severe asthma exacerbation.</span></li>
+<li><span class="num">43</span><span class="txt"><b>Moon face:</b> Systemic corticosteroids (prednisone, methylprednisolone) are given in acute severe exacerbations to reduce airway inflammation and relapse.</span></li>
+<li><span class="num">44</span><span class="txt"><b>Ivy:</b> Steroids are given intravenously (or orally) during an acute severe exacerbation; oral is equally effective if the patient can swallow.</span></li>
+<li><span class="num">45</span><span class="txt"><b>Cat-ipra-pillar:</b> Nebulized ipratropium (a muscarinic antagonist) is added to SABA in severe exacerbations, blocking vagal-mediated bronchoconstriction and reducing hospitalization.</span></li>
+<li><span class="num">46</span><span class="txt"><b>Epic:</b> Subcutaneous or intramuscular epinephrine (or terbutaline) is used in severe, refractory asthma exacerbation when inhaled therapy is not possible or effective.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/82984165997eabf35dc03b7d815be0d1.webp" alt="Asthma Therapy original legend 1" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-r2" data-name="antihistamines">
+      <div class="org-header">
+        <h2>2. Antihistamines</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-r2">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/979213e70ea39aa0264d82cf11a86a23.webp" alt="Antihistamines Sketchy scene 1" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: 1st generation - diphenhydramine, dimenhydrinate, chlorpheniramine, hydroxyzine, meclizine, promethazine, cyproheptadine; 2nd generation - loratadine, cetirizine, fexofenadine.</li><li>Mechanism: competitive (inverse agonist) blockade of H1 receptors (Gq: PLC, IP3, DAG, increased Ca2+); H2 receptors are Gs coupled and mediate gastric acid secretion.</li><li>Indications: allergic rhinitis, urticaria; 1st gen also motion sickness/vertigo, insomnia, pruritus, nausea and acute dystonia from antipsychotics.</li><li>Adverse effects of 1st gen: sedation, anticholinergic effects (dry mouth, urinary retention, constipation, blurred vision, delirium), anti-alpha-1 orthostasis, weight gain; avoid in elderly (Beers) and glaucoma/BPH.</li><li>2nd gen: non-sedating, minimal CNS penetration; fexofenadine avoid with fruit juice; H2 blockers (cimetidine, famotidine) treat GERD, not allergy.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Beehive:</b> Histamine is stored in granules of mast cells and basophils and released on degranulation (e.g. IgE cross-linking in type I hypersensitivity).</span></li>
+<li><span class="num">2</span><span class="txt"><b>"Q" dandelion:</b> H1 receptors are Gq-coupled (PLC activation, IP3/DAG, increased intracellular Ca2+), mediating allergic inflammatory effects.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Honeypot with 2 "S" handles:</b> H2 receptors are Gs-coupled (increased cAMP).</span></li>
+<li><span class="num">4</span><span class="txt"><b>Golden gastric honey:</b> H2 receptor activation on gastric parietal cells stimulates H+/K+ ATPase and gastric acid secretion; H2 blockers (cimetidine, famotidine, ranitidine) reduce acid.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Dripping nose sap:</b> Histamine acting at H1 receptors increases nasal and bronchial mucus secretion (allergic rhinitis, rhinorrhea).</span></li>
+<li><span class="num">6</span><span class="txt"><b>Dripping vascular sap:</b> H1 activation increases vascular permeability (via endothelial cell contraction), causing edema, urticaria/wheals and, with vasodilation, hypotension in anaphylaxis.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Constricted lung branch:</b> H1 activation contracts bronchial smooth muscle, causing bronchoconstriction.<span class="pearl">⭐ Antihistamines do not reliably treat asthma or anaphylaxis (epinephrine does).</span></span></li>
+<li><span class="num">8</span><span class="txt"><b>Brain tree:</b> Histamine is a CNS neurotransmitter (tuberomammillary nucleus) promoting wakefulness; H1 blockade that crosses the blood-brain barrier causes sedation.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Bee swatter:</b> H1 receptor blockers (antihistamines) are competitive antagonists/inverse agonists used for allergic conditions.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Dragonfly fairy:</b> Diphenhydramine and dimenhydrinate are first-generation H1 blockers.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Color fairy:</b> Chlorpheniramine (also brompheniramine) is a first-generation H1 blocker.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Fairy cuiSINE:</b> Hydroxyzine, meclizine and promethazine are first-generation H1 blockers; hydroxyzine is used for pruritus and anxiety, promethazine is an antiemetic (also D2 blocker), meclizine treats vertigo.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Fairy dust and dander:</b> H1 blockers treat type I hypersensitivity: allergic rhinitis, urticaria, allergic conjunctivitis; second-generation agents are preferred as first-line.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Seasick fairy sailors:</b> First-generation H1 blockers (dimenhydrinate, meclizine, diphenhydramine, promethazine) treat motion sickness, vertigo and nausea because they are lipophilic, cross the BBB and block H1/muscarinic receptors in the vestibular system and brainstem.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Sleeping under brain tree:</b> First-generation H1 blockers cause sedation due to CNS H1 blockade; diphenhydramine and doxylamine are used as OTC sleep aids.<span class="pearl">⭐ Sedation worsens with alcohol and other CNS depressants.</span></span></li>
+<li><span class="num">16</span><span class="txt"><b>Antimuscarinic tea party:</b> First-generation H1 blockers block muscarinic receptors causing dry mouth, mydriasis/blurred vision, urinary retention, constipation, tachycardia and delirium; use cautiously in glaucoma and BPH.<span class="pearl">⭐ Atropine-like: "blind as a bat, dry as a bone, red as a beet, mad as a hatter."</span></span></li>
+<li><span class="num">17</span><span class="txt"><b>Falling "extra parking" cone:</b> Diphenhydramine treats acute dystonia (extrapyramidal side effect of antipsychotics) because its anticholinergic effect restores the dopamine-acetylcholine balance (benztropine is the other option).</span></li>
+<li><span class="num">18</span><span class="txt"><b>Cut smiley face cake:</b> Some first-generation H1 blockers (especially cyproheptadine) block serotonin (5-HT2) receptors in the CNS.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Stuffed fairy:</b> Antiserotonergic effects increase appetite and cause weight gain; cyproheptadine is used as an appetite stimulant and for serotonin syndrome and carcinoid symptoms.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Extinguished single alpha candle:</b> First-generation H1 blockers block alpha-1 adrenergic receptors, causing vasodilation.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Fainted fairy:</b> Alpha-1 blockade produces dizziness, orthostatic hypotension and syncope.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Delirious elderly man:</b> First-generation H1 blockers cause confusion, delirium and cognitive impairment in the elderly (central antihistamine and anticholinergic effects); they are on the Beers list.<span class="pearl">⭐ Avoid diphenhydramine in the elderly.</span></span></li>
+<li><span class="num">23</span><span class="txt"><b>Fox, satyr, and rat:</b> Second-generation H1 blockers: loratadine, desloratadine, fexofenadine, cetirizine (levocetirizine); "-adine"/"-izine" are common name cues.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Fox, satyr, and rat stand outside of brain tree:</b> Second-generation H1 blockers are less lipophilic and are substrates of the P-glycoprotein efflux pump at the BBB, so little CNS penetration: non-sedating, with minimal anticholinergic, antiserotonergic and anti-alpha effects.<span class="pearl">⭐ Cetirizine is the most sedating of the second-generation agents.</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/2018549e44ea9514b056df2cc5b23082.webp" alt="Antihistamines original legend 1" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-r3" data-name="opioids, naloxone, naltrexone">
+      <div class="org-header">
+        <h2>3. Opioids, Naloxone, Naltrexone</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-r3">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/0d1295a0b468f7bf5c4ca2ff7bb40b94.webp" alt="Opioids, Naloxone, Naltrexone Sketchy scene" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Opioid receptors (mu, kappa, delta) are Gi/o-coupled: open K+ channels, close presynaptic Ca2+ channels, and reduce neurotransmitter release; mu mediates analgesia, sedation, respiratory depression, miosis, constipation.</li><li>Agents: morphine, fentanyl, tramadol (weak mu agonist plus SNRI action, lowers seizure threshold), loperamide and diphenoxylate (antidiarrheals), codeine and dextromethorphan (antitussives; dextromethorphan is an NMDA antagonist).</li><li>Toxicity: respiratory depression, pinpoint pupils, constipation, biliary colic, sedation; tolerance develops to most effects except miosis and constipation; chronic use can cause hyperalgesia and withdrawal with rhinorrhea, yawning, diarrhea, and anxiety.</li><li>Opioid use disorder treatment: methadone (long-acting full agonist) and buprenorphine (long-acting partial mu agonist); partial agonists can precipitate withdrawal; neonatal abstinence syndrome in exposed infants.</li><li>Antagonists: naloxone reverses acute overdose (short-acting, can precipitate withdrawal); naltrexone maintains abstinence in opioid and alcohol use disorder and is used for weight loss with bupropion.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Utopia:</b> Opiates are drugs derived from or acting like opium (poppy) alkaloids, acting on endogenous opioid receptors (mu, kappa, delta) for analgesia and related effects.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Mu massage:</b> The mu-opioid receptor mediates most clinical and adverse effects: analgesia, euphoria, sedation, respiratory depression, miosis, and constipation.<span class="pearl">⭐ Kappa: spinal analgesia, dysphoria, miosis. Delta: analgesia, antidepressant-like effects.</span><span class="unsure" title="OCR was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">3</span><span class="txt"><b>Open banana barrels:</b> Opioid receptors are Gi/o-coupled; they open K+ channels, causing efflux and hyperpolarization of the postsynaptic neuron.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Closed Calci-Yum ice cream cooler:</b> Opioid receptors close presynaptic voltage-gated Ca2+ channels and decrease cAMP.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Disconnected presynaptic wire:</b> Closing presynaptic voltage-gated Ca2+ channels prevents neurotransmitter release (glutamate, acetylcholine, norepinephrine, serotonin, substance P), which blunts pain transmission.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Fantasy:</b> Fentanyl is a potent, short-acting synthetic opioid analgesic (about 100x morphine), used IV, epidural, and transdermally for severe pain and anesthesia.</span></li>
+<li><span class="num">7</span><span class="txt"><b>More fun:</b> Morphine is the prototype opioid analgesic used for severe pain, including acute MI pain and acute pulmonary edema (reduces preload and anxiety).</span></li>
+<li><span class="num">8</span><span class="txt"><b>Distant tram:</b> Tramadol is a weak mu-opioid receptor agonist used to manage chronic pain.</span></li>
+<li><span class="num">9</span><span class="txt"><b>North-South:</b> Tramadol also inhibits reuptake of norepinephrine and serotonin.<span class="pearl">⭐ Tramadol lowers the seizure threshold and can cause serotonin syndrome, especially with SSRIs, SNRIs, or MAOIs.</span></span></li>
+<li><span class="num">10</span><span class="txt"><b>Colon massage table:</b> Opioid receptors are located in the GI tract; activation delays stool transit and increases fluid absorption, causing constipation.<span class="unsure" title="OCR was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">11</span><span class="txt"><b>Removed muddy slippers:</b> Opioids such as loperamide and diphenoxylate are used as antidiarrheals.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Lop-eared rabbit:</b> Loperamide is an opioid antidiarrheal that acts on gut mu-receptors and has minimal CNS effects because it does not cross the blood-brain barrier well (P-glycoprotein efflux).<span class="pearl">⭐ Loperamide is contraindicated in invasive or bloody diarrhea and C. difficile colitis. Very high doses can cause cardiac toxicity (QT prolongation).</span></span></li>
+<li><span class="num">13</span><span class="txt"><b>Loping back and forth:</b> Loperamide increases colonic phasic segmentation, which slows propulsion and increases stool transit time.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Dolphins:</b> Diphenoxylate is an opioid antidiarrheal, combined with atropine (Lomotil) to discourage abuse.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Barcode:</b> Codeine is an opioid antitussive (cough suppressant) and a weak analgesic.<span class="pearl">⭐ Codeine is a prodrug activated to morphine by CYP2D6; ultrarapid metabolizers are at risk of toxicity (avoid in children and breastfeeding mothers).</span></span></li>
+<li><span class="num">16</span><span class="txt"><b>Orphan:</b> Dextromethorphan is a nonaddictive antitussive that is a synthetic codeine analog.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Tethered nomadic camel:</b> Dextromethorphan antagonizes NMDA receptors; at high doses it can cause dissociative effects and hallucinations.<span class="pearl">⭐ Dextromethorphan with MAOIs or SSRIs can cause serotonin syndrome.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Cerebral towel:</b> Opiates cause CNS depression, including sedation, and can cause euphoria.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Deflated lung vest:</b> Opiates can cause respiratory depression by decreasing the brainstem response to CO2. This is the usual cause of death in overdose.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Constricted hood:</b> Opiates cause miosis (pinpoint pupils) via stimulation of the Edinger-Westphal nucleus.<span class="pearl">⭐ Pinpoint pupils plus respiratory depression and coma is the classic opioid overdose triad. Meperidine is an exception that can cause mydriasis in overdose.</span></span></li>
+<li><span class="num">21</span><span class="txt"><b>Plunger:</b> Opiates cause constipation, because of decreased GI motility and secretions.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Biliary tree:</b> Opiates can cause biliary colic by contracting biliary smooth muscle and the sphincter of Oddi.</span></li>
+<li><span class="num">23</span><span class="txt"><b>All are welcome:</b> Patients can develop tolerance to opiates, including to analgesia, euphoria, sedation, and respiratory depression.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Out of order:</b> Tolerance does not develop to miosis or constipation, so these effects persist with chronic use.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Causing pain:</b> Opioid-induced hyperalgesia (increased pain sensitivity) can occur with chronic opioid use.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Anxious, hot, and moist:</b> Opioid withdrawal causes rhinorrhea, lacrimation, yawning, hyperventilation, hyperthermia, muscle aches, vomiting, diarrhea, and anxiety. It is very unpleasant but rarely life-threatening.<span class="pearl">⭐ Treat with methadone or buprenorphine; clonidine can reduce autonomic symptoms.</span></span></li>
+<li><span class="num">27</span><span class="txt"><b>DONE timer:</b> Methadone is a long-acting opioid (full mu agonist) used to attenuate withdrawal symptoms and for maintenance therapy of opioid use disorder; it can also treat chronic pain.<span class="pearl">⭐ Methadone can prolong the QT interval and is also an NMDA antagonist.</span></span></li>
+<li><span class="num">28</span><span class="txt"><b>Long tapering flag:</b> Methadone and buprenorphine have long half-lives, which makes them useful in opioid detoxification and maintenance with less euphoria and fewer withdrawal swings.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Blueprint:</b> Buprenorphine is a long-acting partial mu-opioid agonist used to attenuate withdrawal symptoms and for maintenance treatment of opioid use disorder.<span class="pearl">⭐ Often given sublingually combined with naloxone to deter IV misuse. Has a ceiling effect on respiratory depression, so it is safer in overdose than full agonists.</span></span></li>
+<li><span class="num">30</span><span class="txt"><b>Irritable, moist, tachypneic baby:</b> Neonatal abstinence syndrome occurs in infants of opioid-dependent mothers: diarrhea, sweating, sneezing, crying, tachypnea, and irritability.</span></li>
+<li><span class="num">31</span><span class="txt"><b>Partial massage:</b> Partial mu-opioid agonists (buprenorphine, and by the scene nalbuphine and butorphanol) activate the receptor with lower intrinsic activity than full agonists.<span class="pearl">⭐ Nalbuphine and butorphanol are kappa agonists with mu partial agonist or antagonist activity.</span><span class="unsure" title="OCR was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">32</span><span class="txt"><b>Bluefin:</b> The 'bu-phin' stem marks the partial opioid agonists, such as buprenorphine, nalbuphine, and butorphanol.</span></li>
+<li><span class="num">33</span><span class="txt"><b>Falling into the withdraw spa:</b> Partial mu-opioid agonists can precipitate withdrawal in patients dependent on full agonists, because they displace the full agonist while providing less receptor activation.</span></li>
+<li><span class="num">34</span><span class="txt"><b>No lax zone:</b> Naloxone is a mu-opioid receptor antagonist (competitive) used to reverse acute opioid toxicity. It can precipitate withdrawal in dependent patients.<span class="pearl">⭐ Naloxone has a short half-life (1-2 hours) so repeat dosing or an infusion may be needed after long-acting opioids like methadone.</span></span></li>
+<li><span class="num">35</span><span class="txt"><b>No tricks zone:</b> Naltrexone is a long-acting opioid receptor antagonist that helps maintain abstinence in patients with opioid (heroin) use disorder, given orally or as a monthly injection.<span class="pearl">⭐ Patients must be opioid-free before starting or it precipitates withdrawal. Monitor liver function.</span></span></li>
+<li><span class="num">36</span><span class="txt"><b>Tempting alcohol:</b> Naltrexone (mu-opioid antagonist) helps reduce cravings for alcohol and nicotine.<span class="pearl">⭐ Naltrexone is first-line for alcohol use disorder, in contrast to disulfiram or acamprosate.</span></span></li>
+<li><span class="num">37</span><span class="txt"><b>Getting fit:</b> Naltrexone can help with weight loss, as when combined with bupropion.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/3a6f2f54eb64bd490388a9512c2f6234.webp" alt="Opioids, Naloxone, Naltrexone original legend" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-r4" data-name="broad-spectrum antiepileptics">
+      <div class="org-header">
+        <h2>4. Broad-Spectrum Antiepileptics</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-r4">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/6f1ca979cd7c60e299f2f7c7699e00da.webp" alt="Broad-Spectrum Antiepileptics Sketchy scene 1" loading="lazy" class="scene-img"><img src="sketchy-pharm-img/b7fff5c993447906b13eee2910b180bf.webp" alt="Broad-Spectrum Antiepileptics Sketchy scene 2" loading="lazy" class="scene-img" style="margin-top:10px"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: valproate, topiramate, lamotrigine, levetiracetam, brivaracetam.</li><li>Mechanism: valproate - Na+ and T-type Ca2+ blockade, raises GABA; topiramate - Na+ block, GABA-A potentiation, AMPA block; lamotrigine - Na+ block; levetiracetam/brivaracetam - SV2A.</li><li>Indications: focal and generalized seizures; valproate JME and bipolar; topiramate migraine prophylaxis; lamotrigine bipolar maintenance and Lennox-Gastaut.</li><li>Adverse: valproate hepatotoxicity, pancreatitis, tremor, weight gain, neural tube defects; topiramate kidney stones, glaucoma, cognitive slowing, weight loss; lamotrigine SJS; levetiracetam irritability/depression.</li><li>Buzzwords: valproate = hyperammonemia and spina bifida; topiramate = 'Dopamax', stones, glaucoma; lamotrigine rash (slow titration); levetiracetam binds SV2A.</li></ul></div>
+          <ol class="legend-list"><li class="part-hd" style="list-style:none;margin:10px 0 2px;font-weight:700;color:var(--accent2)">Part 1 · Broad-Spectrum Antiepileptics (picture 1)</li>
+<li><span class="num">1</span><span class="txt"><b>One-arm shaking:</b> Focal seizures originate in one hemisphere and are either aware (previously 'simple') or impaired awareness ('complex'); a patient who is aware but cannot talk or respond has a focal aware seizure.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Shaking structure:</b> Generalized seizures involve both hemispheres: motor (tonic-clonic: stiffening then jerking) or non-motor (absence: staring, brief unresponsiveness, automatisms).</span></li>
+<li><span class="num">3</span><span class="txt"><b>Rainbow goggles:</b> Broad-spectrum antiepileptics (valproate, topiramate, lamotrigine, levetiracetam) treat both focal and generalized seizures.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Shaking Man FestiVAL:</b> Valproate (valproic acid) is a broad-spectrum antiepileptic used for focal and generalized seizures and bipolar disorder; the drug of choice for juvenile myoclonic epilepsy (except in women of childbearing potential).</span></li>
+<li><span class="num">5</span><span class="txt"><b>Sold Out peanuts and Calci-Yum ice cream:</b> Valproate blocks voltage-gated Na+ channels (increases inactivation) and T-type Ca2+ channels, preventing repetitive neuronal firing.</span></li>
+<li><span class="num">6</span><span class="txt"><b>CAB-A:</b> Valproate increases GABA levels in the CNS by inhibiting GABA transaminase, stimulating glutamic acid decarboxylase and enhancing GABA release.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Nauseated reveller:</b> Valproate commonly causes GI distress (nausea, vomiting); taking it with food helps.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Heavy box:</b> Valproate increases appetite and causes weight gain.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Tremoring antenna:</b> Valproate can cause tremor (dose-related).</span></li>
+<li><span class="num">10</span><span class="txt"><b>Liver fanny pack + ammonia cleaner:</b> Valproate can cause hyperammonemia (even with normal LFTs) and rare fatal hepatotoxicity (especially in young children and with metabolic disease); baseline and periodic LFTs, although monitoring does not reliably predict liver failure.<span class="pearl">⭐ Valproate: hepatotoxicity, pancreatitis, teratogenicity (neural tube defects), hyperammonemia.</span></span></li>
+<li><span class="num">11</span><span class="txt"><b>Squeezed pancreas sponge:</b> Valproate can cause pancreatitis (rare, idiosyncratic, not dose- or duration-dependent).</span></li>
+<li><span class="num">12</span><span class="txt"><b>Tubular tarantula:</b> Valproate is highly teratogenic: neural tube defects (spina bifida), orofacial clefts, cardiac, urogenital and limb defects, and lower IQ; avoid in pregnancy; give folic acid.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Toupee:</b> Topiramate is a broad-spectrum antiepileptic used for focal and generalized seizures, Lennox-Gastaut syndrome, and migraine prophylaxis (also used with phentermine for weight loss; for absence seizures it is not first-line).</span></li>
+<li><span class="num">14</span><span class="txt"><b>Locked peanut boxes:</b> Topiramate blocks voltage-gated Na+ channels, stabilizing neuronal membranes; it also blocks AMPA/kainate (glutamate) receptors.</span></li>
+<li><span class="num">15</span><span class="txt"><b>CAB-A pedicab passenger:</b> Topiramate potentiates GABA-A activity by binding a non-benzodiazepine site.<span class="pearl">⭐ Topiramate: weak carbonic anhydrase inhibitor, causing metabolic acidosis and kidney stones.</span></span></li>
+<li><span class="num">16</span><span class="txt"><b>Sleeping driver:</b> Topiramate can cause somnolence, fatigue, confusion, cognitive slowing and word-finding difficulty ('Dopamax').</span></li>
+<li><span class="num">17</span><span class="txt"><b>Skinny driver:</b> Topiramate causes weight loss and anorexia; it is combined with phentermine for obesity (Qsymia).</span></li>
+<li><span class="num">18</span><span class="txt"><b>Kidney-shaped wheels:</b> Topiramate can cause nephrolithiasis (calcium phosphate stones, due to carbonic anhydrase inhibition and urinary alkalinization); advise hydration.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Bulging eye balloon:</b> Topiramate can cause acute angle-closure glaucoma (usually in the first month); stop immediately if visual blurring or eye pain occurs.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Llama:</b> Lamotrigine is a broad-spectrum antiepileptic used for focal and generalized seizures, Lennox-Gastaut syndrome, bipolar disorder (maintenance); absence seizures (less effective than valproate or ethosuximide).</span></li>
+<li><span class="num">21</span><span class="txt"><b>Locked peanut box:</b> Lamotrigine blocks voltage-gated Na+ channels, also reducing glutamate release.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Cross-eyed:</b> Lamotrigine can cause diplopia, blurred vision, dizziness, and ataxia.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Sloughed off red mask:</b> Lamotrigine can cause Stevens-Johnson syndrome/TEN (higher risk with rapid titration, valproate co-administration, and in children) as well as benign rash.<span class="pearl">⭐ Valproate doubles lamotrigine levels; titrate slowly and reduce dose.</span></span></li>
+<li><span class="num">24</span><span class="txt"><b>Elevator:</b> Levetiracetam is a broad-spectrum antiepileptic for focal, myoclonic and generalized tonic-clonic seizures; it binds synaptic vesicle glycoprotein 2A (SV2A), modulating neurotransmitter release.<span class="pearl">⭐ Levetiracetam has minimal drug interactions (renally cleared, no CYP induction).</span></span></li>
+<li><span class="num">25</span><span class="txt"><b>Brave:</b> Brivaracetam is an SV2A ligand used for focal-onset seizures (a more limited indication than levetiracetam).</span></li>
+<li><span class="num">26</span><span class="txt"><b>Dizzy, nauseated rider:</b> Levetiracetam and brivaracetam can cause dizziness, somnolence and nausea.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Falling brain hat:</b> Levetiracetam (and less so brivaracetam) can cause neuropsychiatric effects: irritability, depression, hostility, aggression, agitation; higher risk with psychiatric history.</span></li>
+<li><span class="num">28</span><span class="txt"><b>P450 shoulder plates:</b> Brivaracetam serum concentration is decreased with CYP450 inducers (phenytoin, carbamazepine, phenobarbital); it is also partly metabolized by CYP2C19.</span></li>
+<li class="part-hd" style="list-style:none;margin:10px 0 2px;font-weight:700;color:var(--accent2)">Part 2 · Valproate, Topiramate, Lamotrigine, Levetiracetam (picture 2)</li>
+<li><span class="num">1</span><span class="txt"><b>Seize the land:</b> Broad-spectrum antiepileptic agents include valproate, topiramate, lamotrigine, levetiracetam.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Focal arm shaking:</b> Broad-spectrum agents treat focal seizures.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Generalized body shaking:</b> Broad-spectrum agents treat generalized seizures (tonic-clonic, absence, myoclonic).</span></li>
+<li><span class="num">4</span><span class="txt"><b>Juvenile shaking arms:</b> Valproate treats juvenile myoclonic epilepsy (generalized, with myoclonic jerks, tonic-clonic and absence seizures).</span></li>
+<li><span class="num">5</span><span class="txt"><b>Welcome festiVAL:</b> Valproate is a broad-spectrum antiepileptic drug.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Inactivated baskets of salty peanuts:</b> Valproate increases Na+ channel inactivation (also blocks T-type Ca2+ channels).</span></li>
+<li><span class="num">7</span><span class="txt"><b>Elevated cab:</b> Valproate raises GABA levels in the CNS (inhibits GABA transaminase).</span></li>
+<li><span class="num">8</span><span class="txt"><b>Nauseated:</b> Valproate can cause GI distress (nausea, vomiting).</span></li>
+<li><span class="num">9</span><span class="txt"><b>Fat belly:</b> Valproate causes increased appetite and weight gain.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Trembling weapon:</b> Valproate can cause tremor.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Liver spot:</b> Valproate can cause fatal hepatotoxicity and hyperammonemia.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Squeezed pancreas sponge:</b> Valproate can cause pancreatitis.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Tarantula:</b> Valproate is teratogenic.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Tubes:</b> Valproate in pregnancy causes neural tube defects (spina bifida) and other malformations.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Toupee:</b> Topiramate is a broad-spectrum antiepileptic drug.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Inactivated baskets of salty peanuts:</b> Topiramate increases Na+ channel inactivation.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Binding to cab driver:</b> Topiramate allosterically potentiates the GABA-A receptor.</span></li>
+<li><span class="num">18</span><span class="txt"><b>Fatigued soldiers:</b> Topiramate can cause somnolence and fatigue.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Scratching head:</b> Topiramate can cause confusion and cognitive slowing.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Thin arm:</b> Topiramate can cause weight loss.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Kidney-shaped wheel and cannonballs:</b> Topiramate can cause kidney stones (urolithiasis).</span></li>
+<li><span class="num">22</span><span class="txt"><b>High pressure eye kettle:</b> Topiramate can cause acute angle-closure glaucoma.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Llama:</b> Lamotrigine is a broad-spectrum antiepileptic drug.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Inactivated baskets of salty peanuts:</b> Lamotrigine increases Na+ channel inactivation.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Sloughed off red mask:</b> Lamotrigine can cause SJS/TEN.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Cross-eyed:</b> Lamotrigine can cause diplopia.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Elevator:</b> Levetiracetam is a broad-spectrum antiepileptic drug (SV2A).</span></li>
+<li><span class="num">28</span><span class="txt"><b>Sleeping on the job:</b> Levetiracetam can cause somnolence.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Chrome CYP450 cannon:</b> Many antiepileptics interact via hepatic cytochrome P450 (phenytoin, carbamazepine, phenobarbital are inducers; valproate is an inhibitor).<span class="pearl">⭐ Levetiracetam and topiramate (at low dose) have fewer interactions.</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend pictures</summary><img src="sketchy-pharm-img/fb16b341c3854179a1d55f0c48ab7a2e.webp" alt="Broad-Spectrum Antiepileptics original legend 1" loading="lazy" class="legend-img"><img src="sketchy-pharm-img/5a77b3aaabbd50dcbbed001dcd4caaa3.webp" alt="Broad-Spectrum Antiepileptics original legend 2" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-r5" data-name="carbamazepine, oxcarbazepine, phenytoin, tiagabine, vigabatrin">
+      <div class="org-header">
+        <h2>5. Carbamazepine, Oxcarbazepine, Phenytoin, Tiagabine, Vigabatrin</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-r5">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/c235cd6ff981d399c7b89e90c3126aeb.webp" alt="Carbamazepine, Oxcarbazepine, Phenytoin, Tiagabine, Vigabatrin Sketchy scene 1" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: carbamazepine, oxcarbazepine, phenytoin (fosphenytoin IV), tiagabine, vigabatrin; benzodiazepines and phenobarbital for status epilepticus.</li><li>Mechanism: carbamazepine, oxcarbazepine and phenytoin prolong Na+ channel inactivation; tiagabine blocks GABA reuptake (GAT-1); vigabatrin irreversibly inhibits GABA transaminase (raises GABA).</li><li>Uses: focal and generalized tonic-clonic seizures; carbamazepine is first line for trigeminal neuralgia; status epilepticus: IV benzodiazepine first, phenytoin for maintenance, phenobarbital if refractory.</li><li>Adverse effects: carbamazepine - agranulocytosis, SIADH, DRESS, SJS/TEN (screen HLA-B*1502), teratogenic, CYP450 inducer (lowers hormonal contraceptive levels); phenytoin - gingival hyperplasia, hirsutism, folate deficiency, low bone density, drug-induced lupus, cleft palate; both - ataxia and diplopia.</li><li>Buzzwords: oxcarbazepine = carbamazepine with fewer side effects and interactions; fetal hydantoin syndrome; vigabatrin can cause permanent visual field loss.</li></ul></div>
+          <ol class="legend-list">
+<li><span class="num">1</span><span class="txt"><b>Seize the Night:</b> Narrow-spectrum antiepileptics include carbamazepine, oxcarbazepine, phenytoin, phenobarbital.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Focal arm shaking:</b> Carbamazepine, oxcarbazepine and phenytoin treat focal seizures and generalized tonic-clonic seizures.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Classic car:</b> Carbamazepine is a narrow-spectrum antiepileptic.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Inactivated salty sodium chip bags:</b> Carbamazepine increases voltage- and use-dependent Na+ channel inactivation.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Three gems:</b> Carbamazepine is first-line for trigeminal neuralgia; oxcarbazepine is sometimes preferred because of fewer adverse effects and drug interactions.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Unbalanced stack:</b> Carbamazepine can cause ataxia and dizziness, particularly at therapy start or dose increases; controlled-release tablets reduce peak-related effects.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Misaligned headlights:</b> Carbamazepine can cause diplopia.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Inappropriate wet head:</b> Carbamazepine can cause SIADH and hyponatremia.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Sand timer:</b> Carbamazepine can cause agranulocytosis/aplastic anemia: check CBC before and during treatment; stop for significant marrow suppression; contraindicated with bone marrow depression history.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Activated chrome bumper:</b> Carbamazepine induces CYP450 enzymes (CYP2B6, CYP2C9, CYP3A4/5), decreasing serum levels of substrates (and its own).</span></li>
+<li><span class="num">11</span><span class="txt"><b>Eosinophilic dress:</b> Carbamazepine can cause DRESS: stop the drug, treat with corticosteroids, and do not restart.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Tarantula:</b> Carbamazepine is teratogenic; avoid in pregnancy when possible.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Neural exhaust tube:</b> Carbamazepine in pregnancy can cause neural tube defects (spina bifida).</span></li>
+<li><span class="num">14</span><span class="txt"><b>Contraceptive pack wheel:</b> Carbamazepine lowers estrogen and progestin levels in hormonal contraceptives via CYP3A4 induction; use a copper IUD, levonorgestrel IUD or depot medroxyprogesterone.<span class="pearl">⭐ Enzyme-inducing AEDs (carbamazepine, phenytoin, phenobarbital, topiramate at high dose) reduce OCP efficacy.</span></span></li>
+<li><span class="num">15</span><span class="txt"><b>Sloughed off red mask:</b> Carbamazepine can cause SJS/TEN; HLA-B*1502 raises risk, so test at-risk patients (Asian ancestry) and avoid carbamazepine if positive.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Ox car:</b> Oxcarbazepine is a narrow-spectrum antiepileptic for focal seizures (monotherapy or adjunct) in adults and children; it is a prodrug of the active 10-monohydroxy metabolite.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Inactivated salty sodium chip bags:</b> Oxcarbazepine blocks voltage-dependent Na+ channels (increases inactivation).</span></li>
+<li><span class="num">18</span><span class="txt"><b>Helmet + tinted windows:</b> Oxcarbazepine has fewer CNS side effects and drug interactions than carbamazepine (less CYP induction, no autoinduction); it can still cause SJS, DRESS, blood dyscrasias, and hyponatremia.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Tarantula jacket:</b> Oxcarbazepine is likely teratogenic (limited data).</span></li>
+<li><span class="num">20</span><span class="txt"><b>Classic tow truck:</b> Phenytoin is a narrow-spectrum antiepileptic for simple and complex focal seizures and generalized tonic-clonic seizures.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Inactivated salty sodium chip bags:</b> Phenytoin increases voltage- and use-dependent Na+ channel inactivation.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Unbalanced stack:</b> Phenytoin can cause ataxia and nystagmus.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Misaligned headlights:</b> Phenytoin can cause diplopia.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Expanding gum:</b> Phenytoin can cause gingival hyperplasia.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Big bushy beard:</b> Phenytoin can cause hirsutism.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Lupus wolf:</b> Phenytoin, carbamazepine and oxcarbazepine can cause drug-induced lupus.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Eosinophilic dress:</b> Phenytoin can cause DRESS syndrome.</span></li>
+<li><span class="num">28</span><span class="txt"><b>Sloughed off red mask:</b> Phenytoin can cause SJS/TEN.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Tarantula:</b> Phenytoin is teratogenic; use in pregnancy can cause cleft palate (fetal hydantoin syndrome).</span></li>
+<li><span class="num">30</span><span class="txt"><b>Activated chrome bumper:</b> Phenytoin induces CYP450 (CYP1A2, CYP2B6, CYP2C9, CYP3A4/5), lowering substrate levels.</span></li>
+<li><span class="num">31</span><span class="txt"><b>Contraceptive pack hubcap:</b> Phenytoin lowers hormonal contraceptive levels by CYP3A4 induction; use a copper IUD, levonorgestrel IUD or depot medroxyprogesterone.</span></li>
+<li><span class="num">32</span><span class="txt"><b>Fractured osteoporotic axle:</b> Phenytoin decreases bone density; monitor BMD and supplement vitamin D and calcium during long-term therapy.</span></li>
+<li><span class="num">33</span><span class="txt"><b>'Status':</b> Status epilepticus is continuous seizure activity (generally over 5 minutes) or repeated seizures without recovery between them.</span></li>
+<li><span class="num">34</span><span class="txt"><b>Ben's Diner:</b> IV benzodiazepines (lorazepam, diazepam) are first-line for status epilepticus; IV phenytoin/fosphenytoin is used for maintenance.</span></li>
+<li><span class="num">35</span><span class="txt"><b>Barbershop:</b> IV phenobarbital can be used in refractory seizures.</span></li>
+<li><span class="num">36</span><span class="txt"><b>Raised CAB-A:</b> Vigabatrin and tiagabine are narrow-spectrum antiepileptics that increase GABA.</span></li>
+<li><span class="num">37</span><span class="txt"><b>V cab transmission:</b> Vigabatrin irreversibly inhibits GABA transaminase, decreasing GABA degradation.</span></li>
+<li><span class="num">38</span><span class="txt"><b>Tied up cab driver:</b> Tiagabine inhibits GABA reuptake (GAT-1).</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/d904526cd2d5498cf564fcc53f51d53a.webp" alt="Carbamazepine, Oxcarbazepine, Phenytoin, Tiagabine, Vigabatrin original legend 1" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-r6" data-name="ethosuximide">
+      <div class="org-header">
+        <h2>6. Ethosuximide</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-r6">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/6b9a3ab74e246987006b6add4dff2924.webp" alt="Ethosuximide Sketchy scene 1" loading="lazy" class="scene-img"><img src="sketchy-pharm-img/fc37860088c23736a0b64d09c1cf6c6b.webp" alt="Ethosuximide Sketchy scene 2" loading="lazy" class="scene-img" style="margin-top:10px"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drug: ethosuximide (narrow-spectrum); alternatives for absence - valproate, lamotrigine.</li><li>Mechanism: blocks T-type Ca2+ channels in thalamic neurons, suppressing 3 Hz spike-and-wave.</li><li>Indication: absence seizures (first-line if no other seizure type); ACTH for infantile spasms; valproate for JME; benzodiazepines for febrile status.</li><li>Adverse: GI distress, lethargy, headache; rarely SJS and blood dyscrasias.</li><li>Buzzwords: 3 Hz spike-and-wave, hyperventilation trigger; hypsarrhythmia = West syndrome; slow spike-wave = Lennox-Gastaut; 'Ethosuximide Blocks Thalamic T-type Ca channels'.</li></ul></div>
+          <ol class="legend-list"><li class="part-hd" style="list-style:none;margin:10px 0 2px;font-weight:700;color:var(--accent2)">Part 1 · Ethosuximide (picture 1)</li>
+<li><span class="num">1</span><span class="txt"><b>'Seize the day':</b> Ethosuximide is an antiepileptic used for absence seizures.</span></li>
+<li><span class="num">2</span><span class="txt"><b>'Absences':</b> Absence seizures are generalized non-motor seizures with brief loss of awareness without postictal confusion.</span></li>
+<li><span class="num">3</span><span class="txt"><b>Inattentive student:</b> Absence seizures cause sudden brief lapses in awareness with staring or blinking, sometimes with automatisms or mild clonic jerks; common in school-aged children, triggered by hyperventilation.</span></li>
+<li><span class="num">4</span><span class="txt"><b>'3 spikes':</b> Absence seizures show 3 Hz generalized spike-and-wave complexes on EEG.</span></li>
+<li><span class="num">5</span><span class="txt"><b>'Ethos':</b> Ethosuximide is a narrow-spectrum antiepileptic and first-line therapy for absence seizures (when there are no other generalized seizure types).<span class="pearl">⭐ Ethosuximide is only effective in absence seizures; valproate covers absence plus tonic-clonic.</span></span></li>
+<li><span class="num">6</span><span class="txt"><b>Closed Calci-Yum chocolate:</b> Ethosuximide blocks voltage-gated Ca2+ channels.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Closed T-thermos:</b> Ethosuximide specifically blocks T-type Ca2+ channels in thalamic neurons, dampening thalamocortical oscillation that generates spike-and-wave discharges.<span class="pearl">⭐ Ethosuximide Blocks Thalamic T-type Ca2+ channels.</span></span></li>
+<li><span class="num">8</span><span class="txt"><b>Punched in stomach:</b> Ethosuximide commonly causes GI distress (abdominal pain, nausea, vomiting) and anorexia.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Sleeping student:</b> Ethosuximide can cause lethargy, fatigue, dizziness, headache; rare SJS and hematologic effects.</span></li>
+<li><span class="num">10</span><span class="txt"><b>FestiVAL banner:</b> Valproate is effective against absence seizures and is preferred when absence coexists with tonic-clonic seizures.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Llama:</b> Lamotrigine is also effective against absence seizures (less effective than ethosuximide or valproate).</span></li>
+<li class="part-hd" style="list-style:none;margin:10px 0 2px;font-weight:700;color:var(--accent2)">Part 2 · Pediatric Seizure DDx (picture 2)</li>
+<li><span class="num">1</span><span class="txt"><b>Shaken-up sign on fire:</b> A febrile seizure occurs with fever in a child (6 months to 5 years) with no CNS infection, other cause, or prior afebrile seizure; the most common seizure of childhood, triggered by rapid temperature rise.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Single car on ascending-descending I-15:</b> Simple febrile seizure: generalized tonic-clonic, under 15 minutes, once in 24 hours, with return to baseline; no treatment or workup is needed in a well-appearing child.<span class="pearl">⭐ Reassure parents; antipyretics do not prevent recurrence.</span></span></li>
+<li><span class="num">3</span><span class="txt"><b>Multiple cars on ascending I-20:</b> Complex febrile seizure: focal, longer than 15 minutes, or recurring within 24 hours (or incomplete recovery); consider EEG/MRI if focal findings, evaluate for CNS infection when indicated.</span></li>
+<li><span class="num">4</span><span class="txt"><b>'Traffic Status: Unending':</b> Febrile status epilepticus: a prolonged febrile seizure (now commonly defined as lasting more than 5 minutes, classically over 30 minutes) or repeated seizures without return to baseline; treat urgently with benzodiazepines (lorazepam) then second-line antiepileptics.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Zoned-out person:</b> Absence seizure: brief (about 10-20 s) generalized seizure with sudden behavioral arrest, blank stare and unresponsiveness, immediate return to baseline with no postictal state; often mistaken for daydreaming or inattention.<span class="pearl">⭐ Hyperventilation provokes an absence seizure.</span></span></li>
+<li><span class="num">6</span><span class="txt"><b>Spiky swordfish nose + wave:</b> Absence seizures show a 3 Hz generalized spike-and-wave EEG pattern, bilaterally symmetric, ictal and provoked by hyperventilation.</span></li>
+<li><span class="num">7</span><span class="txt"><b>'Ethos':</b> First-line treatment of absence seizures is ethosuximide.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Baby:</b> Infantile spasms are brief flexion (or extension) spasms of trunk and limbs in clusters, usually in infants under 1 year, often on waking.</span></li>
+<li><span class="num">9</span><span class="txt"><b>'West LA Farmers Market':</b> West syndrome: triad of infantile spasms, developmental delay/regression, and hypsarrhythmia (chaotic high-voltage EEG).</span></li>
+<li><span class="num">10</span><span class="txt"><b>Tubers market stand:</b> MRI is required to look for a structural cause, especially tuberous sclerosis (cortical tubers) in infantile spasms.</span></li>
+<li><span class="num">11</span><span class="txt"><b>'ACTHion':</b> First-line treatment of infantile spasms is ACTH (or oral prednisolone) in most cases.<span class="pearl">⭐ Infantile spasms: ACTH/steroids first, vigabatrin if tuberous sclerosis.</span></span></li>
+<li><span class="num">12</span><span class="txt"><b>V cab:</b> If infantile spasms are due to tuberous sclerosis, vigabatrin (irreversible GABA transaminase inhibitor) is first-line (watch for retinal toxicity).</span></li>
+<li><span class="num">13</span><span class="txt"><b>'Len's Gas and Tow':</b> Lennox-Gastaut syndrome is a severe childhood-onset generalized epilepsy (name cue for the triad).</span></li>
+<li><span class="num">14</span><span class="txt"><b>'Two gas options':</b> Lennox-Gastaut: multiple seizure types (tonic, atonic, atypical absence), usually more than two types.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Spike, wavy gas line:</b> Lennox-Gastaut: slow (under 2.5 Hz) spike-and-wave EEG pattern.</span></li>
+<li><span class="num">16</span><span class="txt"><b>'Expect delays':</b> Lennox-Gastaut: developmental delay/intellectual disability; difficult to treat (valproate, lamotrigine, rufinamide, clobazam, felbamate, cannabidiol).<span class="pearl">⭐ Lennox-Gastaut triad: multiple seizure types, slow spike-wave, intellectual disability.</span></span></li>
+<li><span class="num">17</span><span class="txt"><b>Juvenile party:</b> Juvenile myoclonic epilepsy (JME) presents in adolescents with morning myoclonic jerks (also tonic-clonic and absence); triggers are alcohol and sleep deprivation.</span></li>
+<li><span class="num">18</span><span class="txt"><b>Spiky hair:</b> JME EEG shows 4-6 Hz generalized spikes and polyspikes.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Strobe lights:</b> JME is often photosensitive, provoked by photic stimulation on EEG.</span></li>
+<li><span class="num">20</span><span class="txt"><b>'Festi-VALley':</b> Valproate is first-line for JME and covers other seizure types (myoclonic, tonic-clonic, absence).<span class="pearl">⭐ In women of childbearing potential, levetiracetam or lamotrigine are often preferred because valproate is teratogenic.</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend pictures</summary><img src="sketchy-pharm-img/1f723509511a29b1dc662ccf77ec5146.webp" alt="Ethosuximide original legend 1" loading="lazy" class="legend-img"><img src="sketchy-pharm-img/fbddd3698c6602aeaeb07a799af3ac33.webp" alt="Ethosuximide original legend 2" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-r7" data-name="gabapentin &amp; pregabalin">
+      <div class="org-header">
+        <h2>7. Gabapentin &amp; Pregabalin</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-r7">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/55837fa959d008c56c198c8f14318e79.webp" alt="Gabapentin &amp; Pregabalin Sketchy scene 1" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: gabapentin and pregabalin (narrow-spectrum antiepileptics).</li><li>Mechanism: bind the alpha-2-delta subunit of voltage-gated Ca2+ channels, lowering Ca2+ influx and neurotransmitter release.</li><li>Uses: focal seizures (with or without secondary generalization); chronic neuropathic pain - painful diabetic neuropathy, postherpetic neuralgia (after varicella-zoster reactivation), fibromyalgia.</li><li>Adverse effects: CNS effects - sedation, dizziness, ataxia.</li></ul></div>
+          <ol class="legend-list">
+<li><span class="num">1</span><span class="txt"><b>Grab a pint:</b> Gabapentin and pregabalin are narrow-spectrum antiepileptics used as adjuncts for focal seizures, with or without secondary generalization, refractory or poorly controlled on other agents.</span></li>
+<li><span class="num">2</span><span class="txt"><b>Closed Calci-Yum ice cream cooler:</b> Gabapentin and pregabalin bind the alpha-2-delta subunit of voltage-gated Ca2+ channels, decreasing Ca2+ influx and neurotransmitter release.<span class="pearl">⭐ Renally cleared: adjust dose in kidney disease.</span></span></li>
+<li><span class="num">3</span><span class="txt"><b>Chronically frayed wire:</b> Gabapentin and pregabalin treat chronic neuropathic pain.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Diasweetes:</b> Gabapentin and pregabalin treat painful diabetic neuropathy.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Fiber bars:</b> Gabapentin and pregabalin treat fibromyalgia.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Zeus:</b> Gabapentin and pregabalin treat postherpetic neuralgia (reactivated VZV).</span></li>
+<li><span class="num">7</span><span class="txt"><b>Unbalanced scoops:</b> Gabapentin and pregabalin can cause CNS side effects (ataxia, dizziness, sedation) and peripheral edema.<span class="pearl">⭐ Sedation is additive with opioids, benzodiazepines and alcohol.</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/6008fe7dd2ce1a8ad2dacbac519acd2b.webp" alt="Gabapentin &amp; Pregabalin original legend 1" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-r8" data-name="iv anesthetics">
+      <div class="org-header">
+        <h2>8. IV Anesthetics</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-r8">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/58015c2aace4235e42aa89eddfd91b94.webp" alt="IV Anesthetics Sketchy scene 1" loading="lazy" class="scene-img"><img src="sketchy-pharm-img/7300b4dbb9f1236b13da40ebeb15fe08.webp" alt="IV Anesthetics Sketchy scene 2" loading="lazy" class="scene-img" style="margin-top:10px"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: propofol, etomidate, ketamine, benzodiazepines (midazolam), barbiturates (thiopental, methohexital).</li><li>Mechanism: propofol, etomidate, benzos, barbiturates enhance GABA-A Cl- current; ketamine blocks NMDA receptors. Short action of lipophilic agents is due to redistribution.</li><li>Uses: induction (all), maintenance and ICU sedation (propofol), unstable patient induction (etomidate), analgesic/asthma/pediatric sedation (ketamine), procedural sedation (midazolam).</li><li>Adverse: propofol - hypotension, apnea, hypertriglyceridemia; etomidate - adrenal suppression, myoclonus; ketamine - hallucinations, raised BP/ICP; thiopental - contraindicated in porphyria.</li><li>Buzzwords: propofol = 'milk of amnesia'; ketamine = dissociative, PCP analog, bronchodilator; etomidate = hemodynamically stable; flumazenil reverses benzodiazepines.</li></ul></div>
+          <ol class="legend-list"><li class="part-hd" style="list-style:none;margin:10px 0 2px;font-weight:700;color:var(--accent2)">Part 1 · Propofol, Etomidate, Ketamine, Barbiturates, Benzodiazepines (picture 1)</li>
+<li><span class="num">1</span><span class="txt"><b>Ivy:</b> IV anesthetics (propofol, etomidate, ketamine, barbiturates, benzodiazepines) are given intravenously, most often for induction of anesthesia.</span></li>
+<li><span class="num">2</span><span class="txt"><b>'Prospero... fall asleep!':</b> Propofol is an IV anesthetic used for induction and maintenance of anesthesia and for ICU sedation.</span></li>
+<li><span class="num">3</span><span class="txt"><b>'Introducing':</b> Propofol is used to induce anesthesia (rapid, smooth induction with quick awakening).</span></li>
+<li><span class="num">4</span><span class="txt"><b>'Maintain':</b> Propofol can also maintain anesthesia (continuous infusion, TIVA) and provide prolonged sedation.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Cab-A:</b> Propofol and etomidate potentiate Cl- current through the GABA-A receptor (increase GABA-A activity), causing CNS depression.<span class="pearl">⭐ Propofol, etomidate, barbiturates and benzodiazepines are GABA-A modulators; ketamine is the exception (NMDA).</span></span></li>
+<li><span class="num">6</span><span class="txt"><b>Dilated sleeves and pants:</b> Propofol causes profound arterial and venous vasodilation and myocardial depression, causing hypotension.<span class="pearl">⭐ Avoid propofol in hypovolemic or hemodynamically unstable patients; use etomidate.</span></span></li>
+<li><span class="num">7</span><span class="txt"><b>'Intimidator':</b> Etomidate is an IV anesthetic used for induction.</span></li>
+<li><span class="num">8</span><span class="txt"><b>'Introducing':</b> Etomidate is used for induction of anesthesia.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Stabilized patient:</b> Etomidate preserves cardiovascular stability (minimal effects on BP, HR, cardiac output).<span class="pearl">⭐ Etomidate is the induction agent of choice in hemodynamically unstable patients.</span></span></li>
+<li><span class="num">10</span><span class="txt"><b>'snaKE TAMINg':</b> Ketamine is an IV anesthetic used for induction.</span></li>
+<li><span class="num">11</span><span class="txt"><b>'Introducing':</b> Ketamine is used for induction of anesthesia.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Hitched nomadic camel:</b> Ketamine (a phencyclidine analog) is an NMDA glutamate receptor antagonist (blocks the channel pore).</span></li>
+<li><span class="num">13</span><span class="txt"><b>Dissociative trance:</b> Ketamine causes dissociative anesthesia: eyes open with slow nystagmic gaze, catalepsy, amnesia and analgesia without true unconsciousness.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Unpleasant hallucinations:</b> Ketamine can cause emergence reactions (vivid dreams, hallucinations, out-of-body experiences, delirium); reduced by pre-treatment with a benzodiazepine.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Stimulated heart cobra:</b> Ketamine stimulates the cardiovascular system (increases BP, HR, cardiac output via catecholamine release); also raises intracranial pressure.<span class="pearl">⭐ Ketamine is good for hypotensive/asthmatic patients; avoid in CAD, hypertension, raised ICP.</span></span></li>
+<li><span class="num">16</span><span class="txt"><b>Ben's diner:</b> Benzodiazepines (e.g. midazolam) are used perioperatively as anxiolytic, sedative and amnestic agents.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Bowel water pump:</b> Benzodiazepines (midazolam) are used for conscious (procedural) sedation for minor procedures such as colonoscopy.<span class="pearl">⭐ Reversal agent: flumazenil.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Barber:</b> IV barbiturates (thiopental, methohexital) can be used as IV anesthetics.</span></li>
+<li><span class="num">19</span><span class="txt"><b>'Introducing':</b> IV barbiturates (thiopental) can be used for induction of anesthesia; now rarely used.</span></li>
+<li><span class="num">20</span><span class="txt"><b>'The ol' quick shave':</b> Thiopental has rapid onset and short duration because it is highly lipid soluble (rapid redistribution from brain to muscle and fat).<span class="pearl">⭐ Thiopental decreases cerebral blood flow and ICP; contraindicated in acute intermittent porphyria.</span></span></li>
+<li class="part-hd" style="list-style:none;margin:10px 0 2px;font-weight:700;color:var(--accent2)">Part 2 · IV Anesthetics (picture 2)</li>
+<li><span class="num">1</span><span class="txt"><b>Ivy:</b> IV anesthetics (propofol, etomidate, ketamine) are given intravenously.</span></li>
+<li><span class="num">2</span><span class="txt"><b>'Introducing' + 'Fall Asleep':</b> IV anesthetics are commonly used for induction of general anesthesia (propofol, etomidate, ketamine, benzodiazepines, barbiturates).</span></li>
+<li><span class="num">3</span><span class="txt"><b>Cab-A:</b> Most IV anesthetics (propofol, etomidate, benzodiazepines, barbiturates) potentiate Cl- current through the GABA-A receptor, decreasing CNS function.</span></li>
+<li><span class="num">4</span><span class="txt"><b>'Milk of Amnesia':</b> Propofol (milky white lipid emulsion) is used for induction of anesthesia.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Rapid snap:</b> Propofol has very rapid onset because it is highly lipophilic and quickly enters well-perfused tissues such as the brain.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Greasy burger:</b> Propofol's high lipid solubility explains its rapid CNS uptake.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Spilling milk:</b> Propofol has a very short duration of action (about 5-10 minutes after a bolus) due to rapid redistribution from brain to less perfused tissues (skeletal muscle and fat).</span></li>
+<li><span class="num">8</span><span class="txt"><b>Continuously refilling the bottle:</b> Propofol is used for maintenance of anesthesia and prolonged ICU sedation by infusion.<span class="pearl">⭐ Prolonged high-dose infusion can cause propofol infusion syndrome (metabolic acidosis, rhabdomyolysis, cardiac failure).</span></span></li>
+<li><span class="num">9</span><span class="txt"><b>Raised fatty food:</b> Propofol is formulated in a lipid emulsion, so it can cause hypertriglyceridemia (and pancreatitis) with prolonged use; it also supports bacterial growth.</span></li>
+<li><span class="num">10</span><span class="txt"><b>'Annat Phil':</b> Propofol's emulsion contains egg lecithin and soybean oil; hypersensitivity is possible, although egg allergy is rarely a true contraindication today.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Dilated blue pants + red sleeves:</b> Propofol causes profound arterial and venous vasodilation and hypotension.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Painful poke:</b> Propofol has no analgesic effect (and injection itself is painful).</span></li>
+<li><span class="num">13</span><span class="txt"><b>Collapsed lung balloon:</b> Propofol causes significant respiratory depression and apnea after induction.<span class="pearl">⭐ Propofol also lowers ICP and has antiemetic and anticonvulsant effects.</span></span></li>
+<li><span class="num">14</span><span class="txt"><b>Tom on a date:</b> Etomidate is used for induction of anesthesia, especially in hemodynamically unstable patients.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Stabbed in the foot:</b> Etomidate has no analgesic effect; also causes myoclonus and postoperative nausea and vomiting.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Stabilizing Tom:</b> Etomidate is hemodynamically neutral (minimal effect on BP, HR, cardiac output).<span class="pearl">⭐ Etomidate GABA-A modulator that is least hypotensive.</span></span></li>
+<li><span class="num">17</span><span class="txt"><b>Dropping adrenal-shaped purse:</b> Etomidate inhibits 11-beta-hydroxylase (cortisol synthesis), causing adrenocortical suppression, even after a single dose.<span class="pearl">⭐ Etomidate adrenal suppression is a concern in septic shock.</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>'Kettle Corn':</b> Ketamine is used for induction of anesthesia.</span></li>
+<li><span class="num">19</span><span class="txt"><b>'No More Desserts Available':</b> Ketamine inhibits the NMDA receptor (non-competitive glutamate antagonist).</span></li>
+<li><span class="num">20</span><span class="txt"><b>Food coma:</b> Ketamine produces dissociative anesthesia with amnesia and analgesia, appearing cataleptic.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Inflated lung balloon:</b> Ketamine preserves respiratory drive and airway reflexes and causes bronchodilation (useful in asthma); patient may appear awake with eyes open.</span></li>
+<li><span class="num">22</span><span class="txt"><b>Pain-LESS poke:</b> Ketamine has strong analgesic properties and is used for procedural (conscious) sedation, burns, and in children.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Swirly eyes:</b> Ketamine can cause emergence reactions: vivid dreams, visual/tactile/auditory hallucinations, out-of-body experiences; treat/prevent with benzodiazepines.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Flying heart watch:</b> Ketamine causes cardiovascular stimulation: increased BP, HR and cardiac output.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Catfish:</b> Ketamine's cardiovascular stimulation is mediated by catecholamine release (sympathomimetic), which also causes bronchodilation.<span class="pearl">⭐ Ketamine is the induction agent of choice in asthma and hypotension; avoid in raised ICP, CAD, psychosis.</span></span></li>
+<li><span class="num">26</span><span class="txt"><b>Ben's diner:</b> Benzodiazepines (midazolam) are used preoperatively for anxiolysis, sedation, hypnosis and anterograde amnesia.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Colon-shaped water pump:</b> Benzodiazepines are used for conscious sedation in minor procedures such as colonoscopy.<span class="pearl">⭐ Midazolam is the preoperative benzodiazepine; flumazenil reverses.</span></span></li>
+<li><span class="num">28</span><span class="txt"><b>Barber:</b> IV barbiturates (thiopental) can induce anesthesia but are rarely used today.</span></li>
+<li><span class="num">29</span><span class="txt"><b>'The Ol' Quick Shave':</b> Thiopental is a fast-acting, highly lipid-soluble barbiturate with short duration due to redistribution; barbiturates have no analgesia and cause hypotension and respiratory depression.</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend pictures</summary><img src="sketchy-pharm-img/3feb09657ad9bbac04b7fd14d98c19f7.webp" alt="IV Anesthetics original legend 1" loading="lazy" class="legend-img"><img src="sketchy-pharm-img/50bbc3ebaf17a62f14b6a40aa985a9ad.webp" alt="IV Anesthetics original legend 2" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-r9" data-name="inhaled anesthetics &amp; dantrolene">
+      <div class="org-header">
+        <h2>9. Inhaled Anesthetics &amp; Dantrolene</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-r9">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/60299189bf971167f964e52d728acd63.webp" alt="Inhaled Anesthetics &amp; Dantrolene Sketchy scene 1" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: nitrous oxide (gas); volatile liquids - sevoflurane, isoflurane, desflurane, halothane, enflurane, methoxyflurane; dantrolene for malignant hyperthermia.</li><li>Mechanism: enhance inhibitory (GABA-A, glycine) and inhibit excitatory receptors; onset is fast with low blood:gas partition coefficient; potency = 1/MAC.</li><li>Uses: general anesthesia induction and maintenance (sevoflurane good for induction); N2O adjunct analgesic; dantrolene for malignant hyperthermia.</li><li>Adverse: myocardial and respiratory depression, increased cerebral blood flow; halothane hepatotoxicity; methoxyflurane/enflurane nephrotoxicity; enflurane seizures; N2O diffusion hypoxia and B12 inactivation.</li><li>Buzzwords: MAC; blood:gas coefficient; malignant hyperthermia = volatile agents + succinylcholine + RYR1 defect; dantrolene blocks ryanodine receptor.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Inhaling balloon:</b> Inhaled anesthetics (nitrous oxide and volatile halogenated agents) produce general anesthesia, loss of consciousness, amnesia and immobility; they are used for induction (sevoflurane) and maintenance.</span></li>
+<li><span class="num">2</span><span class="txt"><b>'Laughing gas':</b> Nitrous oxide (N2O) is the only gaseous anesthetic; it has low potency (MAC about 105%), so it cannot be used alone, but has very fast onset/offset and is analgesic.<span class="pearl">⭐ N2O causes diffusion hypoxia on recovery, expands air-filled spaces (pneumothorax, bowel obstruction), and inactivates vitamin B12 (megaloblastic anemia).</span></span></li>
+<li><span class="num">3</span><span class="txt"><b>Air tank in water:</b> Volatile anesthetics (isoflurane, sevoflurane, desflurane, halothane, enflurane) are liquids at room temperature that vaporize and are delivered by vaporizer.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Balloon flower:</b> Volatile anesthetics are halogenated (fluorinated) ethers/hydrocarbons; halothane also contains bromine and chlorine.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Moving freely in ball pit:</b> Blood solubility determines how readily the agent leaves blood for the brain: agents of low blood solubility (N2O, desflurane, sevoflurane) move freely into the brain, while highly soluble agents (halothane) are held up in blood.<span class="unsure" title="Source was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">6</span><span class="txt"><b>Impeded by ball pit:</b> Highly blood-soluble agents are retained in blood (large reservoir), so brain partial pressure rises slowly.<span class="unsure" title="Source was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">7</span><span class="txt"><b>Passed out earlier:</b> Less soluble agents (N2O, desflurane) have faster onset of action because alveolar and arterial partial pressures equilibrate quickly.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Immediate rescue:</b> Less soluble agents also have faster recovery (rapid washout).</span></li>
+<li><span class="num">9</span><span class="txt"><b>Passed out later:</b> More soluble agents (halothane) have slower onset because a large amount must dissolve in blood before brain partial pressure rises.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Long tapering flag:</b> More soluble agents have a longer duration of action/slower recovery.</span></li>
+<li><span class="num">11</span><span class="txt"><b>Partition coefficient:</b> A higher blood:gas partition coefficient means higher solubility and slower induction and recovery.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Steeper arterial tension curve:</b> Agents with a low blood:gas partition coefficient (N2O, desflurane) have lower solubility and a rapid rise in arterial partial pressure, so onset is faster.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Less steep arterial tension curve:</b> Agents with a high blood:gas partition coefficient (halothane) have higher solubility and slower rise in arterial tension, so onset is slower.<span class="pearl">⭐ Onset is faster for low blood solubility; speed is also increased by high ventilation, low cardiac output.</span></span></li>
+<li><span class="num">14</span><span class="txt"><b>Mac and cheese:</b> Minimum alveolar concentration (MAC) is the alveolar concentration at which 50% of patients do not move in response to a surgical stimulus.</span></li>
+<li><span class="num">15</span><span class="txt"><b>1 out of 2 kids unresponsive:</b> MAC is the dose at which 50% of patients are unresponsive to a painful (surgical incision) stimulus.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Inverted bowl of potent mac and cheese:</b> Potency is inversely proportional to MAC (1/MAC); lower MAC = more potent (halothane most potent among common agents, N2O least).<span class="pearl">⭐ MAC rises with young age, chronic alcohol use, hyperthermia; falls with elderly, pregnancy, opioids, N2O.</span></span></li>
+<li><span class="num">17</span><span class="txt"><b>Deflating heart balloon:</b> Inhaled anesthetics cause myocardial depression and vasodilation, decreasing cardiac output and causing hypotension.<span class="pearl">⭐ Halothane also sensitizes the myocardium to catecholamines (arrhythmias).</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Deflating lung balloons:</b> Inhaled anesthetics cause respiratory depression with decreased minute ventilation and hypercapnia (and decreased response to hypoxia/CO2).</span></li>
+<li><span class="num">19</span><span class="txt"><b>Red brain wig:</b> Fluorinated volatile anesthetics increase cerebral blood flow (cerebral vasodilation, lower cerebrovascular resistance) and ICP, though they reduce metabolic rate.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Cracked liver:</b> Halothane can cause hepatotoxicity ('halothane hepatitis', massive hepatic necrosis, immune-mediated via trifluoroacetylated proteins), particularly with repeat exposure.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Smacked in the flank:</b> Methoxyflurane is nephrotoxic (fluoride release; high-output renal failure); enflurane also releases fluoride and can rarely cause renal toxicity.<span class="pearl">⭐ Methoxyflurane = nephrotoxicity.</span><span class="unsure" title="Source was unclear here - check the original legend picture below">check original</span></span></li>
+<li><span class="num">22</span><span class="txt"><b>Shaking:</b> Enflurane can induce seizures (epileptiform EEG activity), especially with hyperventilation.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Magnificent birthday:</b> Malignant hyperthermia (MH): a life-threatening hypermetabolic crisis triggered by volatile anesthetics or succinylcholine in genetically susceptible patients; signs include hypercarbia, tachycardia, rigidity, fever, acidosis, hyperkalemia, rhabdomyolysis.</span></li>
+<li><span class="num">24</span><span class="txt"><b>'Sucks':</b> Succinylcholine (depolarizing neuromuscular blocker) is also a trigger for malignant hyperthermia, along with volatile anesthetics.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Defective RYAN:</b> Malignant hyperthermia is associated with mutations in the ryanodine receptor (RYR1) of the sarcoplasmic reticulum (autosomal dominant).<span class="pearl">⭐ Associated with central core disease.</span></span></li>
+<li><span class="num">26</span><span class="txt"><b>Flame theme:</b> Defective RYR1 releases excess Ca2+ from the sarcoplasmic reticulum; excessive ATP-dependent Ca2+ reuptake and sustained contraction consume ATP and generate heat.</span></li>
+<li><span class="num">27</span><span class="txt"><b>Bite out of muscle:</b> Sustained contraction and ATP depletion cause muscle damage (rhabdomyolysis) with myoglobinuria, hyperkalemia and elevated CK.</span></li>
+<li><span class="num">28</span><span class="txt"><b>Trampoline:</b> Dantrolene, a skeletal muscle relaxant, is the treatment for malignant hyperthermia (give IV along with cooling and stopping the trigger).<span class="pearl">⭐ Dantrolene also treats neuroleptic malignant syndrome (sometimes).</span></span></li>
+<li><span class="num">29</span><span class="txt"><b>Blocking Ryan:</b> Dantrolene blocks the ryanodine receptor (RYR1), preventing Ca2+ release from the sarcoplasmic reticulum and relaxing skeletal muscle.<span class="pearl">⭐ Dantrolene can cause hepatotoxicity with chronic use.</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/95fbd31e769b534ff0d673bcea4a148c.webp" alt="Inhaled Anesthetics &amp; Dantrolene original legend 1" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-r10" data-name="parkinsonism drugs">
+      <div class="org-header">
+        <h2>10. Parkinsonism Drugs</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-r10">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/3e546cdcf37bc8f24346d76dc193ea65.webp" alt="Parkinsonism Drugs Sketchy scene 1" loading="lazy" class="scene-img"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: levodopa/carbidopa, COMT inhibitors (entacapone, tolcapone), MAO-B inhibitors (selegiline, rasagiline), dopamine agonists (pramipexole, ropinirole), amantadine, antimuscarinics (benztropine, trihexyphenidyl).</li><li>Mechanism: restore dopaminergic tone in the striatum or reduce relative cholinergic excess; carbidopa blocks peripheral DOPA decarboxylase; COMT and MAO-B inhibitors slow dopamine/levodopa breakdown.</li><li>Indications: Parkinson disease (tremor, rigidity, bradykinesia); dopamine agonists also for restless legs syndrome; antimuscarinics mainly for tremor/rigidity and drug-induced parkinsonism; amantadine also for influenza A.</li><li>Adverse effects: levodopa - nausea, orthostatic hypotension, arrhythmias, hallucinations/psychosis, dyskinesias, on-off and wearing-off effects; tolcapone - hepatotoxicity; dopamine agonists - impulse control disorders, sleep attacks; antimuscarinics - dry mouth, urinary retention, confusion.</li><li>Buzzwords: levodopa is contraindicated with non-selective MAO inhibitors and in psychosis; carbidopa does not cross the BBB; amantadine causes livedo reticularis; selegiline plus meperidine or SSRIs risks serotonin syndrome.</li></ul></div>
+          <ol class="legend-list">
+            <li><span class="num">1</span><span class="txt"><b>Cracked open cogwheels:</b> Parkinsonism therapy: the icon for the drug class used to treat Parkinson disease (cogwheel rigidity, resting tremor, bradykinesia).</span></li>
+<li><span class="num">2</span><span class="txt"><b>Bank vault threshold:</b> The blood-brain barrier (BBB), which dopamine itself cannot cross.</span></li>
+<li><span class="num">3</span><span class="txt"><b>"L" rope crank inside vault:</b> Levodopa (L-DOPA), the dopamine precursor, crosses the BBB via large neutral amino acid transporters.<span class="pearl">⭐ Dietary protein competes for this transporter and can reduce levodopa effect.</span></span></li>
+<li><span class="num">4</span><span class="txt"><b>Unfurled rope in vault:</b> In the CNS, levodopa is converted to dopamine by DOPA decarboxylase, replenishing striatal dopamine.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Unfurled rope in lobby:</b> In the periphery, levodopa is converted to dopamine by DOPA decarboxylase; peripheral dopamine cannot cross the BBB and causes side effects.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Nauseated hostage:</b> Levodopa causes GI distress (nausea, vomiting) because peripheral dopamine stimulates the chemoreceptor trigger zone.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Arrhythmia rope:</b> Levodopa can cause cardiac arrhythmias from peripheral dopamine acting on cardiac receptors.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Passed out hostage:</b> Levodopa can cause orthostatic hypotension from peripheral dopamine-mediated vasodilation.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Psychiatrically disturbed hostage:</b> Excess central dopamine from levodopa can cause neuropsychiatric effects: anxiety, agitation, insomnia, confusion, vivid dreams, hallucinations.<span class="pearl">⭐ Treat psychosis in Parkinson disease with pimavanserin, quetiapine or clozapine (avoid D2-blocking antipsychotics).</span></span></li>
+<li><span class="num">10</span><span class="txt"><b>End of rope wearing-off:</b> Chronic levodopa therapy causes a wearing-off reaction: symptoms (akinesia) re-emerge toward the end of each dose interval.</span></li>
+<li><span class="num">11</span><span class="txt"><b>"Too long!":</b> Chronic levodopa therapy produces response fluctuations (wearing-off, on-off phenomenon) and dyskinesias.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Flashing on and off:</b> On-off phenomenon: abrupt, unpredictable swings between periods of good mobility (on) and akinesia (off), not clearly related to dose timing.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Narrowing window:</b> As Parkinson disease progresses, the therapeutic window of levodopa narrows between benefit and dyskinesia, making response unpredictable.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Writhing sneeze:</b> Chronic levodopa therapy can cause dyskinesias (choreoathetoid movements of the face and distal extremities), typically at peak dose.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Damaged psychotic painting:</b> Levodopa is contraindicated in psychotic patients (it can worsen psychosis); also avoid with non-selective MAO inhibitors (hypertensive crisis).</span></li>
+<li><span class="num">16</span><span class="txt"><b>Police car on periphery:</b> Carbidopa is a peripheral DOPA decarboxylase inhibitor that does not cross the BBB.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Scared into vault:</b> Carbidopa increases the bioavailability of levodopa by preventing its peripheral conversion to dopamine, so more reaches the CNS and the dose can be lowered.<span class="pearl">⭐ Given as carbidopa/levodopa (Sinemet).</span></span></li>
+<li><span class="num">18</span><span class="txt"><b>Pulling away from hostages:</b> Carbidopa decreases peripheral side effects of levodopa (nausea, hypotension, arrhythmia), but central side effects (psychiatric, dyskinesia) can be exacerbated since more levodopa reaches the CNS.</span></li>
+<li><span class="num">19</span><span class="txt"><b>InTerCOM guard shooting "L" crank:</b> Catechol-O-methyltransferase (COMT) converts levodopa to 3-O-methyldopa (3-OMD) in the periphery, reducing levodopa available to the brain.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Tall Al Capone gangster:</b> Tolcapone is a peripheral and central COMT inhibitor that increases levodopa bioavailability and prolongs its action.</span></li>
+<li><span class="num">21</span><span class="txt"><b>Al Capone gangster at entrance:</b> Entacapone is a peripheral COMT inhibitor that increases levodopa bioavailability; used as an adjunct to treat wearing-off.<span class="pearl">⭐ Entacapone does not cross the BBB and is safer than tolcapone.</span></span></li>
+<li><span class="num">22</span><span class="txt"><b>InTerCOM guard in vault:</b> In the CNS, COMT converts dopamine to 3-methoxytyramine (3-MT), inactivating it.</span></li>
+<li><span class="num">23</span><span class="txt"><b>Tall gangster in vault:</b> Tolcapone also inhibits central COMT, directly increasing CNS dopamine levels.</span></li>
+<li><span class="num">24</span><span class="txt"><b>Hepatic gun:</b> Tolcapone can cause fulminant hepatic failure; requires liver function monitoring and is reserved for patients who fail other therapy.</span></li>
+<li><span class="num">25</span><span class="txt"><b>Black mouse eating rope:</b> Monoamine oxidase B (MAO-B) selectively metabolizes dopamine in the brain.</span></li>
+<li><span class="num">26</span><span class="txt"><b>Sledge hammer:</b> Selegiline (and rasagiline) are selective MAO-B inhibitors that increase CNS dopamine levels, used as adjuncts to levodopa.<span class="pearl">⭐ Avoid combining with meperidine, SSRIs or TCAs (serotonin syndrome); selectivity is lost at high doses.</span></span></li>
+<li><span class="num">27</span><span class="txt"><b>Rope in a roll:</b> Ropinirole is a non-ergot D2 dopamine receptor agonist and an important initial treatment of Parkinson disease, especially in younger patients.</span></li>
+<li><span class="num">28</span><span class="txt"><b>Double rope ladder:</b> The D2 dopamine receptor, the target of ropinirole and pramipexole.</span></li>
+<li><span class="num">29</span><span class="txt"><b>Big pecs:</b> Pramipexole is a D3-preferring (also D2) dopamine receptor agonist and an important initial treatment of Parkinson disease.<span class="pearl">⭐ Dopamine agonists delay the need for levodopa and motor complications.</span></span></li>
+<li><span class="num">30</span><span class="txt"><b>Restless legs:</b> Dopamine receptor agonists (ropinirole, pramipexole) treat restless legs syndrome (RLS).</span></li>
+<li><span class="num">31</span><span class="txt"><b>"Rock and roll":</b> Dopamine receptor agonists can cause impulse control disorders (pathologic gambling, shopping, hypersexuality), as well as hallucinations, sleep attacks and orthostatic hypotension.</span></li>
+<li><span class="num">32</span><span class="txt"><b>Manatee:</b> Amantadine can treat some motor symptoms of Parkinson disease, especially dyskinesias; it is also an antiviral for influenza A.<span class="pearl">⭐ Adverse effects: livedo reticularis, peripheral edema, ataxia, confusion.</span></span></li>
+<li><span class="num">33</span><span class="txt"><b>Breaking open rope:</b> Amantadine enhances endogenous dopamine effect by increasing dopamine synthesis and release and inhibiting its reuptake (also has NMDA antagonist activity).</span></li>
+<li><span class="num">34</span><span class="txt"><b>Tri-hex Benz car:</b> Trihexyphenidyl and benztropine are antimuscarinic (anticholinergic) agents used to treat parkinsonism, restoring the dopamine-acetylcholine balance in the striatum.<span class="pearl">⭐ Also used for acute dystonia from antipsychotics; cause dry mouth, urinary retention, constipation, confusion.</span></span></li>
+<li><span class="num">35</span><span class="txt"><b>Trembling getaway car:</b> Trihexyphenidyl and benztropine improve the tremor and rigidity of Parkinson disease but have no effect on bradykinesia.<span class="pearl">⭐ Avoid in elderly patients (cognitive impairment) and in narrow-angle glaucoma or BPH.</span></span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend picture</summary><img src="sketchy-pharm-img/daabdcca86dfebfccbffb0cf978ed201.webp" alt="Parkinsonism Drugs original legend 1" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+<section class="org-section" id="org-r11" data-name="alzheimer&#x27;s disease medications">
+      <div class="org-header">
+        <h2>11. Alzheimer's Disease Medications</h2>
+        <label class="reviewed-toggle">
+          <input type="checkbox" class="reviewed-check" data-target="org-r11">
+          Mark reviewed
+        </label>
+      </div>
+      <div class="org-body">
+        <div class="scene-wrap"><button class="fullscreen-btn" title="View full screen" aria-label="View full screen"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button><img src="sketchy-pharm-img/348fe900b7819d9c7a252d8fd5dba58a.webp" alt="Alzheimer's Disease Medications Sketchy scene 1" loading="lazy" class="scene-img"><img src="sketchy-pharm-img/57b1dcfb66b764e950fda27e6b4e5f43.webp" alt="Alzheimer's Disease Medications Sketchy scene 2" loading="lazy" class="scene-img" style="margin-top:10px"></div>
+        <div class="legend-wrap">
+          <div class="snap"><div class="snap-hd">Exam snapshot</div><ul><li>Drugs: cholinesterase inhibitors donepezil, rivastigmine, galantamine; memantine (NMDA receptor antagonist); anti-amyloid antibodies (aducanumab, lecanemab).</li><li>Mechanism: cholinesterase inhibitors raise ACh in the brain; memantine blocks NMDA receptors to limit glutamate excitotoxicity; anti-amyloid antibodies clear beta-amyloid plaques.</li><li>Adverse effects: cholinergic - nausea, vomiting, diarrhea, insomnia, dizziness, bradycardia, heart block; memantine - dizziness, headache, confusion, hallucinations; anti-amyloid antibodies - ARIA (cerebral edema and microhemorrhage).</li><li>Dementia DDx: Alzheimer (amyloid plaques, tau tangles, APOE4, hippocampal atrophy); Lewy body (fluctuating cognition, visual hallucinations, parkinsonism, REM sleep behavior disorder, alpha-synuclein); vascular (stepwise decline after strokes); frontotemporal (personality change or language loss, Pick bodies); normal pressure hydrocephalus (wet, wobbly, wacky; enlarged ventricles); CJD (rapid decline, myoclonus).</li></ul></div>
+          <ol class="legend-list"><li class="part-hd" style="list-style:none;margin:10px 0 2px;font-weight:700;color:var(--accent2)">Part 1 · Alzheimer's Disease Medications (picture 1)</li>
+<li><span class="num">1</span><span class="txt"><b>King Alzheimer scratching head:</b> Alzheimer disease is the most common cause of dementia.</span></li>
+<li><span class="num">2</span><span class="txt"><b>"ANTI-ESTablishment Tourney":</b> Drug treatment of Alzheimer disease starts with cholinesterase inhibitors (rivastigmine, galantamine, donepezil).<span class="pearl">⭐ Cholinergic deficit from loss of basal forebrain (nucleus basalis of Meynert) neurons.</span></span></li>
+<li><span class="num">3</span><span class="txt"><b>River:</b> Rivastigmine, a cholinesterase inhibitor (also inhibits butyrylcholinesterase) available orally or as a patch.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Gallant knight:</b> Galantamine, a cholinesterase inhibitor.</span></li>
+<li><span class="num">5</span><span class="txt"><b>"Donezo" flag:</b> Donepezil, a cholinesterase inhibitor.</span></li>
+<li><span class="num">6</span><span class="txt"><b>Vomiting knight:</b> Cholinesterase inhibitors (rivastigmine, galantamine, donepezil) cause nausea and vomiting (GI side effects) from increased muscarinic tone.</span></li>
+<li><span class="num">7</span><span class="txt"><b>Mud:</b> Cholinesterase inhibitors commonly cause diarrhea from increased GI motility.</span></li>
+<li><span class="num">8</span><span class="txt"><b>Sleep deprived eyes:</b> Cholinesterase inhibitors (particularly donepezil) can cause insomnia and vivid dreams; dizziness is also common.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Heart shield:</b> Cholinesterase inhibitors can cause bradycardia and heart block (vagal effect), so use caution with conduction disease or syncope.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Merman blocking gate + "No More Drawbridge Access":</b> Memantine is an NMDA receptor antagonist (uncompetitive channel blocker), used for moderate-to-severe Alzheimer disease, often with a cholinesterase inhibitor.<span class="pearl">⭐ It blocks pathologic glutamate-driven Ca2+ influx only when the channel is open.</span></span></li>
+<li><span class="num">11</span><span class="txt"><b>Brain coral helmet:</b> Memantine is neuroprotective: it prevents glutamate excitotoxicity from excess Ca2+ entry into neurons.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Colorful fabric behind merman:</b> Adverse effects of memantine include headache, dizziness, confusion and hallucinations.</span></li>
+<li><span class="num">13</span><span class="txt"><b>A duke + B antibody scepter:</b> Aducanumab is an amyloid-beta-directed monoclonal antibody that clears amyloid plaques (lecanemab and donanemab are related agents).<span class="pearl">⭐ Approved on surrogate plaque reduction; clinical benefit is modest.</span></span></li>
+<li><span class="num">14</span><span class="txt"><b>Floppy brain hat with red threads:</b> Adverse effects of aducanumab include headache and amyloid-related imaging abnormalities (ARIA): cerebral edema (ARIA-E) and microhemorrhage (ARIA-H).<span class="pearl">⭐ Risk is higher in APOE4 carriers; avoid with anticoagulation.</span></span></li>
+<li class="part-hd" style="list-style:none;margin:10px 0 2px;font-weight:700;color:var(--accent2)">Part 2 · Dementias DDx (picture 2)</li>
+<li><span class="num">1</span><span class="txt"><b>Sphinx that lost its crown:</b> Alzheimer disease is the most common dementia, with progressive course: early memory loss, middle-stage personality changes, late-stage urinary incontinence and motor deficits.</span></li>
+<li><span class="num">2</span><span class="txt"><b>"E" "4" claws:</b> Risk factors for Alzheimer disease are age and genetics; APOE e4 is the strongest genetic risk factor, while APOE e2 is protective.<span class="pearl">⭐ Also early-onset forms: APP (chr 21, Down syndrome), PSEN1 (chr 14), PSEN2 (chr 1).</span></span></li>
+<li><span class="num">3</span><span class="txt"><b>Dried-up seahorse:</b> MRI in Alzheimer disease shows generalized cortical atrophy, especially temporal lobe and hippocampal atrophy, with ventricular enlargement.</span></li>
+<li><span class="num">4</span><span class="txt"><b>Crown with Amyloid beta (AB):</b> Hallmark pathology: extracellular beta-amyloid plaques and intracellular neurofibrillary (hyperphosphorylated tau) tangles.</span></li>
+<li><span class="num">5</span><span class="txt"><b>Acetyl-cola in a trash can:</b> First-line therapy for Alzheimer disease is a cholinesterase inhibitor (donepezil, galantamine, rivastigmine).</span></li>
+<li><span class="num">6</span><span class="txt"><b>Merman teen:</b> Memantine, an NMDA receptor antagonist, is used for moderate to advanced Alzheimer disease.</span></li>
+<li><span class="num">7</span><span class="txt"><b>"CJ" palm trees:</b> Creutzfeldt-Jakob disease (CJD) is a rapidly progressive neurodegenerative prion disease, the most common human prion disease.<span class="pearl">⭐ Misfolded PrPsc (beta-sheet rich) causes spongiform change; CSF 14-3-3 protein and EEG periodic sharp waves.</span></span></li>
+<li><span class="num">8</span><span class="txt"><b>Fast lightning bolt:</b> CJD progresses rapidly over weeks to months, with death usually within a year, regardless of therapy.</span></li>
+<li><span class="num">9</span><span class="txt"><b>Erratic lightning bolt:</b> CJD presents with dementia and myoclonus (startle-induced muscle jerks), often with ataxia.</span></li>
+<li><span class="num">10</span><span class="txt"><b>Oracle on a shaking rock:</b> Dementia with Lewy bodies presents with fluctuating cognition and alertness, parkinsonism, and well-formed visual hallucinations (and severe sensitivity to antipsychotics).<span class="pearl">⭐ Dementia precedes or occurs within 1 year of parkinsonism; in Parkinson disease dementia, motor symptoms precede dementia by more than 1 year.</span></span></li>
+<li><span class="num">11</span><span class="txt"><b>Sleeping:</b> REM sleep behavior disorder (acting out dreams) is a feature of dementia with Lewy bodies and may precede it.</span></li>
+<li><span class="num">12</span><span class="txt"><b>Round body + pink-red robe + a brooch:</b> Pathology shows Lewy bodies: diffuse, round eosinophilic neuronal inclusions containing alpha-synuclein.</span></li>
+<li><span class="num">13</span><span class="txt"><b>Stroke of paint:</b> Vascular dementia is caused by cerebrovascular disease (e.g. strokes, small vessel disease); the second most common dementia.</span></li>
+<li><span class="num">14</span><span class="txt"><b>Losing "executive" laurel:</b> Vascular dementia often impairs executive function (planning, judgment) with relatively preserved memory early, accompanied by focal motor and sensory deficits.</span></li>
+<li><span class="num">15</span><span class="txt"><b>Falling down:</b> Vascular dementia is often accompanied by other signs of stroke such as gait problems, motor and sensory deficits, with memory lost only later in some cases.</span></li>
+<li><span class="num">16</span><span class="txt"><b>Falling down stairs:</b> Vascular dementia shows stepwise cognitive decline, worsening after each successive stroke.</span></li>
+<li><span class="num">17</span><span class="txt"><b>Skulls in outer layer of building:</b> MRI in vascular dementia shows cortical and/or subcortical infarctions (and white matter lesions).</span></li>
+<li><span class="num">18</span><span class="txt"><b>Drama mask:</b> Frontotemporal dementia (FTD) behavioral variant (Pick disease) predominantly affects the frontal lobe and presents with personality change, disinhibition and apathy.</span></li>
+<li><span class="num">19</span><span class="txt"><b>Words melting off page:</b> FTD primary progressive aphasia predominantly affects the temporal lobe and presents with language disturbance.</span></li>
+<li><span class="num">20</span><span class="txt"><b>Ice pick:</b> Pathology in FTD may show Pick bodies: round, silver-staining intraneuronal aggregates of tau protein (some cases have TDP-43 inclusions).</span></li>
+<li><span class="num">21</span><span class="txt"><b>Wet:</b> Normal pressure hydrocephalus (NPH) triad: urinary incontinence ("wet"), gait abnormality ("wobbly"), and cognitive decline ("wacky").</span></li>
+<li><span class="num">22</span><span class="txt"><b>Wobbly head:</b> NPH triad component: gait disturbance (magnetic, broad-based gait).</span></li>
+<li><span class="num">23</span><span class="txt"><b>Wacky head:</b> NPH triad component: dementia (cognitive decline); the only potentially reversible dementia in this group.<span class="pearl">⭐ Treat with ventriculoperitoneal shunt; symptoms improve after large-volume lumbar puncture.</span></span></li>
+<li><span class="num">24</span><span class="txt"><b>Giant butterfly:</b> MRI in NPH shows dilated ventricles out of proportion to sulcal enlargement, distinguishing NPH from cerebral atrophy (hydrocephalus ex vacuo).</span></li>
+          </ol>
+          <details class="orig-legend"><summary>Show the original legend pictures</summary><img src="sketchy-pharm-img/ad9a3143827e25a1794cfc0fbcb9bbc4.webp" alt="Alzheimer's Disease Medications original legend 1" loading="lazy" class="legend-img"><img src="sketchy-pharm-img/860cc85f8745eb2c32063da5783f365b.webp" alt="Alzheimer's Disease Medications original legend 2" loading="lazy" class="legend-img"></details>
+        </div>
+      </div>
+    </section>
+    
+</main>
+
+<div id="lightbox">
+  <button id="lightbox-close" aria-label="Close full screen view">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = "rns401_sketchypharm_reviewed_v1";
+
+  function loadReviewed() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+  function saveReviewed(obj) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); } catch (e) {}
+  }
+
+  var reviewed = loadReviewed();
+  var navChecks = document.querySelectorAll(".nav-check");
+  var sectionChecks = document.querySelectorAll(".reviewed-check");
+  var total = 11;
+
+  function applyState(id, isReviewed) {
+    var navCheck = document.querySelector('.nav-check[data-target="' + id + '"]');
+    var sectionCheck = document.querySelector('.reviewed-check[data-target="' + id + '"]');
+    var navItem = navCheck ? navCheck.closest(".nav-item") : null;
+    var section = document.getElementById(id);
+    if (navCheck) navCheck.checked = isReviewed;
+    if (sectionCheck) sectionCheck.checked = isReviewed;
+    if (navItem) navItem.classList.toggle("done", isReviewed);
+    if (section) section.classList.toggle("reviewed", isReviewed);
+  }
+
+  function updateProgress() {
+    var count = Object.keys(reviewed).filter(function(k) { return reviewed[k]; }).length;
+    document.getElementById("progress-text").textContent = count + " / " + total + " reviewed";
+    var pct = total ? Math.round((count / total) * 100) : 0;
+    document.getElementById("progress-bar-inner").style.width = pct + "%";
+  }
+
+  function setReviewed(id, val) {
+    reviewed[id] = val;
+    saveReviewed(reviewed);
+    applyState(id, val);
+    updateProgress();
+  }
+
+  Object.keys(reviewed).forEach(function(id) {
+    if (reviewed[id]) applyState(id, true);
+  });
+  updateProgress();
+
+  navChecks.forEach(function(cb) {
+    cb.addEventListener("change", function() {
+      setReviewed(cb.getAttribute("data-target"), cb.checked);
+    });
+  });
+  sectionChecks.forEach(function(cb) {
+    cb.addEventListener("change", function() {
+      setReviewed(cb.getAttribute("data-target"), cb.checked);
+    });
+  });
+
+  // Search / filter
+  var searchBox = document.getElementById("search-box");
+  var navItems = document.querySelectorAll(".nav-item");
+  var sections = document.querySelectorAll(".org-section");
+
+  searchBox.addEventListener("input", function() {
+    var q = searchBox.value.trim().toLowerCase();
+    navItems.forEach(function(li) {
+      var name = li.getAttribute("data-name") || "";
+      li.classList.toggle("hidden", q.length > 0 && name.indexOf(q) === -1);
+    });
+    sections.forEach(function(sec) {
+      var name = sec.getAttribute("data-name") || "";
+      sec.classList.toggle("hidden", q.length > 0 && name.indexOf(q) === -1);
+    });
+  });
+
+  // Sidebar collapse
+  var SIDEBAR_KEY = "ghs402_sketchypharm_sidebar_collapsed_v1";
+  var sidebarToggle = document.getElementById("sidebar-toggle");
+  function setSidebarCollapsed(collapsed) {
+    document.body.classList.toggle("sidebar-collapsed", collapsed);
+    sidebarToggle.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
+    sidebarToggle.title = collapsed ? "Expand sidebar" : "Collapse sidebar";
+    try { localStorage.setItem(SIDEBAR_KEY, collapsed ? "1" : "0"); } catch (e) {}
+  }
+  try {
+    if (localStorage.getItem(SIDEBAR_KEY) === "1") setSidebarCollapsed(true);
+  } catch (e) {}
+  sidebarToggle.addEventListener("click", function() {
+    setSidebarCollapsed(!document.body.classList.contains("sidebar-collapsed"));
+  });
+
+  // Fullscreen image lightbox
+  var lightbox = document.getElementById("lightbox");
+  var lightboxImg = document.getElementById("lightbox-img");
+  var lightboxClose = document.getElementById("lightbox-close");
+
+  function openLightbox(src, alt) {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt || "";
+    lightbox.classList.add("open");
+  }
+  function closeLightbox() {
+    lightbox.classList.remove("open");
+    lightboxImg.src = "";
+  }
+
+  document.querySelectorAll(".fullscreen-btn").forEach(function(btn) {
+    btn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      var img = btn.parentElement.querySelector(".scene-img");
+      if (img) openLightbox(img.src, img.alt);
+    });
+  });
+  document.querySelectorAll(".scene-img").forEach(function(img) {
+    img.addEventListener("click", function() {
+      openLightbox(img.src, img.alt);
+    });
+  });
+  lightboxClose.addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", function(e) {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape" && lightbox.classList.contains("open")) closeLightbox();
+  });
+
+  // Active nav link highlighting on scroll
+  var navLinks = document.querySelectorAll(".nav-link");
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      var link = document.querySelector('.nav-link[href="#' + entry.target.id + '"]');
+      if (!link) return;
+      if (entry.isIntersecting) {
+        navLinks.forEach(function(l) { l.classList.remove("active"); });
+        link.classList.add("active");
+      }
+    });
+  }, { rootMargin: "-10% 0px -70% 0px" });
+  sections.forEach(function(sec) { observer.observe(sec); });
+})();
+</script>
+
+</body>
+</html>
