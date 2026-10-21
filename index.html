@@ -5687,7 +5687,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 78, built: '2026-10-20T23:01:37Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 79, built: '2026-10-21T00:03:30Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5697,6 +5697,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 79], title: "One picture per Sketchy video", items: ["Pharm notes now show a single Sketchy picture per video (the newer version where Sketchy has two), with the legend matching that picture's numbers."] },
   { v: [2, 78], title: "Sketchy notes for every MD4 module", items: ["Every Sketchy micro and pharm video in RNS401, ERS403 and RMS406 now has a \ud83d\udcdd Notes button that opens the scene picture, an exam snapshot and the numbered legend (new notes pages for RNS pharm, ERS micro and pharm, and RMS micro and pharm).", "Fixed legend numbers in the RNS micro notes: RSV/hMPV now runs 1\u201323, Paramyxoviruses matches its picture, Eq. Encephalitis/Chikungunya shows its own picture instead of Rubella's, and the last four organisms are numbered 43\u201346."] },
   { v: [2, 77], title: "No more double videos", items: ["Videos that were listed in more than one lecture row of the same module (for example Gestational Pathology, Nephrotic Syndrome, Transplant Rejection and Hypersensitivity) now only have a tick box in one row. The other rows point to it with \"same video as … above\" so you never cross it off twice.", "Fixed the organism count in the RNS Sketchy notes and renamed the Measles/Mumps/Parainfluenza section to Paramyxoviruses."] },
   { v: [2, 76], title: "Sketchy micro fixes", items: ["Aspergillus, Mucor, Pneumocystis and CMV now have their Sketchy video links, lengths and Anki links in the RNS micro table.", "Fixed the broken pictures in the Sketchy notes (Measles/Mumps/Parainfluenza, RSV, Candida and the four above) and cleaned up the layout of the last four."] },
