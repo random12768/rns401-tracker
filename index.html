@@ -5687,7 +5687,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 79, built: '2026-10-21T00:03:30Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 80, built: '2026-10-22T02:17:26Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5697,6 +5697,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 80], title: "Readable video titles next to Anki buttons", items: ["In the side-by-side Bootcamp/Pixorize lists (MSK101 and others), video titles no longer get squeezed into one letter per line when Anki is on; the Anki buttons now sit under the title."] },
   { v: [2, 79], title: "One picture per Sketchy video", items: ["Pharm notes now show a single Sketchy picture per video (the newer version where Sketchy has two), with the legend matching that picture's numbers."] },
   { v: [2, 78], title: "Sketchy notes for every MD4 module", items: ["Every Sketchy micro and pharm video in RNS401, ERS403 and RMS406 now has a \ud83d\udcdd Notes button that opens the scene picture, an exam snapshot and the numbered legend (new notes pages for RNS pharm, ERS micro and pharm, and RMS micro and pharm).", "Fixed legend numbers in the RNS micro notes: RSV/hMPV now runs 1\u201323, Paramyxoviruses matches its picture, Eq. Encephalitis/Chikungunya shows its own picture instead of Rubella's, and the last four organisms are numbered 43\u201346."] },
   { v: [2, 77], title: "No more double videos", items: ["Videos that were listed in more than one lecture row of the same module (for example Gestational Pathology, Nephrotic Syndrome, Transplant Rejection and Hypersensitivity) now only have a tick box in one row. The other rows point to it with \"same video as … above\" so you never cross it off twice.", "Fixed the organism count in the RNS Sketchy notes and renamed the Measles/Mumps/Parainfluenza section to Paramyxoviruses."] },
@@ -10860,6 +10861,11 @@ html.anki-stat .lv-aks{box-sizing:border-box;flex:none;width:15.5em;text-align:c
 html.anki-stat .lv-ak{flex:none}
 html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
 @media (max-width:640px){html.anki-stat .lv-aks{width:auto;max-width:15.5em}html.anki-stat .vid-sub .sk-group{flex-wrap:wrap}}
+/* keep video titles readable when Anki buttons share a narrow cell (wrap the Anki chips under the title) */
+.vid-sub .sv-line{flex-wrap:wrap;row-gap:4px}
+.vid-sub .sv-line > .video-link,.vid-sub .sv-line > .sv-nolink{flex:1 1 9em;min-width:min(9em,100%)}
+html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
+.vg-cell .sv-line .lv-ak{margin-left:0}
 </style>
 <script>
 (function () {
