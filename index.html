@@ -5687,7 +5687,7 @@ function bioPlainGroup(row) {
   row.classList.add('has-subs');
   row.after(g);
 }
-/*APPVER*/const APP_VERSION = {major: 2, minor: 80, built: '2026-10-22T02:17:26Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 81, built: '2026-10-22T03:18:17Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5697,6 +5697,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  { v: [2, 81], title: "Faster video speeds", items: ["The built-in video player now goes up to 5\u00d7 (3, 3.5, 4, 4.5 and 5\u00d7 added). The > and < keys step by 0.5 above 2.5\u00d7."] },
   { v: [2, 80], title: "Readable video titles next to Anki buttons", items: ["In the side-by-side Bootcamp/Pixorize lists (MSK101 and others), video titles no longer get squeezed into one letter per line when Anki is on; the Anki buttons now sit under the title."] },
   { v: [2, 79], title: "One picture per Sketchy video", items: ["Pharm notes now show a single Sketchy picture per video (the newer version where Sketchy has two), with the legend matching that picture's numbers."] },
   { v: [2, 78], title: "Sketchy notes for every MD4 module", items: ["Every Sketchy micro and pharm video in RNS401, ERS403 and RMS406 now has a \ud83d\udcdd Notes button that opens the scene picture, an exam snapshot and the numbered legend (new notes pages for RNS pharm, ERS micro and pharm, and RMS micro and pharm).", "Fixed legend numbers in the RNS micro notes: RSV/hMPV now runs 1\u201323, Paramyxoviruses matches its picture, Eq. Encephalitis/Chikungunya shows its own picture instead of Rubella's, and the last four organisms are numbered 43\u201346."] },
@@ -10647,8 +10648,8 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
     else if (k === 'ArrowLeft') { e.preventDefault(); v.currentTime = Math.max(0, v.currentTime - 10); }
     else if (k === 'ArrowRight') { e.preventDefault(); v.currentTime += 10; }
     else if (k === 'f') { e.preventDefault(); if (document.fullscreenElement) document.exitFullscreen(); else v.requestFullscreen && v.requestFullscreen(); }
-    else if (k === '>' || k === '.') { v.playbackRate = Math.min(3, +(v.playbackRate + .25).toFixed(2)); sel(v); }
-    else if (k === '<' || k === ',') { v.playbackRate = Math.max(.5, +(v.playbackRate - .25).toFixed(2)); sel(v); }
+    else if (k === '>' || k === '.') { v.playbackRate = Math.min(5, +(v.playbackRate + (v.playbackRate >= 2.5 ? .5 : .25)).toFixed(2)); sel(v); }
+    else if (k === '<' || k === ',') { v.playbackRate = Math.max(.5, +(v.playbackRate - (v.playbackRate > 2.5 ? .5 : .25)).toFixed(2)); sel(v); }
     else return;
     e.stopPropagation();
   }
@@ -10658,7 +10659,7 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
     var title = (MAN[id] ? MAN[id][0] : file.name).replace(/\.(mp4|mov|mkv|m4v|webm)$/i, '').replace(/ atf$/i, '');
     var rate = parseFloat(g('tracker_video_rate_v1')) || 1;
     plEl = document.createElement('div'); plEl.id = 'lv-pl';
-    plEl.innerHTML = '<div class="lv-top"><div class="lv-t">🎬 ' + esc(title) + '</div><select title="Speed">' + [.75, 1, 1.25, 1.5, 1.75, 2, 2.5].map(function (r) { return '<option value="' + r + '"' + (r === rate ? ' selected' : '') + '>' + r + '×</option>'; }).join('') + '</select>'+(window.lvAnkiHas&&lvAnkiHas(id)&&document.documentElement.classList.contains('anki-on')?'<button class="lv-btn" data-k="1">🧠 Anki</button>':'')+'<button class="lv-btn" data-x="1">✕ Close</button></div><video controls autoplay playsinline></video>';
+    plEl.innerHTML = '<div class="lv-top"><div class="lv-t">🎬 ' + esc(title) + '</div><select title="Speed">' + [.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(function (r) { return '<option value="' + r + '"' + (r === rate ? ' selected' : '') + '>' + r + '×</option>'; }).join('') + '</select>'+(window.lvAnkiHas&&lvAnkiHas(id)&&document.documentElement.classList.contains('anki-on')?'<button class="lv-btn" data-k="1">🧠 Anki</button>':'')+'<button class="lv-btn" data-x="1">✕ Close</button></div><video controls autoplay playsinline></video>';
     document.body.appendChild(plEl);
     var v = plEl.querySelector('video'); curUrl = URL.createObjectURL(file); v.src = curUrl; v.playbackRate = rate;
     var pk = 'tracker_vpos_' + id, last = 0;
