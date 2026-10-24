@@ -5843,7 +5843,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 92, built: '2026-10-24T19:42:32Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 93, built: '2026-10-24T19:49:45Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5853,6 +5853,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  {v:[2,93], title:'Planner calendar shows only your semester', items:['The planner calendar no longer shows exams from other years (MSK101, NBME for MD1, etc.) — only the exams for the semester you are planning, like MD4.']},
   {v:[2,92], title:'Exams named on the planner calendar', items:['Calendar days now say which exam it is (for example "BS Graded Quiz: Mood Disorders" or "ERS403 OSCE") instead of just "Exam".','ERS403 exam date fixed to Mon, Nov 16 (from the class timetable), and RMS406 to Mon, Dec 14. If your saved date was the old default, it updates automatically.']},
   {v:[2,91], title:'Cards/day planner fixed', items:['The new-cards/day setting now really fills each day to about your number (it was losing cards on "same video" rows and stopping at your study minutes).','Calendar days and Today now show the day\'s total new cards.','Sketchy videos in the planner show their real names instead of "Video".']},
   {v:[2,89], title:'Planner balances videos with Anki cards', items:['New setting in the Planner: "New Anki cards / day". Set it and each day gets fewer or more videos so the cards that come with them stay near your limit (works on GHS402 and ERS403, where card counts exist).','Each planned video now shows its card count (🃏) and each day shows its total new cards.','Fixed "behind by ~6 videos" showing before a module has started — pace tracking now begins on the first class day.']},
@@ -7613,6 +7614,14 @@ const EXAM_EVENTS = [
   { date: '2026-12-18', label: 'NBME 2 (CHS303)', icon: '🧪', modules: ['chs303'] }
 ];
 
+// Exam events that belong to the semester you're planning (e.g. MD4 only — no MD1/MD2/MD3 exams on an MD4 calendar).
+function semesterExamEvents() {
+  const sem = plannerModule().mod.semester;
+  const ids = MODULES.filter(m => m.semester === sem).map(m => m.id);
+  if (sem === 'MD4') ids.push('bhs');
+  return EXAM_EVENTS.filter(e => e.modules && e.modules.some(id => ids.indexOf(id) >= 0));
+}
+
 // Semester module map — used by renderModuleStatus() on the Overview tab to figure
 // out which module you're currently in and count down to its key dates. Ranges are
 // contiguous (each module's end is the day before the next one starts) so every day
@@ -8797,7 +8806,7 @@ function renderCalendarDayCell(dateStr, plan) {
   const d = parseDateStr(dateStr);
   const isToday = dateStr === fmtDate(dp.today);
   const inRange = dp.allDates.includes(dateStr);
-  const examEvent = EXAM_EVENTS.find(e => e.date === dateStr);
+  const examEvent = semesterExamEvents().find(e => e.date === dateStr);
   const classIds = CLASS_EVENTS_BY_DATE[dateStr] || [];
   const dayTags = SCHED_DAY_TAGS_BY_DATE[dateStr];
   const cellClasses = ['cal-day'];
@@ -8837,7 +8846,7 @@ function renderCalendar(plan) {
   if (!wrap) return;
   const { dp } = plan;
   const rangeStart = startOfWeek(dp.today);
-  const latestKeyDate = EXAM_EVENTS.reduce((max, e) => e.date > max ? e.date : max, fmtDate(dp.examDate));
+  const latestKeyDate = semesterExamEvents().reduce((max, e) => e.date > max ? e.date : max, fmtDate(dp.examDate));
   const rangeEndAnchor = parseDateStr(latestKeyDate) > dp.examDate ? parseDateStr(latestKeyDate) : dp.examDate;
   const rangeEnd = endOfWeek(rangeEndAnchor);
 
@@ -8950,7 +8959,7 @@ function openDayModal(dateStr) {
   const bucket = plan.assignments[dateStr] || { items: [], totalMin: 0, type: 'content' };
   const rev = plan.reviewSessions[dateStr] || [];
   const classIds = CLASS_EVENTS_BY_DATE[dateStr] || [];
-  const examEvent = EXAM_EVENTS.find(e => e.date === dateStr);
+  const examEvent = semesterExamEvents().find(e => e.date === dateStr);
   const dayTags = SCHED_DAY_TAGS_BY_DATE[dateStr];
   const dayTagsHtml = dayTags ? `<div class="cal-sched-tags" style="margin-bottom:8px;">
     ${dayTags.exam && !examEvent ? (dayTags.examNames.length ? dayTags.examNames : ['Exam']).map(n => `<span class="cal-tag cal-tag-exam" title="${escAttr(n)}">📝 ${escAttr(n)}</span>`).join('') : ''}
