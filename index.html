@@ -3075,6 +3075,7 @@ tr.vid-group > td { padding-top: 2px !important; padding-bottom: 6px !important;
     <div class="progress-bar-bg"><div class="progress-bar-fill fill-overall" id="overall-fill" style="width:0%"></div></div>
   </div>
 
+  <div id="overview-ahead-note" style="display:none;margin:0 0 8px;font-size:0.85em;color:var(--text-dim);"></div>
   <div class="card-row" id="card-row"></div>
 
   <div class="grand-total" id="grand-total-box"></div>
@@ -5843,7 +5844,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 93, built: '2026-10-24T19:49:45Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 94, built: '2026-10-24T19:51:04Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5853,6 +5854,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  {v:[2,94], title:'Overview shows ERS403 during review week', items:['In a review week with no videos, the Overview now shows the next module (ERS403) — its Pathology, Microbiology and Pharmacology progress cards and watch time — so you can get ahead, instead of "Nothing to show yet".']},
   {v:[2,93], title:'Planner calendar shows only your semester', items:['The planner calendar no longer shows exams from other years (MSK101, NBME for MD1, etc.) — only the exams for the semester you are planning, like MD4.']},
   {v:[2,92], title:'Exams named on the planner calendar', items:['Calendar days now say which exam it is (for example "BS Graded Quiz: Mood Disorders" or "ERS403 OSCE") instead of just "Exam".','ERS403 exam date fixed to Mon, Nov 16 (from the class timetable), and RMS406 to Mon, Dec 14. If your saved date was the old default, it updates automatically.']},
   {v:[2,91], title:'Cards/day planner fixed', items:['The new-cards/day setting now really fills each day to about your number (it was losing cards on "same video" rows and stopping at your study minutes).','Calendar days and Today now show the day\'s total new cards.','Sketchy videos in the planner show their real names instead of "Video".']},
@@ -8244,11 +8246,20 @@ function renderOverviewDynamic() {
   if (!cardRowEl) return;
 
   const today = startOfDay(new Date());
-  const mod = getCurrentModule(fmtDate(today));
+  let mod = getCurrentModule(fmtDate(today));
+  // During a review week (no videos/tracker), show the next module that has one so you can get ahead — same as the Planner does.
+  let aheadNote = '';
+  if (!(MODULE_CARDS[mod.id] || []).length) {
+    const list = MODULES.filter(x => x.semester === mod.semester);
+    const nxt = list.find(x => x.start > mod.start && (MODULE_CARDS[x.id] || []).length);
+    if (nxt) { aheadNote = `${mod.short} has no videos, so this is showing ${nxt.short} (starts ${shortDate(nxt.start)}) so you can get ahead.`; mod = nxt; }
+  }
   const accent = `var(${mod.color})`;
   const cards = (MODULE_CARDS[mod.id] || []).filter(c => c.kind !== 'qbank' || qbankAllowedForCurrentUser());
 
   if (overallLabelEl) overallLabelEl.textContent = `${mod.short} progress`;
+  const noteHost = document.getElementById('overview-ahead-note');
+  if (noteHost) { noteHost.textContent = aheadNote; noteHost.style.display = aheadNote ? '' : 'none'; }
 
   if (!cards.length) {
     cardRowEl.innerHTML = `<div class="subject-card" style="border-top-color:${accent}"><h3 style="color:${accent}">${mod.name}</h3><div class="stat">No tracker built for this module yet — check back once it's added.</div></div>`;
