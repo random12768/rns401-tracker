@@ -5842,7 +5842,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 89, built: '2026-10-24T03:45:57Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 90, built: '2026-10-24T03:49:37Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -8535,7 +8535,15 @@ function computePlan() {
   const queue = autoPool.slice();
   dp.contentDates.forEach(d => {
     const bucket = assignments[d];
-    while (queue.length && bucket.totalMin + queue[0].min <= cap && (!cardCap || !queue[0].cards || bucketCards(bucket) + queue[0].cards <= cardCap)) {
+    while (queue.length && (() => {
+      const q0 = queue[0];
+      if (cardCap && q0.cards) {
+        // Cards drive the day: fill toward the cards/day target (small overshoot allowed so days aren't left sparse); study minutes don't block it.
+        const cur = bucketCards(bucket);
+        return cur + q0.cards <= cardCap || (cur < cardCap * 0.6 && cur + q0.cards <= cardCap * 1.3);
+      }
+      return bucket.totalMin + q0.min <= cap && (!cardCap || !q0.cards);
+    })()) {
       const it = queue.shift();
       const bs = bufferStatusFor(it.classDate, d, bufferDays);
       it.bufferStatus = bs ? bs.status : null;
