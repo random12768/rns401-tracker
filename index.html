@@ -933,6 +933,7 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .cal-day:hover { border-color: rgba(255,255,255,0.22); transform: translateY(-1px); }
   .cal-day.today { border-color: var(--planner); box-shadow: 0 0 0 1px var(--planner) inset, 0 0 16px -4px rgba(56,189,248,0.6); }
   .cal-day.out-of-range { opacity: 0.35; }
+  .cal-day.out-of-range.is-exam-date { opacity: 1; }
   .cal-day.exam-day { border-color: var(--red); }
   .cal-day.drag-over { border-color: var(--planner); background: rgba(56,189,248,0.10); }
   .cal-day-num { font-size: 0.8em; color: var(--text-dim); font-weight: 700; flex-shrink: 0; }
@@ -979,7 +980,7 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .cal-class-tag { font-size: 0.68em; color: #7dd3fc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; margin-top: 2px; }
   .cal-sched-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 2px 0; flex-shrink: 0; }
   .cal-tag { font-size: 0.64em; font-weight: 700; padding: 2px 6px; border-radius: 999px; white-space: nowrap; }
-  .cal-tag-exam { background: rgba(248,113,113,0.25); color: #fecaca; }
+  .cal-tag-exam { background: rgba(248,113,113,0.25); color: #fecaca; white-space: normal; line-height: 1.25; display: inline-block; }
   .cal-tag-tbl { background: rgba(251,191,36,0.28); color: #fef3c7; }
   .cal-tag-sgd { background: rgba(45,212,191,0.25); color: #99f6e4; }
   .cal-weekly-total { text-align: right; font-size: 0.7em; color: var(--text-faint); padding: 2px 4px 0 0; }
@@ -5842,7 +5843,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 91, built: '2026-10-24T03:52:54Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 92, built: '2026-10-24T19:42:32Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5852,6 +5853,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  {v:[2,92], title:'Exams named on the planner calendar', items:['Calendar days now say which exam it is (for example "BS Graded Quiz: Mood Disorders" or "ERS403 OSCE") instead of just "Exam".','ERS403 exam date fixed to Mon, Nov 16 (from the class timetable), and RMS406 to Mon, Dec 14. If your saved date was the old default, it updates automatically.']},
   {v:[2,91], title:'Cards/day planner fixed', items:['The new-cards/day setting now really fills each day to about your number (it was losing cards on "same video" rows and stopping at your study minutes).','Calendar days and Today now show the day\'s total new cards.','Sketchy videos in the planner show their real names instead of "Video".']},
   {v:[2,89], title:'Planner balances videos with Anki cards', items:['New setting in the Planner: "New Anki cards / day". Set it and each day gets fewer or more videos so the cards that come with them stay near your limit (works on GHS402 and ERS403, where card counts exist).','Each planned video now shows its card count (🃏) and each day shows its total new cards.','Fixed "behind by ~6 videos" showing before a module has started — pace tracking now begins on the first class day.']},
   { v: [2, 87], title: "Ky's GHS402 study guides", items: ["GHS402 Pathology (GI and Liver/Pancreas), Microbiology and Pharmacology now each have Ky's study guide with pictures and practice questions, and every lecture row has a \ud83d\udcd8 Ky link to the matching section."] },
@@ -7588,6 +7590,8 @@ const CLASS_DATE_MAP = {
 };
 
 const EXAM_EVENTS = [
+  { date: '2026-11-16', label: 'ERS403 End Module Exam', icon: '🎓', modules: ['ers403'] },
+  { date: '2026-12-14', label: 'RMS406 End Module Exam', icon: '🎓', modules: ['rms406'] },
   { date: '2026-10-14', label: 'Block 1 Behavioral Science Exam', icon: '📝', modules: ['bhs'] },
   { date: '2026-12-07', label: 'Behavioral Science Final', icon: '🎓', modules: ['bhs'] },
   { date: '2026-10-12', label: 'MSK101 Formative Quiz', icon: '📝', modules: ['msk101'] },
@@ -7867,16 +7871,34 @@ function schedCellIcon(cls) {
 // Per-day flags (SGD / TBL / exam present) derived from the registrar timetable,
 // used to badge the Planner's monthly calendar so those sessions stand out there too.
 const SCHED_DAY_TAGS_BY_DATE = {};
+// Short, readable name for an assessment slot in the timetable (e.g. "Graded Quiz: Mood Disorders", "ERS403 OSCE", "End Module Exam").
+function schedExamName(text, week) {
+  let t = String(text || '').replace(/\s+/g, ' ').trim();
+  if (/\(cont['’]d\)/i.test(t)) return '';
+  t = t.replace(/\s*(Faculty|Coordinator|Proctor|Examiners?)\s*:.*$/i, '')
+       .replace(/\s*\d{1,2}:\d{2}\s*(AM|PM)?.*$/i, '')
+       .replace(/^ICM\d*:?\s*/i, '')
+       .trim();
+  t = t.replace(/\s*&\s*Student Feedback.*$/i, '').replace(/:\s*$/, '');
+  t = t.replace(/^(BS:\s*)?Graded Quiz:\s*/i, 'BS Graded Quiz: ');
+  if (/^end module$/i.test(t)) t = 'End Module Exam';
+  t = t.replace(/\bEND MODULE$/, 'End Module Exam');
+  return t.length > 48 ? t.slice(0, 46) + '…' : t;
+}
 function buildSchedDayTags() {
   for (const k of Object.keys(SCHED_DAY_TAGS_BY_DATE)) delete SCHED_DAY_TAGS_BY_DATE[k];
   for (const w of SCHEDULE_DATA) {
     for (const d of w.days) {
-      const flags = { sgd: false, tbl: false, exam: false };
+      const flags = { sgd: false, tbl: false, exam: false, examNames: [] };
       for (const s of d.slots) {
         const cls = classifySchedCell(s.text);
         if (cls === 'sc-sgd') flags.sgd = true;
         else if (cls === 'sc-tbl') flags.tbl = true;
-        else if (cls === 'sc-exam') flags.exam = true;
+        else if (cls === 'sc-exam') {
+          flags.exam = true;
+          const nm = schedExamName(s.text, w);
+          if (nm && flags.examNames.indexOf(nm) < 0) flags.examNames.push(nm);
+        }
       }
       if (flags.sgd || flags.tbl || flags.exam) SCHED_DAY_TAGS_BY_DATE[d.date] = flags;
     }
@@ -8275,7 +8297,9 @@ let LAST_ITEMS_BY_ID = {};
 function loadPlannerSettings() {
   try {
     const saved = JSON.parse(localStorage.getItem(pkey(PLANNER_SETTINGS_KEY)));
-    return Object.assign({}, DEFAULT_SETTINGS, { examDate: moduleExamDate(plannerModule().mod) }, saved || {});
+    const _m = plannerModule().mod, _def = moduleExamDate(_m);
+    if (saved && saved.examDate === _m.end && _def !== _m.end) saved.examDate = _def;
+    return Object.assign({}, DEFAULT_SETTINGS, { examDate: _def }, saved || {});
   } catch (e) { return Object.assign({}, DEFAULT_SETTINGS, { examDate: moduleExamDate(plannerModule().mod) }); }
 }
 function savePlannerSettings(s) { localStorage.setItem(pkey(PLANNER_SETTINGS_KEY), JSON.stringify(s)); }
@@ -8779,16 +8803,17 @@ function renderCalendarDayCell(dateStr, plan) {
   const cellClasses = ['cal-day'];
   if (isToday) cellClasses.push('today');
   if (!inRange) cellClasses.push('out-of-range');
+  if (examEvent && examEvent.modules && examEvent.modules.indexOf(plannerModule().mod.id) >= 0) cellClasses.push('is-exam-date');
   if (examEvent || (dayTags && dayTags.exam)) cellClasses.push('exam-day');
   const items = bucket ? bucket.items : [];
   const rev = plan.reviewSessions[dateStr] || [];
   // SGD/TBL/exam badges pulled from the registrar timetable so those session
   // types stand out on the calendar even when there's no assigned study video.
-  const schedTagsHtml = dayTags ? `<div class="cal-sched-tags">
-    ${dayTags.exam && !examEvent ? `<span class="cal-tag cal-tag-exam" title="Exam / assessment today">📝 Exam</span>` : ''}
+  const schedTagsHtml = (examEvent ? `<div class="cal-sched-tags"><span class="cal-tag cal-tag-exam" title="${escAttr(examEvent.label)}">${examEvent.icon} ${escAttr(examEvent.label)}</span></div>` : '') + (dayTags ? `<div class="cal-sched-tags">
+    ${dayTags.exam && !examEvent ? (dayTags.examNames.length ? dayTags.examNames : ['Exam']).map(n => `<span class="cal-tag cal-tag-exam" title="${escAttr(n)}">📝 ${escAttr(n)}</span>`).join('') : ''}
     ${dayTags.tbl ? `<span class="cal-tag cal-tag-tbl" title="TBL today">🧩 TBL</span>` : ''}
     ${dayTags.sgd ? `<span class="cal-tag cal-tag-sgd" title="SGD today">👥 SGD</span>` : ''}
-  </div>` : '';
+  </div>` : '');
 
   // Every item is always shown (no truncation, no "+N more" toggle) — cells
   // simply grow to fit their content, and every pill is draggable to any
@@ -8928,7 +8953,7 @@ function openDayModal(dateStr) {
   const examEvent = EXAM_EVENTS.find(e => e.date === dateStr);
   const dayTags = SCHED_DAY_TAGS_BY_DATE[dateStr];
   const dayTagsHtml = dayTags ? `<div class="cal-sched-tags" style="margin-bottom:8px;">
-    ${dayTags.exam && !examEvent ? `<span class="cal-tag cal-tag-exam">📝 Exam</span>` : ''}
+    ${dayTags.exam && !examEvent ? (dayTags.examNames.length ? dayTags.examNames : ['Exam']).map(n => `<span class="cal-tag cal-tag-exam" title="${escAttr(n)}">📝 ${escAttr(n)}</span>`).join('') : ''}
     ${dayTags.tbl ? `<span class="cal-tag cal-tag-tbl">🧩 TBL</span>` : ''}
     ${dayTags.sgd ? `<span class="cal-tag cal-tag-sgd">👥 SGD</span>` : ''}
   </div>` : '';
