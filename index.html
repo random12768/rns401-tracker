@@ -5846,7 +5846,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 98, built: '2026-10-25T23:02:41Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 99, built: '2026-10-25T23:05:40Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5856,6 +5856,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  {v:[2,99], anki:true, title:'Anki button opens only your flag colours', items:['The 🧠 Anki button now opens only the cards with the flag colour(s) you picked in Settings (unless you picked all cards).']},
   {v:[2,96], anki:true, title:'Anki numbers fixed + Freeze plan button', items:['Every number on the ERS403 and GHS402 Anki tabs was re-counted card by card from Anki (several ERS numbers were too low). With Anki open and the Anki buttons on, they switch to only the cards with your own flag colour(s), whatever colours you picked, and remember them after Anki closes.','The planner\'s cards/day uses the same flagged counts.','New 🔒 Freeze plan button in the Planner: locks every video to its day so nothing moves when you check things off or change settings. Click again to unfreeze.']},
   {v:[2,95], anki:true, title:'Planner stays put + counts your flagged cards', items:['Checking a video off no longer reshuffles the rest of your schedule — every unwatched video keeps its planned day. Videos you missed move to the next open day, and changing a planner setting rebuilds the plan.','The new-cards/day planner now uses your real flagged-card counts from Anki (the same colours you chose in Settings) instead of every card, once the Anki add-on has reported them.']},
   {v:[2,94], title:'Overview shows ERS403 during review week', items:['In a review week with no videos, the Overview now shows the next module (ERS403) — its Pathology, Microbiology and Pharmacology progress cards and watch time — so you can get ahead, instead of "Nothing to show yet".']},
@@ -11246,7 +11247,9 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
   window.lvAnkiHas = function (id) { return !!AK[id]; };
   window.lvAnki = async function (id) {
     var q = query(id); if (!q) { toast('No Anki cards are linked to this video yet'); return; }
-    if (await send(q)) toast('Opened in Anki 🧠', 2200); else missing();
+    /* only open the cards with the flag colour(s) chosen in Settings (unless "all cards" is chosen) */
+    var FL = getFlags(); if (FL[0] !== 0) q = q + ' (' + FL.map(function (f) { return 'flag:' + f; }).join(' or ') + ')';
+    if (await send(q)) toast(FL[0] !== 0 ? 'Opened your ' + listWords(FL.map(flagName)) + ' cards in Anki 🧠' : 'Opened in Anki 🧠', 2200); else missing(q);
   };
 
   /* Settings toggle + connection test */
