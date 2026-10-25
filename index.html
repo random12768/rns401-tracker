@@ -5844,7 +5844,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 95, built: '2026-10-24T19:52:11Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 96, built: '2026-10-25T22:46:36Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5854,6 +5854,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  {v:[2,95], anki:true, title:'Planner stays put + counts your flagged cards', items:['Checking a video off no longer reshuffles the rest of your schedule — every unwatched video keeps its planned day. Videos you missed move to the next open day, and changing a planner setting rebuilds the plan.','The new-cards/day planner now uses your real flagged-card counts from Anki (the same colours you chose in Settings) instead of every card, once the Anki add-on has reported them.']},
   {v:[2,94], title:'Overview shows ERS403 during review week', items:['In a review week with no videos, the Overview now shows the next module (ERS403) — its Pathology, Microbiology and Pharmacology progress cards and watch time — so you can get ahead, instead of "Nothing to show yet".']},
   {v:[2,93], title:'Planner calendar shows only your semester', items:['The planner calendar no longer shows exams from other years (MSK101, NBME for MD1, etc.) — only the exams for the semester you are planning, like MD4.']},
   {v:[2,92], title:'Exams named on the planner calendar', items:['Calendar days now say which exam it is (for example "BS Graded Quiz: Mood Disorders" or "ERS403 OSCE") instead of just "Exam".','ERS403 exam date fixed to Mon, Nov 16 (from the class timetable), and RMS406 to Mon, Dec 14. If your saved date was the old default, it updates automatically.']},
@@ -7547,6 +7548,7 @@ const PLANNER_SETTINGS_KEY = 'rns401_planner_settings_v2';
 const PLANNER_META_KEY = 'rns401_planner_meta_v1';
 const REVIEW_STATE_KEY = 'rns401_review_state_v1';
 const MANUAL_OVERRIDES_KEY = 'rns401_manual_overrides_v1';
+const PLAN_LOCK_KEY = 'rns401_plan_lock_v1';
 
 const DEFAULT_SETTINGS = {
   examDate: '2026-10-23',
@@ -8403,12 +8405,14 @@ function useSuggestedPace() {
 
 function resetBaseline() {
   localStorage.removeItem(pkey(PLANNER_META_KEY));
+  localStorage.removeItem(pkey(PLAN_LOCK_KEY));
   renderPlanner();
 }
 
 function clearAllManualOverrides() {
   if (!confirm('Remove all manually scheduled/dragged items and let the planner auto-schedule everything again?')) return;
   localStorage.removeItem(pkey(MANUAL_OVERRIDES_KEY));
+  localStorage.removeItem(pkey(PLAN_LOCK_KEY));
   renderPlanner();
 }
 
@@ -8427,7 +8431,15 @@ function getItemPool() {
       const min = timeTd ? (parseFloat(timeTd.dataset.min) || parseTimeText(timeTd.textContent)) : 0;
       const suppmin = parseFloat(row.dataset.suppmin) || 0;
       const reviewOnly = row.dataset.reviewonly === '1';
-      const rowCards = parseFloat(row.dataset.cards) || 0;
+      let rowCards = parseFloat(row.dataset.cards) || 0;
+      const liveCards = (host) => {
+        if (typeof window.lvAnkiFlagged !== 'function') return null;
+        const ids = Array.prototype.map.call(host.querySelectorAll('.lv-ak'), b => b.dataset.akid).filter(Boolean);
+        if (!ids.length) return null;
+        let t = 0;
+        for (const id of ids) { const v = window.lvAnkiFlagged(id); if (v === null) return null; t += v; }
+        return t;
+      };
       const effMin = min > 0 ? min : suppmin;
       if (effMin <= 0 && !row.classList.contains('has-subs')) return;
       const cells = row.querySelectorAll('td');
@@ -8469,14 +8481,16 @@ function getItemPool() {
             let v = skT ? skT.textContent.trim() : (a ? a.textContent.replace(/^[^\w(]+/, '').trim() : video);
             if (src) v = src.textContent.trim() + ' · ' + v;
             const subTotalMin = subs.reduce((t, x) => t + (parseFloat(x.dataset.min) || 0), 0) || 1;
-            items.push({ id: r.dataset.sid, lecId: id, subject, title, video: v, min: sm, cards: Math.round(rowCards * sm / subTotalMin), isSupp: false, reviewOnly, checked: r.querySelector('input').checked, classDate });
+            const lc = liveCards(r);
+            items.push({ id: r.dataset.sid, lecId: id, subject, title, video: v, min: sm, cards: lc !== null ? lc : Math.round(rowCards * sm / subTotalMin), isSupp: false, reviewOnly, checked: r.querySelector('input').checked, classDate });
           });
           return;
         }
       }
+      const lcRow = liveCards(row);
       items.push({
         id, lecId: id, subject, title, video,
-        min: effMin, cards: rowCards, isSupp: min <= 0 && suppmin > 0,
+        min: effMin, cards: lcRow !== null ? lcRow : rowCards, isSupp: min <= 0 && suppmin > 0,
         reviewOnly, checked,
         classDate
       });
@@ -8654,6 +8668,36 @@ function computePlan() {
       bucket.totalMin += it.min;
     }
   });
+
+  // ---- Keep the schedule put: checking a video off must not reshuffle the days that are already planned. ----
+  // We remember which day each unwatched video was planned for and keep it there. Only videos that have no saved day
+  // (new ones) or whose saved day already passed get a fresh day; changing any planner setting rebuilds the plan.
+  try {
+    const todayStr0 = fmtDate(dp.today);
+    const sig = [settings.examDate, settings.reviewDays, settings.dailyCapacity, settings.bufferDays, settings.newCards || 0, plannerModule().mod.id, items.reduce((t, i) => t + (i.cards || 0), 0)].join('|');
+    let lock = null;
+    try { lock = JSON.parse(localStorage.getItem(pkey(PLAN_LOCK_KEY))); } catch (e) { lock = null; }
+    const keep = lock && lock.sig === sig && lock.map ? lock.map : null;
+    const loc = {};
+    Object.keys(assignments).forEach(d => assignments[d].items.forEach(it => { if (!it.isManual && autoPool.indexOf(it) >= 0) loc[it.id] = d; }));
+    if (keep) {
+      autoPool.forEach(it => {
+        const from = loc[it.id];
+        const want = keep[it.id];
+        if (!from || !want || want < todayStr0 || !assignments[want] || want === from) return;
+        const fb = assignments[from], tb = assignments[want];
+        fb.items.splice(fb.items.indexOf(it), 1); fb.totalMin -= it.min;
+        tb.items.push(it); tb.totalMin += it.min;
+        loc[it.id] = want;
+        it.overflow = tb.type === 'review';
+        const bs = bufferStatusFor(it.classDate, want, bufferDays);
+        it.bufferStatus = bs ? bs.status : null; it.daysAhead = bs ? bs.daysAhead : null;
+      });
+    }
+    const newMap = {};
+    autoPool.forEach(it => { if (loc[it.id]) newMap[it.id] = loc[it.id]; });
+    localStorage.setItem(pkey(PLAN_LOCK_KEY), JSON.stringify({ sig, map: newMap }));
+  } catch (e) { /* plan lock is a convenience only */ }
 
   const reviewState = loadReviewState();
   const reviewSessions = {};
@@ -11276,16 +11320,20 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
         if (getFlags().join() !== '3' && (getStatus.ver || 0) < 3) { failed = 'old'; break; }
         chunk.forEach(function (q, k) {
           var d = statPill(res[k]); if (!d) return;
+          var _old = statCache[q + '|' + fkey()]; if (!_old || _old.g !== res[k].g) window.__lvAkDirty = true;
           statCache[q + '|' + fkey()] = res[k]; saveCache();
           byQ[q].forEach(function (e) { e.className = 'lv-aks on ' + d.c; e.textContent = d.t; e.title = d.h; });
         });
       }
     } finally {
       statBusy = false;
+      if (window.__lvAkDirty) { window.__lvAkDirty = false; setTimeout(function () { try { if (typeof renderPlanner === 'function' && document.getElementById('planner-calendar')) renderPlanner(); } catch (e) {} }, 60); }
       if (failed === 'old') pills.forEach(function (e) { if (/\bload\b|\bstale\b/.test(e.className)) { e.className = 'lv-aks on off fix'; e.dataset.fix = 'update'; e.textContent = 'Update the add-on (tap)'; e.title = 'Your Anki add-on is the old version, so it can only count green cards. Tap for the 1-minute update guide.'; } });
       else if (failed) pills.forEach(function (e) { if (/\bload\b|\bstale\b/.test(e.className)) { e.className = 'lv-aks on off fix'; e.dataset.fix = 'new'; e.textContent = 'Anki not responding (tap)'; e.title = 'Couldn’t reach Anki. Make sure Anki is open and the add-on is installed.'; } });
     }
   }
+  /* live count of cards (with your chosen flag colours) for a video — used by the Planner's cards/day balancing */
+  window.lvAnkiFlagged = function (id) { var q = query(id); if (!q) return null; var c = statCache[q + '|' + fkey()]; return c && typeof c.g === 'number' ? c.g : null; };
   function soonStatus(ms) { clearTimeout(statTimer); statTimer = setTimeout(refreshStatus, ms || 800); }
   window.lvAnkiRefresh = function () { soonStatus(50); };
   window.addEventListener('load', function () { soonStatus(300); });
