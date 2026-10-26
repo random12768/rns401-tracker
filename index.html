@@ -5847,7 +5847,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 102, built: '2026-10-26T16:43:50Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 103, built: '2026-10-26T16:57:30Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5857,7 +5857,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
-  {v:[2,101], anki:true, title:'Anki progress dashboard', items:['The ERS403 and GHS402 Anki tabs are now a live progress dashboard: percent done, new, reviews due, suspended, cards left, and cards started today — for your flag colours only.','Each topic has a done / new / suspended bar and a due badge; sort by most cards left.','A pace line tells you how many new cards a day you need to finish before your exam, and the date you will finish at your current pace.','The Overview tab has an Anki card for the current module.','Update the Anki add-on (Settings → Anki button) to see reviews-due and new-today numbers.']},
+  {v:[2,101], anki:true, title:'Anki progress dashboard', items:['The ERS403 and GHS402 Anki tabs are now a live progress dashboard: percent done, cards left, reviews due, suspended, and cards started today — for your flag colours only. Suspended cards are skipped, so a topic where every active card is studied shows 100%.','Each topic has a done / left bar, a suspended count and a due badge; sort by most cards left.','A pace line tells you how many new cards a day you need to finish before your exam, and the date you will finish at your current pace.','The Overview tab has an Anki card for the current module.','Update the Anki add-on (Settings → Anki button) to see reviews-due and new-today numbers.']},
   {v:[2,100], title:'Video player has its own progress bar', items:['The video player now shows its own progress bar under the video, with time played, total length and time left (at your current speed). Click the bar to jump. Use the ⛶ button (or the F key) for fullscreen — the bar stays visible.']},
   {v:[2,99], anki:true, title:'Anki button opens only your flag colours', items:['The 🧠 Anki button now opens only the cards with the flag colour(s) you picked in Settings (unless you picked all cards).']},
   {v:[2,96], anki:true, title:'Anki numbers fixed + Freeze plan button', items:['Every number on the ERS403 and GHS402 Anki tabs was re-counted card by card from Anki (several ERS numbers were too low). With Anki open and the Anki buttons on, they switch to only the cards with your own flag colour(s), whatever colours you picked, and remember them after Anki closes.','The planner\'s cards/day uses the same flagged counts.','New 🔒 Freeze plan button in the Planner: locks every video to its day so nothing moves when you check things off or change settings. Click again to unfreeze.']},
@@ -11238,6 +11238,7 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
 .ank-row .akd-due{display:inline-block;margin-left:6px;border-radius:999px;padding:0 7px;font-size:.7rem;font-weight:700;background:rgba(245,158,11,.22);color:#b45309;vertical-align:1px;white-space:nowrap}
 .ank-row .akd-pct{opacity:.65;font-size:.72rem;font-weight:600;margin-left:3px}
 .ank-row.akd-fin{opacity:.7}
+.ank-row .akd-sk{display:inline-block;margin-left:6px;border-radius:999px;padding:0 7px;font-size:.7rem;font-weight:700;font-style:normal;background:rgba(154,164,184,.25);color:inherit;opacity:.85;vertical-align:1px;white-space:nowrap}
 .akd-ov{margin:14px 0;border:1px solid var(--border,rgba(127,127,127,.35));border-radius:16px;padding:14px 16px;background:var(--card,rgba(127,127,127,.08))}
 .akd-ov .h{display:flex;align-items:center;gap:8px;font-weight:800;margin-bottom:10px;flex-wrap:wrap}
 .akd-ov .h .sp{flex:1}
@@ -11470,6 +11471,8 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
       T.g += o.g; if (cur) cur.g += o.g;
       el._o = o;
     });
+    T.act = T.lg - T.sus;
+    T.secs.forEach(function (sc) { sc.act = sc.lg - sc.sus; });
     return T;
   }
   /* one snapshot per day so the page can work out your pace */
@@ -11507,16 +11510,15 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
   function tile(c, n, l, sub) { return '<div class="akd-tile" style="--c:' + c + '"><div class="n">' + n + '</div><div class="l">' + l + '</div><div class="s">' + sub + '</div></div>'; }
   function tilesHtml(T, live) {
     var N = function (v) { return live ? fmtN(v) : '—'; };
-    var fw = (function () { var F = getFlags(); return F[0] === 0 ? '' : listWords(F.map(flagName)); })();
-    return tile('#22c55e', N(T.done), 'Done', live ? 'of ' + fmtN(T.lg) + ' cards · ' + pctTxt(T.done, T.lg) : 'studied at least once') +
-      tile('#4f8cff', N(T.nw), 'New', 'not started yet') +
+    return tile('#22c55e', N(T.done), 'Done', live ? 'of ' + fmtN(T.act) + ' active cards · ' + pctTxt(T.done, T.act) : 'studied at least once') +
+      tile('#4f8cff', N(T.nw), 'Left', 'new cards still to start') +
       tile('#f59e0b', live && T.dueKnown ? fmtN(T.due) : '—', 'Reviews due', T.dueKnown || !live ? 'waiting for you now' : 'update the add-on') +
-      tile('#9aa4b8', N(T.sus), 'Suspended', 'paused in Anki') +
-      tile('#a78bfa', N(T.nw + T.sus), 'Left', live ? fmtN(T.nw) + ' new + ' + fmtN(T.sus) + ' suspended' : 'not studied yet') +
-      tile('#14b8a6', live && T.introKnown ? fmtN(T.intro) : '—', 'New today', T.introKnown || !live ? 'cards started today' : 'update the add-on');
+      tile('#9aa4b8', N(T.sus), 'Suspended', 'skipped · not counted') +
+      tile('#14b8a6', live && T.introKnown ? fmtN(T.intro) : '—', 'New today', T.introKnown || !live ? 'cards started today' : 'update the add-on') +
+      tile('#a78bfa', N(T.mature), 'Mature', 'interval 21+ days');
   }
-  function legendHtml(T) { return '<div class="akd-legend"><span style="--c:#22c55e">Done ' + fmtN(T.done) + '</span><span style="--c:#4f8cff">New ' + fmtN(T.nw) + '</span><span style="--c:#9aa4b8">Suspended ' + fmtN(T.sus) + '</span></div>'; }
-  function stackBar(o, tot) { if (!tot) return '<i></i>'; var w = function (v) { return (v / tot * 100).toFixed(2) + '%'; }; return '<i class="d" style="width:' + w(o.done) + '"></i><i class="n" style="width:' + w(o.nw) + '"></i><i class="s" style="width:' + w(o.sus) + '"></i>'; }
+  function legendHtml(T) { return '<div class="akd-legend"><span style="--c:#22c55e">Done ' + fmtN(T.done) + '</span><span style="--c:#4f8cff">Left to start ' + fmtN(T.nw) + '</span><span style="--c:#9aa4b8">Suspended ' + fmtN(T.sus) + ' (not counted)</span></div>'; }
+  function stackBar(o, tot) { if (!tot) return '<i></i>'; var w = function (v) { return (v / tot * 100).toFixed(2) + '%'; }; return '<i class="d" style="width:' + w(o.done) + '"></i><i class="n" style="width:' + w(o.nw) + '"></i>'; }
   function flagWords() { var F = getFlags(); return F[0] === 0 ? '' : listWords(F.map(flagName)); }
   function footHtml(panel, T, state) {
     var fw = flagWords(), t = parseInt(jget(YK)[panel.id], 10) || 0, tm = t ? niceTime(t) : '';
@@ -11550,30 +11552,32 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
       if (intro) { var dt = document.createElement('details'); dt.className = 'akd-how'; dt.innerHTML = '<summary>How these numbers work</summary>'; dt.appendChild(intro); dash.after(dt); }
       dash.addEventListener('click', function (e) { var b = e.target.closest('[data-akd]'); if (!b) return; if (b.dataset.akd === 'sort') { s(SK, g(SK) === 'left' ? 'order' : 'left'); paint(panel, panel._st || 'ok'); } else if (b.dataset.akd === 'sync') { window.lvAnkRefresh(); } });
     }
-    var pct = live && T.lg ? T.done / T.lg : 0;
-    dash.innerHTML = '<div class="akd-hero"><div class="akd-ring">' + ringSvg(pct) + '<div class="pc"><b>' + (live ? pctTxt(T.done, T.lg) : '—') + '</b><span>' + (live ? 'done' : 'no data') + '</span></div></div><div class="akd-tiles">' + tilesHtml(T, live) + '</div></div>' +
-      (live ? '<div class="akd-stack"><div class="ank-bar stk">' + stackBar(T, T.lg) + '</div>' + legendHtml(T) + '</div><div class="akd-pace">' + paceHtml(panel, T) + '</div>' : '') +
+    var pct = live && T.act ? T.done / T.act : 0;
+    dash.innerHTML = '<div class="akd-hero"><div class="akd-ring">' + ringSvg(pct) + '<div class="pc"><b>' + (live ? pctTxt(T.done, T.act) : '—') + '</b><span>' + (live ? 'done' : 'no data') + '</span></div></div><div class="akd-tiles">' + tilesHtml(T, live) + '</div></div>' +
+      (live ? '<div class="akd-stack"><div class="ank-bar stk">' + stackBar(T, T.act) + '</div>' + legendHtml(T) + '</div><div class="akd-pace">' + paceHtml(panel, T) + '</div>' : '') +
       '<div class="akd-foot">' + footHtml(panel, T, !on ? 'off' : (state || 'ok')) + '</div>';
     /* sections */
     T.secs.forEach(function (sc) {
       var sp = sc.el.querySelectorAll(':scope > span'), ok = on && sc.have === sc.n && sc.n > 0;
-      if (sp[1]) { sp[1].className = 'akd-pct'; sp[1].textContent = ok ? fmtN(sc.done) + ' / ' + fmtN(sc.lg) + ' done · ' + pctTxt(sc.done, sc.lg) : fmtN(sc.g) + ' cards'; }
+      if (sp[1]) { sp[1].className = 'akd-pct'; sp[1].textContent = ok ? fmtN(sc.done) + ' / ' + fmtN(sc.act) + ' done · ' + pctTxt(sc.done, sc.act) : fmtN(sc.g) + ' cards'; }
       var sb = sc.el.querySelector('.akd-secbar'); if (!sb) { sb = document.createElement('div'); sb.className = 'akd-secbar'; sb.innerHTML = '<div class="ank-bar stk"></div>'; sc.el.appendChild(sb); }
-      sb.firstChild.innerHTML = ok ? stackBar(sc, sc.lg) : ''; sb.style.display = ok ? '' : 'none';
+      sb.firstChild.innerHTML = ok ? stackBar(sc, sc.act) : ''; sb.style.display = ok ? '' : 'none';
     });
     /* rows */
     var max = 1; T.rows.forEach(function (r) { max = Math.max(max, r._o ? r._o.g : 0); });
     T.rows.forEach(function (r) {
       var o = r._o || { g: 0 }, bar = r.querySelector('.ank-bar'), b = r.querySelector('b'), lab = r.querySelector('span'), chip = lab.querySelector('.akd-due');
       if (o.live && on) {
-        bar.className = 'ank-bar stk'; bar.innerHTML = stackBar(o, o.g);
-        b.innerHTML = fmtN(o.done) + '/' + fmtN(o.g);
-        b.title = fw ? o.g + ' ' + fw + '-flagged cards of ' + o.t + ' total.' : o.g + ' cards. ';
+        bar.className = 'ank-bar stk'; bar.innerHTML = stackBar(o, o.g - o.sus);
+        b.innerHTML = fmtN(o.done) + '/' + fmtN(o.g - o.sus);
+        b.title = (fw ? o.g + ' ' + fw + '-flagged cards of ' + o.t + ' total.' : o.g + ' cards.') + ' Done ' + o.done + ' of ' + (o.g - o.sus) + ' active (suspended cards are not counted).';
         b.title += ' Done ' + o.done + ' · New ' + o.nw + ' · Suspended ' + o.sus + (typeof o.due === 'number' ? ' · Due now ' + o.due : '');
-        r.classList.toggle('akd-fin', o.g > 0 && o.nw === 0 && o.sus === 0);
+        r.classList.toggle('akd-fin', o.g > 0 && o.nw === 0);
+        var sc2 = lab.querySelector('.akd-sk'); if (o.sus > 0) { if (!sc2) { sc2 = document.createElement('em'); sc2.className = 'akd-sk'; lab.appendChild(sc2); } sc2.textContent = o.sus + ' suspended'; sc2.title = o.sus + ' suspended cards are skipped and not counted in the done total'; } else if (sc2) sc2.remove();
         if (typeof o.due === 'number' && o.due > 0) { if (!chip) { chip = document.createElement('em'); chip.className = 'akd-due'; chip.style.fontStyle = 'normal'; lab.appendChild(chip); } chip.textContent = o.due + ' due'; chip.title = o.due + ' reviews due now in this topic'; }
         else if (chip) chip.remove();
       } else {
+        var sc3 = lab.querySelector('.akd-sk'); if (sc3) sc3.remove();
         bar.className = 'ank-bar'; bar.innerHTML = '<i style="width:' + Math.round(o.g / max * 100) + '%"></i>'; b.textContent = o.g; b.title = ''; r.classList.remove('akd-fin'); if (chip) chip.remove();
       }
     });
@@ -11596,13 +11600,13 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
     if (!panel) { host.style.display = 'none'; return; }
     var T = collect(panel), mod = modOf(panel);
     if (!T.have) { host.style.display = ''; host.innerHTML = '<div class="akd-ov"><div class="h">🧠 Anki — ' + (mod ? mod.short : '') + '<span class="sp"></span></div><div style="font-size:.85rem;opacity:.8">' + (state === 'err' ? '⚠️ Couldn’t reach Anki. Open Anki to see your progress here.' : '⏳ Asking Anki for your progress…') + '</div></div>'; return; }
-    var pct = T.lg ? T.done / T.lg : 0, tg = targetOf(mod), left = tg ? dDiff(ymd(new Date()), tg.date) + 1 : 0, need = left > 0 ? Math.ceil(T.nw / left) : 0;
+    var pct = T.act ? T.done / T.act : 0, tg = targetOf(mod), left = tg ? dDiff(ymd(new Date()), tg.date) + 1 : 0, need = left > 0 ? Math.ceil(T.nw / left) : 0;
     var line = !T.nw ? '🎉 All new cards started.' : left > 0 ? 'Need ~<b>' + fmtN(need) + ' new/day</b> to finish by ' + niceDate(tg.date) + (T.introKnown ? ' · done today: <b>' + fmtN(T.intro) + '</b>' : '') : '';
     host.style.display = '';
     host.innerHTML = '<div class="akd-ov"><div class="h"><span>🧠 Anki — ' + (mod ? mod.short : '') + '</span><span class="sp"></span><button type="button" class="akd-btn" data-akd="open">Open Anki tab →</button></div>' +
-      '<div class="body"><div class="akd-ring">' + ringSvg(pct) + '<div class="pc"><b>' + pctTxt(T.done, T.lg) + '</b><span>done</span></div></div><div class="akd-tiles">' +
-      tile('#22c55e', fmtN(T.done), 'Done', 'of ' + fmtN(T.lg)) + tile('#4f8cff', fmtN(T.nw), 'New', 'not started') + tile('#f59e0b', T.dueKnown ? fmtN(T.due) : '—', 'Due', 'reviews now') + tile('#9aa4b8', fmtN(T.sus), 'Suspended', 'paused') + '</div></div>' +
-      '<div class="ank-bar stk" style="margin-top:10px">' + stackBar(T, T.lg) + '</div>' + (line ? '<div class="pl">' + line + '</div>' : '') + '</div>';
+      '<div class="body"><div class="akd-ring">' + ringSvg(pct) + '<div class="pc"><b>' + pctTxt(T.done, T.act) + '</b><span>done</span></div></div><div class="akd-tiles">' +
+      tile('#22c55e', fmtN(T.done), 'Done', 'of ' + fmtN(T.act) + ' active') + tile('#4f8cff', fmtN(T.nw), 'Left', 'new to start') + tile('#f59e0b', T.dueKnown ? fmtN(T.due) : '—', 'Due', 'reviews now') + tile('#9aa4b8', fmtN(T.sus), 'Suspended', 'skipped') + '</div></div>' +
+      '<div class="ank-bar stk" style="margin-top:10px">' + stackBar(T, T.act) + '</div>' + (line ? '<div class="pl">' + line + '</div>' : '') + '</div>';
     var btn = host.querySelector('[data-akd="open"]');
     if (btn) btn.onclick = function () { var m = modOf(panel); try { switchTab(m.tabId); switchSubTab(panel.id.replace(/^sub-/, '')); window.scrollTo(0, 0); } catch (e) {} };
   }
