@@ -5847,7 +5847,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 104, built: '2026-10-26T17:12:20Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 105, built: '2026-10-26T18:05:53Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -10913,7 +10913,22 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
     await walk(dir, '');
     return { map: map, count: n };
   }
-  function matchedCount() { if (!index) return 0; var c = 0; Object.keys(MAN).forEach(function (id) { if (index.map.has(key(MAN[id][0]))) c++; }); return c; }
+  /* a few tracker videos have a different name in the Sketchy folder */
+  var ALIAS = { glycogenesisatfmp4: 'glycogensynthesisglycogenolysisatfmp4', regulationbyfructose26bisphosphatef26bpatfmp4: 'regulationofglycolysisatfmp4' };
+  function lookup(name) {
+    if (!index) return null;
+    var k = key(name), arr = index.map.get(k) || (ALIAS[k] && index.map.get(ALIAS[k]));
+    if (arr && arr.length) return arr;
+    var nz = function (x) { return x.replace(/(mp4|mov|mkv|m4v|webm)$/, '').replace(/atf$/, ''); };
+    var want = nz(k), best = null, bestD = 1e9;
+    if (want.length >= 4) index.map.forEach(function (v, kk) {
+      var c = nz(kk); if (!c) return;
+      var d = c === want ? 0 : ((c.length >= 6 && want.length >= 6 && (c.indexOf(want) >= 0 || want.indexOf(c) >= 0)) ? Math.abs(c.length - want.length) + 1 : 1e9);
+      if (d < bestD) { bestD = d; best = v; }
+    });
+    return best && best.length ? best : null;
+  }
+  function matchedCount() { if (!index) return 0; var c = 0; Object.keys(MAN).forEach(function (id) { if (lookup(MAN[id][0])) c++; }); return c; }
   async function ensureIndex() {
     if (index) return index;
     if (scanning) return scanning;
@@ -10935,7 +10950,7 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
   /* ---- find the right file for a tracker link ---- */
   async function findFile(id) {
     var m = MAN[id]; if (!m || !index) return null;
-    var arr = index.map.get(key(m[0]));
+    var arr = (index.map.get(key(m[0])) || (ALIAS[key(m[0])] && index.map.get(ALIAS[key(m[0])])));
     if (!arr || !arr.length) {
       /* forgiving match: ignore extension, trailing "atf", and allow one name to contain the other */
       var nz = function (k) { return k.replace(/(mp4|mov|mkv|m4v|webm)$/, '').replace(/atf$/, ''); };
@@ -11491,6 +11506,7 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
       T.g += o.g; if (cur) cur.g += o.g;
       el._o = o;
     });
+    T.all = T.act + T.lock;
     return T;
   }
   /* one snapshot per day so the page can work out your pace */
@@ -11511,15 +11527,15 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
   function paceHtml(panel, T) {
     var mod = modOf(panel), tg = targetOf(mod), today = ymd(new Date());
     if (!mod || !tg) return '';
-    if (!T.left) return '<div class="t">🎉 Every card you plan to study is started' + (T.sus ? ' <span class="akd-chip">' + fmtN(T.sus) + ' suspended</span>' : '') + '</div>Nothing new left. Keep up your daily reviews' + (T.dueKnown && T.due ? ' (' + fmtN(T.due) + ' due now)' : '') + '.';
+    if (!T.left && !T.lock) return '<div class="t">🎉 Every card you plan to study is started' + (T.sus ? ' <span class="akd-chip">' + fmtN(T.sus) + ' suspended</span>' : '') + '</div>Nothing new left. Keep up your daily reviews' + (T.dueKnown && T.due ? ' (' + fmtN(T.due) + ' due now)' : '') + '.';
     var left = dDiff(today, tg.date) + 1;
     if (left < 1) return '<div class="t">⏰ ' + mod.short + ' study window has ended</div>' + fmtN(T.left) + ' cards were never studied.';
-    var need = Math.ceil(T.left / left), pace = paceOf(panel, T);
+    var todo = T.left + T.lock, need = Math.ceil(todo / left), pace = paceOf(panel, T);
     var h = '<div class="t">📅 Finish every new card by ' + niceDate(tg.date) + ' <span style="font-weight:500;opacity:.7">(' + tg.why + ' · ' + left + ' day' + (left > 1 ? 's' : '') + ' left incl. today)</span></div>';
-    h += 'You need about <b>' + fmtN(need) + ' new cards a day</b> (' + fmtN(T.left) + ' left' + (T.gsn - T.lock > 0 ? ', incl. ' + fmtN(T.gsn - T.lock) + ' still suspended for videos you watched' : '') + ').' + (T.lock ? ' Another ' + fmtN(T.lock) + ' cards wait for videos you haven\u2019t watched yet.' : '');
+    h += 'You need about <b>' + fmtN(need) + ' new cards a day</b> (' + fmtN(todo) + ' cards still to do: ' + fmtN(T.left) + ' ready now' + (T.gsn - T.lock > 0 ? ' (' + fmtN(T.gsn - T.lock) + ' of them suspended for videos you watched)' : '') + (T.lock ? ' + ' + fmtN(T.lock) + ' in videos you haven\u2019t watched yet' : '') + '). This assumes you watch every video before then.';
     if (T.introKnown) h += ' New cards done today: <b>' + fmtN(T.intro) + '</b>' + (T.intro >= need ? ' <span class="akd-chip ok">today’s goal met</span>' : ' <span class="akd-chip warn">' + fmtN(need - T.intro) + ' to go today</span>') + '.';
     if (pace) {
-      var days = Math.ceil(T.left / pace.v), eta = new Date(); eta.setDate(eta.getDate() + days - 1); var es = ymd(eta), late = dDiff(tg.date, es);
+      var days = Math.ceil(todo / pace.v), eta = new Date(); eta.setDate(eta.getDate() + days - 1); var es = ymd(eta), late = dDiff(tg.date, es);
       h += '<br>At your pace (~' + Math.round(pace.v) + '/day, from ' + pace.src + ') you finish <b>' + niceDate(es) + '</b> ' + (late <= 0 ? '<span class="akd-chip ok">' + (late < 0 ? Math.abs(late) + ' day' + (late < -1 ? 's' : '') + ' early' : 'on time') + '</span>' : '<span class="akd-chip bad">' + late + ' day' + (late > 1 ? 's' : '') + ' late</span>') + '.';
     } else h += '<br>Do some new cards and I’ll estimate your finish date.';
     return h;
@@ -11528,7 +11544,7 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
   function tile(c, n, l, sub) { return '<div class="akd-tile" style="--c:' + c + '"><div class="n">' + n + '</div><div class="l">' + l + '</div><div class="s">' + sub + '</div></div>'; }
   function tilesHtml(T, live) {
     var N = function (v) { return live ? fmtN(v) : '—'; };
-    return tile('#22c55e', N(T.done), 'Done', live ? 'of ' + fmtN(T.act) + ' cards to study · ' + pctTxt(T.done, T.act) : 'studied at least once') +
+    return tile('#22c55e', N(T.done), 'Done', live ? 'of ' + fmtN(T.all) + ' cards in this module · ' + pctTxt(T.done, T.all) : 'studied at least once') +
       tile('#4f8cff', N(T.left), 'Left', live && T.gsn - T.lock > 0 ? 'still to study · ' + fmtN(T.gsn - T.lock) + ' still suspended' : 'cards still to study') +
       tile('#f59e0b', live && T.dueKnown ? fmtN(T.due) : '—', 'Reviews due', T.dueKnown || !live ? 'waiting for you now' : 'update the add-on') +
       tile('#9aa4b8', N(T.lock), 'Video not watched', 'suspended until you watch it') +
@@ -11536,7 +11552,7 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
       tile('#a78bfa', N(T.mature), 'Mature', 'interval 21+ days');
   }
   function legendHtml(T) { return '<div class="akd-legend"><span style="--c:#22c55e">Done ' + fmtN(T.done) + '</span><span style="--c:#4f8cff">Left ' + fmtN(T.left) + '</span><span style="--c:#9aa4b8">Video not watched ' + fmtN(T.lock) + '</span></div>'; }
-  function stackBar(o, tot) { if (!tot) return '<i></i>'; var w = function (v) { return (v / tot * 100).toFixed(2) + '%'; }; return '<i class="d" style="width:' + w(o.done) + '"></i><i class="n" style="width:' + w(o.left != null ? o.left : o.nw) + '"></i>'; }
+  function stackBar(o, tot) { if (!tot) return '<i></i>'; var w = function (v) { return (v / tot * 100).toFixed(2) + '%'; }; return '<i class="d" style="width:' + w(o.done) + '"></i><i class="n" style="width:' + w(o.left != null ? o.left : o.nw) + '"></i>' + (o.lock && tot === o.all ? '<i style="background:#9aa4b8;opacity:.55;width:' + w(o.lock) + '"></i>' : ''); }
   function flagWords() { var F = getFlags(); return F[0] === 0 ? '' : listWords(F.map(flagName)); }
   function footHtml(panel, T, state) {
     var fw = flagWords(), t = parseInt(jget(YK)[panel.id], 10) || 0, tm = t ? niceTime(t) : '';
@@ -11570,9 +11586,9 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
       if (intro) { var dt = document.createElement('details'); dt.className = 'akd-how'; dt.innerHTML = '<summary>How these numbers work</summary>'; dt.appendChild(intro); dash.after(dt); }
       dash.addEventListener('click', function (e) { var b = e.target.closest('[data-akd]'); if (!b) return; if (b.dataset.akd === 'sort') { s(SK, g(SK) === 'left' ? 'order' : 'left'); paint(panel, panel._st || 'ok'); } else if (b.dataset.akd === 'sync') { window.lvAnkRefresh(); } });
     }
-    var pct = live && T.act ? T.done / T.act : 0;
-    dash.innerHTML = '<div class="akd-hero"><div class="akd-ring">' + ringSvg(pct) + '<div class="pc"><b>' + (live ? pctTxt(T.done, T.act) : '—') + '</b><span>' + (live ? 'done' : 'no data') + '</span></div></div><div class="akd-tiles">' + tilesHtml(T, live) + '</div></div>' +
-      (live ? '<div class="akd-stack"><div class="ank-bar stk">' + stackBar(T, T.act) + '</div>' + legendHtml(T) + '</div><div class="akd-pace">' + paceHtml(panel, T) + '</div>' : '') +
+    var pct = live && T.all ? T.done / T.all : 0;
+    dash.innerHTML = '<div class="akd-hero"><div class="akd-ring">' + ringSvg(pct) + '<div class="pc"><b>' + (live ? pctTxt(T.done, T.all) : '—') + '</b><span>' + (live ? 'done' : 'no data') + '</span></div></div><div class="akd-tiles">' + tilesHtml(T, live) + '</div></div>' +
+      (live ? '<div class="akd-stack"><div class="ank-bar stk">' + stackBar(T, T.all) + '</div>' + legendHtml(T) + '</div><div class="akd-pace">' + paceHtml(panel, T) + '</div>' : '') +
       '<div class="akd-foot">' + footHtml(panel, T, !on ? 'off' : (state || 'ok')) + '</div>';
     /* sections */
     T.secs.forEach(function (sc) {
@@ -11619,13 +11635,13 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
     if (!panel) { host.style.display = 'none'; return; }
     var T = collect(panel), mod = modOf(panel);
     if (!T.have) { host.style.display = ''; host.innerHTML = '<div class="akd-ov"><div class="h">🧠 Anki — ' + (mod ? mod.short : '') + '<span class="sp"></span></div><div style="font-size:.85rem;opacity:.8">' + (state === 'err' ? '⚠️ Couldn’t reach Anki. Open Anki to see your progress here.' : '⏳ Asking Anki for your progress…') + '</div></div>'; return; }
-    var pct = T.act ? T.done / T.act : 0, tg = targetOf(mod), left = tg ? dDiff(ymd(new Date()), tg.date) + 1 : 0, need = left > 0 ? Math.ceil(T.left / left) : 0;
-    var line = !T.left ? '🎉 All new cards started.' : left > 0 ? 'Need ~<b>' + fmtN(need) + ' new/day</b> to finish by ' + niceDate(tg.date) + (T.introKnown ? ' · done today: <b>' + fmtN(T.intro) + '</b>' : '') : '';
+    var pct = T.all ? T.done / T.all : 0, tg = targetOf(mod), left = tg ? dDiff(ymd(new Date()), tg.date) + 1 : 0, need = left > 0 ? Math.ceil((T.left + T.lock) / left) : 0;
+    var line = !T.left && !T.lock ? '🎉 All new cards started.' : left > 0 ? 'Need ~<b>' + fmtN(need) + ' new/day</b> to finish by ' + niceDate(tg.date) + (T.introKnown ? ' · done today: <b>' + fmtN(T.intro) + '</b>' : '') : '';
     host.style.display = '';
     host.innerHTML = '<div class="akd-ov"><div class="h"><span>🧠 Anki — ' + (mod ? mod.short : '') + '</span><span class="sp"></span><button type="button" class="akd-btn" data-akd="open">Open Anki tab →</button></div>' +
-      '<div class="body"><div class="akd-ring">' + ringSvg(pct) + '<div class="pc"><b>' + pctTxt(T.done, T.act) + '</b><span>done</span></div></div><div class="akd-tiles">' +
-      tile('#22c55e', fmtN(T.done), 'Done', 'of ' + fmtN(T.act)) + tile('#4f8cff', fmtN(T.left), 'Left', 'to study') + tile('#f59e0b', T.dueKnown ? fmtN(T.due) : '—', 'Due', 'reviews now') + tile('#9aa4b8', fmtN(T.lock), 'Not watched', 'video not watched') + '</div></div>' +
-      '<div class="ank-bar stk" style="margin-top:10px">' + stackBar(T, T.act) + '</div>' + (line ? '<div class="pl">' + line + '</div>' : '') + '</div>';
+      '<div class="body"><div class="akd-ring">' + ringSvg(pct) + '<div class="pc"><b>' + pctTxt(T.done, T.all) + '</b><span>done</span></div></div><div class="akd-tiles">' +
+      tile('#22c55e', fmtN(T.done), 'Done', 'of ' + fmtN(T.all)) + tile('#4f8cff', fmtN(T.left), 'Left', 'to study') + tile('#f59e0b', T.dueKnown ? fmtN(T.due) : '—', 'Due', 'reviews now') + tile('#9aa4b8', fmtN(T.lock), 'Not watched', 'video not watched') + '</div></div>' +
+      '<div class="ank-bar stk" style="margin-top:10px">' + stackBar(T, T.all) + '</div>' + (line ? '<div class="pl">' + line + '</div>' : '') + '</div>';
     var btn = host.querySelector('[data-akd="open"]');
     if (btn) btn.onclick = function () { var m = modOf(panel); try { switchTab(m.tabId); switchSubTab(panel.id.replace(/^sub-/, '')); window.scrollTo(0, 0); } catch (e) {} };
   }
