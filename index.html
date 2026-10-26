@@ -3079,6 +3079,7 @@ tr.vid-group > td { padding-top: 2px !important; padding-bottom: 6px !important;
   <div class="card-row" id="card-row"></div>
 
   <div class="grand-total" id="grand-total-box"></div>
+  <div id="overview-anki" style="display:none"></div>
 
   <h2 class="guide-heading">How to use this tracker</h2>
   <p class="guide-sub">Everything saves automatically — checkboxes, notes, planner changes (and across devices once you sign in). Quick hits below:</p>
@@ -5846,7 +5847,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 100, built: '2026-10-26T16:16:31Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 101, built: '2026-10-26T16:43:22Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5856,6 +5857,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  {v:[2,101], anki:true, title:'Anki progress dashboard', items:['The ERS403 and GHS402 Anki tabs are now a live progress dashboard: percent done, new, reviews due, suspended, cards left, and cards started today — for your flag colours only.','Each topic has a done / new / suspended bar and a due badge; sort by most cards left.','A pace line tells you how many new cards a day you need to finish before your exam, and the date you will finish at your current pace.','The Overview tab has an Anki card for the current module.','Update the Anki add-on (Settings → Anki button) to see reviews-due and new-today numbers.']},
   {v:[2,100], title:'Video player has its own progress bar', items:['The video player now shows its own progress bar under the video, with time played, total length and time left (at your current speed). Click the bar to jump. Use the ⛶ button (or the F key) for fullscreen — the bar stays visible.']},
   {v:[2,99], anki:true, title:'Anki button opens only your flag colours', items:['The 🧠 Anki button now opens only the cards with the flag colour(s) you picked in Settings (unless you picked all cards).']},
   {v:[2,96], anki:true, title:'Anki numbers fixed + Freeze plan button', items:['Every number on the ERS403 and GHS402 Anki tabs was re-counted card by card from Anki (several ERS numbers were too low). With Anki open and the Anki buttons on, they switch to only the cards with your own flag colour(s), whatever colours you picked, and remember them after Anki closes.','The planner\'s cards/day uses the same flagged counts.','New 🔒 Freeze plan button in the Planner: locks every video to its day so nothing moves when you check things off or change settings. Click again to unfreeze.']},
@@ -11195,6 +11197,56 @@ html.anki-stat .vid-sub .sk-group{flex-wrap:nowrap}
 .vid-sub .sv-line > .video-link,.vid-sub .sv-line > .sv-nolink{flex:1 1 9em;min-width:min(9em,100%)}
 html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
 .vg-cell .sv-line .lv-ak{margin-left:0}
+/* ===== Anki progress dashboard ===== */
+.ank-wrap.akd-on .ank-top,.ank-wrap.akd-on .ank-flagnote{display:none}
+.akd{margin:6px 0 18px;--akd-done:#22c55e;--akd-new:#4f8cff;--akd-sus:#9aa4b8;--akd-due:#f59e0b}
+.akd-hero{display:grid;grid-template-columns:150px 1fr;gap:18px;align-items:center;border:1px solid var(--border,rgba(127,127,127,.35));border-radius:16px;padding:16px 18px;background:var(--card,rgba(127,127,127,.08))}
+.akd-ring{position:relative;width:140px;height:140px}
+.akd-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.akd-ring circle{fill:none;stroke-width:11;stroke-linecap:round}
+.akd-ring .bg{stroke:rgba(127,127,127,.22)}
+.akd-ring .fg{stroke:var(--akd-done);transition:stroke-dashoffset .6s ease}
+.akd-ring .pc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
+.akd-ring .pc b{font-size:2.1rem;font-weight:800}
+.akd-ring .pc span{font-size:.78rem;opacity:.7;margin-top:3px}
+.akd-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.akd-tile{border-radius:12px;padding:10px 12px;background:rgba(127,127,127,.09);border-left:4px solid var(--c,#888);min-width:0}
+.akd-tile .n{font-size:1.55rem;font-weight:800;line-height:1.1}
+.akd-tile .l{font-weight:700;font-size:.85rem;margin-top:2px}
+.akd-tile .s{font-size:.72rem;opacity:.7;margin-top:1px;line-height:1.3}
+.akd-stack{margin:14px 0 4px}
+.ank-bar.stk{display:flex;height:12px;background:rgba(127,127,127,.18)}
+.ank-bar.stk i{height:100%;border-radius:0;flex:none}
+.ank-bar i.d{background:var(--akd-done,#22c55e)}.ank-bar i.n{background:var(--akd-new,#4f8cff)}.ank-bar i.s{background:var(--akd-sus,#9aa4b8)}
+.akd-stack .ank-bar{height:16px}
+.akd-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.78rem;margin-top:6px;opacity:.9}
+.akd-legend span:before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--c)}
+.akd-pace{margin-top:12px;border:1px solid var(--border,rgba(127,127,127,.35));border-radius:14px;padding:12px 16px;font-size:.9rem;line-height:1.55;background:var(--card,rgba(127,127,127,.06))}
+.akd-pace .t{font-weight:800;margin-bottom:2px}
+.akd-chip{display:inline-block;border-radius:999px;padding:1px 9px;font-size:.74rem;font-weight:700;margin-left:6px;background:rgba(127,127,127,.2)}
+.akd-chip.ok{background:rgba(34,197,94,.22);color:#16a34a}.akd-chip.bad{background:rgba(239,68,68,.2);color:#dc2626}.akd-chip.warn{background:rgba(245,158,11,.22);color:#b45309}
+.akd-foot{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;font-size:.8rem;margin-top:10px;opacity:.9}
+.akd-foot .sp{flex:1}
+.akd-btn{font:inherit;font-size:.78rem;font-weight:700;border:1px solid var(--border,rgba(127,127,127,.4));background:transparent;color:inherit;border-radius:999px;padding:3px 11px;cursor:pointer}
+.akd-btn:hover{background:rgba(127,127,127,.15)}
+.akd-how{margin:6px 0;font-size:.85rem}.akd-how summary{cursor:pointer;font-weight:700;opacity:.8}
+.ank-sec{align-items:baseline}
+.ank-sec .akd-secbar{flex:0 0 100%;margin-top:2px}
+.ank-sec .akd-secbar .ank-bar{height:8px}
+.ank-sec .akd-pct{font-weight:700;opacity:.9}
+.ank-wrap.akd-on .ank-row{grid-template-columns:minmax(120px,2fr) 3fr 92px}
+.ank-row .akd-due{display:inline-block;margin-left:6px;border-radius:999px;padding:0 7px;font-size:.7rem;font-weight:700;background:rgba(245,158,11,.22);color:#b45309;vertical-align:1px;white-space:nowrap}
+.ank-row .akd-pct{opacity:.65;font-size:.72rem;font-weight:600;margin-left:3px}
+.ank-row.akd-fin{opacity:.7}
+.akd-ov{margin:14px 0;border:1px solid var(--border,rgba(127,127,127,.35));border-radius:16px;padding:14px 16px;background:var(--card,rgba(127,127,127,.08))}
+.akd-ov .h{display:flex;align-items:center;gap:8px;font-weight:800;margin-bottom:10px;flex-wrap:wrap}
+.akd-ov .h .sp{flex:1}
+.akd-ov .body{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center}
+.akd-ov .akd-ring{width:92px;height:92px}.akd-ov .akd-ring .pc b{font-size:1.4rem}.akd-ov .akd-ring circle{stroke-width:12}
+.akd-ov .akd-tiles{grid-template-columns:repeat(4,1fr)}
+.akd-ov .akd-tile .n{font-size:1.25rem}
+.akd-ov .pl{font-size:.85rem;margin-top:10px;line-height:1.5}
+@media(max-width:700px){.akd-hero,.akd-ov .body{grid-template-columns:1fr;justify-items:center}.akd-tiles,.akd-ov .akd-tiles{width:100%;grid-template-columns:repeat(2,1fr)}.ank-wrap.akd-on .ank-row{grid-template-columns:1fr 92px}}
 </style>
 <script>
 (function () {
@@ -11372,52 +11424,217 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
   }
   /* live count of cards (with your chosen flag colours) for a video — used by the Planner's cards/day balancing */
   window.lvAnkiFlagged = function (id) { var q = query(id); if (!q) return null; var c = statCache[q + '|' + fkey()]; return c && typeof c.g === 'number' ? c.g : null; };
-  /* Anki sub-tabs (ERS / GHS): show only cards with your chosen flag colour(s), asked live from the add-on */
+  /* Anki sub-tabs (ERS / GHS) + Overview card: your real progress, asked live from the add-on */
   var ankBusy = false;
-  function fmtN(n) { return n.toLocaleString('en-US'); }
+  var HK = 'tracker_anki_hist_v1', SK = 'tracker_anki_sort_v1', YK = 'tracker_anki_sync_v1';
+  function fmtN(n) { return (n || 0).toLocaleString('en-US'); }
+  function pad2(n) { return ('0' + n).slice(-2); }
+  function ymd(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+  function pYmd(x) { var p = x.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function dDiff(a, b) { return Math.round((pYmd(b) - pYmd(a)) / 864e5); }
+  function niceDate(x) { return pYmd(x).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
+  function niceTime(t) { return new Date(t).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }); }
+  function jget(k) { try { return JSON.parse(g(k) || '{}') || {}; } catch (e) { return {}; } }
+  function modOf(panel) {
+    var m = /^sub-(\w+)-anki$/.exec(panel.id || ''); if (!m) return null;
+    var id = { ers: 'ers403', ghs: 'ghs402' }[m[1]];
+    try { return MODULES.filter(function (x) { return x.id === id; })[0] || null; } catch (e) { return null; }
+  }
+  function targetOf(mod) {
+    if (!mod) return null;
+    var ex = null;
+    try { EXAM_EVENTS.forEach(function (e) { if (e.modules && e.modules.indexOf(mod.id) >= 0 && /End Module Exam/i.test(e.label)) ex = e.date; }); } catch (e) {}
+    if (ex) { var d = pYmd(ex); d.setDate(d.getDate() - 1); return { date: ymd(d), why: 'the day before your ' + mod.short + ' exam' }; }
+    return { date: mod.end, why: 'the end of ' + mod.short };
+  }
+  function qOfRow(r) { var parts = r.dataset.aktag.split('|').map(function (x) { return 'tag:"#AK_Step1_v*::' + x.replace(/"/g, '') + '"'; }); return parts.length > 1 ? '(' + parts.join(' or ') + ')' : parts[0]; }
+  function cacheOfRow(r) { return statCache[qOfRow(r) + '|' + fkey()]; }
+  function pctTxt(a, b) { if (!b) return '0%'; var p = a / b * 100; return (a > 0 && p < 1 ? '<1' : Math.round(p)) + '%'; }
+  /* gather every number for one Anki panel (works even while the panel is hidden) */
+  function collect(panel) {
+    var rows = Array.prototype.slice.call(panel.querySelectorAll('.ank-row[data-aktag]'));
+    var T = { n: rows.length, have: 0, g: 0, lg: 0, done: 0, nw: 0, sus: 0, due: 0, intro: 0, today: 0, mature: 0, dueKnown: true, introKnown: true, secs: [], rows: rows }, cur = null;
+    Array.prototype.slice.call(panel.querySelectorAll('.ank-sec, .ank-row')).forEach(function (el) {
+      if (el.classList.contains('ank-sec')) { cur = { el: el, g: 0, lg: 0, done: 0, nw: 0, sus: 0, due: 0, have: 0, n: 0 }; T.secs.push(cur); return; }
+      var c = cacheOfRow(el), all = parseInt(el.dataset.all, 10) || 0, o;
+      if (cur) cur.n++;
+      if (c && typeof c.g === 'number') {
+        o = { live: true, g: c.g, t: c.t, done: c.gr || 0, nw: c.gn || 0, sus: c.gs || 0, due: c.gd, intro: c.gi, today: c.gt, mature: c.gm || 0 };
+        T.have++; if (cur) cur.have++;
+        if (typeof c.gd !== 'number') T.dueKnown = false;
+        if (typeof c.gi !== 'number') T.introKnown = false;
+        T.lg += o.g; T.done += o.done; T.nw += o.nw; T.sus += o.sus; T.mature += o.mature;
+        T.due += c.gd || 0; T.intro += c.gi || 0; T.today += c.gt || 0;
+        if (cur) { cur.lg += o.g; cur.done += o.done; cur.nw += o.nw; cur.sus += o.sus; cur.due += c.gd || 0; }
+      } else o = { live: false, g: all, t: all, done: 0, nw: 0, sus: 0 };
+      T.g += o.g; if (cur) cur.g += o.g;
+      el._o = o;
+    });
+    return T;
+  }
+  /* one snapshot per day so the page can work out your pace */
+  function recordHist(panel, T) {
+    if (!T.n || T.have < T.n) return;
+    var h = jget(HK), k = panel.id + '|' + fkey(), today = ymd(new Date());
+    var e = h[k] || {}; e[today] = { d: T.done, t: T.lg };
+    Object.keys(e).forEach(function (d) { if (dDiff(d, today) > 30) delete e[d]; });
+    h[k] = e; s(HK, JSON.stringify(h));
+  }
+  function paceOf(panel, T) {
+    var h = jget(HK)[panel.id + '|' + fkey()] || {}, today = ymd(new Date()), best = null;
+    Object.keys(h).forEach(function (d) { var n = dDiff(d, today); if (n >= 1 && n <= 7 && (!best || n > best.n)) best = { n: n, d: h[d].d }; });
+    if (best) { var p = (T.done - best.d) / best.n; if (p > 0) return { v: p, src: 'the last ' + best.n + ' day' + (best.n > 1 ? 's' : '') }; }
+    if (T.introKnown && T.intro > 0) return { v: T.intro, src: 'today so far' };
+    return null;
+  }
+  function paceHtml(panel, T) {
+    var mod = modOf(panel), tg = targetOf(mod), today = ymd(new Date());
+    if (!mod || !tg) return '';
+    if (!T.nw) return '<div class="t">🎉 Every card you plan to study is started' + (T.sus ? ' <span class="akd-chip">' + fmtN(T.sus) + ' suspended</span>' : '') + '</div>Nothing new left. Keep up your daily reviews' + (T.dueKnown && T.due ? ' (' + fmtN(T.due) + ' due now)' : '') + '.';
+    var left = dDiff(today, tg.date) + 1;
+    if (left < 1) return '<div class="t">⏰ ' + mod.short + ' study window has ended</div>' + fmtN(T.nw) + ' new cards were never started.';
+    var need = Math.ceil(T.nw / left), pace = paceOf(panel, T);
+    var h = '<div class="t">📅 Finish every new card by ' + niceDate(tg.date) + ' <span style="font-weight:500;opacity:.7">(' + tg.why + ' · ' + left + ' day' + (left > 1 ? 's' : '') + ' left incl. today)</span></div>';
+    h += 'You need about <b>' + fmtN(need) + ' new cards a day</b> (' + fmtN(T.nw) + ' left).';
+    if (T.introKnown) h += ' New cards done today: <b>' + fmtN(T.intro) + '</b>' + (T.intro >= need ? ' <span class="akd-chip ok">today’s goal met</span>' : ' <span class="akd-chip warn">' + fmtN(need - T.intro) + ' to go today</span>') + '.';
+    if (pace) {
+      var days = Math.ceil(T.nw / pace.v), eta = new Date(); eta.setDate(eta.getDate() + days - 1); var es = ymd(eta), late = dDiff(tg.date, es);
+      h += '<br>At your pace (~' + Math.round(pace.v) + '/day, from ' + pace.src + ') you finish <b>' + niceDate(es) + '</b> ' + (late <= 0 ? '<span class="akd-chip ok">' + (late < 0 ? Math.abs(late) + ' day' + (late < -1 ? 's' : '') + ' early' : 'on time') + '</span>' : '<span class="akd-chip bad">' + late + ' day' + (late > 1 ? 's' : '') + ' late</span>') + '.';
+    } else h += '<br>Do some new cards and I’ll estimate your finish date.';
+    return h;
+  }
+  function ringSvg(p) { var C = 2 * Math.PI * 52; return '<svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" cx="60" cy="60" r="52" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + (C * (1 - Math.min(1, p))).toFixed(1) + '"/></svg>'; }
+  function tile(c, n, l, sub) { return '<div class="akd-tile" style="--c:' + c + '"><div class="n">' + n + '</div><div class="l">' + l + '</div><div class="s">' + sub + '</div></div>'; }
+  function tilesHtml(T, live) {
+    var N = function (v) { return live ? fmtN(v) : '—'; };
+    var fw = (function () { var F = getFlags(); return F[0] === 0 ? '' : listWords(F.map(flagName)); })();
+    return tile('#22c55e', N(T.done), 'Done', live ? 'of ' + fmtN(T.lg) + ' cards · ' + pctTxt(T.done, T.lg) : 'studied at least once') +
+      tile('#4f8cff', N(T.nw), 'New', 'not started yet') +
+      tile('#f59e0b', live && T.dueKnown ? fmtN(T.due) : '—', 'Reviews due', T.dueKnown || !live ? 'waiting for you now' : 'update the add-on') +
+      tile('#9aa4b8', N(T.sus), 'Suspended', 'paused in Anki') +
+      tile('#a78bfa', N(T.nw + T.sus), 'Left', live ? fmtN(T.nw) + ' new + ' + fmtN(T.sus) + ' suspended' : 'not studied yet') +
+      tile('#14b8a6', live && T.introKnown ? fmtN(T.intro) : '—', 'New today', T.introKnown || !live ? 'cards started today' : 'update the add-on');
+  }
+  function legendHtml(T) { return '<div class="akd-legend"><span style="--c:#22c55e">Done ' + fmtN(T.done) + '</span><span style="--c:#4f8cff">New ' + fmtN(T.nw) + '</span><span style="--c:#9aa4b8">Suspended ' + fmtN(T.sus) + '</span></div>'; }
+  function stackBar(o, tot) { if (!tot) return '<i></i>'; var w = function (v) { return (v / tot * 100).toFixed(2) + '%'; }; return '<i class="d" style="width:' + w(o.done) + '"></i><i class="n" style="width:' + w(o.nw) + '"></i><i class="s" style="width:' + w(o.sus) + '"></i>'; }
+  function flagWords() { var F = getFlags(); return F[0] === 0 ? '' : listWords(F.map(flagName)); }
+  function footHtml(panel, T, state) {
+    var fw = flagWords(), t = parseInt(jget(YK)[panel.id], 10) || 0, tm = t ? niceTime(t) : '';
+    var msg = state === 'off' ? '📊 Showing every card. Turn on the Anki buttons in Settings to see your progress.'
+      : state === 'wait' ? '⏳ Asking Anki for ' + (fw ? 'your <b>' + fw + '</b>-flagged cards' : 'your cards') + '…'
+      : state === 'err' ? '⚠️ Couldn’t reach Anki. Open Anki (with the Tracker add-on) and press Refresh.' + (tm ? ' Showing numbers saved at ' + tm + '.' : '')
+      : '✅ Live from Anki · counting only your <b>' + (fw || 'every') + '</b>' + (fw ? '-flagged' : '') + ' cards' + (tm ? ' · synced ' + tm : '');
+    var warn = state === 'ok' && !T.dueKnown ? '<span class="akd-chip warn" title="Your Anki add-on is the old version. Download the new one in Settings → Anki button.">Update the add-on for due-today numbers</span>' : '';
+    var sort = g(SK) === 'left' ? 'left' : 'order';
+    return '<span>' + msg + '</span>' + warn + '<span class="sp"></span><button type="button" class="akd-btn" data-akd="sort">Sort: ' + (sort === 'left' ? 'most left first' : 'course order') + '</button>' + (state === 'off' ? '' : '<button type="button" class="akd-btn" data-akd="sync">↻ Refresh</button>');
+  }
+  function applySort(panel, T) {
+    var mode = g(SK) === 'left' ? 'left' : 'order';
+    T.secs.forEach(function (sc) {
+      var rows = [], n = sc.el.nextElementSibling;
+      while (n && !n.classList.contains('ank-sec')) { if (n.classList.contains('ank-row')) rows.push(n); n = n.nextElementSibling; }
+      rows.forEach(function (r, i) { if (r.dataset.i == null) r.dataset.i = i; });
+      rows.sort(function (a, b) { return mode === 'left' ? ((b._o ? b._o.nw : 0) - (a._o ? a._o.nw : 0)) || (a.dataset.i - b.dataset.i) : a.dataset.i - b.dataset.i; });
+      var anchor = sc.el; rows.forEach(function (r) { anchor.after(r); anchor = r; });
+    });
+  }
+  function paint(panel, state) {
+    var on = document.documentElement.classList.contains('anki-on');
+    var wrap = panel.querySelector('.ank-wrap'); if (!wrap) return null;
+    var T = collect(panel), live = T.have > 0 && on, fw = flagWords();
+    wrap.classList.add('akd-on');
+    var dash = wrap.querySelector('.akd');
+    if (!dash) {
+      dash = document.createElement('div'); dash.className = 'akd'; wrap.insertBefore(dash, wrap.firstChild);
+      var intro = wrap.querySelector(':scope > .settings-sec-sub:not(.ank-flagnote)');
+      if (intro) { var dt = document.createElement('details'); dt.className = 'akd-how'; dt.innerHTML = '<summary>How these numbers work</summary>'; dt.appendChild(intro); dash.after(dt); }
+      dash.addEventListener('click', function (e) { var b = e.target.closest('[data-akd]'); if (!b) return; if (b.dataset.akd === 'sort') { s(SK, g(SK) === 'left' ? 'order' : 'left'); paint(panel, panel._st || 'ok'); } else if (b.dataset.akd === 'sync') { window.lvAnkRefresh(); } });
+    }
+    var pct = live && T.lg ? T.done / T.lg : 0;
+    dash.innerHTML = '<div class="akd-hero"><div class="akd-ring">' + ringSvg(pct) + '<div class="pc"><b>' + (live ? pctTxt(T.done, T.lg) : '—') + '</b><span>' + (live ? 'done' : 'no data') + '</span></div></div><div class="akd-tiles">' + tilesHtml(T, live) + '</div></div>' +
+      (live ? '<div class="akd-stack"><div class="ank-bar stk">' + stackBar(T, T.lg) + '</div>' + legendHtml(T) + '</div><div class="akd-pace">' + paceHtml(panel, T) + '</div>' : '') +
+      '<div class="akd-foot">' + footHtml(panel, T, !on ? 'off' : (state || 'ok')) + '</div>';
+    /* sections */
+    T.secs.forEach(function (sc) {
+      var sp = sc.el.querySelectorAll(':scope > span'), ok = on && sc.have === sc.n && sc.n > 0;
+      if (sp[1]) { sp[1].className = 'akd-pct'; sp[1].textContent = ok ? fmtN(sc.done) + ' / ' + fmtN(sc.lg) + ' done · ' + pctTxt(sc.done, sc.lg) : fmtN(sc.g) + ' cards'; }
+      var sb = sc.el.querySelector('.akd-secbar'); if (!sb) { sb = document.createElement('div'); sb.className = 'akd-secbar'; sb.innerHTML = '<div class="ank-bar stk"></div>'; sc.el.appendChild(sb); }
+      sb.firstChild.innerHTML = ok ? stackBar(sc, sc.lg) : ''; sb.style.display = ok ? '' : 'none';
+    });
+    /* rows */
+    var max = 1; T.rows.forEach(function (r) { max = Math.max(max, r._o ? r._o.g : 0); });
+    T.rows.forEach(function (r) {
+      var o = r._o || { g: 0 }, bar = r.querySelector('.ank-bar'), b = r.querySelector('b'), lab = r.querySelector('span'), chip = lab.querySelector('.akd-due');
+      if (o.live && on) {
+        bar.className = 'ank-bar stk'; bar.innerHTML = stackBar(o, o.g);
+        b.innerHTML = fmtN(o.done) + '/' + fmtN(o.g);
+        b.title = fw ? o.g + ' ' + fw + '-flagged cards of ' + o.t + ' total.' : o.g + ' cards. ';
+        b.title += ' Done ' + o.done + ' · New ' + o.nw + ' · Suspended ' + o.sus + (typeof o.due === 'number' ? ' · Due now ' + o.due : '');
+        r.classList.toggle('akd-fin', o.g > 0 && o.nw === 0 && o.sus === 0);
+        if (typeof o.due === 'number' && o.due > 0) { if (!chip) { chip = document.createElement('em'); chip.className = 'akd-due'; chip.style.fontStyle = 'normal'; lab.appendChild(chip); } chip.textContent = o.due + ' due'; chip.title = o.due + ' reviews due now in this topic'; }
+        else if (chip) chip.remove();
+      } else {
+        bar.className = 'ank-bar'; bar.innerHTML = '<i style="width:' + Math.round(o.g / max * 100) + '%"></i>'; b.textContent = o.g; b.title = ''; r.classList.remove('akd-fin'); if (chip) chip.remove();
+      }
+    });
+    applySort(panel, T);
+    panel._st = state;
+    return T;
+  }
+  /* Overview card: the current module's Anki progress at a glance */
+  function overviewPanel() {
+    var today = ymd(new Date()), list = [];
+    try { list = MODULES.filter(function (m) { return m.semester === currentSemester; }); } catch (e) { return null; }
+    var key = { ers403: 'ers', ghs402: 'ghs' }, cand = null;
+    list.forEach(function (m) { if (!key[m.id]) return; if (m.start <= today && today <= m.end) cand = m; else if (!cand && m.start > today) cand = m; });
+    if (!cand) { list.forEach(function (m) { if (key[m.id] && m.end < today) cand = m; }); }
+    return cand ? document.getElementById('sub-' + key[cand.id] + '-anki') : null;
+  }
+  function paintOverview(state) {
+    var host = document.getElementById('overview-anki'); if (!host) return;
+    var on = document.documentElement.classList.contains('anki-on'), panel = on ? overviewPanel() : null;
+    if (!panel) { host.style.display = 'none'; return; }
+    var T = collect(panel), mod = modOf(panel);
+    if (!T.have) { host.style.display = ''; host.innerHTML = '<div class="akd-ov"><div class="h">🧠 Anki — ' + (mod ? mod.short : '') + '<span class="sp"></span></div><div style="font-size:.85rem;opacity:.8">' + (state === 'err' ? '⚠️ Couldn’t reach Anki. Open Anki to see your progress here.' : '⏳ Asking Anki for your progress…') + '</div></div>'; return; }
+    var pct = T.lg ? T.done / T.lg : 0, tg = targetOf(mod), left = tg ? dDiff(ymd(new Date()), tg.date) + 1 : 0, need = left > 0 ? Math.ceil(T.nw / left) : 0;
+    var line = !T.nw ? '🎉 All new cards started.' : left > 0 ? 'Need ~<b>' + fmtN(need) + ' new/day</b> to finish by ' + niceDate(tg.date) + (T.introKnown ? ' · done today: <b>' + fmtN(T.intro) + '</b>' : '') : '';
+    host.style.display = '';
+    host.innerHTML = '<div class="akd-ov"><div class="h"><span>🧠 Anki — ' + (mod ? mod.short : '') + '</span><span class="sp"></span><button type="button" class="akd-btn" data-akd="open">Open Anki tab →</button></div>' +
+      '<div class="body"><div class="akd-ring">' + ringSvg(pct) + '<div class="pc"><b>' + pctTxt(T.done, T.lg) + '</b><span>done</span></div></div><div class="akd-tiles">' +
+      tile('#22c55e', fmtN(T.done), 'Done', 'of ' + fmtN(T.lg)) + tile('#4f8cff', fmtN(T.nw), 'New', 'not started') + tile('#f59e0b', T.dueKnown ? fmtN(T.due) : '—', 'Due', 'reviews now') + tile('#9aa4b8', fmtN(T.sus), 'Suspended', 'paused') + '</div></div>' +
+      '<div class="ank-bar stk" style="margin-top:10px">' + stackBar(T, T.lg) + '</div>' + (line ? '<div class="pl">' + line + '</div>' : '') + '</div>';
+    var btn = host.querySelector('[data-akd="open"]');
+    if (btn) btn.onclick = function () { var m = modOf(panel); try { switchTab(m.tabId); switchSubTab(panel.id.replace(/^sub-/, '')); window.scrollTo(0, 0); } catch (e) {} };
+  }
+  async function fetchRows(panel, rows) {
+    var seen = {}, qs = []; rows.forEach(function (r) { var q = qOfRow(r); if (!seen[q]) { seen[q] = 1; qs.push(q); } });
+    for (var i = 0; i < qs.length; i += 10) {
+      var chunk = qs.slice(i, i + 10), res = await getStatus(chunk);
+      if (!res) return false;
+      chunk.forEach(function (q, k) { if (res[k]) statCache[q + '|' + fkey()] = res[k]; });
+      saveCache();
+      if (panel.offsetParent !== null) paint(panel, 'wait'); else paintOverview('wait');
+    }
+    return true;
+  }
   async function refreshAnk() {
     if (ankBusy) return;
-    var panels = Array.prototype.filter.call(document.querySelectorAll('.module-sub-panel[id$="-anki"]'), function (p) { return p.offsetParent !== null && p.querySelector('.ank-row[data-aktag]'); });
-    if (!panels.length) return;
-    var on = document.documentElement.classList.contains('anki-on');
-    var FL = getFlags(), fw = FL[0] === 0 ? '' : listWords(FL.map(flagName));
+    var on = document.documentElement.classList.contains('anki-on'), panels = Array.prototype.filter.call(document.querySelectorAll('.module-sub-panel[id$="-anki"]'), function (p) { return p.offsetParent !== null && p.querySelector('.ank-row[data-aktag]'); });
+    var ov = document.getElementById('panel-overview'), ovp = on && ov && ov.offsetParent !== null ? overviewPanel() : null;
+    if (ovp && panels.indexOf(ovp) < 0) panels.push(ovp);
+    var any = document.querySelectorAll('.module-sub-panel[id$="-anki"]').length > 0; if (!any) return;
     ankBusy = true;
     try {
-      for (var pi = 0; pi < panels.length; pi++) {
+      panels.forEach(function (p) { if (p.offsetParent !== null) paint(p, on ? 'wait' : 'off'); });
+      paintOverview('wait');
+      if (on) for (var pi = 0; pi < panels.length; pi++) {
         var panel = panels[pi], rows = Array.prototype.slice.call(panel.querySelectorAll('.ank-row[data-aktag]'));
-        var note = panel.querySelector('.ank-flagnote');
-        if (!note) { note = document.createElement('div'); note.className = 'ank-flagnote settings-sec-sub'; note.style.cssText = 'margin:6px 0;font-size:.85em;'; var wrap = panel.querySelector('.ank-wrap'); wrap.insertBefore(note, wrap.firstChild); }
-        var qOf = function (r) { var parts = r.dataset.aktag.split('|').map(function (x) { return 'tag:"#AK_Step1_v*::' + x.replace(/"/g, '') + '"'; }); return parts.length > 1 ? '(' + parts.join(' or ') + ')' : parts[0]; };
-        var cache = function (r) { return statCache[qOf(r) + '|' + fkey()]; };
-        var apply = function () {
-          var secTot = {}, have = 0, allTot = 0, flagTot = 0, secs = [], cur = null;
-          var kids = Array.prototype.slice.call(panel.querySelectorAll('.ank-sec, .ank-row'));
-          kids.forEach(function (el) {
-            if (el.classList.contains('ank-sec')) { cur = { el: el, g: 0, a: 0, ok: true }; secs.push(cur); return; }
-            var c = cache(el), b = el.querySelector('b'), all = parseInt(el.dataset.all, 10) || 0;
-            if (c && typeof c.g === 'number') { b.textContent = c.g; b.title = c.g + ' ' + (fw ? fw + '-flagged ' : '') + 'cards of ' + c.t + ' total'; have++; if (cur) { cur.g += c.g; cur.a += c.t; } flagTot += c.g; allTot += c.t; el.dataset.val = c.g; }
-            else { b.textContent = all; el.dataset.val = all; if (cur) { cur.g += all; cur.ok = false; } flagTot += all; allTot += all; }
-          });
-          var max = 1; rows.forEach(function (el) { max = Math.max(max, +el.dataset.val || 0); });
-          rows.forEach(function (el) { var i = el.querySelector('.ank-bar i'); if (i) i.style.width = Math.round((+el.dataset.val || 0) / max * 100) + '%'; });
-          secs.forEach(function (sc) { var sp = sc.el.querySelectorAll('span')[1]; if (sp) sp.textContent = fmtN(sc.g) + ' cards'; });
-          var tops = panel.querySelectorAll('.ank-top .ank-card .n'); secs.forEach(function (sc, i) { if (tops[i]) tops[i].textContent = fmtN(sc.g); });
-          var st = panel.querySelector('.settings-sec-sub strong'); /* keep the intro text, but the unique total below is no longer exact */
-          note.innerHTML = !on ? '📊 Showing every card. Turn on the Anki buttons in Settings to count only your flag colour(s).'
-            : have < rows.length ? (fw ? '⏳ Asking Anki for your <b>' + fw + '</b>-flagged cards… (open Anki; showing every card until then).' : '⏳ Asking Anki for your cards…')
-            : (fw ? '✅ Counting only your <b>' + fw + '</b>-flagged cards: <b>' : '✅ Counting all your cards: <b>') + fmtN(flagTot) + '</b> of ' + fmtN(allTot) + ' total, live from Anki.';
-        };
-        apply();
-        if (!on) continue;
-        var need = rows.filter(function (r) { return !cache(r); }).concat(rows.filter(function (r) { return cache(r); }));
-        var seen = {}, qs = []; need.forEach(function (r) { var q = qOf(r); if (!seen[q]) { seen[q] = 1; qs.push(q); } });
-        for (var i = 0; i < qs.length; i += 10) {
-          var chunk = qs.slice(i, i + 10), res = await getStatus(chunk);
-          if (!res) break;
-          chunk.forEach(function (q, k) { if (res[k]) { statCache[q + '|' + fkey()] = res[k]; } });
-          saveCache(); apply();
-        }
+        var ok = await fetchRows(panel, rows), st = ok ? 'ok' : 'err';
+        if (ok) { var sy = jget(YK); sy[panel.id] = Date.now(); s(YK, JSON.stringify(sy)); recordHist(panel, collect(panel)); }
+        if (panel.offsetParent !== null) paint(panel, st);
+        paintOverview(st);
       }
+      else paintOverview('off');
     } catch (e) { console.warn('ank refresh', e); } finally { ankBusy = false; }
   }
   window.lvAnkRefresh = function () { setTimeout(refreshAnk, 50); };
@@ -11426,7 +11643,7 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
   window.addEventListener('load', function () { soonStatus(300); });
   window.addEventListener('focus', function () { soonStatus(600); });
   document.addEventListener('visibilitychange', function () { if (!document.hidden) soonStatus(600); });
-  setInterval(function () { if (!document.hidden) refreshStatus(); }, 120000);
+  setInterval(function () { if (!document.hidden) { refreshStatus(); refreshAnk(); } }, 120000);
   document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.lv-ak, #lv-anki-toggle, summary, .nav-item, [data-panel], .module-subtab-btn, .tab-btn')) soonStatus(250); }, true);
 
   /* ===== Anki setup guide (interactive) ===== */
