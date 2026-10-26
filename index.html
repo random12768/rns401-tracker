@@ -5847,7 +5847,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 107, built: '2026-10-26T23:19:14Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 108, built: '2026-10-26T23:22:37Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -11232,6 +11232,9 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
 .akd-stack{margin:14px 0 4px}
 .ank-bar.stk{display:flex;height:12px;background:rgba(127,127,127,.18)}
 .ank-bar.stk i{height:100%;border-radius:0;flex:none}
+.akd-sk.akd-todo{background:rgba(245,158,11,.22)!important;color:#b45309!important;font-weight:800}
+.ank-bar.akd-todo-bar{background:rgba(245,158,11,.28)!important;box-shadow:inset 0 0 0 1.5px rgba(245,158,11,.75)}
+.ank-row.akd-row-todo>b{color:#b45309}
 .ank-bar i.d{background:var(--akd-done,#22c55e)}.ank-bar i.n{background:var(--akd-new,#4f8cff)}.ank-bar i.s{background:var(--akd-sus,#9aa4b8)}
 .akd-stack .ank-bar{height:16px}
 .akd-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.78rem;margin-top:6px;opacity:.9}
@@ -11606,8 +11609,8 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
         b.title = (fw ? o.g + ' ' + fw + '-flagged cards of ' + o.t + ' total.' : o.g + ' cards.') + ' Done ' + o.done + ' of ' + o.all + ' cards.';
         b.title += ' Done ' + o.done + ' · New ' + o.nw + ' · Suspended ' + o.sus + (typeof o.due === 'number' ? ' · Due now ' + o.due : '');
         r.classList.toggle('akd-fin', o.all > 0 && o.done >= o.all);
-        var sc2 = lab.querySelector('.akd-sk'), skT = o.lock > 0 ? '\ud83d\udd12 ' + o.lock + ' video not watched' : o.gsn > 0 ? o.gsn + ' suspended' : o.sus > 0 ? o.sus + ' paused' : '';
-        if (skT) { if (!sc2) { sc2 = document.createElement('em'); sc2.className = 'akd-sk'; lab.appendChild(sc2); } sc2.textContent = skT; sc2.title = o.lock > 0 ? o.lock + ' suspended cards wait for this video. Tick the video as watched and they count as still to do.' : o.gsn > 0 ? 'You watched this video but ' + o.gsn + ' cards are still suspended. Unsuspend them to study.' : o.sus + ' cards you studied before are paused and not counted.'; } else if (sc2) sc2.remove();
+        var sc2 = lab.querySelector('.akd-sk'), todo = o.watched === true && o.left > 0, skT = todo ? '\u2705 watched \u00b7 ' + o.left + ' cards to do' : o.lock > 0 ? '\ud83d\udd12 ' + o.lock + ' video not watched' : o.gsn > 0 ? o.gsn + ' suspended' : o.sus > 0 ? o.sus + ' paused' : '';
+        if (skT) { if (!sc2) { sc2 = document.createElement('em'); sc2.className = 'akd-sk'; lab.appendChild(sc2); } sc2.textContent = skT; sc2.classList.toggle('akd-todo', todo); bar.classList.toggle('akd-todo-bar', todo); r.classList.toggle('akd-row-todo', todo); sc2.title = todo ? 'You watched this video but these cards are not done yet.' : o.lock > 0 ? o.lock + ' suspended cards wait for this video. Tick the video as watched and they count as still to do.' : o.gsn > 0 ? 'You watched this video but ' + o.gsn + ' cards are still suspended. Unsuspend them to study.' : o.sus + ' cards you studied before are paused and not counted.'; } else { if (sc2) sc2.remove(); bar.classList.remove('akd-todo-bar'); r.classList.remove('akd-row-todo'); }
         if (typeof o.due === 'number' && o.due > 0) { if (!chip) { chip = document.createElement('em'); chip.className = 'akd-due'; chip.style.fontStyle = 'normal'; lab.appendChild(chip); } chip.textContent = o.due + ' due'; chip.title = o.due + ' reviews due now in this topic'; }
         else if (chip) chip.remove();
       } else {
