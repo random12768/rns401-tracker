@@ -5846,7 +5846,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 99, built: '2026-10-25T23:05:40Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 100, built: '2026-10-26T16:16:31Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -5856,6 +5856,7 @@ function verLabel(v) {
 (function () { const el = document.getElementById('app-version-line'); if (el) el.textContent = verLabel(APP_VERSION); })();
 /* ===== What's new (shown once after an update; newest first) ===== */
 const WHATS_NEW = [
+  {v:[2,100], title:'Video player has its own progress bar', items:['The video player now shows its own progress bar under the video, with time played, total length and time left (at your current speed). Click the bar to jump. Use the ⛶ button (or the F key) for fullscreen — the bar stays visible.']},
   {v:[2,99], anki:true, title:'Anki button opens only your flag colours', items:['The 🧠 Anki button now opens only the cards with the flag colour(s) you picked in Settings (unless you picked all cards).']},
   {v:[2,96], anki:true, title:'Anki numbers fixed + Freeze plan button', items:['Every number on the ERS403 and GHS402 Anki tabs was re-counted card by card from Anki (several ERS numbers were too low). With Anki open and the Anki buttons on, they switch to only the cards with your own flag colour(s), whatever colours you picked, and remember them after Anki closes.','The planner\'s cards/day uses the same flagged counts.','New 🔒 Freeze plan button in the Planner: locks every video to its day so nothing moves when you check things off or change settings. Click again to unfreeze.']},
   {v:[2,95], anki:true, title:'Planner stays put + counts your flagged cards', items:['Checking a video off no longer reshuffles the rest of your schedule — every unwatched video keeps its planned day. Videos you missed move to the next open day, and changing a planner setting rebuilds the plan.','The new-cards/day planner now uses your real flagged-card counts from Anki (the same colours you chose in Settings) instead of every card, once the Anki add-on has reported them.']},
@@ -10854,6 +10855,10 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
 #lv-pl .lv-btn.pri{background:linear-gradient(135deg,#38bdf8,#818cf8);color:#071022;border-color:transparent}
 #lv-pl select{background:rgba(255,255,255,.1);color:#f4f6fb;border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:6px 8px;font:inherit}
 #lv-pl video{flex:1;min-height:0;width:100%;background:#000;outline:none}
+#lv-pl .lv-prog{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0b0f19;color:#f4f6fb;font:600 .8rem/1 system-ui,sans-serif;font-variant-numeric:tabular-nums}
+#lv-pl .lv-pbar{flex:1;height:10px;border-radius:6px;background:rgba(255,255,255,.18);cursor:pointer;position:relative;overflow:hidden}
+#lv-pl .lv-pbar i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#38bdf8,#818cf8);pointer-events:none}
+#lv-pl .lv-prog b{min-width:5.5ch;text-align:center}
 #lv-pl .lv-err{position:absolute;inset:60px 0 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#f4f6fb;text-align:center;padding:24px;background:rgba(0,0,0,.85)}
 #lv-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:100002;background:#0b0f19;color:#f4f6fb;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:10px 18px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:92vw}
 .no-video-access #set-video,.no-video-access a[data-set-video]{display:none!important}
@@ -10954,6 +10959,7 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
 
   /* ---- player ---- */
   function closePlayer() { if (!plEl) return; try { var v = plEl.querySelector('video'); v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} plEl.remove(); plEl = null; if (curUrl) { URL.revokeObjectURL(curUrl); curUrl = null; } document.removeEventListener('keydown', plKey, true); }
+  function lvFs() { try { if (document.fullscreenElement) document.exitFullscreen(); else if (plEl && plEl.requestFullscreen) plEl.requestFullscreen(); } catch (e) {} }
   function plKey(e) {
     if (!plEl) return; var v = plEl.querySelector('video'); var k = e.key;
     if (k === 'Escape') { e.preventDefault(); closePlayer(); return; }
@@ -10961,7 +10967,7 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
     if (k === ' ' || k === 'k') { e.preventDefault(); v.paused ? v.play() : v.pause(); }
     else if (k === 'ArrowLeft') { e.preventDefault(); v.currentTime = Math.max(0, v.currentTime - 10); }
     else if (k === 'ArrowRight') { e.preventDefault(); v.currentTime += 10; }
-    else if (k === 'f') { e.preventDefault(); if (document.fullscreenElement) document.exitFullscreen(); else v.requestFullscreen && v.requestFullscreen(); }
+    else if (k === 'f') { e.preventDefault(); lvFs(); }
     else if (k === '>' || k === '.') { v.playbackRate = Math.min(5, +(v.playbackRate + (v.playbackRate >= 2.5 ? .5 : .25)).toFixed(2)); sel(v); }
     else if (k === '<' || k === ',') { v.playbackRate = Math.max(.5, +(v.playbackRate - (v.playbackRate > 2.5 ? .5 : .25)).toFixed(2)); sel(v); }
     else return;
@@ -10973,17 +10979,25 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
     var title = (MAN[id] ? MAN[id][0] : file.name).replace(/\.(mp4|mov|mkv|m4v|webm)$/i, '').replace(/ atf$/i, '');
     var rate = parseFloat(g('tracker_video_rate_v1')) || 1;
     plEl = document.createElement('div'); plEl.id = 'lv-pl';
-    plEl.innerHTML = '<div class="lv-top"><div class="lv-t">🎬 ' + esc(title) + '</div><select title="Speed">' + [.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(function (r) { return '<option value="' + r + '"' + (r === rate ? ' selected' : '') + '>' + r + '×</option>'; }).join('') + '</select>'+(window.lvAnkiHas&&lvAnkiHas(id)&&document.documentElement.classList.contains('anki-on')?'<button class="lv-btn" data-k="1">🧠 Anki</button>':'')+'<button class="lv-btn" data-x="1">✕ Close</button></div><video controls autoplay playsinline></video>';
+    plEl.innerHTML = '<div class="lv-top"><div class="lv-t">🎬 ' + esc(title) + '</div><select title="Speed">' + [.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(function (r) { return '<option value="' + r + '"' + (r === rate ? ' selected' : '') + '>' + r + '×</option>'; }).join('') + '</select>'+(window.lvAnkiHas&&lvAnkiHas(id)&&document.documentElement.classList.contains('anki-on')?'<button class="lv-btn" data-k="1">🧠 Anki</button>':'')+'<button class="lv-btn" data-fs="1" title="Fullscreen (F)">⛶</button><button class="lv-btn" data-x="1">✕ Close</button></div><video controls controlsList="nofullscreen" autoplay playsinline></video><div class="lv-prog"><b class="lv-cur">0:00</b><div class="lv-pbar" title="Click to jump"><i></i></div><b class="lv-dur">0:00</b><b class="lv-left"></b></div>';
     document.body.appendChild(plEl);
     var v = plEl.querySelector('video'); curUrl = URL.createObjectURL(file); v.src = curUrl; v.playbackRate = rate;
     var pk = 'tracker_vpos_' + id, last = 0;
     v.addEventListener('loadedmetadata', function () { var p = parseFloat(g(pk)); if (p > 5 && p < v.duration - 15) { v.currentTime = p; toast('Resumed at ' + Math.floor(p / 60) + ':' + ('0' + Math.floor(p % 60)).slice(-2), 2200); } v.playbackRate = rate; });
     v.addEventListener('timeupdate', function () { var n = Date.now(); if (n - last > 4000 && v.duration) { last = n; if (v.currentTime > v.duration - 15) s(pk, null); else s(pk, String(v.currentTime)); } });
     v.addEventListener('ended', function () { s(pk, null); });
+    (function () {
+      var bar = plEl.querySelector('.lv-pbar'), fill = bar.querySelector('i'), cu = plEl.querySelector('.lv-cur'), du = plEl.querySelector('.lv-dur'), lf = plEl.querySelector('.lv-left');
+      function fm(t) { t = Math.max(0, Math.floor(t || 0)); var h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), sc = t % 60; return (h ? h + ':' + ('0' + m).slice(-2) : m) + ':' + ('0' + sc).slice(-2); }
+      function upd() { var d = v.duration; if (!d || !isFinite(d)) return; fill.style.width = Math.min(100, v.currentTime / d * 100) + '%'; cu.textContent = fm(v.currentTime); du.textContent = fm(d); var left = (d - v.currentTime) / (v.playbackRate || 1); lf.textContent = fm(left) + ' left'; }
+      ['timeupdate', 'loadedmetadata', 'durationchange', 'seeked', 'ratechange'].forEach(function (ev) { v.addEventListener(ev, upd); });
+      bar.addEventListener('click', function (e) { var r = bar.getBoundingClientRect(); if (v.duration) v.currentTime = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * v.duration; });
+      upd();
+    })();
     v.addEventListener('error', function () {
       var e = document.createElement('div'); e.className = 'lv-err'; e.innerHTML = '<div style="font-size:1.1rem;font-weight:700">This file can’t be played in the browser</div><div style="color:#9aa4b8">It may use a format your browser doesn’t support.</div><button class="lv-btn pri" data-d="1">Open on Google Drive instead</button>'; plEl.appendChild(e);
     });
-    plEl.addEventListener('click', function (e) { if (e.target.closest('[data-x]')) closePlayer(); else if (e.target.closest('[data-k]')) window.lvAnki(id); else if (e.target.closest('[data-d]')) { window.open(href, '_blank', 'noopener'); closePlayer(); } });
+    plEl.addEventListener('click', function (e) { if (e.target.closest('[data-fs]')) lvFs(); else if (e.target.closest('[data-x]')) closePlayer(); else if (e.target.closest('[data-k]')) window.lvAnki(id); else if (e.target.closest('[data-d]')) { window.open(href, '_blank', 'noopener'); closePlayer(); } });
     plEl.querySelector('select').addEventListener('change', function (e) { v.playbackRate = parseFloat(e.target.value); s('tracker_video_rate_v1', e.target.value); });
     document.addEventListener('keydown', plKey, true);
   }
