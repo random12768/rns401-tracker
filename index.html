@@ -5847,7 +5847,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 105, built: '2026-10-26T18:05:53Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 106, built: '2026-10-26T23:18:14Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -11495,7 +11495,7 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
       if (cur) cur.n++;
       if (c && typeof c.g === 'number') {
         o = { live: true, g: c.g, t: c.t, done: c.gr || 0, nw: c.gn || 0, sus: c.gs || 0, gsn: c.gsn != null ? Math.min(c.gsn, c.gs || 0) : (c.gs || 0), due: c.gd, intro: c.gi, today: c.gt, mature: c.gm || 0 };
-        o.watched = rowWatched(el, wm); o.lock = o.watched === false ? o.gsn : 0; o.left = o.nw + o.gsn - o.lock; o.act = o.done + o.left;
+        o.watched = rowWatched(el, wm); o.lock = o.watched === false ? o.gsn : 0; o.left = o.nw + o.gsn - o.lock; o.act = o.done + o.left; o.all = o.act + o.lock;
         T.have++; if (cur) cur.have++;
         if (typeof c.gd !== 'number') T.dueKnown = false;
         if (typeof c.gi !== 'number') T.introKnown = false;
@@ -11552,7 +11552,7 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
       tile('#a78bfa', N(T.mature), 'Mature', 'interval 21+ days');
   }
   function legendHtml(T) { return '<div class="akd-legend"><span style="--c:#22c55e">Done ' + fmtN(T.done) + '</span><span style="--c:#4f8cff">Left ' + fmtN(T.left) + '</span><span style="--c:#9aa4b8">Video not watched ' + fmtN(T.lock) + '</span></div>'; }
-  function stackBar(o, tot) { if (!tot) return '<i></i>'; var w = function (v) { return (v / tot * 100).toFixed(2) + '%'; }; return '<i class="d" style="width:' + w(o.done) + '"></i><i class="n" style="width:' + w(o.left != null ? o.left : o.nw) + '"></i>' + (o.lock && tot === o.all ? '<i style="background:#9aa4b8;opacity:.55;width:' + w(o.lock) + '"></i>' : ''); }
+  function stackBar(o, tot) { if (!tot) return '<i></i>'; var w = function (v) { return (v / tot * 100).toFixed(2) + '%'; }; return '<i class="d" style="width:' + w(o.done) + '"></i><i class="n" style="width:' + w(o.left != null ? o.left : o.nw) + '"></i>' + (o.lock && tot >= (o.act != null ? o.act : o.done + o.left) + o.lock ? '<i style="background:#9aa4b8;opacity:.55;width:' + w(o.lock) + '"></i>' : ''); }
   function flagWords() { var F = getFlags(); return F[0] === 0 ? '' : listWords(F.map(flagName)); }
   function footHtml(panel, T, state) {
     var fw = flagWords(), t = parseInt(jget(YK)[panel.id], 10) || 0, tm = t ? niceTime(t) : '';
@@ -11593,20 +11593,20 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
     /* sections */
     T.secs.forEach(function (sc) {
       var sp = sc.el.querySelectorAll(':scope > span'), ok = on && sc.have === sc.n && sc.n > 0;
-      if (sp[1]) { sp[1].className = 'akd-pct'; sp[1].textContent = ok ? fmtN(sc.done) + ' / ' + fmtN(sc.act) + ' done · ' + pctTxt(sc.done, sc.act) : fmtN(sc.g) + ' cards'; }
+      if (sp[1]) { sp[1].className = 'akd-pct'; sp[1].textContent = ok ? fmtN(sc.done) + ' / ' + fmtN(sc.act + sc.lock) + ' done · ' + pctTxt(sc.done, sc.act + sc.lock) : fmtN(sc.g) + ' cards'; }
       var sb = sc.el.querySelector('.akd-secbar'); if (!sb) { sb = document.createElement('div'); sb.className = 'akd-secbar'; sb.innerHTML = '<div class="ank-bar stk"></div>'; sc.el.appendChild(sb); }
-      sb.firstChild.innerHTML = ok ? stackBar(sc, sc.act) : ''; sb.style.display = ok ? '' : 'none';
+      sb.firstChild.innerHTML = ok ? stackBar(sc, sc.act + sc.lock) : ''; sb.style.display = ok ? '' : 'none';
     });
     /* rows */
     var max = 1; T.rows.forEach(function (r) { max = Math.max(max, r._o ? r._o.g : 0); });
     T.rows.forEach(function (r) {
       var o = r._o || { g: 0 }, bar = r.querySelector('.ank-bar'), b = r.querySelector('b'), lab = r.querySelector('span'), chip = lab.querySelector('.akd-due');
       if (o.live && on) {
-        bar.className = 'ank-bar stk'; bar.innerHTML = stackBar(o, o.act);
-        b.innerHTML = o.act ? fmtN(o.done) + '/' + fmtN(o.act) : '<span style="opacity:.6">—</span>';
-        b.title = (fw ? o.g + ' ' + fw + '-flagged cards of ' + o.t + ' total.' : o.g + ' cards.') + ' Done ' + o.done + ' of ' + o.act + ' to study.';
+        bar.className = 'ank-bar stk'; bar.innerHTML = stackBar(o, o.all);
+        b.innerHTML = o.all ? fmtN(o.done) + '/' + fmtN(o.all) : '<span style="opacity:.6">—</span>';
+        b.title = (fw ? o.g + ' ' + fw + '-flagged cards of ' + o.t + ' total.' : o.g + ' cards.') + ' Done ' + o.done + ' of ' + o.all + ' cards.';
         b.title += ' Done ' + o.done + ' · New ' + o.nw + ' · Suspended ' + o.sus + (typeof o.due === 'number' ? ' · Due now ' + o.due : '');
-        r.classList.toggle('akd-fin', o.act > 0 && o.left === 0);
+        r.classList.toggle('akd-fin', o.all > 0 && o.done >= o.all);
         var sc2 = lab.querySelector('.akd-sk'), skT = o.lock > 0 ? '\ud83d\udd12 ' + o.lock + ' video not watched' : o.gsn > 0 ? o.gsn + ' still suspended' : o.sus > 0 ? o.sus + ' paused' : '';
         if (skT) { if (!sc2) { sc2 = document.createElement('em'); sc2.className = 'akd-sk'; lab.appendChild(sc2); } sc2.textContent = skT; sc2.title = o.lock > 0 ? o.lock + ' suspended cards wait for this video. Tick the video as watched and they count as still to do.' : o.gsn > 0 ? 'You watched this video but ' + o.gsn + ' cards are still suspended. Unsuspend them to study.' : o.sus + ' cards you studied before are paused and not counted.'; } else if (sc2) sc2.remove();
         if (typeof o.due === 'number' && o.due > 0) { if (!chip) { chip = document.createElement('em'); chip.className = 'akd-due'; chip.style.fontStyle = 'normal'; lab.appendChild(chip); } chip.textContent = o.due + ' due'; chip.title = o.due + ' reviews due now in this topic'; }
