@@ -5847,7 +5847,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 108, built: '2026-10-26T23:22:37Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 109, built: '2026-10-26T23:25:26Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -11497,7 +11497,7 @@ html.anki-stat .vg-cell .lv-aks{width:auto;max-width:100%}
       var c = cacheOfRow(el), all = parseInt(el.dataset.all, 10) || 0, o;
       if (cur) cur.n++;
       if (c && typeof c.g === 'number') {
-        o = { live: true, g: c.g, t: c.t, done: c.gr || 0, nw: c.gn || 0, sus: c.gs || 0, gsn: c.gsn != null ? Math.min(c.gsn, c.gs || 0) : (c.gs || 0), due: c.gd, intro: c.gi, today: c.gt, mature: c.gm || 0 };
+        o = { live: true, g: c.g, t: c.t, done: c.gr || 0, nw: c.gn || 0, sus: c.gs || 0, gsn: c.gs || 0, due: c.gd, intro: c.gi, today: c.gt, mature: c.gm || 0 };
         o.watched = rowWatched(el, wm); o.lock = 0; o.left = o.nw + o.gsn - o.lock; o.act = o.done + o.left; o.all = o.act + o.lock;
         T.have++; if (cur) cur.have++;
         if (typeof c.gd !== 'number') T.dueKnown = false;
