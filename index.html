@@ -448,6 +448,10 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .chip-micro { background: var(--micro); }
   .chip-pharm { background: var(--pharm); }
   .plan-item .title { flex: 1; font-size: 0.9em; }
+  .plan-shaky { background: none; border: 0; cursor: pointer; opacity: .35; font-size: 1em; padding: 2px 6px; color: inherit; }
+  .plan-shaky:hover, .plan-shaky.on { opacity: 1; }
+  .plan-shaky-ok { background: var(--planner, #4f8cff); color: #fff; border: 0; border-radius: 8px; padding: 6px 12px; font-weight: 700; font-size: .85em; cursor: pointer; }
+  .plan-shaky-ok:disabled { opacity: .4; cursor: default; }
   .plan-item .title.plan-vid:hover { text-decoration: underline; }
   .plan-item .title .sub-video { color: var(--text-faint); font-size: 0.85em; }
   .plan-item .mins { font-size: 0.8em; color: var(--text-faint); white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -3103,6 +3107,7 @@ tr.vid-group > td { padding-top: 2px !important; padding-bottom: 6px !important;
   </div>
 
   <div id="overview-ahead-note" style="display:none;margin:0 0 8px;font-size:0.85em;color:var(--text-dim);"></div>
+  <div id="overview-continue" style="display:none"></div>
   <div class="card-row" id="card-row"></div>
 
   <div class="grand-total" id="grand-total-box"></div>
@@ -3208,6 +3213,7 @@ tr.vid-group > td { padding-top: 2px !important; padding-bottom: 6px !important;
 <div id="planner-dashboard"></div>
 <div id="planner-subject-countdown"></div>
 <div id="planner-today"></div>
+<div id="planner-timer"></div>
 
 <h3 style="margin-bottom:8px; color:#ccc; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
   Calendar — today through exam day
@@ -5963,7 +5969,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 123, built: '2026-10-27T17:37:06Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 124, built: '2026-10-27T17:41:54Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -9058,6 +9064,95 @@ function openPlanItemVideo(id) {
     a.click();
   } catch (e) { console.warn('openPlanItemVideo', e); }
 }
+
+/* ===================== Study features (v2.124) ===================== */
+function escH(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+function lsJson(k, fb) { try { return JSON.parse(localStorage.getItem(k)) || fb; } catch (e) { return fb; } }
+
+/* --- Shaky videos: flag one and it comes back 3, then 7, then 14 days later --- */
+const SHAKY_KEY = 'tracker_shaky_v1', SHAKY_STEPS = [3, 7, 14];
+function loadShaky() { return lsJson(pkey(SHAKY_KEY), {}); }
+function saveShaky(s) { try { localStorage.setItem(pkey(SHAKY_KEY), JSON.stringify(s)); } catch (e) {} }
+function toggleShaky(id) {
+  const s = loadShaky();
+  if (s[id]) delete s[id];
+  else {
+    const it = LAST_ITEMS_BY_ID[id] || {};
+    s[id] = { sub: it.subject || '', label: it.video || it.title || String(id), min: Math.max(2, Math.round((it.min || 10) * 0.5)), step: 0, due: fmtDate(addDays(startOfDay(new Date()), SHAKY_STEPS[0])) };
+  }
+  saveShaky(s); renderPlanner();
+}
+function shakyRedone(id) {
+  const s = loadShaky(); const e = s[id]; if (!e) return;
+  e.step = (e.step || 0) + 1;
+  if (e.step >= SHAKY_STEPS.length) delete s[id];
+  else e.due = fmtDate(addDays(startOfDay(new Date()), SHAKY_STEPS[e.step]));
+  saveShaky(s); renderPlanner();
+}
+function shakyDue(dateStr) {
+  const todayStr = fmtDate(startOfDay(new Date())), s = loadShaky();
+  return Object.keys(s).filter(id => dateStr === todayStr ? s[id].due <= dateStr : s[id].due === dateStr).map(id => [id, s[id]]);
+}
+function shakyBtn(id) { const on = !!loadShaky()[id]; return `<button class="plan-shaky${on ? ' on' : ''}" onclick="event.stopPropagation();toggleShaky('${id}')" title="${on ? 'Marked shaky — click to unmark' : 'Mark as shaky: I will bring it back in 3, 7, then 14 days'}">🤔</button>`; }
+function shakyTodayHtml(todayStr) {
+  const due = shakyDue(todayStr); if (!due.length) return '';
+  return `<div style="margin-top:10px;font-size:0.85em;color:#f59e0b;font-weight:bold;">🤔 Shaky — re-review today:</div>` + due.map(([id, e]) =>
+    `<div class="plan-item"><span class="chip chip-${escH(e.sub)}">${escH(e.sub)}</span><span class="title">${escH(e.label)}${e.due < todayStr ? ' <span style="color:#e07a7a;font-size:.8em">(overdue)</span>' : ''}</span><span class="mins">~${e.min}m</span><button class="plan-shaky-ok" onclick="shakyRedone('${id}')" title="Done re-watching — next one comes back later">✓ Re-watched</button><button class="plan-shaky" onclick="toggleShaky('${id}')" title="Stop reminding me">✕</button></div>`).join('');
+}
+function shakyCalPill(dateStr) { const n = shakyDue(dateStr).length; return n ? `<div class="cal-item" style="background:#f59e0b;color:#1a1a1a" title="Shaky videos to re-review">🤔 ${n} re-review</div>` : ''; }
+
+/* --- Study timer: log real minutes per subject --- */
+const TIMER_KEY = 'tracker_timer_v1', STUDYLOG_KEY = 'tracker_studylog_v1';
+function tmGet() { return lsJson(pkey(TIMER_KEY), {}); }
+function tmSet(o) { try { localStorage.setItem(pkey(TIMER_KEY), JSON.stringify(o)); } catch (e) {} }
+function tmSecs(o) { return (o.acc || 0) + (o.running && o.start ? Math.floor((Date.now() - o.start) / 1000) : 0); }
+function fmtHMS(t) { t = Math.max(0, Math.floor(t)); const h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60; return (h ? h + ':' : '') + String(m).padStart(h ? 2 : 1, '0') + ':' + String(s).padStart(2, '0'); }
+function fmtHM(sec) { const m = Math.round(sec / 60); return m >= 60 ? Math.floor(m / 60) + 'h ' + (m % 60) + 'm' : m + 'm'; }
+function timerToggle() { const o = tmGet(); if (o.running) { o.acc = tmSecs(o); o.running = false; o.start = 0; } else { o.running = true; o.start = Date.now(); } tmSet(o); renderStudyTimer(); }
+function timerSub(v) { const o = tmGet(); o.sub = v; tmSet(o); }
+function timerDiscard() { tmSet({ sub: tmGet().sub }); renderStudyTimer(); }
+function timerSave() {
+  const o = tmGet(), sec = tmSecs(o); if (sec < 1) return;
+  const subs = plannerSubjects(), sub = o.sub || (subs[0] && subs[0].key) || 'study';
+  const log = lsJson(pkey(STUDYLOG_KEY), {}), d = fmtDate(startOfDay(new Date()));
+  log[d] = log[d] || {}; log[d][sub] = (log[d][sub] || 0) + sec;
+  try { localStorage.setItem(pkey(STUDYLOG_KEY), JSON.stringify(log)); } catch (e) {}
+  tmSet({ sub }); renderStudyTimer();
+}
+function renderStudyTimer() {
+  const el = document.getElementById('planner-timer'); if (!el) return;
+  const o = tmGet(), subs = plannerSubjects(), sub = o.sub || (subs[0] && subs[0].key) || '';
+  const log = lsJson(pkey(STUDYLOG_KEY), {}), today = startOfDay(new Date());
+  let todaySec = 0; const week = {}; let weekSec = 0;
+  for (let i = 0; i < 7; i++) { const d = fmtDate(addDays(today, -i)), e = log[d] || {}; Object.keys(e).forEach(k => { week[k] = (week[k] || 0) + e[k]; weekSec += e[k]; if (i === 0) todaySec += e[k]; }); }
+  const chips = Object.keys(week).map(k => `<span class="chip chip-${escH(k)}">${escH(k)}</span> ${fmtHM(week[k])}`).join(' &nbsp;·&nbsp; ');
+  el.innerHTML = `<div class="today-box" style="margin-top:14px"><h3>⏱ Study timer</h3>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+      <select onchange="timerSub(this.value)" title="Which subject are you studying?">${subs.map(s => `<option value="${escH(s.key)}"${s.key === sub ? ' selected' : ''}>${escH(s.label)}</option>`).join('')}</select>
+      <b id="timer-disp" style="font-size:1.4em;font-variant-numeric:tabular-nums;min-width:4.5ch">${fmtHMS(tmSecs(o))}</b>
+      <button class="plan-shaky-ok" onclick="timerToggle()">${o.running ? '⏸ Pause' : (tmSecs(o) ? '▶ Resume' : '▶ Start')}</button>
+      <button class="plan-shaky-ok" onclick="timerSave()" ${tmSecs(o) ? '' : 'disabled'} title="Add this time to today's log">💾 Save to log</button>
+      <button class="plan-shaky" onclick="timerDiscard()" title="Discard this session">✕</button>
+    </div>
+    <div class="subtext" style="margin-top:8px">Logged today: <b>${fmtHM(todaySec)}</b> &nbsp;·&nbsp; last 7 days: <b>${fmtHM(weekSec)}</b>${chips ? '<br>' + chips : ''}</div></div>`;
+}
+setInterval(function () { const d = document.getElementById('timer-disp'); if (d) d.textContent = fmtHMS(tmSecs(tmGet())); }, 1000);
+
+/* --- Continue watching card on the Overview --- */
+function renderContinueCard() {
+  const host = document.getElementById('overview-continue'); if (!host) return;
+  const r = lsJson('tracker_last_video_v1', null);
+  if (!r || !r.id || !(r.t > 5) || (r.d && r.d - r.t < 15) || Date.now() - r.ts > 14 * 864e5 || typeof window.lvOpenLocal !== 'function') { host.style.display = 'none'; host.innerHTML = ''; return; }
+  const ago = (() => { const m = Math.round((Date.now() - r.ts) / 60000); return m < 2 ? 'just now' : m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' h ago' : Math.round(m / 1440) + ' d ago'; })();
+  host.style.display = '';
+  host.innerHTML = `<div class="today-box" style="margin:0 0 12px;display:flex;flex-wrap:wrap;align-items:center;gap:12px"><div style="flex:1;min-width:220px"><div style="font-size:.78em;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em">▶ Continue watching</div><div style="font-weight:700">${escH(r.title)}</div><div class="subtext">at ${fmtHMS(r.t)} of ${fmtHMS(r.d)} · ${ago}</div></div><button class="plan-shaky-ok" onclick="continueLastVideo()">▶ Continue</button><button class="plan-shaky" onclick="dismissContinue()" title="Hide">✕</button></div>`;
+}
+function continueLastVideo() { const r = lsJson('tracker_last_video_v1', null); if (r && window.lvOpenLocal) window.lvOpenLocal(r.id, r.href); }
+function dismissContinue() { try { localStorage.removeItem('tracker_last_video_v1'); } catch (e) {} renderContinueCard(); }
+window.renderContinueCard = renderContinueCard;
+document.addEventListener('DOMContentLoaded', function () { setTimeout(renderContinueCard, 600); });
+window.addEventListener('load', function () { setTimeout(renderContinueCard, 1500); });
+
 function renderPlanItemRow(it, dateStr) {
   const overflowTag = it.overflow ? ' <span style="color:#e07a7a; font-size:0.68em;">⚠ overflow</span>' : '';
   const manualTag = it.isManual ? ' <span class="supp-tag" style="border-color:var(--planner); color:#9fd0ff;">manually scheduled</span>' : '';
@@ -9069,6 +9164,7 @@ function renderPlanItemRow(it, dateStr) {
     <span class="chip chip-${it.subject}">${it.subject}</span>
     <span class="title plan-vid" onclick="openPlanItemVideo('${it.id}')" title="Click to open this video" style="cursor:pointer">${it.isSupp ? it.title + ' <span class="supp-tag">no video — slides/First Aid</span>' : it.video + ` <span class="sub-video" style="opacity:.65">· ${it.title}</span>`}${manualTag}${overflowTag}${bufferBadge(it)}</span>
     <span class="mins">${it.min}m${it.cards ? ' · 🃏' + it.cards : ''}</span>
+    ${shakyBtn(it.id)}
     ${moveInput}
     ${it.isManual ? `<button style="background:none;border:none;color:#e07a7a;cursor:pointer;font-size:0.9em;" onclick="removeManualOverride('${it.id}')" title="Remove manual schedule">✕</button>` : ''}
   </div>`;
@@ -9098,6 +9194,7 @@ function renderDoneRow(d) {
     <span class="chip chip-${it.subject}">${it.subject}</span>
     <span class="title" style="text-decoration:line-through">${it.isSupp ? it.title : it.video}${it.isSupp ? '' : ` <span class="sub-video" style="text-decoration:none;display:inline-block;opacity:.65">· ${it.title}</span>`}</span>
     <span class="mins">${it.min}m${it.cards ? ' · 🃏' + it.cards : ''}</span>
+    ${shakyBtn(it.id)}
     <span style="font-size:11px;font-weight:600;color:#15803d;background:#dcfce7;border-radius:8px;padding:1px 7px;white-space:nowrap" title="Ticked off ${escAttr(new Date(d.iso).toLocaleString())}">✓ ${fmtDoneStamp(d.iso)}</span>
   </div>`;
 }
@@ -9154,7 +9251,7 @@ function renderCalendarDayCell(dateStr, plan) {
     ${bucket && bucket.totalMin ? `<div class="cal-mins">${bucket.totalMin}m${(() => { const c = (bucket.preCards || 0) + bucket.items.reduce((t, i) => t + (i.cards || 0), 0); return c ? ' · ' + c + '🃏' : ''; })()}</div>` : ''}
     ${bucket && bucket.doneToday && bucket.doneToday.length ? `<div class="cal-done-today" style="font-size:11px;color:#15803d;font-weight:600;margin:2px 0" title="${escAttr(bucket.doneToday.map(i => i.title).join(', '))}">✓ ${bucket.doneToday.length} done today (${bucket.preMin}m)</div>` : ''}
     ${schedTagsHtml}
-    <div class="cal-items">${doneOnDay.map(renderDonePill).join('')}${items.filter(i => !doneIdsOnDay.has(i.id)).map(renderCalPill).join('')}${rev.length ? `<div class="cal-item review-pill">${rev.length} review</div>` : ''}</div>
+    <div class="cal-items">${doneOnDay.map(renderDonePill).join('')}${items.filter(i => !doneIdsOnDay.has(i.id)).map(renderCalPill).join('')}${rev.length ? `<div class="cal-item review-pill">${rev.length} review</div>` : ''}${shakyCalPill(dateStr)}</div>
     ${classIds.length ? `<div class="cal-class-tag">🏫 ${classIds.length} in class</div>` : ''}
   </div>`;
 }
@@ -9375,6 +9472,8 @@ function renderSubjectCountdown(plan) {
   const el = document.getElementById('planner-subject-countdown');
   if (!el) return;
   const { stats, bySubject } = plan;
+  const behind = {};
+  Object.values(plan.assignments || {}).forEach(bk => (bk.items || []).forEach(it => { if (it.bufferStatus === 'behind' && !it.checked) { const o = behind[it.subject] = behind[it.subject] || { n: 0, min: 0 }; o.n++; o.min += it.min || 0; } }));
   const cards = plannerSubjects().map(sj => {
     const s = sj.key; const labels = { [s]: sj.label };
     const b = bySubject[s];
@@ -9386,6 +9485,7 @@ function renderSubjectCountdown(plan) {
       <div class="sc-line">${b.remCount} video(s) left · <b>${b.remMin} min</b> remaining</div>
       <div class="sc-line">Pace needed: <b>${reqLabel}</b> before review starts</div>
       <div class="sc-line">Bare-min. pace to exam: <b>${absLabel}</b></div>
+      ${b.remCount === 0 ? '<div class="sc-line" style="color:#15803d"><b>✅ All videos watched</b></div>' : behind[s] ? `<div class="sc-line" style="color:#e07a7a"><b>⚠ Behind by ${behind[s].min} min</b> · ${behind[s].n} video${behind[s].n === 1 ? '' : 's'} past class date + buffer</div>` : '<div class="sc-line" style="color:#15803d"><b>✅ On pace</b></div>'}
     </div>`;
   }).join('');
   el.innerHTML = `<div class="subject-countdown-row">${cards}</div>`;
@@ -9435,6 +9535,7 @@ function renderPlanner() {
       todayHtml += `<div style="margin-top:10px; font-size:0.85em; color:#e0a860; font-weight:bold;">Review pass:</div>`;
       todayHtml += todayReview.map(r => renderReviewItemRow(todayStr, r)).join('');
     }
+    todayHtml += shakyTodayHtml(todayStr);
   } else if (dp.today.getTime() === dp.examDate.getTime()) {
     todayHtml += `<div class="agenda-empty">🎓 Exam day. Good luck!</div>`;
   } else if (dp.today > dp.examDate) {
@@ -9442,8 +9543,12 @@ function renderPlanner() {
   } else {
     todayHtml += `<div class="agenda-empty">No study day scheduled for today.</div>`;
   }
+  if (!todayBucket) todayHtml += shakyTodayHtml(todayStr);
+  { const ad = typeof window.lvAnkiDueTotal === 'function' ? window.lvAnkiDueTotal() : null;
+    if (ad) todayHtml += `<div class="subtext" style="margin-top:10px">🧠 About <b>${ad}</b> Anki card${ad === 1 ? '' : 's'} due across your videos right now <span style="opacity:.7">(open Anki to review)</span></div>`; }
   todayHtml += `</div>`;
   todayEl.innerHTML = todayHtml;
+  try { renderStudyTimer(); } catch (e) { console.warn('timer', e); }
 
   renderCalendar(plan);
 
@@ -11221,7 +11326,7 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
   }
 
   /* ---- player ---- */
-  function closePlayer() { if (!plEl) return; try { var v = plEl.querySelector('video'); v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} plEl.remove(); plEl = null; if (curUrl) { URL.revokeObjectURL(curUrl); curUrl = null; } document.removeEventListener('keydown', plKey, true); }
+  function closePlayer() { if (!plEl) return; try { if (plEl._rec) plEl._rec(); } catch (e) {} try { var v = plEl.querySelector('video'); v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {} plEl.remove(); plEl = null; if (curUrl) { URL.revokeObjectURL(curUrl); curUrl = null; } document.removeEventListener('keydown', plKey, true); }
   function lvFs() { try { if (document.fullscreenElement) document.exitFullscreen(); else if (plEl && plEl.requestFullscreen) plEl.requestFullscreen(); } catch (e) {} }
   function plKey(e) {
     if (!plEl) return; var v = plEl.querySelector('video'); var k = e.key;
@@ -11247,8 +11352,11 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
     var v = plEl.querySelector('video'); curUrl = URL.createObjectURL(file); v.src = curUrl; v.playbackRate = rate;
     var pk = 'tracker_vpos_' + id, last = 0;
     v.addEventListener('loadedmetadata', function () { var p = parseFloat(g(pk)); if (p > 5 && p < v.duration - 15) { v.currentTime = p; toast('Resumed at ' + Math.floor(p / 60) + ':' + ('0' + Math.floor(p % 60)).slice(-2), 2200); } v.playbackRate = rate; });
-    v.addEventListener('timeupdate', function () { var n = Date.now(); if (n - last > 4000 && v.duration) { last = n; if (v.currentTime > v.duration - 15) s(pk, null); else s(pk, String(v.currentTime)); } });
-    v.addEventListener('ended', function () { s(pk, null); });
+    function recLast() { if (!plEl || !plEl.contains(v) || !v.duration || !isFinite(v.duration)) return; if (v.currentTime > v.duration - 15) s('tracker_last_video_v1', null); else s('tracker_last_video_v1', JSON.stringify({ id: id, title: title, href: href, t: v.currentTime, d: v.duration, ts: Date.now() })); try { if (window.renderContinueCard) window.renderContinueCard(); } catch (e) {} }
+    v.addEventListener('timeupdate', function () { var n = Date.now(); if (n - last > 4000 && v.duration) { last = n; if (v.currentTime > v.duration - 15) s(pk, null); else s(pk, String(v.currentTime)); recLast(); } });
+    v.addEventListener('pause', recLast);
+    plEl._rec = recLast;
+    v.addEventListener('ended', function () { s(pk, null); s('tracker_last_video_v1', null); });
     (function () {
       var bar = plEl.querySelector('.lv-pbar'), fill = bar.querySelector('i'), cu = plEl.querySelector('.lv-cur'), du = plEl.querySelector('.lv-dur'), lf = plEl.querySelector('.lv-left');
       function fm(t) { t = Math.max(0, Math.floor(t || 0)); var h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), sc = t % 60; return (h ? h + ':' + ('0' + m).slice(-2) : m) + ':' + ('0' + sc).slice(-2); }
@@ -11341,6 +11449,7 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
   window.lvPick = async function () { try { await pickFolder(); } catch (e) { if (e && e.name !== 'AbortError') toast('Could not open that folder'); } status(); };
   window.lvRescan = async function () { try { if (!root) root = await idbGet(); if (!root) return window.lvPick(); if (await permission(root, true)) { index = null; await ensureIndex(); } } catch (e) { toast('Could not scan the folder'); } status(); };
   window.lvForget = async function () { root = null; index = null; await idbDel(); s(LS, null); status(); toast('Folder forgotten. You’ll be asked again on your next video click.'); };
+  window.lvOpenLocal = function (id, href) { return open(id, href); };
   window.__lvTest = { setRoot: async function (h) { root = h; index = null; await ensureIndex(); status(); }, find: function (id) { return findFile(id).then(function (h) { return h ? h.name : null; }); }, hasManifest: function (id) { return !!MAN[id]; }, playFile: function (f, id, href) { play(f, id, href); }, count: function () { return Object.keys(MAN).length; } };
   idbGet().then(function (h) { if (h) { root = h; } status(); });
   document.addEventListener('DOMContentLoaded', status);
@@ -11606,6 +11715,13 @@ Object.assign(AK, {"1s_b3cX5zMsMKSvnEzdfltAxt-97YwYO5": "#FirstAid::15_Repro::02
     o.addEventListener('click', function (e) { if (e.target === o || e.target.closest('[data-a=x]')) o.remove(); else if (e.target.closest('[data-a=wiz]')) window.lvAnkiSetup('new'); else if (e.target.closest('[data-a=set]')) window.lvAnkiMarkSetUp(); else if (e.target.closest('[data-a=copy]')) copy(q).then(function () { toast('Copied'); }); });
   }
   window.lvAnkiHas = function (id) { return !!AK[id]; };
+  /* about how many of your tracked videos' cards are due right now (null when Anki buttons are off or nothing is cached yet) */
+  window.lvAnkiDueTotal = function () {
+    if (!document.documentElement.classList.contains('anki-on')) return null;
+    var suf = '|' + fkey(), n = 0, any = false;
+    Object.keys(statCache).forEach(function (k) { if (k.slice(-suf.length) === suf && statCache[k] && typeof statCache[k].gd === 'number') { any = true; n += statCache[k].gd; } });
+    return any ? n : null;
+  };
   window.lvAnki = async function (id) {
     var q = query(id); if (!q) { toast('No Anki cards are linked to this video yet'); return; }
     /* only open the cards with the flag colour(s) chosen in Settings (unless "all cards" is chosen) */
@@ -11662,6 +11778,7 @@ Object.assign(AK, {"1s_b3cX5zMsMKSvnEzdfltAxt-97YwYO5": "#FirstAid::15_Repro::02
     var c = r.gs === r.g ? 'sus' : done ? 'rev' : 'mid', t = r.gr + '/' + r.g + ' in reviews';
     if (c === 'sus') t = '0/' + r.g + ' \u00b7 all suspended';
     else if (r.gn || r.gs) { if (r.gn) t += ' \u00b7 ' + r.gn + ' new'; if (r.gs) t += ' \u00b7 ' + r.gs + ' susp'; }
+    if (c !== 'sus' && r.gd > 0) t += ' \u00b7 \u23f0 ' + r.gd + ' due';
     return { c: c, t: t, h: r.g + ' ' + fadj + 'cards of ' + r.t + ' total. Suspended: ' + r.gs + ' · New (unsuspended, not studied yet): ' + r.gn + ' · Studied (in your reviews): ' + r.gr };
   }
   var statBusy = false, statTimer = null;
