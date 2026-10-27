@@ -5968,7 +5968,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 125, built: '2026-10-27T17:51:00Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 126, built: '2026-10-27T17:53:37Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -8977,9 +8977,6 @@ function computePlan() {
       if (needPerDay > cardCap) warnings.push(`Your ${cardCap} new cards/day limit means ~${Math.ceil(remCards / cardCap)} days for the ${remCards} cards still ahead, but only ${contentDaysCount} study days come before review. You'd need about ${needPerDay} new cards/day to keep up.`);
     }
   }
-  if (behindItemsCount > 0) {
-    warnings.push(`${behindItemsCount} topic(s) are currently scheduled on or after the day they're taught in class — you're behind your ${bufferDays}-day get-ahead buffer on those. Look for the red-outlined items on the calendar.`);
-  }
 
   let meta = loadPlannerMeta();
   const todayStr = fmtDate(dp.today);
@@ -9011,6 +9008,37 @@ function computePlan() {
   // (esp. Micro, which is much heavier this module) needs its own pace
   // check rather than being averaged away in the combined numbers above.
   const remainingPool = autoPool.concat(manualItems, reviewOnlyPool);
+  /* Where you actually stand, in plain terms:
+       behind = already taught in class (class date today or earlier) and not watched yet
+       soon   = taught within the next few days (your get-ahead window) and not watched yet
+       ahead  = watched before its class day */
+  const _todayP = fmtDate(dp.today), _soonEnd = fmtDate(addDays(dp.today, Math.max(1, bufferDays || 3)));
+  const _pending = autoPool.concat(manualItems).filter(i => i.min > 0 && i.classDate);
+  const mkStanding = (subj) => {
+    const st = { behind: { n: 0, min: 0 }, soon: { n: 0, min: 0 }, ahead: { n: 0, min: 0 } };
+    _pending.forEach(i => { if (subj && i.subject !== subj) return; if (i.classDate <= _todayP) { st.behind.n++; st.behind.min += i.min; } else if (i.classDate <= _soonEnd) { st.soon.n++; st.soon.min += i.min; } });
+    completedPool.forEach(i => { if (subj && i.subject !== subj) return; if (i.classDate && i.classDate > _todayP && i.min > 0) { st.ahead.n++; st.ahead.min += i.min; } });
+    return st;
+  };
+  const standing = mkStanding(null);
+  /* Projected finish from how fast you ACTUALLY watch (last 7 days), not from the maximum daily capacity */
+  const _dl = loadDoneLog(), _perDay = {};
+  completedPool.forEach(i => { const v = _dl[i.id] || (i.lecId && _dl[i.lecId]); if (!v) return; const d = doneDay(v); _perDay[d] = (_perDay[d] || 0) + (i.min || 0); });
+  let _sum7 = 0, _act7 = 0;
+  for (let k = 0; k < 7; k++) { const m = _perDay[fmtDate(addDays(dp.today, -k))] || 0; _sum7 += m; if (m > 0) _act7++; }
+  const _remContentMin = autoPool.concat(manualItems).reduce((t, i) => t + (i.min || 0), 0);
+  const _recent = _sum7 / 7;
+  const projBasis = (_act7 >= 2 && _recent >= 5) ? 'recent' : 'capacity';
+  const projPace = projBasis === 'recent' ? Math.round(_recent) : cap;
+  let projFinish = null;
+  if (_remContentMin <= 0) projFinish = _todayP;
+  else if (projPace > 0) projFinish = fmtDate(addDays(dp.today, Math.max(0, Math.ceil(_remContentMin / projPace) - (projBasis === 'capacity' ? 1 : 0))));
+  const projAfterExam = !!(projFinish && projFinish > fmtDate(dp.examDate));
+  // One clear status from where you actually stand (replaces the old baseline-pace guess, which disagreed with the class-date check)
+  if (standing.behind.n > 0) { paceStatus = `behind by ${standing.behind.n} video${standing.behind.n === 1 ? '' : 's'}`; paceClass = 'pace-behind'; }
+  else if (standing.ahead.n > 0) { paceStatus = `ahead by ${standing.ahead.n} video${standing.ahead.n === 1 ? '' : 's'}`; paceClass = 'pace-ahead'; }
+  else { paceStatus = 'on track'; paceClass = 'pace-ontrack'; }
+
   const bySubject = {};
   plannerSubjects().forEach(sj => {
     const s = sj.key;
@@ -9025,7 +9053,7 @@ function computePlan() {
       remCount: remaining.length, doneCount: done.length,
       remMin, doneMin, totalMin,
       pct: totalMin ? Math.round((doneMin / totalMin) * 100) : 100,
-      reqDailyMin, absMinPaceMin
+      reqDailyMin, absMinPaceMin, standing: mkStanding(s)
     };
   });
 
@@ -9036,7 +9064,7 @@ function computePlan() {
       paceStatus, paceClass, paceDiff, reviewDaysCount: dp.reviewDates.length,
       daysUntilExam, baselineDate: fmtDate(effBase), notStarted,
       finishDate: lastAssignedDate, reviewStartDate,
-      absoluteMinPaceMin, behindItemsCount, tightItemsCount
+      absoluteMinPaceMin, behindItemsCount, tightItemsCount, standing, cap, projFinish, projPace, projBasis, projAfterExam, planFinish: lastAssignedDate
     },
     warnings
   };
@@ -9431,12 +9459,18 @@ function renderWeeklyDigest(plan) {
   el.innerHTML = `<div class="digest-box">📆 <strong>This week (${rangeLabel}):</strong> ${parts.join(' &nbsp;·&nbsp; ')} — <strong>${totalCount} video${totalCount === 1 ? '' : 's'}, ~${hours}h ${mins}m</strong> total${reviewPart}.</div>`;
 }
 
+function standingSub(st, cap) {
+  if (!st) return '';
+  const parts = [];
+  if (st.behind.n) parts.push(`<b>${st.behind.n}</b> already taught in class, not watched (${st.behind.min} min) — about ${Math.max(1, Math.ceil(st.behind.min / Math.max(1, cap || 60)))} day${Math.ceil(st.behind.min / Math.max(1, cap || 60)) > 1 ? 's' : ''} to clear at your ${cap || 60} min/day`);
+  if (st.soon.n) parts.push(`${st.soon.n} more taught in the next few days (${st.soon.min} min)`);
+  if (st.ahead.n) parts.push(`${st.ahead.n} watched before class (${st.ahead.min} min)`);
+  return parts.length ? parts.join(' · ') : 'nothing overdue — keep going';
+}
 function renderSubjectCountdown(plan) {
   const el = document.getElementById('planner-subject-countdown');
   if (!el) return;
   const { stats, bySubject } = plan;
-  const behind = {};
-  Object.values(plan.assignments || {}).forEach(bk => (bk.items || []).forEach(it => { if (it.bufferStatus === 'behind' && !it.checked) { const o = behind[it.subject] = behind[it.subject] || { n: 0, min: 0 }; o.n++; o.min += it.min || 0; } }));
   const cards = plannerSubjects().map(sj => {
     const s = sj.key; const labels = { [s]: sj.label };
     const b = bySubject[s];
@@ -9448,7 +9482,7 @@ function renderSubjectCountdown(plan) {
       <div class="sc-line">${b.remCount} video(s) left · <b>${b.remMin} min</b> remaining</div>
       <div class="sc-line">Pace needed: <b>${reqLabel}</b> before review starts</div>
       <div class="sc-line">Bare-min. pace to exam: <b>${absLabel}</b></div>
-      ${b.remCount === 0 ? '<div class="sc-line" style="color:#15803d"><b>✅ All videos watched</b></div>' : behind[s] ? `<div class="sc-line" style="color:#e07a7a"><b>⚠ Behind by ${behind[s].min} min</b> · ${behind[s].n} video${behind[s].n === 1 ? '' : 's'} past class date + buffer</div>` : '<div class="sc-line" style="color:#15803d"><b>✅ On pace</b></div>'}
+      ${b.remCount === 0 ? '<div class="sc-line" style="color:#15803d"><b>✅ All videos watched</b></div>' : b.standing.behind.n ? `<div class="sc-line" style="color:#c2410c"><b>⚠ Behind: ${b.standing.behind.n} video${b.standing.behind.n === 1 ? '' : 's'}</b> already taught, not watched (${b.standing.behind.min} min)</div>` : b.standing.ahead.n ? `<div class="sc-line" style="color:#15803d"><b>✅ Ahead:</b> ${b.standing.ahead.n} watched before class${b.standing.soon.n ? ` · ${b.standing.soon.n} due soon` : ''}</div>` : `<div class="sc-line" style="color:#15803d"><b>✅ On track</b>${b.standing.soon.n ? ` · ${b.standing.soon.n} due in the next few days` : ''}</div>`}
     </div>`;
   }).join('');
   el.innerHTML = `<div class="subject-countdown-row">${cards}</div>`;
@@ -9470,16 +9504,16 @@ function renderPlanner() {
   renderWeeklyDigest(plan);
 
   const dashEl = document.getElementById('planner-dashboard');
-  const finishLabel = stats.totalRemainingCount === 0 ? 'All done! 🎉' : (stats.finishDate ? dayLabel(stats.finishDate) : '—');
+  const finishLabel = stats.totalRemainingCount === 0 ? 'All done! 🎉' : (stats.projFinish ? dayLabel(stats.projFinish) : '—');
   const reviewStartLabel = stats.reviewStartDate ? dayLabel(stats.reviewStartDate) : 'no review days set';
   dashEl.innerHTML = `
     <div class="planner-dash">
       <div class="planner-stat"><div class="label">Days until exam</div><div class="value">${stats.daysUntilExam}</div><div class="sub">${dayLabel(fmtDate(dp.examDate))}</div></div>
       <div class="planner-stat"><div class="label">Videos remaining</div><div class="value">${stats.totalRemainingCount}</div><div class="sub">~${stats.totalRemainingMin} min total</div></div>
-      <div class="planner-stat"><div class="label">Projected finish</div><div class="value">${finishLabel}</div><div class="sub">all new content watched, at current pace</div></div>
+      <div class="planner-stat"><div class="label">Projected finish</div><div class="value">${finishLabel}</div><div class="sub">${stats.projBasis === 'recent' ? `at your real pace of <b>${stats.projPace} min/day</b> (last 7 days)` : `no pace history yet — assuming ${stats.projPace} min/day`}${stats.projAfterExam ? ' · <b style="color:#c2410c">after your exam!</b>' : (stats.planFinish && stats.planFinish < stats.projFinish ? ` · finish by ${dayLabel(stats.planFinish)} by doing ${plan.settings.dailyCapacity} min/day` : '')}</div></div>
       <div class="planner-stat"><div class="label">Pace needed — before review</div><div class="value">${stats.requiredDailyMin === Infinity ? '—' : stats.requiredDailyMin + ' min/day'}</div><div class="sub">to clear everything by ${reviewStartLabel} · you're set to ${plan.settings.dailyCapacity} min/day</div></div>
       <div class="planner-stat"><div class="label">Pace needed — bare min. to exam</div><div class="value">${stats.absoluteMinPaceMin === Infinity ? '—' : stats.absoluteMinPaceMin + ' min/day'}</div><div class="sub">if every remaining day (incl. review) went to new content, zero cushion</div></div>
-      <div class="planner-stat"><div class="label">On-track status</div><div class="value ${stats.paceClass}">${stats.paceStatus}</div><div class="sub">${stats.notStarted ? 'module starts ' + stats.baselineDate + ' — pace tracking begins then' : 'vs. pace since ' + stats.baselineDate}${stats.behindItemsCount ? ' · ' + stats.behindItemsCount + ' behind class buffer' : ''}</div></div>
+      <div class="planner-stat"><div class="label">On-track status</div><div class="value ${stats.paceClass}">${stats.paceStatus}</div><div class="sub">${standingSub(stats.standing, stats.cap)}</div></div>
     </div>
   `;
 
