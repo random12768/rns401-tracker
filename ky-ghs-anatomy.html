@@ -1,0 +1,4109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ky's GHS201 Anatomy Study Guide</title>
+    <style>
+/* === MEDICAL-BRAIN DESIGN SYSTEM (inlined for standalone export) === */
+/* =============================================
+   MEDICAL-BRAIN DESIGN SYSTEM
+   Extracted from Ky's RNS Anatomy Study Guide
+   + hub/navigation extensions
+   ============================================= */
+
+/* =============================================
+   BASE & LAYOUT
+   ============================================= */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.55;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  padding-bottom: 6rem;
+  background: #f8fafc;
+  color: #111827;
+}
+
+h1 {
+  color: #0f172a;
+  border-bottom: 3px solid #0284c7;
+  padding-bottom: 0.4rem;
+  margin-top: 1.5rem;
+  font-size: 1.8rem;
+}
+
+h2 {
+  color: #0f172a;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.25rem;
+  margin-top: 2.5rem;
+  font-size: 1.35rem;
+}
+
+h3 {
+  color: #1e3a5f;
+  margin-top: 1.2rem;
+  font-size: 1.1rem;
+}
+
+h4 {
+  color: #374151;
+  margin-top: 0.9rem;
+  font-size: 1rem;
+}
+
+p {
+  margin: 0.5rem 0;
+}
+
+ul,
+ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.3rem;
+}
+
+a {
+  color: #0284c7;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* =============================================
+   TABLES
+   ============================================= */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.75rem 0 1.2rem 0;
+  font-size: 0.92rem;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+th,
+td {
+  border: 1px solid #d1d5db;
+  padding: 0.45rem 0.6rem;
+  vertical-align: top;
+}
+
+th {
+  background: #1e3a5f;
+  color: #ffffff;
+  font-weight: 600;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: #f1f5f9;
+}
+
+td strong {
+  color: #1e3a5f;
+}
+
+/* =============================================
+   COLORED BOXES
+   ============================================= */
+.box {
+  border-radius: 7px;
+  padding: 0.9rem 1.1rem;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* High Yield / Exam Emphasis – Yellow */
+.box.high-yield {
+  background: #fefce8;
+  border: 1.5px solid #fbbf24;
+  border-left: 5px solid #f59e0b;
+  color: #78350f;
+}
+
+.box.high-yield b,
+.box.high-yield strong {
+  color: #92400e;
+}
+
+/* Clinical – Green */
+.box.clinical {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  border-left: 5px solid #16a34a;
+  color: #14532d;
+}
+
+.box.clinical b,
+.box.clinical strong {
+  color: #166534;
+}
+
+/* Mnemonic – Purple */
+.box.mnemonic {
+  background: #faf5ff;
+  border: 1.5px solid #c4b5fd;
+  border-left: 5px solid #7c3aed;
+  color: #3b0764;
+}
+
+.box.mnemonic b,
+.box.mnemonic strong {
+  color: #5b21b6;
+}
+
+/* =============================================
+   INLINE UTILITIES
+   ============================================= */
+.highlight {
+  background-color: #fef3c7;
+  padding: 0 3px;
+  border-radius: 2px;
+}
+
+.emoji-label {
+  font-size: 1.1em;
+  margin-right: 4px;
+}
+
+.tag-emergency {
+  display: inline-block;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 4px;
+  padding: 0 5px;
+  font-size: 0.8em;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+/* =============================================
+   TABLE OF CONTENTS
+   ============================================= */
+#toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.1rem 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#toc-grid li {
+  margin-bottom: 0.45rem;
+  padding-left: 0;
+  font-size: 0.93rem;
+  display: flex;
+  align-items: flex-start;
+}
+
+#toc-grid a {
+  color: #0284c7;
+  text-decoration: none;
+  font-size: 0.93rem;
+  line-height: 1.4;
+}
+
+#toc-grid a:hover {
+  text-decoration: underline;
+}
+
+#toc-grid a:visited {
+  color: #0284c7;
+}
+
+#toc-grid .toc-sub {
+  display: block;
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 0.1rem;
+}
+
+@media (max-width: 600px) {
+  #toc-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================
+   QUIZ STYLES
+   ============================================= */
+.quiz-section-title {
+  margin-top: 4rem;
+  text-align: center;
+  font-size: 1.8rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  border-bottom: 3px solid #0284c7;
+  padding-bottom: 0.4rem;
+}
+
+.quiz-subtitle {
+  text-align: center;
+  color: #475569;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.quiz-container {
+  display: grid;
+  gap: 2rem;
+}
+
+.question-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s;
+}
+
+.question-card:hover {
+  box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.08);
+}
+
+.question-number {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0284c7;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+}
+
+.question-text {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 1.02rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.options-grid {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.option-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.7rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.93rem;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.option-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.option-btn.selected {
+  border-width: 2px;
+  border-color: #3b82f6;
+}
+
+.option-btn.correct {
+  background-color: #dcfce7 !important;
+  border-color: #16a34a !important;
+  color: #14532d;
+  font-weight: 600;
+}
+
+.option-btn.incorrect {
+  background-color: #fee2e2 !important;
+  border-color: #dc2626 !important;
+  color: #7f1d1d;
+}
+
+.option-btn:disabled {
+  cursor: default;
+}
+
+.explanation {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  background: #f8fafc;
+  border-left: 4px solid #3b82f6;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #334155;
+  display: none;
+  line-height: 1.65;
+}
+
+/* =============================================
+   SCORE BAR
+   ============================================= */
+.score-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1e293b;
+  color: white;
+  padding: 0.85rem 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.15);
+  font-weight: 600;
+  font-size: 1.05rem;
+  z-index: 1000;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-out;
+  flex-wrap: wrap;
+}
+
+.score-bar.visible {
+  transform: translateY(0);
+}
+
+.score-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.stat-green  { color: #4ade80; }
+.stat-red    { color: #f87171; }
+.stat-blue   { color: #60a5fa; }
+.stat-yellow { color: #fbbf24; }
+
+/* =============================================
+   HUB / NAVIGATION EXTENSIONS
+   ============================================= */
+.breadcrumb {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 0.75rem;
+}
+
+.breadcrumb a {
+  color: #0284c7;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.module-badge {
+  display: inline-block;
+  background: #0284c7;
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.subject-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin: 2rem 0;
+}
+
+.subject-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.subject-card:hover {
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.12);
+  border-color: #0284c7;
+  text-decoration: none;
+}
+
+.subject-card h3 {
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.subject-card p {
+  color: #6b7280;
+  font-size: 0.88rem;
+  margin-bottom: 0.75rem;
+}
+
+.subject-card .card-meta {
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+.card-status {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+}
+
+.card-status.stub    { background: #fef3c7; color: #92400e; }
+.card-status.active  { background: #dcfce7; color: #14532d; }
+.card-status.planned { background: #f1f5f9; color: #64748b; }
+
+.stub-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  background: white;
+  margin: 2rem 0;
+}
+
+.stub-state .stub-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+.stub-state h2 {
+  border-bottom: none;
+  color: #374151;
+  margin: 0 0 0.5rem;
+}
+
+.stub-state p {
+  color: #6b7280;
+  max-width: 480px;
+  margin: 0 auto 0.5rem;
+}
+
+.source-note {
+  display: inline-block;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.82rem;
+  color: #475569;
+  font-family: monospace;
+  margin-top: 0.5rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin: 1.25rem 0 2rem;
+}
+
+.nav-links a {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid #0284c7;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  color: #0284c7;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-links a:hover {
+  background: #0284c7;
+  color: white;
+  text-decoration: none;
+}
+
+.site-footer {
+  margin-top: 4rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  text-align: center;
+}
+
+</style>
+  </head>
+  <body>
+<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:0.5rem 1rem;font-size:0.82rem;color:#0369a1;margin-bottom:1rem;">
+  📤 <strong>Shared export</strong> — Windsor University School of Medicine · GHS201 Anatomy · Medical Brain study guide
+</div>
+    <p class="breadcrumb">
+      <span>Medical Brain</span> /
+      <span>GHS201</span> / Anatomy v2
+    </p>
+    <span class="module-badge">GHS201</span>
+    <h1>Ky's GHS Study Guide</h1>
+    <p>
+      <b>Focus:</b> Rebuilt from class notes, restructured to match the slide
+      deck session order. Covers 12 anatomy topics — abdominal introduction,
+      inguinal region, esophagus and stomach, duodenum, large intestine, liver
+      and pancreas, rectum, anal canal, posterior wall, arteries and veins, and
+      clinical correlations.
+    </p>
+
+    <!-- TABLE OF CONTENTS -->
+    <div id="toc">
+      <h2>Table of Contents</h2>
+      <ul id="toc-grid">
+        <li>
+          <a href="#s1"
+            >1. Introduction to Abdomen
+            <span class="toc-sub"
+              >Boundaries, Regions, Quadrants, Referred Pain, Landmarks</span
+            ></a
+          >
+        </li>
+        <li>
+          <a href="#s2"
+            >2. Abdomen — Inguinal Region
+            <span class="toc-sub"
+              >Inguinal Canal, Direct vs Indirect, Femoral Hernia</span
+            ></a
+          >
+        </li>
+        <li>
+          <a href="#s3"
+            >3. Esophagus and Stomach
+            <span class="toc-sub"
+              >Abdominal Esophagus, Hiatus, Barrett's, Varices</span
+            ></a
+          >
+        </li>
+        <li>
+          <a href="#s4"
+            >4. Abdomen — Stomach Relations
+            <span class="toc-sub"
+              >Parts, Bed, Blood Supply, Surgical Anatomy</span
+            ></a
+          >
+        </li>
+        <li>
+          <a href="#s5"
+            >5. Small Intestine
+            <span class="toc-sub"
+              >Duodenum, Jejunum vs Ileum, Surface Area, Neurovascular</span
+            ></a
+          >
+        </li>
+        <li>
+          <a href="#s6"
+            >6. Large Intestine
+            <span class="toc-sub"
+              >Cecum, Appendix, Colon Segments, Taeniae, Stomas</span
+            ></a
+          >
+        </li>
+        <li>
+          <a href="#s7"
+            >7. Liver and Pancreas
+            <span class="toc-sub"
+              >Couinaud, Porta Hepatis, Biliary Tree, Portal Vein, Pancreas,
+              Spleen</span
+            ></a
+          >
+        </li>
+        <li>
+          <a href="#s8"
+            >8. Rectum
+            <span class="toc-sub"
+              >Flexures, Houston Valves, Blood Supply, Venous Drainage</span
+            ></a
+          >
+        </li>
+        <li>
+          <a href="#s9"
+            >9. Anal Canal
+            <span class="toc-sub"
+              >Dentate Line, Sphincters, Hemorrhoids, Lymphatics</span
+            ></a
+          >
+        </li>
+        <li>
+          <a href="#s10"
+            >10. Posterior Abdominal Wall
+            <span class="toc-sub">Muscles, Fascia, Lumbar Plexus</span></a
+          >
+        </li>
+        <li>
+          <a href="#s11"
+            >11. Review of Arteries and Veins
+            <span class="toc-sub"
+              >Celiac, SMA, IMA, Watershed Zones, Portosystemic</span
+            ></a
+          >
+        </li>
+        <li>
+          <a href="#s12"
+            >12. Clinicals of Abdomen
+            <span class="toc-sub">High-Yield Clinical Correlations</span></a
+          >
+        </li>
+        <li>
+          <a href="#quiz"
+            >Practice Quiz
+            <span class="toc-sub">54 board-style MCQs — all 12 topics</span></a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <!-- ============================================================
+         SECTION 1 — INTRODUCTION TO ABDOMEN
+    ============================================================= -->
+    <h2 id="s1">1. Introduction to Abdomen</h2>
+
+    <p>
+      The abdomen is the portion of the trunk between the thorax and the pelvis.
+      It is not a closed cylinder but a dynamic space defined by rigid bony
+      boundaries above and below, and muscular walls laterally. Its internal
+      content — the majority of the digestive and urogenital systems — is mapped
+      using two complementary grid systems: the nine-region system for precise
+      anatomical localisation and the four-quadrant system for rapid clinical
+      communication.
+    </p>
+
+    <h3>1.1 Anatomical Boundaries</h3>
+    <p>
+      The superior boundary is the inferior thoracic aperture, sealed by the
+      diaphragm. Inferiorly, the abdominal cavity is continuous with the pelvic
+      cavity at the pelvic inlet (superior pelvic aperture). The posterior
+      boundary is formed by the vertebral column with
+      <strong>quadratus lumborum</strong>, <strong>psoas major</strong>, and
+      <strong>iliacus</strong> muscles on each side. The anterior wall is the
+      rectus abdominis, and the lateral walls are the three flat muscles. Key
+      palpable bony landmarks for physical examination are the
+      <strong>ASIS</strong>, <strong>pubic tubercle</strong>, and
+      <strong>pubic symphysis</strong>.
+    </p>
+
+    <h3>1.2 Nine-Region System</h3>
+    <p>
+      Four planes create the nine-region grid: two vertical
+      <strong>midclavicular planes</strong> (mid-clavicle to midinguinal point),
+      a horizontal <strong>subcostal plane</strong> (inferior border of the 10th
+      costal cartilage), and a <strong>transtubercular plane</strong> (through
+      the iliac tubercles and the body of L5). The clinically vital
+      <strong>transpyloric plane</strong> (lower border of L1) cuts through the
+      pylorus, neck of pancreas, hilum of both kidneys, and the SMA origin.
+    </p>
+
+    <table>
+      <tr>
+        <th>Region</th>
+        <th>Key Contents</th>
+        <th>Clinical Pathologies</th>
+      </tr>
+      <tr>
+        <td><strong>Right Hypochondriac</strong></td>
+        <td>Liver (R lobe), gallbladder, right kidney, small intestine</td>
+        <td>Hepatitis, gallstones, cholecystitis, liver abscess</td>
+      </tr>
+      <tr>
+        <td><strong>Epigastric</strong></td>
+        <td>
+          Stomach, liver (L lobe), pancreas, duodenum, spleen, adrenal glands
+        </td>
+        <td>Peptic ulcer, oesophagitis, pancreatitis, gastric cancer</td>
+      </tr>
+      <tr>
+        <td><strong>Left Hypochondriac</strong></td>
+        <td>Spleen, colon (splenic flexure), left kidney, pancreas (tail)</td>
+        <td>Splenic abscess, rupture, infarct</td>
+      </tr>
+      <tr>
+        <td><strong>Right Lumbar (Flank)</strong></td>
+        <td>Gallbladder, liver, ascending colon, right kidney</td>
+        <td>Renal colic, pyelonephritis</td>
+      </tr>
+      <tr>
+        <td><strong>Umbilical</strong></td>
+        <td>Umbilicus, small intestine, duodenum, transverse colon</td>
+        <td>
+          Early appendicitis, mesenteric adenitis, Meckel's diverticulitis
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Left Lumbar (Flank)</strong></td>
+        <td>Descending colon, left kidney</td>
+        <td>Renal colic, pyelonephritis</td>
+      </tr>
+      <tr>
+        <td><strong>Right Iliac (Groin)</strong></td>
+        <td>Cecum, appendix</td>
+        <td>Late appendicitis, Crohn's disease, ectopic pregnancy</td>
+      </tr>
+      <tr>
+        <td><strong>Hypogastric (Pubic)</strong></td>
+        <td>Urinary bladder, sigmoid colon, female reproductive organs</td>
+        <td>UTI, urinary retention, testicular torsion</td>
+      </tr>
+      <tr>
+        <td><strong>Left Iliac (Groin)</strong></td>
+        <td>Descending colon, sigmoid colon</td>
+        <td>Diverticulitis, ulcerative colitis, ectopic pregnancy</td>
+      </tr>
+    </table>
+
+    <p>
+      Several of the organs listed in the nine-region table are
+      <strong>retroperitoneal</strong> — positioned posterior to the parietal
+      peritoneum against the posterior abdominal wall, covered by peritoneum on
+      their anterior surface only. Knowing these structures is clinically
+      essential: retroperitoneal pathology (bleeding, inflammation, abscess)
+      does not freely communicate with the peritoneal cavity, making signs more
+      subtle and delayed than with intraperitoneal pathology.
+    </p>
+
+    <div class="box mnemonic">
+      <strong>SAD PUCKER</strong> — retroperitoneal structures:
+      <ul>
+        <li><strong>S</strong> — Suprarenal (adrenal) glands</li>
+        <li><strong>A</strong> — Aorta and inferior vena cava</li>
+        <li>
+          <strong>D</strong> — Duodenum (D2–D4; the first 2.5 cm "cap" is
+          intraperitoneal)
+        </li>
+        <li>
+          <strong>P</strong> — Pancreas (head, neck, and body; the tail is
+          intraperitoneal within the splenorenal ligament)
+        </li>
+        <li><strong>U</strong> — Ureters</li>
+        <li>
+          <strong>C</strong> — Colon — ascending and descending (secondarily
+          retroperitoneal)
+        </li>
+        <li><strong>K</strong> — Kidneys</li>
+        <li><strong>E</strong> — (o)Esophagus — abdominal segment</li>
+        <li>
+          <strong>R</strong> — Rectum (upper two-thirds; lower rectum is
+          primarily retroperitoneal, i.e., never had a mesentery)
+        </li>
+      </ul>
+    </div>
+
+    <h3>1.3 Four-Quadrant System</h3>
+    <p>
+      The vertical <strong>median plane</strong> and a horizontal
+      <strong>transumbilical plane</strong> (through the L3–L4 disc) intersect
+      at the umbilicus to create four quadrants used for rapid clinical
+      communication, operative notes, and imaging reports.
+    </p>
+
+    <h3>1.4 Referred Pain — Embryological Basis</h3>
+    <p>
+      Visceral pain signals are conducted via bilateral sympathetic afferents
+      and perceived at the somatic dermatomes sharing the same spinal cord
+      segments as the developing gut segment. This produces predictable midline
+      pain that shifts to somatic (parietal) pain only when the overlying
+      parietal peritoneum becomes inflamed.
+    </p>
+
+    <div class="box high-yield">
+      <strong>Visceral Pain Referral by Gut Origin:</strong>
+      <ul>
+        <li>
+          <strong>Foregut</strong> (esophagus → duodenum D2, liver, pancreas,
+          spleen) → Epigastric region
+        </li>
+        <li>
+          <strong>Midgut</strong> (distal D2 → proximal 2/3 transverse colon,
+          appendix) → Umbilical region
+        </li>
+        <li>
+          <strong>Hindgut</strong> (distal 1/3 transverse colon → rectum) →
+          Hypogastric (pubic) region
+        </li>
+      </ul>
+      Classic exam pattern: appendicitis begins as periumbilical pain (midgut
+      visceral referral via T10) then localises to McBurney's point as parietal
+      peritoneum becomes inflamed.
+    </div>
+
+    <h3>1.5 Anterior Abdominal Wall — Layers and Muscles</h3>
+    <p>
+      The anterior abdominal wall is a layered "sandwich" that protects the
+      viscera while allowing significant changes in intra-abdominal pressure for
+      micturition, defecation, vomiting, parturition, and forced expiration.
+      Understanding its fascial planes is essential because they dictate how
+      fluid (urine, blood, infection) spreads following trauma.
+    </p>
+
+    <ol>
+      <li>Skin</li>
+      <li>Superficial fascia (subcutaneous tissue)</li>
+      <li>Deep fascia (investing fascia)</li>
+      <li>Muscles</li>
+      <li>Extraperitoneal fascia (containing extraperitoneal fat)</li>
+      <li>Parietal peritoneum</li>
+    </ol>
+
+    <h3>1.6 Superficial Fascia — Camper's and Scarpa's</h3>
+    <p>
+      Below the umbilicus, the superficial fascia bifurcates into two named
+      layers with distinct clinical behavior.
+      <strong>Camper's fascia</strong> is the fatty layer; it continues over the
+      inguinal ligament into the thigh's fascia lata, and in males loses its fat
+      over the penis to become the smooth-muscle-containing
+      <strong>Dartos fascia</strong> of the scrotum.
+      <strong>Scarpa's fascia</strong> is a thin, membranous layer that attaches
+      firmly to the
+      <strong>fascia lata just inferior to the inguinal ligament</strong>, and
+      continues into the perineum as <strong>Colles' fascia</strong>.
+    </p>
+
+    <div class="box high-yield">
+      <strong>Urinary Extravasation — Fascial Boundaries:</strong>
+      Rupture of the bulbar urethra tears Buck's fascia, allowing urine into the
+      superficial perineal space. Because Scarpa's fascia attaches firmly to the
+      fascia lata, urine is <em>excluded from the thighs</em>
+      and instead spreads: into the scrotum (deep to Dartos), around the penis,
+      and superiorly into the lower anterior abdominal wall deep to Scarpa's
+      fascia.
+    </div>
+
+    <h3>1.7 Muscles of the Anterior Abdominal Wall</h3>
+    <p>
+      Three flat muscles with obliquely crossing fibres provide lateral and
+      rotational support. Two vertical muscles (rectus abdominis and
+      pyramidalis) run along the midline, encased in the rectus sheath.
+    </p>
+
+    <table>
+      <tr>
+        <th>Muscle</th>
+        <th>Origin</th>
+        <th>Insertion</th>
+        <th>Nerve Supply</th>
+        <th>Action</th>
+      </tr>
+      <tr>
+        <td><strong>External Oblique</strong></td>
+        <td>External surface, lower 8 ribs</td>
+        <td>Xiphoid, linea alba, pubic crest, pubic tubercle, iliac crest</td>
+        <td>Lower 6 thoracic, iliohypogastric, ilioinguinal (L1)</td>
+        <td>Compresses contents; flexes and rotates trunk</td>
+      </tr>
+      <tr>
+        <td><strong>Internal Oblique</strong></td>
+        <td>Lumbar fascia, iliac crest, lateral 2/3 of inguinal ligament</td>
+        <td>
+          Lower 3 ribs/costal cartilages, xiphoid, linea alba, pubic symphysis
+        </td>
+        <td>Same as external oblique</td>
+        <td>Compresses contents; flexes and rotates trunk</td>
+      </tr>
+      <tr>
+        <td><strong>Transversus Abdominis</strong></td>
+        <td>
+          Lower 6 costal cartilages, lumbar fascia, iliac crest, lateral 1/3
+          inguinal ligament
+        </td>
+        <td>Xiphoid, linea alba, symphysis pubis</td>
+        <td>Same as external oblique</td>
+        <td>Compresses abdominal contents</td>
+      </tr>
+      <tr>
+        <td><strong>Rectus Abdominis</strong></td>
+        <td>Pubic symphysis and crest</td>
+        <td>Xiphoid and 5th–7th costal cartilages</td>
+        <td>Lower 6 thoracic nerves</td>
+        <td>Flexes trunk; increases intra-abdominal pressure</td>
+      </tr>
+      <tr>
+        <td><strong>Pyramidalis</strong></td>
+        <td>Anterior surface of pubis</td>
+        <td>Linea alba</td>
+        <td>12th thoracic nerve</td>
+        <td>Tenses the linea alba</td>
+      </tr>
+    </table>
+
+    <div class="box high-yield">
+      <strong>Key Fibrous Structures:</strong>
+      <ul>
+        <li>
+          <strong>Inguinal (Poupart) Ligament:</strong> The folded inferior
+          border of the external oblique aponeurosis — spans ASIS to pubic
+          tubercle.
+        </li>
+        <li>
+          <strong>Linea Alba:</strong> Tendinous midline raphe from xiphoid to
+          pubic symphysis. Becomes pigmented in pregnancy (Linea Nigra).
+        </li>
+        <li>
+          <strong>Conjoint Tendon (Falx Inguinalis):</strong> Union of internal
+          oblique and transversus abdominis aponeuroses; reinforces the medial
+          posterior wall of the inguinal canal.
+        </li>
+      </ul>
+    </div>
+
+    <h3>1.8 Rectus Sheath — The Arcuate Line Rule</h3>
+    <p>
+      The rectus sheath is an aponeurotic container formed by contributions from
+      all three flat muscles. Its arrangement changes critically at the
+      <strong>arcuate line</strong> (midway between umbilicus and pubic
+      symphysis), which marks the inferior limit of the posterior sheath.
+    </p>
+
+    <table>
+      <tr>
+        <th>Level</th>
+        <th>Anterior Sheath</th>
+        <th>Posterior Sheath</th>
+      </tr>
+      <tr>
+        <td>Above costal margin</td>
+        <td>External oblique aponeurosis only</td>
+        <td>None (muscle lies on costal cartilages)</td>
+      </tr>
+      <tr>
+        <td>Costal margin → Arcuate line</td>
+        <td>External oblique + anterior layer of internal oblique</td>
+        <td>Posterior layer of internal oblique + transversus abdominis</td>
+      </tr>
+      <tr>
+        <td>Below arcuate line</td>
+        <td>All three aponeuroses pass anterior to rectus</td>
+        <td>None — rectus lies directly on transversalis fascia</td>
+      </tr>
+    </table>
+
+    <h3>1.9 Neurovascular Architecture</h3>
+    <p>
+      Segmental thoracic nerves provide both motor supply to the flat muscles
+      and cutaneous sensation in a predictable dermatomal pattern. The umbilicus
+      serves as a watershed for both venous drainage and lymphatics.
+    </p>
+
+    <table>
+      <tr>
+        <th>Nerve Level</th>
+        <th>Cutaneous Territory</th>
+      </tr>
+      <tr>
+        <td>T7–T9</td>
+        <td>Xiphoid to just above umbilicus</td>
+      </tr>
+      <tr>
+        <td>T10</td>
+        <td>Umbilicus (exact level)</td>
+      </tr>
+      <tr>
+        <td>T11, T12, L1</td>
+        <td>Below umbilicus to pubic region</td>
+      </tr>
+    </table>
+
+    <div class="box high-yield">
+      <strong>Umbilicus as Clinical Watershed:</strong>
+      <ul>
+        <li>
+          <strong>Venous drainage above umbilicus</strong> → axillary vein (via
+          lateral thoracic vein)
+        </li>
+        <li>
+          <strong>Venous drainage below umbilicus</strong> → femoral vein (via
+          superficial epigastric vein)
+        </li>
+        <li>
+          <strong>Portal connection:</strong> Paraumbilical veins link both
+          systems to the portal vein → dilate as <em>Caput Medusae</em> in
+          portal hypertension
+        </li>
+        <li>
+          <strong>Lymphatics above umbilicus</strong> → axillary nodes;
+          <strong>below</strong> → superficial inguinal nodes
+        </li>
+      </ul>
+    </div>
+
+    <h3>1.10 Iliopectineal Arcus — Space Deep to Inguinal Ligament</h3>
+    <p>
+      The iliopectineal arcus divides the space posterior to the inguinal
+      ligament into two compartments that transmit distinct structures.
+    </p>
+    <table>
+      <tr>
+        <th>Compartment</th>
+        <th>Position</th>
+        <th>Contents</th>
+      </tr>
+      <tr>
+        <td>Muscular lacuna</td>
+        <td>Lateral</td>
+        <td>Iliopsoas muscle</td>
+      </tr>
+      <tr>
+        <td>Vascular lacuna</td>
+        <td>Medial</td>
+        <td>
+          Femoral sheath, femoral vessels, femoral branch of genitofemoral nerve
+        </td>
+      </tr>
+    </table>
+
+    <!-- ============================================================
+         SECTION 2 — INGUINAL REGION
+    ============================================================= -->
+    <h2 id="s2">2. Abdomen — Inguinal Region</h2>
+
+    <p>
+      The inguinal canal is an oblique, intramuscular passage approximately 4 cm
+      long in adults, directed inferomedially through the lower anterolateral
+      abdominal wall. It is the direct anatomical consequence of gonadal descent
+      during embryological development — the testes pass through this passage
+      between weeks 9 and 12, dragging peritoneal (processus vaginalis) and
+      fascial coverings along with them. Because this passage represents a
+      structural weakness, inguinal hernias are the most common hernia,
+      occurring overwhelmingly more in males (86%).
+    </p>
+
+    <h3>2.1 Boundaries of the Inguinal Canal</h3>
+    <table>
+      <tr>
+        <th>Wall</th>
+        <th>Structure</th>
+      </tr>
+      <tr>
+        <td>Anterior wall</td>
+        <td>Aponeurosis of external oblique (entire length)</td>
+      </tr>
+      <tr>
+        <td>Posterior wall</td>
+        <td>
+          Transversalis fascia — reinforced medially by the conjoint tendon
+          (inguinal falx)
+        </td>
+      </tr>
+      <tr>
+        <td>Superior wall (roof)</td>
+        <td>
+          Internal oblique and transversus abdominis muscles (arch over the
+          canal)
+        </td>
+      </tr>
+      <tr>
+        <td>Inferior wall (floor)</td>
+        <td>Inguinal ligament</td>
+      </tr>
+    </table>
+
+    <h3>2.2 Rings of the Canal</h3>
+    <p>
+      The canal opens at two ends. The
+      <strong>deep (internal) inguinal ring</strong> is an evagination of the
+      transversalis fascia, located superior to the midpoint of the inguinal
+      ligament and <em>lateral</em> to the inferior epigastric artery. The
+      <strong>superficial (external) inguinal ring</strong> is a triangular gap
+      in the external oblique aponeurosis, located superior to the pubic
+      tubercle, with a medial crus, lateral crus, and apex directed
+      superolaterally.
+    </p>
+
+    <h3>2.3 Contents of the Inguinal Canal</h3>
+    <p>
+      In males, the canal transmits the <strong>spermatic cord</strong>. In
+      females, it transmits the <strong>round ligament of the uterus</strong>
+      and the genital branch of the genitofemoral nerve (both sexes).
+    </p>
+
+    <h3>2.4 Spermatic Cord — Fascial Layers and Contents</h3>
+    <p>
+      As the testis descends, it picks up three concentric fascial sleeves
+      derived from the corresponding layers of the abdominal wall.
+    </p>
+    <table>
+      <tr>
+        <th>Fascial Layer</th>
+        <th>Abdominal Wall Derivative</th>
+      </tr>
+      <tr>
+        <td>External spermatic fascia</td>
+        <td>External oblique aponeurosis / fascia</td>
+      </tr>
+      <tr>
+        <td>Cremasteric fascia</td>
+        <td>Internal oblique fascia</td>
+      </tr>
+      <tr>
+        <td>Internal spermatic fascia</td>
+        <td>Transversalis fascia</td>
+      </tr>
+    </table>
+
+    <div class="box mnemonic">
+      <strong
+        >Spermatic Cord Contents — "Partying Doesn't Contribute To A Good Social
+        Life":</strong
+      >
+      <ul>
+        <li><strong>P</strong>ampiniform plexus (8–12 veins)</li>
+        <li><strong>D</strong>uctus deferens</li>
+        <li><strong>C</strong>remasteric artery (from inferior epigastric)</li>
+        <li>
+          <strong>T</strong>esticular artery (from abdominal aorta, below renal
+          arteries)
+        </li>
+        <li>
+          <strong>A</strong>rtery of the ductus deferens (from inferior vesical
+          artery)
+        </li>
+        <li>
+          <strong>G</strong>enital branch of genitofemoral nerve (motor to
+          cremaster)
+        </li>
+        <li><strong>S</strong>ympathetic and parasympathetic nerve fibers</li>
+        <li>
+          <strong>L</strong>ymphatic vessels (drain to lumbar/para-aortic nodes)
+        </li>
+        <li>Plus: vestige of the processus vaginalis</li>
+      </ul>
+    </div>
+
+    <h3>2.5 Direct vs. Indirect Inguinal Hernia</h3>
+    <p>
+      The relationship of the hernia sac to the
+      <strong>inferior epigastric artery</strong> is the definitive anatomical
+      discriminator between the two types. The inferior epigastric artery forms
+      the lateral boundary of Hesselbach's triangle (inguinal triangle).
+    </p>
+
+    <table>
+      <tr>
+        <th>Feature</th>
+        <th>Indirect Inguinal Hernia</th>
+        <th>Direct Inguinal Hernia</th>
+      </tr>
+      <tr>
+        <td>Origin</td>
+        <td>Congenital (patent processus vaginalis)</td>
+        <td>Acquired (posterior wall weakness)</td>
+      </tr>
+      <tr>
+        <td>Entry point</td>
+        <td>Deep inguinal ring — lateral to inferior epigastric artery</td>
+        <td>
+          Directly through the posterior wall (conjoint tendon) — medial to
+          inferior epigastric artery
+        </td>
+      </tr>
+      <tr>
+        <td>Hesselbach's triangle</td>
+        <td>Lateral to triangle</td>
+        <td>Within the triangle</td>
+      </tr>
+      <tr>
+        <td>Reduction control</td>
+        <td>Reduced and controlled by pressure over deep ring</td>
+        <td>
+          Reduced but not controlled by pressure over deep ring alone;
+          controlled at superficial ring
+        </td>
+      </tr>
+    </table>
+
+    <p>
+      <strong>Hesselbach's Triangle</strong> boundaries: lateral — inferior
+      epigastric artery; medial — lateral border of rectus abdominis; inferior —
+      inguinal ligament.
+    </p>
+
+    <div class="box high-yield">
+      <strong>Hernia Exam Pearls:</strong>
+      <ul>
+        <li>
+          Indirect is the most common hernia overall; most common in young males
+        </li>
+        <li>
+          Femoral hernia passes below the inguinal ligament through the femoral
+          canal — more common in females and at higher risk of strangulation
+        </li>
+        <li>
+          Spigelian hernia: protrudes at the junction of the linea semilunaris
+          and the arcuate line; peaks at age 50, more common on the right
+        </li>
+        <li>
+          Cremasteric reflex: afferent — ilioinguinal nerve (L1); efferent —
+          genital branch of genitofemoral nerve (motor to cremaster)
+        </li>
+      </ul>
+    </div>
+
+    <h3>2.6 Scrotum and Testis — Clinical Anatomy</h3>
+    <p>
+      The scrotum maintains testicular temperature below core body temperature
+      via its fat-free Dartos wall. Scrotal innervation is divided: the anterior
+      one-third is supplied by the
+      <strong>ilioinguinal nerve (L1)</strong>, and the posterior two-thirds by
+      the <strong>pudendal nerve (S3)</strong>. Lymphatic drainage of the testis
+      goes to <strong>lumbar/para-aortic nodes</strong> (not the groin), which
+      is why early testicular cancer produces no palpable inguinal
+      lymphadenopathy.
+    </p>
+
+    <div class="box clinical">
+      <strong>Varicocele:</strong> Dilated pampiniform plexus producing a "bag
+      of worms" appearance. 99% occur on the left because the left testicular
+      vein drains into the left renal vein at a 90-degree angle, increasing
+      venous back-pressure. The right testicular vein enters the IVC at an acute
+      angle, allowing easier drainage.
+    </div>
+
+    <div class="box clinical">
+      <strong>Hydrocele:</strong> Excess fluid in a persistent processus
+      vaginalis, surrounding the testis (hydrocele of testis) or confined to the
+      cord (hydrocele of cord). Diagnosed by
+      <strong>transillumination</strong> — the fluid-filled sac transmits light;
+      a solid mass (tumor) does not.
+    </div>
+
+    <!-- ============================================================
+         SECTION 3 — ESOPHAGUS AND STOMACH MODIFIED
+    ============================================================= -->
+    <h2 id="s3">3. Esophagus and Stomach</h2>
+
+    <p>
+      The abdominal segment of the esophagus is the shortest and clinically most
+      critical portion of the organ. Measuring only approximately
+      <strong>1.25 cm</strong>, it passes through the esophageal hiatus of the
+      diaphragm at <strong>T10</strong> and terminates at the esophagogastric
+      junction at <strong>T11</strong>. Despite its brevity, it is the primary
+      anti-reflux zone and the site of important portosystemic anastomoses.
+    </p>
+
+    <h3>3.1 Structural Anchoring</h3>
+    <p>
+      The <strong>phrenicoesophageal ligament</strong> (with superior and
+      inferior segments) anchors the esophagus to the margins of the
+      diaphragmatic hiatus. This attachment allows the diaphragm and esophagus
+      to move independently during respiration and swallowing while maintaining
+      the integrity of the gastro-esophageal barrier.
+    </p>
+
+    <h3>3.2 Z-Line — Endoscopic Landmark</h3>
+    <p>
+      The esophagogastric junction is marked internally by the
+      <strong>irregular Z-line (squamocolumnar junction)</strong>, visible on
+      endoscopy as an abrupt transition from the stratified squamous epithelium
+      of the esophagus to the simple columnar epithelium of the gastric mucosa.
+    </p>
+
+    <h3>3.3 Innervation</h3>
+    <p>
+      The right and left vagus nerves form the
+      <strong>esophageal plexus</strong>
+      around the lower thoracic esophagus. As they descend through the
+      esophageal hiatus, they reorganise into the
+      <strong>anterior gastric trunk</strong> (predominantly left vagus) and
+      <strong>posterior gastric trunk</strong> (predominantly right vagus) to
+      supply the stomach.
+    </p>
+
+    <div class="box clinical">
+      <strong>Barrett's Esophagus:</strong> Chronic GERD causes metaplastic
+      replacement of the normal stratified squamous epithelium with
+      <strong>intestinal-type columnar epithelium</strong>. This is a
+      precancerous lesion — Barrett's is a high-risk precursor to
+      <strong>esophageal adenocarcinoma</strong> and requires regular endoscopic
+      surveillance with biopsies.
+    </div>
+
+    <div class="box clinical">
+      <strong>Esophageal Varices:</strong> The lower third of the esophagus is a
+      site of portosystemic anastomosis between the
+      <strong>left gastric vein (portal)</strong> and
+      <strong>azygos vein (systemic)</strong>. Portal hypertension (most
+      commonly from cirrhosis) causes these channels to dilate into fragile,
+      thin-walled varices. Rupture produces massive upper GI hemorrhage — a
+      leading cause of death in cirrhosis.
+    </div>
+
+    <div class="box clinical">
+      <strong>Hiatal Hernias — Two Types:</strong>
+      <ul>
+        <li>
+          <strong>Sliding (Type I):</strong> The abdominal esophagus, cardia,
+          and part of the fundus slide superiorly through the hiatus. Most
+          common type; associated with GERD.
+        </li>
+        <li>
+          <strong>Paraesophageal (Type II):</strong> The cardia remains in place
+          but a peritoneal pouch (often containing fundus) herniates through the
+          hiatus alongside the esophagus. Higher risk of
+          <strong>strangulation</strong> — the key distinguishing danger.
+        </li>
+      </ul>
+    </div>
+
+    <!-- ============================================================
+         SECTION 4 — STOMACH RELATIONS
+    ============================================================= -->
+    <h2 id="s4">4. Abdomen — Stomach Relations</h2>
+
+    <p>
+      The stomach is the most dilated segment of the GI tract, acting as a
+      reservoir for mechanical and chemical digestion. It occupies the
+      epigastric, umbilical, and left hypochondrium regions, typically assuming
+      a J-shaped morphology. Its fundus reaches the level of the
+      <strong>5th intercostal space</strong> — the anatomical basis for why
+      acute gastric distension or irritation can mimic angina pectoris.
+    </p>
+
+    <h3>4.1 Gross Morphological Divisions</h3>
+    <ul>
+      <li>
+        <strong>Cardia:</strong> Region immediately distal to the esophageal
+        orifice
+      </li>
+      <li>
+        <strong>Fundus:</strong> Dome-shaped superior portion above the
+        horizontal plane of the cardia
+      </li>
+      <li>
+        <strong>Body:</strong> Primary central region from fundus to pyloric
+        antrum
+      </li>
+      <li>
+        <strong>Pylorus:</strong> Distal outflow tract — pyloric antrum → sulcus
+        intermedius → pyloric canal → gastroduodenal junction
+      </li>
+    </ul>
+
+    <h3>4.2 Interior — Gastric Rugae</h3>
+    <p>
+      The gastric mucosa is thrown into prominent longitudinal ridges called
+      <strong>gastric rugae</strong>. These are most marked toward the pyloric
+      part and along the greater curvature. They allow significant expansion as
+      the stomach fills (capacity ~1500 mL in adults) and are an important
+      endoscopic orientation landmark.
+    </p>
+
+    <h3>4.3 Peritoneal Attachments and the Lesser Sac</h3>
+    <p>
+      The stomach is almost entirely intraperitoneal. Its peritoneal attachments
+      are the primary neurovascular conduits. The posterior surface of the
+      stomach forms the anterior wall of the
+      <strong>lesser sac (omental bursa)</strong> — a secluded retrogastric
+      peritoneal compartment that communicates with the greater sac via the
+      <strong>epiploic foramen of Winslow</strong> (anteriorly bounded by the
+      hepatoduodenal ligament containing the portal triad; posteriorly by the
+      IVC; superiorly by the caudate lobe; inferiorly by D1).
+    </p>
+    <ul>
+      <li>
+        <strong>Lesser omentum:</strong> Lesser curvature → liver (hepatogastric
+        + hepatoduodenal ligaments)
+      </li>
+      <li>
+        <strong>Greater omentum:</strong> Lower 2/3 of greater curvature →
+        transverse colon (four layers)
+      </li>
+      <li>
+        <strong>Gastrosplenic ligament:</strong> Upper 1/3 of greater curvature
+        (fundus) → splenic hilum; contains short gastric and gastroomental
+        vessels
+      </li>
+      <li>
+        <strong>Gastrophrenic ligament:</strong> Superior fundus → inferior
+        diaphragm
+      </li>
+    </ul>
+
+    <div class="box high-yield">
+      <strong>Omental Bursa — Why It Matters:</strong> The pancreas forms the
+      posterior wall of the lesser sac. A perforated posterior gastric ulcer or
+      pancreatic laceration releases fluid/enzymes into this compartment first,
+      explaining why these conditions present with pain radiating to the back
+      and collections localized to this space initially.
+    </div>
+
+    <h3>4.4 Visceral Relations — The Stomach Bed</h3>
+    <p>
+      The anterior surface of the stomach is related on its right to the liver's
+      left and quadrate lobes, and on its left to the diaphragm. Its inferior
+      aspect is in direct contact with the anterior abdominal wall. The
+      posterior surface rests upon the <strong>"stomach bed"</strong>.
+    </p>
+
+    <div class="box mnemonic">
+      <strong>Stomach Bed — "Dr S3 Kills Patients Mercilessly":</strong>
+      <ul>
+        <li><strong>D</strong>iaphragm</li>
+        <li>
+          <strong>S</strong>plenic artery, <strong>S</strong>uprarenal gland
+          (left), <strong>S</strong>plenic flexure (left colic flexure) + Spleen
+          (lateral boundary)
+        </li>
+        <li><strong>K</strong>idney (left)</li>
+        <li><strong>P</strong>ancreas (body)</li>
+        <li><strong>M</strong>esocolon (transverse)</li>
+      </ul>
+      Clinical correlate: a posterior gastric ulcer can erode into the pancreas
+      (→ acute pancreatitis) or splenic artery (→ catastrophic haemorrhage).
+    </div>
+
+    <h3>4.5 Blood Supply</h3>
+    <p>
+      All gastric arteries are branches of the
+      <strong>celiac trunk (L1)</strong>. The stomach receives a rich, redundant
+      blood supply along both curvatures:
+    </p>
+    <ul>
+      <li>
+        <strong>Lesser curvature:</strong> Left gastric artery (directly from
+        celiac) + right gastric artery (from hepatic artery proper)
+      </li>
+      <li>
+        <strong>Greater curvature:</strong> Right gastroomental (from
+        gastroduodenal) + left gastroomental (from splenic artery)
+      </li>
+      <li>
+        <strong>Fundus:</strong> Short gastric arteries (from splenic artery)
+      </li>
+    </ul>
+    <p>Venous drainage follows the same named veins → portal system.</p>
+
+    <h3>4.6 Autonomic Innervation</h3>
+    <p>
+      Parasympathetic (vagal) fibres increase gastric motility and secretion.
+      Sympathetic fibres originate at T5–T9 and reach the stomach via the
+      <strong>greater splanchnic nerves</strong> and
+      <strong>celiac ganglion</strong>, inhibiting motility and causing
+      vasoconstriction.
+    </p>
+
+    <h3>4.7 Surgical Anatomy — Vagotomy and Gastrectomy</h3>
+    <p>
+      Vagotomy reduces acid secretion by denervating the parietal cells. The key
+      surgical pitfall during truncal vagotomy is the
+      <strong>Nerve of Grassi</strong> (criminal nerve) — a branch of the
+      <strong>posterior</strong> vagal trunk supplying the posterior gastric
+      fundus. It branches early, often still within the mediastinum before the
+      posterior trunk reaches the abdomen, making it easy to overlook. If missed
+      during vagotomy, the posterior fundus remains innervated and parietal cell
+      acid secretion persists, producing recurrent PUD despite apparent complete
+      vagotomy.
+    </p>
+
+    <div class="box clinical">
+      <strong>Peptic Ulcer Disease:</strong> Erosion of the gastric or duodenal
+      mucosa by acidic digestive juices. >80% are associated with
+      <strong>H. pylori</strong> infection. A perforated duodenal or gastric
+      ulcer releases free gas into the peritoneal cavity (pneumoperitoneum),
+      visible as air under the diaphragm on an <strong>upright CXR</strong>
+      — the classic radiological emergency sign.
+    </div>
+
+    <!-- ============================================================
+         SECTION 5 — SMALL INTESTINE
+    ============================================================= -->
+    <h2 id="s5">5. Small Intestine</h2>
+
+    <p>
+      The small intestine extends from the pylorus to the ileocecal junction,
+      measuring 6–7 metres in total. It comprises three segments: the
+      <strong>duodenum</strong> (25 cm, largely retroperitoneal, the convergence
+      point for bile and pancreatic secretions), the
+      <strong>jejunum</strong> (proximal 2/5, left upper abdomen), and the
+      <strong>ileum</strong> (distal 3/5, right lower abdomen). The duodenum
+      curves in a C-shape around the pancreatic head; its intimate posterior
+      relations make it highly vulnerable during posterior ulcer perforation and
+      pancreatic surgery.
+    </p>
+
+    <h3>5.1 Duodenum — The Four Parts and Relations</h3>
+    <table>
+      <tr>
+        <th>Part</th>
+        <th>Length</th>
+        <th>Anterior Relations</th>
+        <th>Posterior Relations</th>
+        <th>Other Relations</th>
+      </tr>
+      <tr>
+        <td><strong>1st (Superior)</strong></td>
+        <td>5 cm</td>
+        <td>Quadrate lobe of liver, gallbladder</td>
+        <td>Portal vein, gastroduodenal artery, CBD</td>
+        <td>Sup: epiploic foramen; Inf: pancreatic head/neck</td>
+      </tr>
+      <tr>
+        <td><strong>2nd (Descending)</strong></td>
+        <td>7.5 cm</td>
+        <td>Gallbladder, liver, transverse colon</td>
+        <td>Right kidney and renal vessels, IVC, psoas major</td>
+        <td>Medial: pancreatic head; Lateral: right colic flexure</td>
+      </tr>
+      <tr>
+        <td><strong>3rd (Horizontal)</strong></td>
+        <td>10 cm</td>
+        <td>Root of mesentery, SMV, jejunal coils</td>
+        <td>Right psoas major, right ureter, IVC, aorta</td>
+        <td>Superior: uncinate process of pancreas</td>
+      </tr>
+      <tr>
+        <td><strong>4th (Ascending)</strong></td>
+        <td>2.5 cm</td>
+        <td>Transverse colon and mesocolon</td>
+        <td>Left psoas major, sympathetic chain, inferior mesenteric vein</td>
+        <td>Superior: body of pancreas</td>
+      </tr>
+    </table>
+
+    <h3>5.2 Internal Anatomy of the Second Part</h3>
+    <p>
+      The descending duodenum is the critical interface between the
+      hepatobiliary system and the GI lumen. Two papillae open on its medial
+      wall:
+    </p>
+    <ul>
+      <li>
+        <strong>Major duodenal papilla (Ampulla of Vater):</strong> 8–10 cm
+        distal to the pylorus; marks the opening of the hepatopancreatic duct
+        (junction of CBD and main pancreatic duct/duct of Wirsung), controlled
+        by the <strong>Sphincter of Oddi</strong>. A
+        <strong>plica semicircularis</strong> forms a "monk's hood" over it,
+        with a <strong>plica longitudinalis</strong> descending from it.
+      </li>
+      <li>
+        <strong>Minor duodenal papilla (Accessory Ampulla):</strong> 2 cm
+        proximal to the major papilla; opening of the accessory pancreatic duct
+        (duct of Santorini).
+      </li>
+    </ul>
+
+    <div class="box high-yield">
+      <strong>Duodenum Exam Pearls:</strong>
+      <ul>
+        <li>
+          The <strong>duodenal cap (bulb)</strong> is the smooth-walled first
+          part seen on barium meal — most frequent site of duodenal ulceration
+        </li>
+        <li>
+          <strong>SMA syndrome:</strong> The 3rd part of the duodenum can be
+          compressed between the aorta posteriorly and SMA anteriorly following
+          rapid weight loss (loss of the mesenteric fat pad), causing duodenal
+          obstruction
+        </li>
+        <li>
+          <strong>Duodenal diverticula</strong> occur in the medial wall of D2,
+          where neurovascular structures pierce the muscle — creating a point of
+          weakness
+        </li>
+        <li>
+          <strong>Blood supply:</strong> D1–D2 → gastroduodenal artery (from
+          hepatic artery, celiac trunk); D3–D4 → inferior pancreaticoduodenal
+          artery (from SMA) — these form the pancreaticoduodenal arcade
+        </li>
+      </ul>
+    </div>
+
+    <h3>5.3 Jejunum vs. Ileum — Comparative Anatomy</h3>
+    <table>
+      <tr>
+        <th>Feature</th>
+        <th>Jejunum</th>
+        <th>Ileum</th>
+      </tr>
+      <tr>
+        <td>Location</td>
+        <td>Left upper quadrant (proximal 2/5)</td>
+        <td>Right lower quadrant (distal 3/5)</td>
+      </tr>
+      <tr>
+        <td>Colour</td>
+        <td>Deeper red (higher vascularity)</td>
+        <td>Paler pink</td>
+      </tr>
+      <tr>
+        <td>Calibre</td>
+        <td>2–4 cm (wider)</td>
+        <td>2–3 cm (narrower)</td>
+      </tr>
+      <tr>
+        <td>Wall</td>
+        <td>Thick and heavy</td>
+        <td>Thin and light</td>
+      </tr>
+      <tr>
+        <td>Vasa recta</td>
+        <td>Long</td>
+        <td>Short</td>
+      </tr>
+      <tr>
+        <td>Arterial arcades</td>
+        <td>A few large loops</td>
+        <td>Many short, close loops</td>
+      </tr>
+      <tr>
+        <td>Fat in mesentery</td>
+        <td>Less (windows visible)</td>
+        <td>More (opaque)</td>
+      </tr>
+      <tr>
+        <td>Circular folds (plicae circulares)</td>
+        <td>Large, tall, and closely packed</td>
+        <td>Low and sparse; absent distally</td>
+      </tr>
+      <tr>
+        <td>Lymphoid nodules</td>
+        <td>Few Peyer's patches</td>
+        <td>Many Peyer's patches</td>
+      </tr>
+    </table>
+
+    <h3>5.4 Surface Area Adaptations</h3>
+    <p>
+      The small intestinal wall is maximally modified for absorption.
+      <strong>Plicae circulares (valves of Kerckring)</strong> are permanent
+      mucosal folds that do not flatten on distension. Villi and microvilli
+      multiply the absorptive surface area exponentially. The
+      <strong>crypts of Lieberkühn</strong> secrete digestive enzymes.
+      <strong>Brunner's glands</strong> are in the duodenal submucosa only —
+      they secrete bicarbonate-rich mucus to neutralise acidic gastric chyme.
+    </p>
+
+    <div class="box high-yield">
+      <strong>Terminal Ileum — Unique Absorptive Role:</strong> Only the
+      terminal ileum can absorb
+      <strong>vitamin B12–intrinsic factor complex</strong> and
+      <strong>bile salts</strong>. Resection of the terminal ileum causes B12
+      deficiency (→ megaloblastic anaemia) and bile salt malabsorption (→
+      steatorrhoea, fat-soluble vitamin deficiency). Peyer's patches in the
+      ileum are the primary site of typhoid ulcers and tubercular ulcers.
+    </div>
+
+    <h3>5.5 Neurovascular Supply of the Small Intestine</h3>
+    <p>
+      Arterial supply is from the
+      <strong>superior mesenteric artery (SMA)</strong> via jejunal and ileal
+      branches forming vascular arcades. Venous drainage parallels the SMA into
+      the <strong>superior mesenteric vein</strong> → portal vein. Sympathetic
+      innervation (T10–T11) reaches the gut via lesser splanchnic nerves and the
+      superior mesenteric ganglion; these fibres are inhibitory to the gut wall
+      and excitatory to sphincters. Post-surgical sympathetic dominance causes
+      <strong>paralytic ileus</strong>. Parasympathetic supply is via the vagus,
+      stimulating peristalsis.
+    </p>
+
+    <div class="box clinical">
+      <strong>Meckel's Diverticulum:</strong> A true diverticulum — a remnant of
+      the vitelline (omphalomesenteric) duct, present in ~2% of the population.
+      Found within 2 feet (60 cm) of the ileocecal valve on the antimesenteric
+      border. Contains ectopic gastric or pancreatic tissue in 50% of
+      symptomatic cases. Rule of 2s: 2% incidence, within 2 feet of ileocecal
+      valve, 2 inches long, 2x more symptomatic in males, presents before age 2
+      most commonly. Ectopic gastric mucosa produces acid → ulceration →
+      painless rectal bleeding.
+    </div>
+
+    <!-- ============================================================
+         SECTION 6 — LARGE INTESTINE
+    ============================================================= -->
+    <h2 id="s6">6. Large Intestine</h2>
+
+    <p>
+      The large intestine extends approximately 1.5 metres from the ileocecal
+      valve to the anus. It is distinguished from the small intestine at
+      laparotomy by three reliable gross anatomical features: taeniae coli,
+      haustra, and omental appendices.
+    </p>
+
+    <h3>6.1 Large Intestine vs. Small Intestine — Distinguishing Features</h3>
+    <p>
+      The large intestine is distinguished from the small intestine by three
+      gross anatomical features visible at laparotomy:
+      <strong>taeniae coli</strong> (three longitudinal muscle bands),
+      <strong>haustra</strong> (sacculations between the taeniae), and
+      <strong>omental appendices</strong> (fatty peritoneal projections).
+      Microscopically, the large intestine is characterised by
+      <strong>abundant goblet cells</strong> and an absence of plicae
+      circulares, villi, and Peyer's patches — all of which are present in the
+      small intestine.
+    </p>
+
+    <table>
+      <tr>
+        <th>Feature</th>
+        <th>Small Intestine</th>
+        <th>Large Intestine</th>
+      </tr>
+      <tr>
+        <td>Diameter</td>
+        <td>Smaller</td>
+        <td>Larger</td>
+      </tr>
+      <tr>
+        <td>Taeniae coli</td>
+        <td>Absent</td>
+        <td>Present (3 bands)</td>
+      </tr>
+      <tr>
+        <td>Haustra</td>
+        <td>Absent</td>
+        <td>Present</td>
+      </tr>
+      <tr>
+        <td>Omental appendices</td>
+        <td>Absent</td>
+        <td>Present</td>
+      </tr>
+      <tr>
+        <td>Standard pathologies</td>
+        <td>Worm infestation, typhoid, tubercular ulcers</td>
+        <td>Amebiasis, carcinoma</td>
+      </tr>
+      <tr>
+        <td>Irritation outcome</td>
+        <td>Diarrhoea</td>
+        <td>Dysentery</td>
+      </tr>
+    </table>
+
+    <h3>6.2 Taeniae Coli — Three Bands</h3>
+    <ul>
+      <li>
+        <strong>Mesocolic taenia:</strong> At the site of mesocolon attachment
+      </li>
+      <li>
+        <strong>Omental taenia:</strong> At the site of omental appendix
+        attachment
+      </li>
+      <li><strong>Free taenia:</strong> Bearing no attachments</li>
+    </ul>
+
+    <h3>6.3 Caecum and Ileocecal Valve</h3>
+    <p>
+      The caecum is the blind-ended initial pouch of the large intestine,
+      approximately 7 cm long, located in the right lower quadrant. It is
+      <strong>intraperitoneal</strong>, giving it mobility within the iliac
+      fossa. The terminal ileum enters the caecum at an oblique angle,
+      invaginating to form the <strong>ileocecal valve</strong>, which prevents
+      retrograde flow of bacteria-rich colonic contents into the small bowel.
+    </p>
+
+    <h3>6.4 Vermiform Appendix — Anatomy and Positions</h3>
+    <p>
+      The appendix arises from the
+      <strong>posteromedial aspect of the caecum</strong>, just inferior to the
+      ileocecal junction. Its base is fixed; its tip position is highly
+      variable. All three taeniae coli converge on the base of the appendix —
+      the most reliable surgical guide to finding it during laparotomy.
+    </p>
+
+    <table>
+      <tr>
+        <th>Position</th>
+        <th>Clock-Face</th>
+        <th>Prevalence</th>
+        <th>Clinical Significance</th>
+      </tr>
+      <tr>
+        <td>Retrocecal</td>
+        <td>11 o'clock</td>
+        <td>64% (most common)</td>
+        <td>Psoas sign positive; tenderness atypically posterior</td>
+      </tr>
+      <tr>
+        <td>Pelvic</td>
+        <td>5 o'clock</td>
+        <td>32%</td>
+        <td>Obturator sign positive; may mimic pelvic pathology</td>
+      </tr>
+      <tr>
+        <td>Subcecal</td>
+        <td>6 o'clock</td>
+        <td>2%</td>
+        <td>Directly below the caecum</td>
+      </tr>
+      <tr>
+        <td>Pre-ileal</td>
+        <td>1–2 o'clock</td>
+        <td>1%</td>
+        <td>Anterior to terminal ileum</td>
+      </tr>
+      <tr>
+        <td>Post-ileal</td>
+        <td>1–2 o'clock</td>
+        <td>0.5%</td>
+        <td>Posterior to terminal ileum</td>
+      </tr>
+    </table>
+
+    <p>
+      The appendix is suspended by the <strong>mesoappendix</strong>, which
+      contains the <strong>appendicular artery</strong> (branch of ileocolic
+      artery). Venous drainage is via the
+      <strong>superior mesenteric vein</strong>. Sensory innervation follows
+      sympathetic pathways to the <strong>T10 dermatome</strong> — explaining
+      early periumbilical pain in appendicitis before somatic localisation to
+      the RLQ.
+    </p>
+
+    <h3>6.5 McBurney's Point</h3>
+    <p>
+      McBurney's point localises the base of the appendix at the surface. It is
+      located
+      <strong
+        >one-third of the way along the oblique line from the right ASIS to the
+        umbilicus</strong
+      >
+      (the spinoumbilical line). This is the site of maximal tenderness in
+      appendicitis and the standard incision point for open appendicectomy
+      (either a gridiron/muscle-splitting incision or the more cosmetic Lanz
+      incision).
+    </p>
+
+    <div class="box clinical">
+      <strong>Acute Appendicitis — Diagnosis:</strong> Caused by lumenal
+      obstruction (often by a <strong>fecalith</strong>), leading to increased
+      intraluminal pressure, ischaemia, and bacterial proliferation.
+      <ul>
+        <li>
+          <strong>Rovsing's sign:</strong> RLQ pain elicited by LLQ palpation —
+          indicates parietal peritoneal irritation
+        </li>
+        <li>
+          <strong>Psoas sign:</strong> RLQ pain on passive right hip extension
+          in left lateral decubitus — suggests retrocecal appendix irritating
+          the iliopsoas
+        </li>
+        <li>
+          <strong>Obturator sign:</strong> RLQ pain on passive internal rotation
+          of flexed right hip — suggests pelvic appendix irritating the
+          obturator internus
+        </li>
+      </ul>
+      Progression: periumbilical visceral pain (T10) → RLQ somatic pain →
+      guarding → rigidity → perforation and peritonitis.
+    </div>
+
+    <h3>6.6 Colon Segments and Peritoneal Status</h3>
+    <table>
+      <tr>
+        <th>Segment</th>
+        <th>Course</th>
+        <th>Peritoneal Status</th>
+        <th>Clinical Note</th>
+      </tr>
+      <tr>
+        <td>Ascending colon</td>
+        <td>Right iliac fossa → hepatic (right colic) flexure</td>
+        <td>Retroperitoneal (secondarily)</td>
+        <td>Hepatic flexure is positioned higher than splenic flexure</td>
+      </tr>
+      <tr>
+        <td>Transverse colon</td>
+        <td>Hepatic → splenic flexure (~45 cm)</td>
+        <td>Intraperitoneal (transverse mesocolon)</td>
+        <td>Most mobile segment; ptoses inferiorly in tall individuals</td>
+      </tr>
+      <tr>
+        <td>Descending colon</td>
+        <td>Splenic flexure → left iliac fossa</td>
+        <td>Retroperitoneal (secondarily)</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Sigmoid colon</td>
+        <td>S-shaped; left iliac fossa → S3</td>
+        <td>Intraperitoneal (sigmoid mesocolon)</td>
+        <td>Most common site for diverticulosis (60%)</td>
+      </tr>
+    </table>
+
+    <div class="box high-yield">
+      <strong>Autonomic Divide at the Splenic Flexure:</strong> Proximal to the
+      left colic (splenic) flexure, parasympathetic supply is via the
+      <strong>vagus (cranial)</strong>. Distal to the splenic flexure,
+      parasympathetic supply switches to
+      <strong>pelvic splanchnic nerves (S2–S4)</strong>. This junction also
+      approximates the SMA–IMA vascular watershed (Griffith's point).
+    </div>
+
+    <div class="box clinical">
+      <strong>Watershed Zone — Griffith's Point and Sudeck's Point:</strong>
+      The colon has two zones of tenuous collateral blood supply where SMA and
+      IMA territories meet with minimal overlap.
+      <strong>Griffith's point</strong> at the splenic flexure marks the
+      junction between the SMA's middle colic territory and the IMA's left colic
+      territory; the marginal artery is most attenuated here.
+      <strong>Sudeck's point</strong>
+      is a second watershed at the rectosigmoid junction, where the sigmoid
+      branches of the IMA meet the superior rectal artery. Both zones are
+      vulnerable to ischaemic colitis during systemic hypoperfusion (e.g.,
+      septic shock, post-cardiac surgery) or when a major mesenteric vessel is
+      ligated or occluded. Clinically, ischaemic colitis at the splenic flexure
+      presents with cramping left-sided abdominal pain and bloody diarrhoea;
+      diagnosis is confirmed by flexible sigmoidoscopy showing mucosal pallor,
+      submucosal haemorrhage, or frank necrosis at the flexure.
+    </div>
+
+    <h3>6.7 Colonic Motility — Gastrocolic Reflex</h3>
+    <p>
+      The most important colonic mass movement reflex is the
+      <strong>gastrocolic reflex</strong>: distension of the stomach by a large
+      meal triggers increased propulsive mass movements in the colon, producing
+      an urge to defecate. This is a neurally and hormonally mediated reflex,
+      largely via the enteric nervous system and gastrin/cholecystokinin
+      release. It is the reason patients with irritable bowel syndrome typically
+      experience urgency shortly after meals.
+    </p>
+
+    <h3>6.8 Colonic Stomas</h3>
+    <p>
+      A stoma is a surgically created opening that diverts intestinal contents
+      through the abdominal wall. An <strong>ileostomy</strong> is fashioned
+      from the terminal ileum and an <strong>colostomy</strong> from the colon;
+      the level of diversion determines the anatomical site, output volume, and
+      stool consistency. The table below compares the two, as these differences
+      are directly testable and guide post-operative management.
+    </p>
+    <table>
+      <tr>
+        <th>Criteria</th>
+        <th>Ileostomy</th>
+        <th>Colostomy</th>
+      </tr>
+      <tr>
+        <td>Site</td>
+        <td>Right lower quadrant</td>
+        <td>Left lower quadrant</td>
+      </tr>
+      <tr>
+        <td>Output volume</td>
+        <td>500–1300 mL/day</td>
+        <td>200–700 mL/day</td>
+      </tr>
+      <tr>
+        <td>Stool consistency</td>
+        <td>Liquid / mushy (water not yet absorbed)</td>
+        <td>Semi-formed</td>
+      </tr>
+    </table>
+
+    <!-- ============================================================
+         SECTION 7 — LIVER AND PANCREAS
+    ============================================================= -->
+    <h2 id="s7">7. Liver and Pancreas</h2>
+
+    <p>
+      The liver is the largest gland in the body (average weight 1500 g),
+      strategically positioned in the right hypochondrium, epigastric, and left
+      hypochondrium regions. It has a dual blood supply and serves as the
+      central metabolic, detoxification, and bile-producing organ. The pancreas
+      is a retroperitoneal exocrine and endocrine gland positioned posterior to
+      the stomach, sitting in the concavity of the duodenal C-loop. The spleen
+      is an intraperitoneal immunological and filtrative organ in the left
+      hypochondrium, closely related to the pancreatic tail.
+    </p>
+
+    <h3>7.1 Liver — Surfaces and the Bare Area</h3>
+    <p>
+      The liver has two primary surfaces. The
+      <strong>diaphragmatic surface</strong> is smooth and convex, moulded
+      against the inferior diaphragm. The <strong>visceral surface</strong> is
+      irregular and concave, bearing impressions from the stomach, duodenum,
+      right kidney, and gallbladder. The <strong>bare area</strong>
+      on the posterior diaphragmatic surface is devoid of peritoneum, allowing
+      direct liver-diaphragm contact — it is bounded by the coronary ligaments.
+    </p>
+
+    <h3>7.2 Peritoneal Ligaments of the Liver</h3>
+    <ul>
+      <li>
+        <strong>Falciform ligament:</strong> Two-layered fold anchoring the
+        liver to the anterior abdominal wall; its free margin contains the
+        <strong>ligamentum teres (round ligament)</strong> — the obliterated
+        remnant of the fetal umbilical vein.
+      </li>
+      <li>
+        <strong>Coronary ligaments (anterior and posterior):</strong> Bound the
+        bare area; meet laterally as the triangular ligaments.
+      </li>
+      <li>
+        <strong>Hepatogastric ligament:</strong> Part of the lesser omentum;
+        connects liver to stomach.
+      </li>
+      <li>
+        <strong>Hepatoduodenal ligament:</strong> Part of the lesser omentum;
+        connects liver to D1; transmits the
+        <strong>portal triad</strong> (portal vein, hepatic artery proper, CBD).
+      </li>
+    </ul>
+
+    <h3>7.3 Lobar Anatomy and Porta Hepatis</h3>
+    <p>
+      Morphologically, the liver is divided into right, left, quadrate, and
+      caudate lobes by surface fissures. The quadrate and caudate lobes arise
+      from the right lobe morphologically but are functionally part of the left
+      lobe. The <strong>porta hepatis (hilum)</strong> lies on the visceral
+      surface between the caudate and quadrate lobes. It is the gateway for all
+      neurovascular entry/exit. Its contents are:
+    </p>
+    <ul>
+      <li>Right and left hepatic ducts (biliary exit)</li>
+      <li>Right and left branches of hepatic artery proper (arterial entry)</li>
+      <li>Portal vein (entering posterior to hepatic arteries)</li>
+      <li>Sympathetic and parasympathetic nerve fibres</li>
+      <li>Hepatic lymph nodes</li>
+    </ul>
+
+    <h3>7.4 Hepatic Blood Supply — Dual System</h3>
+    <p>
+      The liver receives blood from two sources:
+      <strong>30%</strong> from the <strong>hepatic artery proper</strong>
+      (oxygenated, from the celiac trunk), and
+      <strong>70%</strong> from the <strong>portal vein</strong>
+      (nutrient-rich venous blood from the GI tract).
+    </p>
+
+    <h3>7.5 Portal-Caval Anastomoses</h3>
+    <p>
+      Portal hypertension (e.g., cirrhosis) forces blood through portosystemic
+      collateral channels. The four clinically important anastomotic sites are:
+    </p>
+
+    <table>
+      <tr>
+        <th>Site</th>
+        <th>Portal Vein Tributary</th>
+        <th>Systemic Vein Tributary</th>
+        <th>Clinical Manifestation</th>
+      </tr>
+      <tr>
+        <td>Esophageal</td>
+        <td>Left gastric vein</td>
+        <td>Esophageal vein (azygos)</td>
+        <td>Esophageal varices — risk of massive haemorrhage</td>
+      </tr>
+      <tr>
+        <td>Paraumbilical</td>
+        <td>Paraumbilical vein</td>
+        <td>Epigastric veins</td>
+        <td>Caput Medusae — dilated veins radiating from umbilicus</td>
+      </tr>
+      <tr>
+        <td>Rectal</td>
+        <td>Superior rectal vein (IMA → portal)</td>
+        <td>Inferior/middle rectal vein (systemic)</td>
+        <td>Rectal varices (distinct from haemorrhoids)</td>
+      </tr>
+      <tr>
+        <td>Retroperitoneal</td>
+        <td>Colic veins</td>
+        <td>Retroperitoneal veins</td>
+        <td>Typically no overt clinical finding</td>
+      </tr>
+    </table>
+
+    <h3>7.6 Biliary System and Gallbladder</h3>
+    <p>
+      Bile flows from hepatocytes → right and left hepatic ducts →
+      <strong>common hepatic duct</strong> (~4 cm). The common hepatic duct
+      joins the <strong>cystic duct</strong> (~3.8 cm) to form the
+      <strong>common bile duct</strong> (~8 cm), which descends posterior to D1
+      and in a groove on the pancreatic head to join the main pancreatic duct at
+      the <strong>ampulla of Vater</strong>.
+    </p>
+    <p>
+      The <strong>gallbladder</strong> is a pear-shaped, 30–50 mL sac with a
+      <strong>fundus</strong>, <strong>body</strong>, and <strong>neck</strong>.
+      The neck contains an <strong>infundibulum (Hartmann's pouch)</strong> —
+      the most common site for gallstone impaction. The cystic duct contains the
+      <strong>spiral valve of Heister</strong>, a mucosal fold that keeps the
+      lumen open for bidirectional bile flow.
+    </p>
+
+    <div class="box clinical">
+      <strong>Cholelithiasis (Gallstones):</strong> Gallstones composed of
+      cholesterol and bile pigments most commonly impact at
+      <strong>Hartmann's pouch</strong>, obstructing gallbladder emptying and
+      causing biliary colic. Stones passing into the CBD can cause obstructive
+      jaundice and cholangitis. Definitive management is
+      <strong>cholecystectomy</strong>. A stone at the ampulla of Vater can
+      simultaneously obstruct bile and pancreatic secretion, precipitating
+      pancreatitis (gallstone pancreatitis).
+    </div>
+
+    <h3>7.7 Pancreatic Anatomy — Parts and Peritoneal Status</h3>
+    <p>
+      The pancreas is <strong>secondarily retroperitoneal</strong> except for
+      its tail, which is intraperitoneal within the splenorenal ligament. Its
+      parts are: <strong>head</strong> (seated within the duodenal C-loop),
+      <strong>uncinate process</strong> (hooks posterior to the SMA),
+      <strong>neck</strong>, <strong>body</strong>, and <strong>tail</strong>.
+    </p>
+
+    <h3>7.8 Pancreatic Ductal System</h3>
+    <ul>
+      <li>
+        <strong>Main pancreatic duct (duct of Wirsung):</strong> Runs the length
+        of the gland; joins the CBD to form the
+        <strong>hepatopancreatic ampulla (Ampulla of Vater)</strong>, which
+        opens at the <strong>major duodenal papilla</strong>, regulated by the
+        <strong>Sphincter of Oddi</strong>.
+      </li>
+      <li>
+        <strong>Accessory pancreatic duct (duct of Santorini):</strong> Drains
+        the upper head and uncinate process; opens at the
+        <strong>minor duodenal papilla</strong>, 2 cm proximal to the major
+        papilla.
+      </li>
+    </ul>
+
+    <div class="box clinical">
+      <strong>Annular Pancreas:</strong> A congenital anomaly where the ventral
+      bud of the pancreas bifurcates and one segment wraps completely around the
+      second part of the duodenum. This encirclement causes
+      <strong>duodenal constriction or atresia</strong>, presenting clinically
+      as bilious vomiting in a neonate and <strong>polyhydramnios</strong> in
+      utero (the fetus cannot swallow sufficient amniotic fluid).
+    </div>
+
+    <div class="box high-yield">
+      <strong>Pancreatic Relations — Why They Matter:</strong>
+      <ul>
+        <li>
+          Pancreas forms the <strong>posterior wall of the lesser sac</strong> —
+          enzyme leak from pancreatitis or trauma collects here first
+        </li>
+        <li>
+          The <strong>splenic vein</strong> runs along the posterior surface of
+          the pancreas → chronic pancreatitis can cause splenic vein thrombosis
+          → sinistral (left-sided) portal hypertension
+        </li>
+        <li>
+          The <strong>CBD</strong> runs in a groove on the posterior surface of
+          the pancreatic head → pancreatic head carcinoma causes painless
+          obstructive jaundice (Courvoisier's law)
+        </li>
+      </ul>
+    </div>
+
+    <h3>7.9 Spleen — Anatomy and Ligaments</h3>
+    <p>
+      The spleen lies in the left hypochondrium against the diaphragm at the
+      level of <strong>ribs IX and X</strong>. It is held in position by two
+      primary ligaments:
+    </p>
+    <ul>
+      <li>
+        <strong>Gastrosplenic ligament:</strong> Connects the spleen to the
+        greater curvature (fundus) of the stomach; contains the short gastric
+        and gastroomental vessels.
+      </li>
+      <li>
+        <strong>Splenorenal (lienorenal) ligament:</strong> Connects the spleen
+        to the left kidney; contains the splenic vessels and the
+        <strong>tail of the pancreas</strong>.
+      </li>
+    </ul>
+    <p>
+      The <strong>splenic artery</strong> is the largest and most tortuous
+      branch of the celiac trunk and provides the entire arterial supply. Venous
+      drainage is via the <strong>splenic vein</strong>, which joins the SMV to
+      form the portal vein.
+    </p>
+
+    <h3>7.10 Peritoneal Classification of Abdominal Organs</h3>
+    <p>
+      The peritoneal cavity is a <strong>potential space</strong> (not a real,
+      fluid-filled space) between the
+      <strong>parietal peritoneum</strong> (lining the abdominal wall) and the
+      <strong>visceral peritoneum</strong> (covering the organs). It contains
+      only a thin film of serous fluid that allows frictionless organ movement.
+      An organ's degree of peritoneal coverage determines its surgical mobility
+      and the route by which disease can spread from it.
+    </p>
+
+    <table>
+      <tr>
+        <th>Classification</th>
+        <th>Definition</th>
+        <th>Examples</th>
+      </tr>
+      <tr>
+        <td>Intraperitoneal</td>
+        <td>Almost completely covered by visceral peritoneum</td>
+        <td>
+          Stomach, spleen, jejunum, ileum, cecum, appendix, transverse colon,
+          sigmoid colon
+        </td>
+      </tr>
+      <tr>
+        <td>Mesoperitoneal (partially covered)</td>
+        <td>Covered on one surface only; fused to the posterior wall</td>
+        <td>Liver, gallbladder, ascending colon, descending colon</td>
+      </tr>
+      <tr>
+        <td>Retroperitoneal (secondarily)</td>
+        <td>
+          Lost original mesentery during development; covered anteriorly only
+        </td>
+        <td>Duodenum (D2–D4), pancreas (body, head), upper/middle rectum</td>
+      </tr>
+      <tr>
+        <td>Retroperitoneal (primarily)</td>
+        <td>Never had a mesentery; always behind peritoneum</td>
+        <td>Kidneys, suprarenal glands, ureters, aorta, IVC, lower rectum</td>
+      </tr>
+    </table>
+
+    <h3>7.11 Dependent Peritoneal Spaces</h3>
+    <p>
+      Fluid collecting in the peritoneal cavity accumulates in the most
+      dependent recesses determined by posture, creating sites where infection
+      or haemorrhage localises.
+    </p>
+    <table>
+      <tr>
+        <th>Space</th>
+        <th>Location</th>
+        <th>Most Dependent When</th>
+        <th>Clinical Significance</th>
+      </tr>
+      <tr>
+        <td>Hepatorenal recess (Morison's pouch)</td>
+        <td>Between liver and right kidney</td>
+        <td>Supine position</td>
+        <td>
+          Most common site for blood/fluid collection post-trauma (FAST exam)
+        </td>
+      </tr>
+      <tr>
+        <td>Rectouterine pouch (Pouch of Douglas)</td>
+        <td>Between rectum and posterior uterus (female)</td>
+        <td>Standing/erect</td>
+        <td>
+          Lowest point of peritoneal cavity; aspirated by culdocentesis for
+          ruptured ectopic pregnancy
+        </td>
+      </tr>
+      <tr>
+        <td>Rectovesical pouch</td>
+        <td>Between rectum and bladder (male)</td>
+        <td>Standing/erect</td>
+        <td>Male equivalent of Pouch of Douglas</td>
+      </tr>
+      <tr>
+        <td>Vesicouterine pouch</td>
+        <td>Between uterus and bladder (female)</td>
+        <td>—</td>
+        <td>Anterior pelvic recess</td>
+      </tr>
+    </table>
+
+    <div class="box high-yield">
+      <strong>Ascites — Mechanism in Portal Hypertension:</strong> Increased
+      portal venous pressure causes fluid to leak from the portal venous system
+      into the peritoneal cavity. Clinical signs: distended abdomen, umbilical
+      protrusion, shifting dullness, fluid thrill.
+    </div>
+
+    <!-- ============================================================
+         SECTION 8 — RECTUM
+    ============================================================= -->
+    <h2 id="s8">8. Rectum</h2>
+
+    <p>
+      The rectum begins at the rectosigmoid junction at
+      <strong>S3</strong> and spans approximately 13 cm. It is the portion of
+      the hindgut that stores fecal matter prior to defecation. Its flexures,
+      internal folds, and layered peritoneal coverage are clinically significant
+      for endoscopy, surgery, and oncology.
+    </p>
+
+    <h3>8.1 Rectum — Gross Anatomy and Flexures</h3>
+    <p>
+      The rectum follows two flexures: the <strong>sacral flexure</strong>
+      (conforming to the anterior concavity of the sacrum) and the
+      <strong>anorectal flexure</strong> (sharply posteroinferior at the
+      anorectal ring). The distal rectum dilates to form the
+      <strong>rectal ampulla</strong>, which stores fecal matter prior to
+      defecation.
+    </p>
+
+    <div class="box high-yield">
+      <strong>Retroperitoneal Classification of the Rectum:</strong>
+      <ul>
+        <li>
+          Upper rectum = <strong>secondarily retroperitoneal</strong> (lost
+          mesentery during development)
+        </li>
+        <li>
+          Lower rectum = <strong>primarily retroperitoneal</strong> (never had a
+          mesentery)
+        </li>
+      </ul>
+      This dictates surgical mobilisation and the spread of rectal malignancy.
+    </div>
+
+    <h3>8.2 Valves of Houston (Transverse Rectal Folds)</h3>
+    <p>
+      Three permanent transverse rectal folds (not mere mucosal ridges — they
+      incorporate the circular muscle coat) line the interior of the rectum:
+      <strong>one on the right (intermediate)</strong> and
+      <strong>two on the left (superior and inferior)</strong>. They support the
+      weight of the fecal load, preventing constant pressure on the anal canal.
+      They must be gently navigated during sigmoidoscopy to avoid iatrogenic
+      perforation.
+    </p>
+
+    <h3>8.3 Peritoneal Reflections and Pelvic Pouches</h3>
+    <p>
+      The peritoneum covers the upper and middle thirds of the rectum anteriorly
+      and then reflects anteriorly to form gender-specific pouches. In females,
+      this forms the <strong>rectouterine pouch (Pouch of Douglas)</strong> —
+      the lowest point of the peritoneal cavity. In males, the equivalent is the
+      <strong>rectovesical pouch</strong>.
+    </p>
+
+    <h3>8.4 Neurovascular Supply of the Rectum</h3>
+    <table>
+      <tr>
+        <th>Supply</th>
+        <th>Vessel / Nerve</th>
+        <th>Origin</th>
+      </tr>
+      <tr>
+        <td>Superior rectal artery</td>
+        <td>Continuation of IMA</td>
+        <td>Upper rectum</td>
+      </tr>
+      <tr>
+        <td>Middle rectal artery</td>
+        <td>Internal iliac artery</td>
+        <td>Middle rectum</td>
+      </tr>
+      <tr>
+        <td>Inferior rectal artery</td>
+        <td>Internal pudendal artery</td>
+        <td>Lower rectum / anal canal</td>
+      </tr>
+      <tr>
+        <td>Sympathetic nerves</td>
+        <td>L1–L2 via hypogastric plexus</td>
+        <td>Inhibit defecation; contract sphincters</td>
+      </tr>
+      <tr>
+        <td>Parasympathetic nerves</td>
+        <td>S2–S4 via pelvic splanchnic nerves</td>
+        <td>Initiate defecation; relax internal sphincter</td>
+      </tr>
+    </table>
+
+    <!-- ============================================================
+         SECTION 9 — ANAL CANAL
+    ============================================================= -->
+    <h2 id="s9">9. Anal Canal</h2>
+
+    <p>
+      The anal canal is 3.5–4 cm long, begins at the rectal ampulla where the
+      <strong>puborectalis muscle</strong> forms a muscular sling, and
+      terminates at the anus. The <strong>dentate (pectinate) line</strong>
+      is the single most important landmark in this region, dividing it into two
+      anatomically, embryologically, and clinically distinct halves.
+    </p>
+
+    <h3>9.1 Anorectal Angle and Puborectalis</h3>
+    <p>
+      The <strong>anorectal angle</strong> (approximately 80 degrees) is
+      maintained by the puborectalis — its contraction during sitting "chokes"
+      the rectum to maintain continence. Squatting relaxes the puborectalis,
+      straightening the rectum and facilitating defecation.
+    </p>
+
+    <h3>9.2 The Dentate (Pectinate) Line — Primary Landmark</h3>
+    <p>
+      The dentate line marks the junction between the endodermal and ectodermal
+      portions of the anal canal and is formed by the inferior margins of the
+      <strong>anal valves</strong>. Above the valves are the
+      <strong>anal columns of Morgagni</strong> (6–10 longitudinal ridges) and
+      <strong>anal sinuses</strong> (containing openings of anal glands). Below
+      the dentate line, an additional landmark, the
+      <strong>White Line of Hilton</strong>, marks the intersphincteric groove
+      between the internal and external sphincters.
+    </p>
+
+    <table>
+      <tr>
+        <th>Feature</th>
+        <th>Above Dentate Line (Upper Canal)</th>
+        <th>Below Dentate Line (Lower Canal)</th>
+      </tr>
+      <tr>
+        <td>Embryological origin</td>
+        <td>Endoderm (primitive anorectal canal)</td>
+        <td>Ectoderm</td>
+      </tr>
+      <tr>
+        <td>Epithelial lining</td>
+        <td>Simple/stratified columnar epithelium</td>
+        <td>Stratified squamous → keratinised skin</td>
+      </tr>
+      <tr>
+        <td>Arterial supply</td>
+        <td>Superior rectal artery (from IMA)</td>
+        <td>Inferior rectal artery (from internal pudendal)</td>
+      </tr>
+      <tr>
+        <td>Venous drainage</td>
+        <td>Superior rectal vein → Portal circulation</td>
+        <td>Inferior rectal vein → Systemic (IVC)</td>
+      </tr>
+      <tr>
+        <td>Lymphatic drainage</td>
+        <td>Para-rectal / inferior mesenteric nodes</td>
+        <td>Superficial inguinal lymph nodes</td>
+      </tr>
+      <tr>
+        <td>Innervation</td>
+        <td>Visceral (autonomic) — pain insensitive</td>
+        <td>Somatic — exquisitely pain sensitive</td>
+      </tr>
+    </table>
+
+    <h3>9.3 Sphincteric Mechanism</h3>
+    <p>
+      Continence depends on a dual sphincter system. The
+      <strong>internal sphincter</strong> is an involuntary thickening of the
+      circular smooth muscle coat surrounding the upper 2/3 of the anal canal.
+      The <strong>external sphincter</strong> is voluntary striated muscle
+      divided into three parts: deep (encircles upper end), superficial
+      (attached to perineal body and anococcygeal ligament), and subcutaneous
+      (encircles lower end). The <strong>anorectal ring</strong> — formed by
+      puborectalis, deep external sphincter, conjoint longitudinal muscle, and
+      highest internal sphincter — is palpable digitally on its posterior and
+      lateral aspects. Damage to the anorectal ring causes incontinence.
+    </p>
+
+    <div class="box high-yield">
+      <strong>Internal vs External Sphincter — Clinical Distinction:</strong>
+      The <strong>internal anal sphincter</strong> is
+      <em>involuntary</em> smooth muscle (sympathetic tone keeps it contracted
+      at rest). The <strong>external anal sphincter</strong> is
+      <em>voluntary</em> striated muscle (pudendal nerve, S2–S4). If a patient
+      loses <strong>voluntary</strong> bowel control but
+      <strong>resting tone is preserved</strong> and the anal wink reflex is
+      present → the <strong>external sphincter</strong> (voluntary component) is
+      damaged while the internal sphincter is intact. Complete section of the
+      anorectal ring (internal + external + puborectalis) causes total
+      incontinence.
+    </div>
+
+    <div class="box clinical">
+      <strong>Haemorrhoids (Piles):</strong>
+      <ul>
+        <li>
+          <strong>Internal:</strong> Above the dentate line; insensitive to pain
+          (visceral innervation); sensitive only to stretch. Primary piles are
+          enlargements of the three main radicles of the superior rectal vein at
+          <strong>3, 7, and 11 o'clock</strong> (left lateral, right posterior,
+          right anterior).
+        </li>
+        <li>
+          <strong>External:</strong> Below the dentate line; covered by skin;
+          extremely painful (somatic innervation).
+        </li>
+      </ul>
+      Causes include portal hypertension, chronic constipation, venous
+      incompetence (no valves in portal system), poor connective tissue support.
+    </div>
+
+    <div class="box clinical">
+      <strong>Anal Fissure:</strong> An elongated ulcer in the anal mucosa
+      caused by tearing of the anal valves, almost always in the
+      <strong>posterior midline</strong>. Exquisitely painful due to somatic
+      innervation below the dentate line. The posterior midline is
+      preferentially affected because the superficial external sphincter does
+      not encircle the canal posteriorly, leaving the mucosa unsupported.
+    </div>
+
+    <!-- ============================================================
+         SECTION 10 — POSTERIOR ABDOMINAL WALL
+    ============================================================= -->
+    <h2 id="s10">10. Posterior Abdominal Wall</h2>
+
+    <p>
+      The posterior abdominal wall forms the back boundary of the abdominal
+      cavity, providing structural support and serving as the origin of several
+      muscles that move the vertebral column and lower limb. It is also the
+      direct anatomical floor for the retroperitoneal organs — kidneys, ureters,
+      adrenal glands, aorta, and IVC.
+    </p>
+
+    <h3>10.1 Muscles of the Posterior Wall</h3>
+    <table>
+      <tr>
+        <th>Muscle</th>
+        <th>Origin</th>
+        <th>Insertion</th>
+        <th>Action</th>
+        <th>Nerve</th>
+      </tr>
+      <tr>
+        <td><strong>Psoas major</strong></td>
+        <td>T12–L5 vertebral bodies and discs</td>
+        <td>Lesser trochanter of femur (with iliacus = iliopsoas)</td>
+        <td>Hip flexion; lateral flexion of lumbar spine</td>
+        <td>Lumbar plexus (L1–L3 ventral rami)</td>
+      </tr>
+      <!-- NEW -->
+      <tr>
+        <td><strong>Psoas minor</strong></td>
+        <td>Lateral surface of T12 and L1 vertebral bodies</td>
+        <td>Pectineal line and iliopubic eminence</td>
+        <td>
+          Weak flexor of the trunk; <strong>often absent or variable</strong>
+        </td>
+        <td>L1 nerve</td>
+      </tr>
+      <tr>
+        <td><strong>Iliacus</strong></td>
+        <td>Iliac fossa</td>
+        <td>Lesser trochanter (with psoas = iliopsoas)</td>
+        <td>Hip flexion</td>
+        <td>Femoral nerve (L2–L3)</td>
+      </tr>
+      <tr>
+        <td><strong>Quadratus lumborum</strong></td>
+        <td>Iliac crest and iliolumbar ligament</td>
+        <td>12th rib and L1–L4 transverse processes</td>
+        <td>Lateral flexion of trunk; fixes 12th rib during inspiration</td>
+        <td>Subcostal nerve + lumbar plexus (L1–L3)</td>
+      </tr>
+    </table>
+
+    <!-- NEW SECTION -->
+    <h3>10.2 Diaphragm — Apertures, Arcuate Ligaments, and Defects</h3>
+    <p>
+      The diaphragm is the musculotendinous partition forming the superior
+      boundary of the posterior abdominal wall. It attaches to the lumbar
+      vertebrae via crura that blend with the anterior longitudinal ligament.
+      Three <strong>arcuate ligaments</strong> provide additional anchoring: the
+      <strong>median arcuate ligament</strong> arches over the aorta, the
+      <strong>medial arcuate ligament</strong> arches over the psoas major, and
+      the <strong>lateral arcuate ligament</strong> arches over the quadratus
+      lumborum.
+    </p>
+
+    <table>
+      <tr>
+        <th>Vertebral Level</th>
+        <th>Opening</th>
+        <th>Structures Passing Through</th>
+      </tr>
+      <tr>
+        <td><strong>T8</strong></td>
+        <td>Vena caval opening</td>
+        <td>Inferior vena cava (IVC), <strong>right phrenic nerve</strong></td>
+      </tr>
+      <tr>
+        <td><strong>T10</strong></td>
+        <td>Esophageal hiatus</td>
+        <td>
+          Esophagus, anterior and posterior vagal trunks, left gastric artery
+          esophageal branches
+        </td>
+      </tr>
+      <tr>
+        <td><strong>T12</strong></td>
+        <td>Aortic hiatus</td>
+        <td>Aorta, <strong>thoracic duct</strong>, azygos vein</td>
+      </tr>
+    </table>
+
+    <div class="box high-yield">
+      <!-- NEW -->
+      <strong>T8, T10, T12 — Diaphragm Apertures:</strong> "I 8 (ate) 10 eggs at
+      12" — IVC at T8, Esophagus at T10, Aorta at T12. Note the
+      <strong>left phrenic nerve</strong> pierces the muscular part of the
+      diaphragm anterior to the central tendon (does NOT travel through a named
+      hiatus). The right phrenic nerve travels with the IVC at T8.
+    </div>
+
+    <p>Two congenital diaphragmatic defects are high-yield:</p>
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Foramen of Morgagni (Retrosternal Hernia):</strong> A
+      para-retrosternal defect caused by incomplete fusion of the septum
+      transversum with the sternum and anterior ribs. Content herniates
+      anteriorly into the chest. Rare but tested.
+    </div>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Foramen of Bochdalek (Posterolateral Hernia):</strong> The most
+      common congenital diaphragmatic hernia. A posterolateral defect (left side
+      > right). Abdominal viscera herniate into the thorax, compressing the
+      developing lung → pulmonary hypoplasia. Presents at birth with respiratory
+      distress and a scaphoid abdomen.
+    </div>
+
+    <h3>10.3 Lumbar Plexus</h3>
+    <p>
+      The lumbar plexus forms within the substance of the psoas major from the
+      ventral rami of <strong>L1–L4</strong>. Key branches:
+    </p>
+    <ul>
+      <li>
+        <strong>Iliohypogastric nerve (L1):</strong> Supplies skin of
+        hypogastric region
+      </li>
+      <li>
+        <strong>Ilioinguinal nerve (L1):</strong> Supplies anterior
+        scrotum/labia and medial thigh; afferent limb of cremasteric reflex
+      </li>
+      <li>
+        <strong>Genitofemoral nerve (L1–L2):</strong> Genital branch (efferent
+        cremasteric reflex — motor to cremaster) + femoral branch (skin over
+        femoral triangle)
+      </li>
+      <li>
+        <strong>Lateral cutaneous nerve of the thigh (L2–L3):</strong> Passes
+        under (or through) the inguinal ligament near the ASIS; compression
+        causes meralgia paraesthetica
+      </li>
+      <li>
+        <strong>Femoral nerve (L2–L4):</strong> Exits via muscular lacuna
+        beneath inguinal ligament; motor to quadriceps, sensory to anteromedial
+        thigh and medial leg
+      </li>
+      <li>
+        <strong>Obturator nerve (L2–L4):</strong> Exits through obturator canal;
+        motor to adductors, sensory to medial thigh
+      </li>
+    </ul>
+
+    <h3>10.4 Major Retroperitoneal Vessels</h3>
+    <p>
+      The <strong>aorta</strong> enters the abdomen at <strong>T12</strong>
+      through the aortic hiatus and bifurcates into the
+      <strong>common iliac arteries at L4</strong> (level of the iliac crests —
+      a key surface landmark). The <strong>IVC</strong> forms at L5 from the
+      union of the common iliac veins and ascends to the right of the aorta,
+      exiting through the caval opening in the diaphragm at <strong>T8</strong>.
+      Key anatomical relations: the <strong>left sympathetic trunk</strong> lies
+      to the left of the aorta; the
+      <strong>IVC, cisterna chyli, and the beginning of the azygos vein</strong>
+      lie to its right. Note that the
+      <strong>left ovarian (gonadal) vein</strong> drains into the
+      <strong>left renal vein</strong> (not directly into the IVC), whereas the
+      right gonadal vein drains directly into the IVC.
+    </p>
+
+    <div class="box high-yield">
+      <strong>Aortic Bifurcation at L4</strong> — palpable in thin patients as a
+      pulsatile midline mass slightly above and to the left of the umbilicus. An
+      aortic aneurysm expanding toward the spine causes back pain; anterior
+      rupture causes haemoperitoneum.
+    </div>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Abdominal Aortic Aneurysm (AAA):</strong> Dilation &gt;3 cm of the
+      infrarenal aorta (most common site). Rupture presents with sudden, severe
+      abdominal or back pain ± haemodynamic collapse. Carries a
+      <strong>90% mortality rate</strong> at rupture due to massive blood loss.
+      Surgical treatment involves placement of a
+      <strong>prosthetic graft</strong>. Elective repair is offered when
+      diameter exceeds 5.5 cm.
+    </div>
+
+    <!-- NEW SECTION -->
+    <h3>10.5 Lymphatics — Cisterna Chyli and Thoracic Duct</h3>
+    <p>
+      Lymph from the abdomen drains hierarchically: lumbar (aortic/caval) nodes
+      receive drainage from the posterior wall, kidneys, and reproductive
+      organs; pre-aortic nodes receive drainage from the GI tract. These
+      converge into the <strong>intestinal trunk</strong>, which delivers lymph
+      to the <strong>cisterna chyli</strong>.
+    </p>
+    <div class="box high-yield">
+      <!-- NEW -->
+      <strong>Cisterna Chyli and Thoracic Duct:</strong> The cisterna chyli is a
+      thin-walled lymphatic sac located
+      <strong>anterior to L1–L2 vertebrae</strong> and marks the inferior origin
+      of the thoracic duct. The thoracic duct ascends through the
+      <strong>aortic hiatus (T12)</strong> and terminates at the
+      <strong>left venous angle</strong> — the junction of the left subclavian
+      and left internal jugular veins. Disruption (e.g., thoracic surgery or
+      trauma) causes a chylothorax.
+    </div>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Psoas Abscess:</strong> Infection (TB, Crohn's, discitis) tracks
+      within the fascial compartment of the psoas, then passes
+      <strong>inferiorly over the pelvic brim</strong> and deep to the inguinal
+      ligament, presenting as a tender inguinal swelling. Hip is held in flexion
+      to relieve tension on the infected muscle.
+    </div>
+
+    <!-- ============================================================
+         SECTION 11 — REVIEW OF ARTERIES AND VEINS
+    ============================================================= -->
+    <h2 id="s11">11. Review of Arteries and Veins</h2>
+
+    <p>
+      The abdominal gut receives its arterial supply from three unpaired
+      anterior branches of the aorta, each supplying the territory of the
+      corresponding embryological gut division. Understanding the precise origin
+      levels, branches, and watershed zones between these vessels is essential
+      for interpreting ischaemia and planning vascular surgery.
+    </p>
+
+    <h3>11.1 Celiac Trunk (T12/L1)</h3>
+    <p>
+      The celiac trunk arises from the anterior aorta at the level of
+      <strong>L1 (transpyloric plane)</strong> and immediately trifurcates into
+      three branches, supplying the foregut (distal esophagus to D2).
+    </p>
+    <ul>
+      <li>
+        <strong>Left gastric artery:</strong> Supplies the lesser curvature of
+        the stomach; gives esophageal branches; provides the portal side of the
+        esophageal portosystemic anastomosis
+      </li>
+      <li>
+        <strong>Splenic artery:</strong> Largest, most tortuous branch; supplies
+        the spleen, pancreas (via pancreatic branches), and fundus of the
+        stomach (via short gastric arteries); runs along the superior border of
+        the pancreas
+      </li>
+      <li>
+        <strong>Common hepatic artery:</strong> Divides into gastroduodenal
+        artery (→ superior pancreaticoduodenal + right gastroomental) and
+        hepatic artery proper (→ right and left hepatic + right gastric
+        arteries)
+      </li>
+    </ul>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong
+        >Celiac Trunk Compression Syndrome (Median Arcuate Ligament
+        Syndrome):</strong
+      >
+      The median arcuate ligament of the diaphragm abnormally compresses the
+      celiac trunk at its origin. Presents with
+      <strong>postprandial epigastric pain</strong> (intestinal angina) in
+      young, thin females. Diagnosed by Doppler ultrasound or CT angiography;
+      treated by surgical division of the ligament.
+    </div>
+
+    <h3>11.2 Superior Mesenteric Artery — SMA (L1)</h3>
+    <p>
+      The SMA arises from the anterior aorta at <strong>L1</strong>, just behind
+      the neck of the pancreas, and descends anterior to the uncinate process
+      and D3 (where it can compress the duodenum in SMA syndrome). It supplies
+      the midgut (distal D2 → proximal 2/3 transverse colon).
+      <strong>Anatomical relations:</strong> anteriorly lie the pyloric part of
+      the stomach, the splenic vein, and the neck of the pancreas; posteriorly
+      lie the left renal vein and the uncinate process of the pancreas. The SMA
+      terminates in the <strong>right iliac fossa</strong>.
+    </p>
+    <ul>
+      <li>
+        Inferior pancreaticoduodenal artery (→ anastomoses with superior
+        pancreaticoduodenal = celiac-SMA arcade)
+      </li>
+      <li>Jejunal and ileal branches (12–15 branches forming arcades)</li>
+      <li>Ileocolic artery (→ appendicular artery, cecal branches)</li>
+      <li>Right colic artery (ascending colon)</li>
+      <li>Middle colic artery (transverse colon)</li>
+    </ul>
+
+    <h3>11.3 Inferior Mesenteric Artery — IMA (L3)</h3>
+    <p>
+      The IMA arises from the anterior aorta at <strong>L3</strong> and supplies
+      the hindgut (distal 1/3 transverse colon → upper rectum).
+    </p>
+    <ul>
+      <li>Left colic artery (descending colon)</li>
+      <li>Sigmoid arteries (2–4 branches to sigmoid colon)</li>
+      <li>Superior rectal artery (continuation of IMA → upper rectum)</li>
+    </ul>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Splenic Artery Aneurysm:</strong> The most common visceral artery
+      aneurysm, accounting for approximately <strong>60%</strong> of all
+      visceral aneurysms. Risk factors include portal hypertension, multiparity,
+      and fibromuscular dysplasia. Rupture during pregnancy carries high
+      maternal and fetal mortality — treat electively when discovered.
+    </div>
+
+    <h3>11.4 Anastomotic Channels — Collateral Circulation</h3>
+    <p>
+      Two longitudinal anastomoses protect against ischaemia along the colon:
+    </p>
+    <ul>
+      <li>
+        <strong>Marginal artery of Drummond:</strong> A continuous arterial
+        arcade running along the inner border of the entire colon, anastomosing
+        branches of the SMA and IMA — clinically critical during colonic
+        resection to preserve adequate blood supply to remaining colon.
+      </li>
+      <li>
+        <strong>Arc of Riolan (Meandering Mesenteric Artery):</strong> A
+        specific, larger anastomosis in the mesentery directly connecting the
+        left branch of the middle colic (SMA) to the left colic (IMA). Becomes
+        prominent and identifiable on angiography when either the SMA or IMA is
+        obstructed.
+      </li>
+    </ul>
+
+    <div class="box high-yield">
+      <strong>Watershed Zones — Highest Ischaemia Risk:</strong>
+      <ul>
+        <li>
+          <strong>Griffith's point:</strong> Splenic flexure — watershed between
+          SMA (middle colic) and IMA (left colic). Most vulnerable to ischaemia
+          in hypoperfusion states.
+        </li>
+        <li>
+          <strong>Sudeck's point:</strong> Rectosigmoid junction — watershed
+          between sigmoid arteries (IMA) and superior rectal artery.
+        </li>
+      </ul>
+      Systemic hypotension (e.g., post-cardiac surgery, aortic surgery)
+      preferentially infarcts these watershed zones → ischaemic colitis
+      presenting with bloody diarrhoea.
+    </div>
+
+    <h3>11.5 Venous Drainage Summary</h3>
+    <table>
+      <tr>
+        <th>Colon Segment</th>
+        <th>Primary Vein</th>
+        <th>Drains Into</th>
+      </tr>
+      <tr>
+        <td>Ascending colon</td>
+        <td>Ileocolic and right colic veins</td>
+        <td>Superior mesenteric vein</td>
+      </tr>
+      <tr>
+        <td>Transverse colon</td>
+        <td>Middle colic vein</td>
+        <td>Superior mesenteric vein</td>
+      </tr>
+      <tr>
+        <td>Descending colon</td>
+        <td>Left colic vein</td>
+        <td>Inferior mesenteric vein</td>
+      </tr>
+      <tr>
+        <td>Sigmoid colon</td>
+        <td>Sigmoid veins</td>
+        <td>Inferior mesenteric vein</td>
+      </tr>
+    </table>
+    <p>
+      All venous return drains into the
+      <strong>hepatic portal vein</strong> (formed by the SMV and splenic vein
+      posterior to the neck of the pancreas at L2) for hepatic detoxification
+      before reaching systemic circulation.
+    </p>
+
+    <!-- NEW SECTION -->
+    <h3>11.6 Portal Hypertension — Classification</h3>
+    <p>
+      Portal hypertension (portal pressure &gt;12 mmHg) is classified by the
+      site of obstruction relative to the liver. When pressure rises, blood is
+      forced through portosystemic anastomoses (covered in Section 7.5),
+      producing esophageal varices, caput medusae, and hemorrhoids.
+    </p>
+    <table>
+      <tr>
+        <th>Category</th>
+        <th>Site of Obstruction</th>
+        <th>Causes</th>
+      </tr>
+      <tr>
+        <td><strong>Pre-hepatic</strong></td>
+        <td>Before the liver (portal vein itself)</td>
+        <td>Portal vein thrombosis, splenic vein thrombosis</td>
+      </tr>
+      <tr>
+        <td><strong>Hepatic</strong></td>
+        <td>Within liver parenchyma</td>
+        <td>
+          <strong>Liver cirrhosis</strong> (primary cause), schistosomiasis,
+          hepatitis
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Post-hepatic</strong></td>
+        <td>After the liver (venous outflow)</td>
+        <td>
+          Right-sided heart failure, Budd-Chiari syndrome (hepatic vein
+          thrombosis), IVC obstruction
+        </td>
+      </tr>
+    </table>
+    <div class="box high-yield">
+      <!-- NEW -->
+      <strong>Liver cirrhosis = primary cause of portal hypertension.</strong>
+      Hepatic fibrosis increases intrahepatic vascular resistance → portal
+      pressure rises → collateral channels dilate. Esophageal varices (at the
+      gastroesophageal junction) are the most lethal consequence — rupture
+      causes massive upper GI haemorrhage.
+    </div>
+
+    <!-- ============================================================
+         SECTION 12 — CLINICALS OF ABDOMEN
+    ============================================================= -->
+    <h2 id="s12">12. Clinicals of Abdomen</h2>
+
+    <p>
+      The following cases integrate anatomy with clinical reasoning in the
+      format used on board examinations. For each scenario, identify the
+      anatomical basis before reading the answer.
+    </p>
+
+    <h3>12.1 Blunt Abdominal Trauma — Pancreatic Laceration</h3>
+    <p>
+      Scenario: A patient sustains blunt abdominal trauma; a CT scan shows
+      pancreatic laceration with fluid accumulation anterior to the pancreas.
+      Which space does the fluid first collect in?
+    </p>
+    <div class="box high-yield">
+      <strong>Answer: Omental Bursa (Lesser Sac).</strong> The pancreas forms
+      the posterior wall of the lesser sac. Enzymes or fluid leaking anteriorly
+      from the pancreas collect in this compartment first, which is why
+      pancreatic pseudocysts classically appear in the lesser sac.
+    </div>
+
+    <h3>12.2 Hiatal Hernia Repair — Nerve at Risk</h3>
+    <p>
+      Scenario: During surgical repair of a large hiatal hernia involving the
+      gastric fundus, which specific nerve must be identified and protected?
+    </p>
+    <div class="box high-yield">
+      <strong>Answer: Nerve of Grassi.</strong> This is a branch of the
+      <strong>posterior</strong> vagal trunk supplying the posterior gastric
+      fundus. It branches proximally — often still within the mediastinum — and
+      is the most commonly <em>missed</em> nerve during truncal vagotomy. If
+      overlooked, parietal cell innervation persists in the posterior fundus,
+      causing recurrent peptic ulcer disease despite apparent complete vagotomy.
+      Its tendency to escape detection earned it the epithet "criminal nerve."
+    </div>
+
+    <h3>12.3 Inguinal Hernia in a Neonate — Deepest Layer</h3>
+    <p>
+      Scenario: A newborn has small intestine within a scrotal swelling. What is
+      the deepest fascial layer covering the herniated bowel?
+    </p>
+    <div class="box high-yield">
+      <strong>Answer: Transversalis fascia (internal spermatic fascia).</strong>
+      In indirect inguinal hernia, the bowel passes through the deep inguinal
+      ring — an evagination of the transversalis fascia. The bowel therefore
+      acquires the internal spermatic fascia as its deepest layer.
+    </div>
+
+    <h3>12.4 Cremasteric Reflex — Efferent Limb</h3>
+    <p>
+      Scenario: A patient with an L1–L2 spinal cord injury has an absent
+      cremasteric reflex. Which nerve carries the efferent limb of this reflex?
+    </p>
+    <div class="box high-yield">
+      <strong
+        >Answer: Genital branch of the genitofemoral nerve (L1–L2).</strong
+      >
+      The cremasteric reflex arc: afferent — ilioinguinal nerve (L1, stroking
+      the medial thigh); efferent — genital branch of genitofemoral nerve (motor
+      to cremaster muscle). Absent reflex at L1–L2 eliminates both limbs.
+    </div>
+
+    <h3>12.5 Diverticulosis — Most Common Site and Mechanism</h3>
+    <p>
+      The <strong>sigmoid colon</strong> is the most common site for
+      diverticulosis (60%). Diverticula are false diverticula — only mucosa and
+      submucosa herniate through weak points in the circular muscle layer where
+      blood vessels penetrate. Low-fibre diets increase intraluminal pressure,
+      driving mucosal herniation. When inflamed, diverticulitis presents with
+      <strong>LLQ pain</strong> — "left-sided appendicitis."
+    </p>
+
+    <h3>12.6 Testicular Cancer Metastasis — No Groin Nodes</h3>
+    <p>
+      Testicular lymphatics drain to
+      <strong>lumbar/para-aortic nodes</strong> (mirroring the embryological
+      origin of the testes near the kidneys), not to the inguinal nodes.
+      Therefore, early testicular cancer produces no palpable groin
+      lymphadenopathy. A scrotal skin tumour, by contrast, would drain to the
+      <strong>superficial inguinal nodes</strong>.
+    </p>
+
+    <h3>12.7 Varicocele — Why Almost Always Left-Sided</h3>
+    <p>
+      The left testicular vein drains into the left renal vein at a
+      <strong>90-degree angle</strong>, creating increased hydrostatic pressure
+      and susceptibility to incompetent venous valves → dilation of the
+      pampiniform plexus. The right testicular vein enters the IVC at an acute
+      angle, allowing easier drainage. A new right-sided varicocele in an older
+      male should raise concern for a <strong>right renal mass</strong>
+      compressing the right testicular vein.
+    </p>
+
+    <!-- NEW -->
+    <h3>12.9 Gallbladder Clinical Signs — Murphy's and Boas'</h3>
+    <p>
+      Two examination signs localise gallbladder pathology using referred and
+      somatic pain mechanisms.
+    </p>
+    <div class="box high-yield">
+      <!-- NEW -->
+      <strong>Murphy's Sign:</strong> The examiner presses into the right
+      subcostal region while the patient takes a deep breath. The descending
+      liver brings the inflamed gallbladder against the examiner's fingers →
+      <strong>sudden cessation of inspiration</strong> due to pain. Positive in
+      acute cholecystitis. Contrast with a negative sign in choledocholithiasis
+      (no peritoneal irritation).
+    </div>
+    <div class="box high-yield">
+      <!-- NEW -->
+      <strong>Boas' Sign:</strong> Hyperaesthesia (increased skin sensitivity)
+      in the area <strong>below the right scapula</strong>. Caused by referred
+      pain from gallbladder inflammation via the right phrenic nerve (C3–C5
+      dermatome). Often accompanies cholecystitis and cholelithiasis.
+    </div>
+
+    <!-- NEW -->
+    <h3>12.10 Jaundice — Three Types</h3>
+    <p>
+      Jaundice results from bilirubin accumulation. Distinguishing its origin is
+      essential for directing investigation and management.
+    </p>
+    <table>
+      <tr>
+        <th>Type</th>
+        <th>Mechanism</th>
+        <th>Examples</th>
+      </tr>
+      <tr>
+        <td><strong>Prehepatic</strong></td>
+        <td>Excessive RBC breakdown overwhelms hepatic conjugation capacity</td>
+        <td>Haemolytic anaemia, incompatible transfusion, G6PD deficiency</td>
+      </tr>
+      <tr>
+        <td><strong>Hepatic</strong></td>
+        <td>
+          Hepatocyte failure to conjugate fat-soluble to water-soluble bilirubin
+        </td>
+        <td>Hepatitis, cirrhosis, paracetamol (acetaminophen) overdose</td>
+      </tr>
+      <tr>
+        <td><strong>Posthepatic (Obstructive)</strong></td>
+        <td>
+          Obstruction of bile flow in the biliary tree → conjugated bilirubin
+          backs up
+        </td>
+        <td>
+          Gallstones (cholelithiasis), pancreatic head cancer,
+          cholangiocarcinoma
+        </td>
+      </tr>
+    </table>
+    <div class="box high-yield">
+      <!-- NEW -->
+      <strong>Obstructive jaundice = pale stools + dark urine.</strong> Bile
+      pigments cannot reach the gut (pale stools) and conjugated bilirubin
+      (water-soluble) is excreted in urine (dark urine). Pancreatic head cancer
+      causes <strong>painless obstructive jaundice</strong> — no gallbladder
+      tenderness because the pancreatic mass compresses the CBD gradually.
+      Courvoisier's sign: palpable, non-tender gallbladder in obstructive
+      jaundice → malignancy until proven otherwise.
+    </div>
+
+    <!-- NEW -->
+    <h3>12.11 Scrotal Pathologies — Torsion and Hematocele</h3>
+    <p>
+      Several acute scrotal conditions require rapid differentiation because
+      testicular torsion is a surgical emergency.
+    </p>
+    <div class="box clinical">
+      <!-- NEW -->
+      <strong>Testicular Torsion:</strong> Twisting of the spermatic cord causes
+      simultaneous obstruction of venous and then arterial blood supply.
+      Presents with <strong>sudden-onset severe scrotal pain</strong>, nausea,
+      and a high-riding testis with a horizontal lie (bell-clapper deformity).
+      Must be surgically detorsed within <strong>6 hours</strong> to prevent
+      irreversible testicular necrosis. No cremasteric reflex on the affected
+      side.
+    </div>
+    <div class="box clinical">
+      <!-- NEW -->
+      <strong>Hematocele:</strong> Collection of blood within the
+      <strong>tunica vaginalis</strong>, typically from blunt scrotal trauma
+      causing rupture of branches of the testicular artery. Does not
+      transilluminate (blood blocks light), distinguishing it from a hydrocele.
+      Management: surgical evacuation if large.
+    </div>
+
+    <!-- NEW -->
+    <h3>12.12 Pyloric Stenosis</h3>
+    <p>
+      Hypertrophic pyloric stenosis is a congenital narrowing of the pyloric
+      canal caused by hypertrophy of the pyloric circular muscle.
+    </p>
+    <div class="box clinical">
+      <!-- NEW -->
+      <strong>Pyloric Stenosis:</strong> Presents at
+      <strong>~3 weeks of age</strong> with
+      <strong>projectile, non-bilious vomiting</strong> after feeds (the
+      obstruction is proximal to the ampulla of Vater, so bile cannot enter the
+      vomitus). The infant appears hungry and may develop hypochloraemic
+      hypokalaemic metabolic alkalosis. A palpable
+      <strong>olive-shaped mass</strong> in the epigastrium is pathognomonic.
+      Treatment: Ramstedt pyloromyotomy.
+    </div>
+
+    <!-- NEW -->
+    <h3>12.13 Surgical and Procedural Pearls</h3>
+    <p>
+      Several surgical procedures have high-yield anatomical vulnerabilities
+      that commonly appear on examinations.
+    </p>
+    <div class="box high-yield">
+      <!-- NEW -->
+      <strong>Liver Biopsy:</strong> Performed at the
+      <strong>10th intercostal space in the midaxillary line</strong>. This site
+      avoids the costodiaphragmatic recess and provides direct access to the
+      right lobe. The liver is highly vascular — fractured ribs can lacerate
+      liver parenchyma, causing significant haemorrhage.
+    </div>
+    <div class="box high-yield">
+      <!-- NEW -->
+      <strong>Splenectomy — Stomach at Risk:</strong> During ligation of the
+      splenic artery at the splenic hilum, the
+      <strong>short gastric arteries</strong> (branches of the splenic artery
+      supplying the gastric fundus) may be inadvertently ligated, compromising
+      the blood supply of the fundic portion of the stomach.
+    </div>
+
+    <h3>12.8 Appendicitis Pain Migration — Anatomical Explanation</h3>
+    <p>
+      Initial appendicitis causes visceral inflammation sensed via sympathetic
+      afferents at <strong>T10</strong>, referred to the periumbilical region
+      (umbilical dermatome). As inflammation progresses and involves the
+      parietal peritoneum overlying the RLQ, somatic afferents (well-localised)
+      produce pain localised to <strong>McBurney's point</strong> (<strong
+        >one-third of the distance from the right ASIS to the umbilicus</strong
+      >
+      along the spinoumbilical line — the base of the appendix projects to this
+      surface landmark). This pain migration from periumbilical to RLQ is
+      pathognomonic of appendicitis.
+    </p>
+
+    <!-- ============================================================
+         QUIZ PLACEHOLDER
+    ============================================================= -->
+    <h2 id="quiz">Practice Quiz</h2>
+
+    <p>
+      54 board-style MCQs spanning all 12 anatomy topics. Answer each question,
+      then read the explanation to reinforce the concept.
+    </p>
+
+    <div id="scoreBar" class="score-bar">
+      <span class="score-stat"
+        ><span class="stat-blue" id="statAnswered">0</span> answered</span
+      >
+      <span class="score-stat"
+        ><span class="stat-green" id="statCorrect">0</span> correct</span
+      >
+      <span class="score-stat"
+        ><span class="stat-red" id="statIncorrect">0</span> incorrect</span
+      >
+      <span class="score-stat"
+        ><span class="stat-yellow" id="statPercent">0%</span></span
+      >
+    </div>
+
+    <div id="quizContainer" class="quiz-container"></div>
+
+    <script>
+      const questions = [
+        // ── SECTION 1: Introduction to Abdomen ──────────────────────────
+        {
+          question:
+            "A radiologist identifies the origin of the superior mesenteric artery on CT. The report states the vessel arises at the transpyloric plane. Which group of structures also lies at this level?",
+          options: [
+            "Pylorus, neck of pancreas, hilum of both kidneys",
+            "Pylorus, body of pancreas, renal pelves",
+            "D1 duodenum, gallbladder, splenic hilum",
+            "Neck of pancreas, duodenal cap, umbilicus",
+          ],
+          answer: 0,
+          explanation:
+            "The transpyloric plane (lower border of L1) passes through the pylorus, the neck of the pancreas, the hilum of both kidneys, and the origin of the SMA. The IMA arises at L3 and the aortic bifurcation is at L4. This plane is one of the highest-yield surgical landmarks in abdominal anatomy.",
+        },
+        {
+          question:
+            "During anatomy dissection, a student notes that below a certain point the posterior wall of the rectus sheath is absent and the rectus muscle lies directly on transversalis fascia. Which structure marks this transition?",
+          options: [
+            "Inguinal ligament",
+            "Linea alba",
+            "Arcuate line",
+            "Linea semilunaris",
+          ],
+          answer: 2,
+          explanation:
+            "The arcuate line (midway between the umbilicus and pubic symphysis) marks the inferior limit of the posterior rectus sheath. Below this line, all three flat muscle aponeuroses pass anterior to the rectus, leaving only the transversalis fascia posteriorly. The linea semilunaris is the lateral border of the rectus abdominis, not a change in sheath composition.",
+        },
+        {
+          question:
+            "A 22-year-old male has pain that began periumbilically and has now shifted to the right lower quadrant over 12 hours. This migration pattern is most directly explained by which mechanism?",
+          options: [
+            "Rupture of the appendix into the peritoneal cavity",
+            "Irritation of the L2 nerve root by psoas inflammation",
+            "Compression of the SMA by retroperitoneal edema",
+            "Inflammation extending to involve the parietal peritoneum",
+          ],
+          answer: 3,
+          explanation:
+            "Early appendicitis causes visceral pain via T10 sympathetic afferents, referred to the periumbilical region (midgut derivation). As parietal peritoneum overlying the RLQ becomes inflamed, somatic afferents activate and produce well-localised pain at McBurney's point. Perforation would cause diffuse peritonitis, not localisation.",
+        },
+        {
+          question:
+            "A 32-year-old male falls astride a metal fence and ruptures his bulbar urethra. Urine escapes into the superficial perineal space. Into which of the following areas will it spread?",
+          options: [
+            "Thigh and femoral triangle",
+            "Ischioanal fossa and anal triangle",
+            "Scrotum and anterior abdominal wall",
+            "Gluteal region and posterior thigh",
+          ],
+          answer: 2,
+          explanation:
+            "Urine escapes into the superficial perineal space, which is bounded superficially by Colles' fascia — the direct perineal continuation of Scarpa's fascia. From here it spreads into the scrotum (deep to Dartos), around the penis, and superiorly onto the anterior abdominal wall deep to Scarpa's fascia. The thighs are excluded because Scarpa's fascia attaches firmly to the fascia lata just inferior to the inguinal ligament, forming an impenetrable barrier. The ischioanal fossa and gluteal region are excluded because Colles' fascia fuses posteriorly to the perineal body, preventing posterior spread.",
+        },
+        {
+          question:
+            "A patient with cirrhosis develops tortuous veins radiating from the umbilicus. Which vessels are responsible for this caput medusae?",
+          options: [
+            "Inferior epigastric veins",
+            "Superior epigastric veins",
+            "Paraumbilical veins",
+            "Superficial circumflex iliac veins",
+          ],
+          answer: 2,
+          explanation:
+            "Paraumbilical veins run within the falciform ligament, connecting the portal vein to the anterior abdominal wall epigastric veins. In portal hypertension, these channels dilate, producing caput medusae. The inferior and superior epigastric veins carry systemic blood and are not the portal-to-systemic connection at the umbilicus.",
+        },
+        {
+          question:
+            "A surgeon performs an appendectomy via a Lanz incision in the right iliac fossa. Postoperatively, the male patient reports numbness of the right scrotum, root of the penis, and medial thigh. Which nerve was most likely damaged during this procedure?",
+          options: [
+            "Iliohypogastric nerve (L1)",
+            "Ilioinguinal nerve (L1)",
+            "Lateral cutaneous nerve of the thigh (L2–L3)",
+            "Genitofemoral nerve — femoral branch (L1–L2)",
+          ],
+          answer: 1,
+          explanation:
+            "The ilioinguinal nerve (L1) exits through the superficial inguinal ring and supplies the skin of the scrotum/labium majus and the medial thigh. It runs in the neurovascular plane between the internal oblique and transversus abdominis muscles in the right iliac fossa — directly within the field of Lanz and gridiron incisions. The iliohypogastric nerve (also L1) supplies only the skin above the pubis, not the scrotum. The genitofemoral femoral branch supplies only a small patch of skin over the femoral triangle. This iatrogenic nerve injury is one of the most common complications of open appendectomy.",
+        },
+        {
+          question:
+            "A melanoma arises from skin of the right anterior abdominal wall, above the umbilicus. To which lymph node group does this region primarily drain?",
+          options: [
+            "Superficial inguinal nodes",
+            "Para-aortic nodes",
+            "Inferior mesenteric nodes",
+            "Axillary nodes",
+          ],
+          answer: 3,
+          explanation:
+            "Lymphatics of the anterior abdominal wall above the umbilicus drain to the axillary nodes via the lateral thoracic vessels. Below the umbilicus, drainage goes to the superficial inguinal nodes. The umbilicus is the watershed for both venous and lymphatic drainage of the anterior abdominal wall.",
+        },
+        // ── SECTION 2: Inguinal Region ───────────────────────────────────
+        {
+          question:
+            "During laparotomy, a surgeon must distinguish a direct from an indirect inguinal hernia. Which structure serves as the definitive intraoperative landmark?",
+          options: [
+            "Inguinal ligament",
+            "Inferior epigastric artery",
+            "Conjoint tendon",
+            "Femoral canal",
+          ],
+          answer: 1,
+          explanation:
+            "The inferior epigastric artery is the key discriminator: an indirect hernia enters the deep inguinal ring lateral to it, while a direct hernia protrudes through Hesselbach's triangle medial to it. The conjoint tendon reinforces the medial posterior wall of the canal but does not define the type of hernia.",
+        },
+        {
+          question:
+            "As the testis descends through the inguinal canal, it acquires three fascial layers. The cremasteric fascia is derived from which abdominal wall layer?",
+          options: [
+            "External oblique aponeurosis",
+            "Transversalis fascia",
+            "Internal oblique fascia",
+            "Rectus sheath",
+          ],
+          answer: 2,
+          explanation:
+            "The three fascial coverings of the spermatic cord derive as follows: external spermatic fascia from the external oblique, cremasteric fascia (and muscle) from the internal oblique, and internal spermatic fascia from the transversalis fascia. This sequence mirrors the layers of the anterior abdominal wall from outside inward.",
+        },
+        {
+          question:
+            "A 24-year-old male has a left scrotal swelling that enlarges on standing and feels like a bag of worms. The anatomy of the left testicular vein explains its predominance. Where does the left testicular vein drain?",
+          options: [
+            "Left renal vein",
+            "Inferior vena cava directly",
+            "Left external iliac vein",
+            "Left common iliac vein",
+          ],
+          answer: 0,
+          explanation:
+            "The left testicular vein drains into the left renal vein at a 90-degree angle, creating greater venous resistance and predisposing to incompetent valves and pampiniform plexus dilation — hence varicoceles occur on the left in 99% of cases. The right testicular vein drains directly into the IVC at an acute angle, allowing easier drainage.",
+        },
+        {
+          question:
+            "A 50-year-old female presents with a bulge in the upper medial thigh below the inguinal ligament with signs of intestinal obstruction. Which hernia type has the highest risk of strangulation?",
+          options: [
+            "Direct inguinal hernia",
+            "Indirect inguinal hernia",
+            "Spigelian hernia",
+            "Femoral hernia",
+          ],
+          answer: 3,
+          explanation:
+            "Femoral hernias pass below the inguinal ligament through the femoral canal, which has a narrow, rigid, unyielding neck formed by the lacunar ligament — making strangulation far more likely than with inguinal hernias. Femoral hernias are more common in females. Spigelian hernias protrude at the arcuate line–linea semilunaris junction, not below the inguinal ligament.",
+        },
+        {
+          question:
+            "A physician strokes the medial thigh of a male patient and observes elevation of the ipsilateral testis. Which nerve carries the afferent limb of this reflex?",
+          options: [
+            "Genitofemoral nerve",
+            "Ilioinguinal nerve",
+            "Femoral nerve",
+            "Pudendal nerve",
+          ],
+          answer: 1,
+          explanation:
+            "The cremasteric reflex arc: the afferent limb is carried by the ilioinguinal nerve (L1), activated by stroking the medial thigh; the efferent limb is the genital branch of the genitofemoral nerve (L1–L2), which is motor to the cremaster muscle. The genitofemoral nerve provides the efferent (motor) limb, not the afferent sensory limb.",
+        },
+        // ── SECTION 3: Esophagus and Stomach ────────────────────────────
+        {
+          question:
+            "A 55-year-old with chronic GERD undergoes upper endoscopy. Biopsies from the displaced Z-line show intestinal-type columnar epithelium replacing normal squamous mucosa. What is this condition and its primary malignant risk?",
+          options: [
+            "Esophageal squamous cell carcinoma risk",
+            "Sliding hiatal hernia with metaplasia",
+            "Barrett's esophagus with adenocarcinoma risk",
+            "Esophageal candidiasis with dysplasia",
+          ],
+          answer: 2,
+          explanation:
+            "Barrett's esophagus is metaplastic replacement of normal stratified squamous epithelium with intestinal-type columnar epithelium, driven by chronic GERD. It is a premalignant condition — the primary precursor to esophageal adenocarcinoma — and requires regular endoscopic surveillance with biopsies. Sliding hiatal hernia is the structural defect; Barrett's is the histological consequence.",
+        },
+        {
+          question:
+            "A cirrhotic patient presents with massive hematemesis. The culprit portosystemic anastomosis involves which two vessels?",
+          options: [
+            "Left gastric vein and azygos vein",
+            "Short gastric vein and left gastric vein",
+            "Right gastric vein and portal vein",
+            "Paraumbilical vein and epigastric vein",
+          ],
+          answer: 0,
+          explanation:
+            "Esophageal varices form where the left gastric vein (portal tributary) anastomoses with esophageal tributaries of the azygos vein (systemic). Portal hypertension dilates these channels into fragile, thin-walled varices at the lower esophagus. The paraumbilical–epigastric anastomosis produces caput medusae; rectal portal–systemic anastomosis produces rectal varices.",
+        },
+        {
+          question:
+            "A 48-year-old male with refractory duodenal ulcer disease undergoes truncal vagotomy. Both the anterior and posterior vagal trunks are confirmed divided at the esophageal hiatus. Eighteen months later he re-presents with recurrent epigastric pain and elevated basal acid output. Which nerve was most likely overlooked?",
+          options: [
+            "Nerve of Grassi",
+            "Greater splanchnic nerve",
+            "Anterior vagal trunk",
+            "Left phrenic nerve",
+          ],
+          answer: 0,
+          explanation:
+            "The Nerve of Grassi (criminal nerve) is a branch of the posterior vagal trunk that supplies the posterior gastric fundus. It branches early — often within the mediastinum before the posterior trunk reaches the abdomen — and is therefore easily missed when vagotomy is performed at the hiatus. If overlooked, the posterior fundal parietal cells remain vagally stimulated, sustaining acid hypersecretion and causing PUD recurrence despite apparent complete vagotomy. The greater splanchnic nerve is sympathetic and does not drive acid secretion. The anterior vagal trunk would have been divided at the same operative field.",
+        },
+        {
+          question:
+            "A Type II (paraesophageal) hiatal hernia is distinguished from a Type I (sliding) hiatal hernia primarily by which feature?",
+          options: [
+            "Higher overall incidence",
+            "Risk of gastric strangulation",
+            "Strong association with GERD symptoms",
+            "Displacement of the gastroesophageal junction above the hiatus",
+          ],
+          answer: 1,
+          explanation:
+            "The key distinguishing danger of a paraesophageal (Type II) hernia is strangulation risk: the cardia remains fixed while a peritoneal sac containing the fundus herniates alongside the esophagus through the hiatus, with a narrow neck prone to vascular compromise. Sliding hernias (Type I) are far more common and are primarily associated with GERD, while the Z-line displacement characterises the sliding type.",
+        },
+        // ── SECTION 4: Stomach Relations ────────────────────────────────
+        {
+          question:
+            "A medical student is asked to list the structures comprising the stomach bed. Which of the following is NOT part of the stomach bed?",
+          options: [
+            "Left suprarenal gland",
+            "Body of the pancreas",
+            "Right kidney",
+            "Splenic artery",
+          ],
+          answer: 2,
+          explanation:
+            "The stomach bed (posterior surface relations) comprises: diaphragm, spleen, left suprarenal gland, left kidney, body of the pancreas, splenic artery, transverse mesocolon, and splenic flexure. The right kidney lies posterior to the right lobe of the liver and ascending colon. The mnemonic 'Dr S3 Kills Patients Mercilessly' covers these structures.",
+        },
+        {
+          question:
+            "During laparoscopic Nissen fundoplication, both vagal trunks are inadvertently divided as they pass through the esophageal hiatus. Which combination of functional changes would result?",
+          options: [
+            "Increased acid secretion and accelerated gastric emptying",
+            "Reduced acid secretion and delayed gastric emptying",
+            "Reduced acid secretion and accelerated gastric emptying",
+            "Increased intestinal motility with unchanged acid secretion",
+          ],
+          answer: 1,
+          explanation:
+            "Vagotomy produces two distinct effects: (1) reduced gastric acid secretion by denervating parietal cells — the intended therapeutic goal in peptic ulcer surgery; and (2) delayed gastric emptying, because vagal innervation drives pyloric relaxation and gastric peristalsis. Loss of pyloric relaxation causes gastroparesis. This is precisely why historical truncal vagotomy was always combined with a drainage procedure (pyloroplasty or gastrojejunostomy). Accelerated emptying (option C) is the opposite of what occurs; vagotomy impairs, not speeds, gastric emptying.",
+        },
+        {
+          question:
+            "A posterior gastric ulcer perforates through the stomach wall. Which structure in the stomach bed is at greatest risk of catastrophic hemorrhage?",
+          options: [
+            "Left kidney",
+            "Transverse mesocolon",
+            "Left adrenal gland",
+            "Splenic artery",
+          ],
+          answer: 3,
+          explanation:
+            "The splenic artery runs along the superior border of the pancreas within the stomach bed. Erosion of a posterior gastric ulcer into the splenic artery causes massive arterial hemorrhage — a surgical emergency. Erosion into the pancreas body can cause acute pancreatitis, but the immediate life-threatening vascular risk is the splenic artery.",
+        },
+        // ── SECTION 5: Duodenum ──────────────────────────────────────────
+        {
+          question:
+            "A malnourished 25-year-old develops bilious vomiting and imaging shows compression of the horizontal third part of the duodenum between the aorta and a vessel anteriorly. What is the mechanism?",
+          options: [
+            "Adhesions between D3 and the posterior abdominal wall",
+            "Loss of mesenteric fat pad narrowing the aorto-SMA angle, compressing D3",
+            "Annular pancreas encircling D2 from both sides",
+            "Gallstone impacted at the duodenojejunal flexure",
+          ],
+          answer: 1,
+          explanation:
+            "SMA syndrome (Wilkie syndrome) occurs when the angle between the aorta posteriorly and the SMA anteriorly narrows after loss of the mesenteric fat pad, compressing D3 (the horizontal part). Causes include rapid weight loss, malnutrition, or prolonged supine positioning. Annular pancreas encircles D2, not D3, and presents in neonates.",
+        },
+        {
+          question:
+            "A 35-year-old presents with recurrent epigastric pain and steatorrhoea. MRCP reveals that the main pancreatic duct drains separately into the minor duodenal papilla rather than joining the CBD at the ampulla of Vater. The accessory duct drains via the major papilla. This reversal of normal ductal anatomy describes which congenital variant?",
+          options: [
+            "Annular pancreas",
+            "Pancreas divisum",
+            "Heterotopic pancreas",
+            "Agenesis of the duct of Wirsung",
+          ],
+          answer: 1,
+          explanation:
+            "Pancreas divisum (present in ~5–10% of the population) results from failure of the dorsal and ventral pancreatic buds to fuse during embryogenesis. The majority of the gland (dorsal bud → body/tail/upper head) drains via the accessory duct (duct of Santorini) through the minor duodenal papilla rather than the major papilla. The minor papilla has a narrower orifice, predisposing to ductal hypertension, recurrent pancreatitis, and steatorrhoea. Normal anatomy: the duct of Wirsung joins the CBD at the ampulla of Vater (major papilla); the duct of Santorini is the accessory. In pancreas divisum this relationship is reversed.",
+        },
+        {
+          question:
+            "The blood supply to the duodenal cap (D1–D2) is primarily derived from which artery?",
+          options: [
+            "Gastroduodenal artery",
+            "Superior mesenteric artery",
+            "Right gastric artery",
+            "Inferior pancreaticoduodenal artery",
+          ],
+          answer: 0,
+          explanation:
+            "D1 and D2 are supplied by the gastroduodenal artery (from the common hepatic artery, a celiac trunk branch), which gives the superior pancreaticoduodenal artery. D3 and D4 are supplied by the inferior pancreaticoduodenal artery from the SMA. These two vessels form the pancreaticoduodenal arcade — the celiac–SMA anastomosis.",
+        },
+        // ── SECTION 6: Large Intestine ───────────────────────────────────
+        {
+          question:
+            "A 35-year-old male presents with painless rectal bleeding. A nuclear medicine Meckel's scan shows a focus 60 cm proximal to the ileocecal valve on the antimesenteric border. Which ectopic tissue type is most likely present?",
+          options: [
+            "Pancreatic islet cells",
+            "Colonic mucosa",
+            "Hepatic parenchyma",
+            "Gastric mucosa",
+          ],
+          answer: 3,
+          explanation:
+            "Meckel's diverticulum contains ectopic gastric mucosa in ~50% of symptomatic cases. This mucosa secretes acid, causing ulceration of the adjacent ileal wall, producing painless rectal bleeding — the classic presentation. The Rule of 2s: 2% incidence, within 2 feet (60 cm) of the ileocecal valve, 2 inches long, 2x more symptomatic in males, presents before age 2 most commonly.",
+        },
+        {
+          question:
+            "A surgeon examines a loop of bowel intraoperatively and wants to confirm it is jejunum rather than ileum. Which feature is most reliable?",
+          options: [
+            "Multiple short arterial arcades and short vasa recta",
+            "Large, closely packed plicae circulares and long vasa recta",
+            "Abundant Peyer's patches on the antimesenteric border",
+            "Pale pink coloration with thin, light walls",
+          ],
+          answer: 1,
+          explanation:
+            "Jejunum is characterised by large, tall, closely packed plicae circulares (valves of Kerckring), long vasa recta, a few large arterial arcades, thick heavy walls, and deeper red coloration. Ileum has multiple short close arcades, short vasa recta, sparse and low plicae, abundant Peyer's patches, and pale pink thin walls with opaque fat in the mesentery.",
+        },
+        {
+          question:
+            "A patient develops chronic fatty diarrhea and megaloblastic anemia after a small bowel resection. Which segment was most likely removed?",
+          options: [
+            "Proximal jejunum",
+            "Mid-jejunum",
+            "Terminal ileum",
+            "Duodenal cap",
+          ],
+          answer: 2,
+          explanation:
+            "Only the terminal ileum can absorb vitamin B12 bound to intrinsic factor, and is the exclusive site of bile salt reabsorption. Resection causes B12 deficiency (megaloblastic anemia) and bile salt malabsorption (steatorrhea, fat-soluble vitamin deficiency). The proximal jejunum primarily handles iron, folate, and calcium; the duodenum handles iron and fat-soluble vitamins.",
+        },
+        {
+          question:
+            "A 24-year-old presents with a 5-day history of worsening right-sided back and hip pain. CT shows a retrocecal appendix with perforation and a fluid collection tracking inferiorly along the right psoas sheath toward the lesser trochanter. Why does pus track posteriorly in this case rather than diffusing freely into the peritoneal cavity?",
+          options: [
+            "Retroperitoneal position confines pus to the retroperitoneal space",
+            "Psoas muscle compression occludes the appendix and limits pus spread",
+            "Congenital absence of parietal peritoneum in the right iliac fossa",
+            "Gravity-driven pus spread regardless of fascial boundaries",
+          ],
+          answer: 0,
+          explanation:
+            "The retrocecal appendix (64% of cases) lies posterior to the cecum and is either extraperitoneal or covered by peritoneum only on its anterior surface. Perforation in this position discharges pus into the retroperitoneal space rather than the peritoneal cavity, where it becomes contained by the psoas fascia and tracks inferiorly along the psoas sheath toward the lesser trochanter. This explains why retrocecal appendicitis may mimic hip pathology, presents with back/hip pain rather than classic RLQ peritonism, and can form a psoas abscess with delayed diagnosis. The psoas sign (pain on passive hip extension) reflects direct irritation of the underlying iliopsoas.",
+        },
+        {
+          question:
+            "A 68-year-old male with a history of diverticulosis presents with pneumaturia (air in urine) and fecaluria. CT pelvis shows a fistulous tract between the colon and the bladder dome. Which feature of the sigmoid colon's anatomy most directly explains why it — rather than the ascending or descending colon — is the most common source of colovesical fistula?",
+          options: [
+            "Direct retroperitoneal contact between sigmoid and posterior bladder wall",
+            "Long mobile mesocolon allows inflamed sigmoid to appose the bladder dome",
+            "Thinnest colonic wall facilitating erosion into adjacent structures",
+            "Poorest blood supply predisposing to ischaemic fistulisation",
+          ],
+          answer: 1,
+          explanation:
+            "The sigmoid colon is intraperitoneal with a long, mobile sigmoid mesocolon. This mobility allows inflamed sigmoid diverticula to adhere to and erode into the adjacent bladder dome (rectovesical space in males). The ascending and descending colon are secondarily retroperitoneal — they are fixed and cannot reposition themselves against the bladder. The sigmoid colon is also the most common site of diverticulosis (60%), further explaining why colovesical fistula localises here. Presentation: pneumaturia is pathognomonic; fecaluria and recurrent UTIs with mixed organisms confirm the diagnosis.",
+        },
+        // ── SECTION 7: Liver and Pancreas ───────────────────────────────
+        {
+          question:
+            "A 45-year-old woman presents with progressive ascites, painful hepatomegaly, and jaundice. CT venography shows thrombosis of the right, middle, and left hepatic veins with a caudate lobe that appears enlarged and has separate venous drainage. Why is the caudate lobe relatively spared in Budd-Chiari syndrome while the rest of the liver undergoes congestion and necrosis?",
+          options: [
+            "Direct aortic arterial supply independent of the hepatic artery",
+            "Direct IVC drainage via multiple small short hepatic veins",
+            "Separate fibrous capsule protecting against venous back-pressure",
+            "Left portal vein supply shielded from the thrombus",
+          ],
+          answer: 1,
+          explanation:
+            "The caudate lobe (Couinaud segment I) has unique venous drainage — its multiple short hepatic veins drain directly into the IVC rather than via the right, middle, or left hepatic veins. In Budd-Chiari syndrome (hepatic vein thrombosis), the three main hepatic veins are occluded, causing centrizonal (zone 3) congestion and necrosis in the rest of the liver. The caudate lobe escapes this back-pressure via its independent IVC drainage, becomes the primary functional liver tissue, and compensatory hypertrophies — producing the characteristic enlarged caudate lobe seen on CT. This caudate hypertrophy can itself compress the IVC.",
+        },
+        {
+          question:
+            "A 65-year-old presents with progressive painless jaundice and a palpable, non-tender gallbladder. Which principle explains why the gallbladder is non-tender and distended in this scenario?",
+          options: [
+            "Confirms gallstones as the cause of obstruction",
+            "Suggests acute cholecystitis with peritoneal irritation",
+            "Malignant obstruction in a previously unscarred gallbladder",
+            "Indicates Mirizzi syndrome with external compression",
+          ],
+          answer: 2,
+          explanation:
+            "Courvoisier's law: a palpable, non-tender gallbladder in obstructive jaundice suggests malignant obstruction (most commonly pancreatic head carcinoma), not gallstones. In cholelithiasis, the gallbladder wall becomes chronically fibrosed and cannot distend. A gradually compressing mass allows the normal gallbladder to fill silently. A tender gallbladder would suggest acute cholecystitis.",
+        },
+        {
+          question:
+            "Which structure runs in a groove on the posterior surface of the pancreatic head, explaining why a mass there causes obstructive jaundice?",
+          options: [
+            "Common bile duct",
+            "Portal vein",
+            "Gastroduodenal artery",
+            "Superior mesenteric vein",
+          ],
+          answer: 0,
+          explanation:
+            "The common bile duct (CBD) runs in a groove on the posterior surface of the pancreatic head before joining the main pancreatic duct at the ampulla of Vater. A carcinoma of the pancreatic head compresses this groove, progressively obstructing bile flow and producing painless, progressive jaundice — the anatomical basis of Courvoisier's sign.",
+        },
+        {
+          question:
+            "A FAST exam performed on a supine trauma patient first identifies fluid between two specific organs. Which structures define this most dependent supine recess?",
+          options: [
+            "Liver and gallbladder",
+            "Right kidney and right adrenal gland",
+            "Spleen and left kidney",
+            "Right lobe of liver and right kidney",
+          ],
+          answer: 3,
+          explanation:
+            "Morison's pouch (hepatorenal recess) lies between the inferior surface of the right lobe of the liver and the anterior surface of the right kidney. It is the most dependent part of the peritoneal cavity in the supine position and the first site where free blood or ascites accumulates. It is the primary target of the hepatic window in the FAST exam.",
+        },
+        {
+          question:
+            "A newborn presents with bilious vomiting and the mother reports polyhydramnios. Imaging shows a 'double bubble' sign at D2. Which congenital anomaly is most consistent?",
+          options: [
+            "Pyloric stenosis",
+            "Meckel's diverticulum",
+            "Malrotation with midgut volvulus",
+            "Annular pancreas",
+          ],
+          answer: 3,
+          explanation:
+            "Annular pancreas results from abnormal rotation of the ventral pancreatic bud, forming a ring that encircles D2. It presents with bilious vomiting (the obstruction is distal to the ampulla of Vater, so bile enters the vomitus) and polyhydramnios (the fetus cannot swallow amniotic fluid). Pyloric stenosis causes non-bilious vomiting at 3 weeks of age, not bilious.",
+        },
+        {
+          question:
+            "Chronic pancreatitis leads to splenic vein thrombosis producing isolated splenomegaly with gastric varices but normal liver function. Which vessel's thrombosis causes this specific pattern?",
+          options: [
+            "Portal vein",
+            "Inferior mesenteric vein",
+            "Splenic vein",
+            "Left renal vein",
+          ],
+          answer: 2,
+          explanation:
+            "The splenic vein runs along the posterior surface of the pancreas. Chronic pancreatitis can cause thrombosis of the splenic vein, obstructing splenic drainage and producing sinistral (left-sided) portal hypertension: isolated splenomegaly and gastric varices via the short gastric veins, while main portal pressure and liver function remain normal.",
+        },
+        // ── SECTION 8: Rectum ────────────────────────────────────────────
+        {
+          question:
+            "A 60-year-old male undergoes elective low anterior resection for rectal carcinoma. Six weeks postoperatively he reports inability to achieve erection and urinary retention requiring catheterisation. Which nerve injury best explains this specific combination of deficits?",
+          options: [
+            "Pudendal nerve (S2–S4 somatic) bilaterally",
+            "Hypogastric nerve plexus (sympathetic, L1–L2) bilaterally",
+            "Pelvic splanchnic nerves (S2–S4 parasympathetic) bilaterally",
+            "Obturator nerve (L2–L4) bilaterally",
+          ],
+          answer: 2,
+          explanation:
+            "The pelvic splanchnic nerves (nervi erigentes, S2–S4) provide parasympathetic innervation responsible for: (1) erection via vasodilation of helicine arteries in the corpora cavernosa, and (2) detrusor contraction for bladder voiding. Bilateral injury during lateral mesorectal excision — the most common significant nerve injury during rectal surgery — produces both erectile dysfunction AND urinary retention. Sympathetic (hypogastric nerve) injury causes retrograde ejaculation and internal urethral sphincter dysfunction (incontinence, not retention). Pudendal nerve injury causes perineal numbness and external sphincter weakness. This distinction is surgically critical: the pelvic splanchnics run in the lateral ligaments of the rectum and are at direct risk during wide lateral dissection.",
+        },
+        {
+          question:
+            "The Houston valves (transverse rectal folds) must be carefully navigated during sigmoidoscopy to avoid perforation. What layers do they incorporate?",
+          options: [
+            "Mucosal folds only",
+            "Submucosa and mucosa without muscle",
+            "Peritoneum and mucosa only",
+            "Mucosa, submucosa, and circular muscle coat",
+          ],
+          answer: 3,
+          explanation:
+            "Unlike simple mucosal folds, the transverse rectal folds (valves of Houston) incorporate the full thickness of mucosa, submucosa, and the circular muscle coat. There are typically three: two on the left and one on the right. This full-thickness composition means they are a real perforation risk if forcibly traversed during sigmoidoscopy.",
+        },
+        {
+          question:
+            "A 70-year-old male develops massive colonic dilation on AXR following a prolonged hospital admission for pneumonia (Ogilvie syndrome). The cecum measures 11 cm. Dilation is present from the cecum to the splenic flexure, with decompressed colon distally. Intravenous neostigmine is administered and produces rapid colonic decompression. Which physiological mechanism explains both why dilation arrests at the splenic flexure and why neostigmine is effective?",
+          options: [
+            "Splenic flexure is the narrowest colonic segment; neostigmine reduces wall oedema",
+            "Phrenocolic ligament creates a mechanical barrier to dilation at the splenic flexure",
+            "Vagal/pelvic splanchnic boundary at the splenic flexure; neostigmine restores vagal tone",
+            "IMA motor dominance selectively suppresses SMA-territory colonic segments",
+          ],
+          answer: 2,
+          explanation:
+            "The splenic flexure is the anatomical boundary between vagal (cranial X) parasympathetic supply to the proximal colon and pelvic splanchnic (S2–S4) supply to the distal colon. In Ogilvie syndrome, a functional excess of sympathetic tone suppresses vagally-mediated propulsive activity in the right and transverse colon — causing dilation that stops where vagal control ends, at the splenic flexure. Neostigmine (an acetylcholinesterase inhibitor) increases acetylcholine availability at the vagal–enteric synapse, restoring parasympathetic drive to the dilated segment. This is also why the splenic flexure watershed marks the midgut–hindgut division clinically.",
+        },
+        // ── SECTION 9: Anal Canal ────────────────────────────────────────
+        {
+          question:
+            "A cirrhotic patient with known portal hypertension undergoes proctoscopy for rectal bleeding. Large internal hemorrhoids are identified at 3, 7, and 11 o'clock. The bleeding is venous and profuse. Which portosystemic anastomosis is responsible, and why are these hemorrhoids painless despite their size?",
+          options: [
+            "Superior rectal → inferior rectal veins; visceral innervation above dentate line",
+            "Inferior mesenteric → inferior rectal vein; somatic innervation above dentate line",
+            "Left gastric → inferior rectal vein; somatic innervation throughout",
+            "Portal vein → IVC via rectal plexus; mixed innervation above and below dentate line",
+          ],
+          answer: 0,
+          explanation:
+            "The anorectal portosystemic anastomosis connects the superior rectal vein (portal tributary via IMA) with the inferior and middle rectal veins (systemic tributaries via internal pudendal → internal iliac → IVC). Portal hypertension dilates the three main radicles of the superior rectal vein at 3, 7, and 11 o'clock. Internal hemorrhoids are located ABOVE the dentate line, which is supplied by visceral (autonomic) afferents — there is no somatic pain sensation here. This is why massive internal hemorrhoids can bleed profusely without pain. External hemorrhoids below the dentate line are somatic and acutely painful. This distinction is essential both clinically and on examinations.",
+        },
+        {
+          question:
+            "Primary internal hemorrhoids occur at the three main radicles of the superior rectal vein. In the lithotomy position, at which clock positions are they found?",
+          options: [
+            "3, 7, and 11 o'clock",
+            "2, 6, and 10 o'clock",
+            "3, 6, and 9 o'clock",
+            "1, 5, and 9 o'clock",
+          ],
+          answer: 0,
+          explanation:
+            "Primary internal hemorrhoids correspond to the three main tributaries of the superior rectal vein at 3 o'clock (left lateral), 7 o'clock (right posterior), and 11 o'clock (right anterior) in the lithotomy position. This distribution is tested directly in exams and is surgically significant for hemorrhoidectomy planning.",
+        },
+        {
+          question:
+            "A carcinoma arises in the upper anal canal, above the dentate line. To which lymph node group does it first spread?",
+          options: [
+            "Superficial inguinal nodes",
+            "Internal iliac nodes exclusively",
+            "Femoral nodes",
+            "Para-rectal and inferior mesenteric nodes",
+          ],
+          answer: 3,
+          explanation:
+            "Above the dentate line, the anal canal drains lymph to the para-rectal nodes and then the inferior mesenteric lymph nodes, following the portal-type drainage of the hindgut. Below the dentate line (ectodermal derivation), drainage is to the superficial inguinal nodes. This distinction is critical for staging anal versus perianal malignancy.",
+        },
+        {
+          question:
+            "A patient presents with extreme perianal pain exacerbated by defecation and a posterior midline linear ulcer on inspection. Which condition is most likely?",
+          options: [
+            "Internal hemorrhoid",
+            "Anal fissure",
+            "Perianal abscess",
+            "Rectal polyp",
+          ],
+          answer: 1,
+          explanation:
+            "Anal fissures are elongated mucosal ulcers almost always in the posterior midline of the anal canal, below the dentate line — hence exquisitely painful due to somatic innervation. The posterior midline is preferentially affected because the superficial external sphincter is incomplete posteriorly, leaving the mucosa unsupported and susceptible to tearing during passage of hard stool.",
+        },
+        // ── SECTION 10: Posterior Abdominal Wall ─────────────────────────
+        {
+          question:
+            "A neonate presents at birth with respiratory distress and a scaphoid abdomen. Chest X-ray shows bowel loops in the left hemithorax. Which congenital diaphragmatic hernia is most likely?",
+          options: [
+            "Foramen of Morgagni hernia",
+            "Sliding hiatal hernia",
+            "Bochdalek hernia",
+            "Spigelian hernia",
+          ],
+          answer: 2,
+          explanation:
+            "Bochdalek hernia is the most common congenital diaphragmatic hernia, occurring through a posterolateral defect, predominantly on the left side (the liver protects the right). Herniation of abdominal viscera into the thorax compresses the developing lung, causing pulmonary hypoplasia. It presents at birth with respiratory distress and a scaphoid abdomen from absence of bowel. Morgagni hernia is a rare anterior (retrosternal) defect.",
+        },
+        {
+          question:
+            "A patient develops numbness and burning pain over the lateral thigh without any motor weakness. Compression of which nerve is responsible?",
+          options: [
+            "Lateral cutaneous nerve of the thigh",
+            "Femoral nerve",
+            "Ilioinguinal nerve",
+            "Genitofemoral nerve femoral branch",
+          ],
+          answer: 0,
+          explanation:
+            "Meralgia paraesthetica is caused by compression of the lateral cutaneous nerve of the thigh (L2–L3) as it passes under or through the inguinal ligament near the ASIS. This is a purely sensory nerve; compression causes burning paresthesias over the lateral thigh with no motor deficit. The femoral nerve supplies motor function to the quadriceps.",
+        },
+        {
+          question:
+            "A 58-year-old undergoes left-sided thoracoscopic resection of a posterior mediastinal mass at the T3–T4 level. On postoperative day 2 a milky pleural effusion develops; analysis confirms chylothorax. A right-sided approach would NOT have carried this risk. Which feature of the thoracic duct's course explains why only left-sided upper thoracic surgery risks chylothorax?",
+          options: [
+            "Left-sided entry and ascent throughout to the left venous angle",
+            "Right-sided entry, crosses to left at T4–T5, ascends to left venous angle",
+            "Bifurcates at T6 into symmetric right and left ascending trunks",
+            "Midline ascent to T2, then abrupt leftward crossing to left venous angle",
+          ],
+          answer: 1,
+          explanation:
+            "The thoracic duct enters the thorax through the aortic hiatus (T12) on the RIGHT side, ascending between the aorta (left) and azygos vein (right). At approximately T4–T5 it crosses to the LEFT side of the posterior mediastinum. From this level upward, it runs on the left before draining into the LEFT venous angle (left subclavian + left internal jugular junction). Therefore: right-sided thoracic surgery risks the duct below T5; left-sided upper thoracic and neck dissection risks it above T5. Chylothorax from thoracic duct injury presents with a milky, triglyceride-rich pleural effusion and can cause significant nutritional and immunological depletion.",
+        },
+        {
+          question:
+            "The vena caval opening in the diaphragm transmits the IVC at a specific vertebral level. Which additional structure passes through this opening?",
+          options: [
+            "Aorta and thoracic duct",
+            "Esophagus and vagal trunks",
+            "Azygos vein",
+            "Right phrenic nerve",
+          ],
+          answer: 3,
+          explanation:
+            "At T8, the vena caval opening transmits the IVC and the right phrenic nerve. The esophageal hiatus at T10 transmits the esophagus and anterior and posterior vagal trunks. The aortic hiatus at T12 transmits the aorta, thoracic duct, and azygos vein. The left phrenic nerve pierces the muscular diaphragm separately and does not travel through a named hiatus.",
+        },
+        // ── SECTION 11: Review of Arteries and Veins ─────────────────────
+        {
+          question:
+            "A patient develops ischemic colitis at the splenic flexure following a prolonged period of hypotension after cardiac surgery. Why is this site most vulnerable?",
+          options: [
+            "It has no anastomotic blood supply from adjacent vessels",
+            "It is supplied solely by terminal branches of the IMA",
+            "It lies at the watershed between SMA and IMA territories",
+            "It receives blood only from the marginal artery of Drummond",
+          ],
+          answer: 2,
+          explanation:
+            "Griffith's point at the splenic flexure is the watershed between the SMA (middle colic artery territory) and IMA (left colic artery territory). This zone has the least collateral reserve and is most vulnerable to ischemia during systemic hypoperfusion. Sudeck's point at the rectosigmoid junction is the second watershed zone. Ischemic colitis here presents with bloody diarrhea.",
+        },
+        {
+          question:
+            "An angiogram in a 65-year-old with chronic mesenteric ischaemia reveals complete occlusion of the celiac trunk at its aortic origin. Despite this, the patient has no symptoms of foregut ischaemia and the hepatic and splenic parenchyma appear viable. Which collateral pathway is sustaining blood supply to the celiac territory?",
+          options: [
+            "Retrograde via right colic → ileocolic → SMA → celiac trunk",
+            "Retrograde via SMA → pancreaticoduodenal arcade → gastroduodenal artery → hepatic artery",
+            "Direct anastomosis between the left gastric artery and the inferior phrenic artery",
+            "Inferior phrenic arteries perfusing the entire celiac territory via direct anastomosis",
+          ],
+          answer: 1,
+          explanation:
+            "The pancreaticoduodenal arcade is the key celiac–SMA anastomosis. With celiac occlusion, blood flows retrograde: SMA → inferior pancreaticoduodenal artery → superior pancreaticoduodenal artery → gastroduodenal artery → hepatic artery proper (retrograde) → celiac territory (liver, spleen, stomach). This is the anatomical basis for the 'celiac artery steal' phenomenon and explains why chronic celiac occlusion is often asymptomatic. During Whipple procedure (pancreaticoduodenectomy), the gastroduodenal artery is ligated — if undiagnosed celiac occlusion exists, this eliminates the collateral inflow, causing hepatic ischaemia postoperatively.",
+        },
+        {
+          question:
+            "In portal hypertension, the rectal portosystemic anastomosis shunts blood from which portal tributary into the systemic inferior rectal veins?",
+          options: [
+            "Middle rectal vein",
+            "Inferior mesenteric vein directly",
+            "Left colic vein",
+            "Superior rectal vein",
+          ],
+          answer: 3,
+          explanation:
+            "The rectal portosystemic anastomosis connects the superior rectal vein (portal tributary — drains into the inferior mesenteric vein → portal system) and the inferior and middle rectal veins (systemic tributaries draining into the internal iliac → IVC). This produces rectal varices in portal hypertension, which are distinct from hemorrhoids.",
+        },
+        {
+          question:
+            "An angiogram in a patient with abdominal angina shows a prominent, tortuous midline vessel connecting the middle colic artery territory to the left colic artery territory. Which vessel has been enlarged as a collateral?",
+          options: [
+            "Arc of Riolan",
+            "Marginal artery of Drummond",
+            "Inferior pancreaticoduodenal artery",
+            "Ileocolic artery",
+          ],
+          answer: 0,
+          explanation:
+            "The Arc of Riolan (meandering mesenteric artery) is a specific anastomosis in the mesentery directly connecting the left branch of the middle colic artery (SMA territory) to the left colic artery (IMA territory). It becomes prominently enlarged on angiography when the SMA or IMA is critically obstructed, serving as a major collateral pathway. The marginal artery of Drummond is a continuous arcade along the inner colon border.",
+        },
+        // ── SECTION 12: Clinicals ────────────────────────────────────────
+        {
+          question:
+            "A 3-week-old male presents with projectile, non-bilious vomiting after every feed. He appears hungry immediately after vomiting and an olive-shaped mass is palpable in the epigastrium. What is the definitive treatment?",
+          options: [
+            "Feed thickening and metoclopramide",
+            "Nasogastric decompression and TPN",
+            "Ramstedt pyloromyotomy",
+            "Atropine infusion to relax pyloric muscle",
+          ],
+          answer: 2,
+          explanation:
+            "Hypertrophic pyloric stenosis presents at ~3 weeks with projectile, non-bilious vomiting (the obstruction is proximal to the ampulla of Vater so bile cannot enter the vomitus), an olive-shaped epigastric mass, and a hungry infant. Metabolic sequela is hypochloraemic hypokalaemic metabolic alkalosis. Definitive treatment is Ramstedt pyloromyotomy — surgical splitting of the hypertrophied pyloric muscle.",
+        },
+        {
+          question:
+            "A 67-year-old male undergoes elective EVAR for a 6.1 cm infrarenal AAA. The procedure is uncomplicated and the stent graft is deployed from just below the renal arteries to the iliac bifurcation. On postoperative day 4 he develops bloody diarrhoea and a CT abdomen with contrast shows a well-positioned graft with no endoleak but mucosal enhancement of the descending and sigmoid colon. Which mechanism best explains this complication?",
+          options: [
+            "Splenic artery thrombosis from air embolisation during stent deployment",
+            "Right colonic infarction from kinking of the ileocolic artery by the stent graft",
+            "Ischaemic proctitis from bilateral internal iliac artery occlusion by the iliac limbs",
+            "Left colonic ischaemia from IMA occlusion with inadequate Arc of Riolan collateral",
+          ],
+          answer: 3,
+          explanation:
+            "EVAR stent grafts routinely cover and occlude the IMA orifice. In most patients, the left colon is adequately supplied by collateral flow via the Arc of Riolan (middle colic → left colic) and the marginal artery of Drummond. However, if these collaterals are insufficient — particularly if the SMA has significant disease — the IMA territory (descending colon, sigmoid colon, upper rectum) becomes ischaemic 2–5 days post-procedure. This presents as bloody diarrhoea and is confirmed by flexible sigmoidoscopy showing mucosal ischaemia. It is the most common serious bowel complication of open and endovascular AAA repair. Pre-operative assessment includes checking IMA patency and the presence of the Arc of Riolan.",
+        },
+        // ── ADDITIONAL HARD QUESTIONS ────────────────────────────────────
+        {
+          question:
+            "A trauma surgeon controls haemorrhage from a grade IV liver laceration by compressing the hepatoduodenal ligament between thumb and index finger (Pringle maneuver). This manoeuvre arrests arterial and portal inflow to the liver. Within the hepatoduodenal ligament, which arrangement of the portal triad is correct?",
+          options: [
+            "Portal vein anterior-right, hepatic artery anterior-left, CBD posterior",
+            "CBD anterior-right, hepatic artery anterior-left, portal vein posterior",
+            "Hepatic artery anterior-right, CBD anterior-left, portal vein posterior",
+            "CBD anterior, portal vein posterior-right, hepatic artery posterior-left",
+          ],
+          answer: 1,
+          explanation:
+            "Within the hepatoduodenal ligament: CBD is anterior-right, hepatic artery proper is anterior-left, and portal vein is posterior (deepest). The Pringle maneuver simultaneously occludes all three. This arrangement is critical during cholecystectomy — the 'critical view of safety' requires identifying the cystic duct (rightward) and cystic artery (leftward) before applying clips. Blind clamping risks CBD injury. The CBD's anterior-right position also guides orientation during ERCP. The top distractor (hepatic artery anterior-right) swaps the two anterior structures — the artery is always to the LEFT of the duct.",
+        },
+        {
+          question:
+            "A 78-year-old thin woman presents with intermittent right inner thigh pain worsened by hip extension and internal rotation, relieved by flexion. No groin lump is palpable. AXR shows small bowel obstruction. At emergency laparotomy the bowel is found herniated through a deep pelvic foramen. What is the diagnosis and which nerve is compressed?",
+          options: [
+            "Obturator hernia; obturator nerve compression",
+            "Femoral hernia; femoral nerve compression",
+            "Spigelian hernia; lateral cutaneous nerve of the thigh",
+            "Direct inguinal hernia; ilioinguinal nerve compression",
+          ],
+          answer: 0,
+          explanation:
+            "Obturator hernia: abdominal contents herniate through the obturator canal alongside the obturator nerve (L2–L4). Compression produces the Howship-Romberg sign: inner thigh pain worsened by hip extension or internal rotation, relieved by flexion. No palpable lump (hernia is deep to pectineus). Classic triad: elderly thin woman, no visible hernia, SBO found at laparotomy. Fat atrophy in thin women widens the canal. High strangulation risk from unyielding bony boundaries. Femoral hernia is the top distractor but produces a femoral triangle lump and femoral nerve compression would cause quadriceps weakness — absent here.",
+        },
+        {
+          question:
+            "A 72-year-old woman undergoes right hemicolectomy for cecal adenocarcinoma. During mobilisation of the hepatic flexure, the right colon is swept medially with sustained lateral retraction. Six weeks postoperatively she reports burning dysaesthesias and numbness over the right lateral thigh with no motor weakness or reflex change. Which nerve was compressed?",
+          options: [
+            "Femoral nerve (L2–L4)",
+            "Ilioinguinal nerve (L1)",
+            "Lateral cutaneous nerve of the thigh (L2–L3)",
+            "Genitofemoral nerve (L1–L2)",
+          ],
+          answer: 2,
+          explanation:
+            "The lateral cutaneous nerve of the thigh (L2–L3) runs retroperitoneally across iliacus and passes under the inguinal ligament just medial to the ASIS. Sustained retraction during right colon mobilisation compresses it here, causing meralgia paraesthetica: burning dysaesthesias over the lateral thigh with entirely preserved motor function. Femoral nerve injury (the top distractor) would produce quadriceps weakness and a lost knee reflex — both absent in this case. The genitofemoral nerve supplies the inner thigh and scrotum/labia, not the lateral thigh. This injury also occurs with prolonged lithotomy positioning.",
+        },
+        {
+          question:
+            "A 65-year-old with Child-Pugh B cirrhosis undergoes hepatic ultrasound. Colour Doppler shows hepatofugal flow in the ligamentum teres toward the umbilicus. Which obliterated fetal structure does the ligamentum teres contain?",
+          options: [
+            "Obliterated ductus venosus",
+            "Obliterated right hepatic vein",
+            "Obliterated right umbilical vein",
+            "Obliterated left umbilical vein",
+          ],
+          answer: 3,
+          explanation:
+            "The ligamentum teres (round ligament of the liver) is the obliterated remnant of the fetal LEFT umbilical vein, running in the free edge of the falciform ligament from the umbilicus to the left branch of the portal vein. In portal hypertension, elevated left portal vein pressure recanalizies this vessel, directing portal blood toward the anterior abdominal wall via paraumbilical veins — producing caput medusae and the Doppler finding of hepatofugal flow in the ligamentum teres. The ductus venosus (top distractor) becomes the ligamentum venosum, which connects the left portal vein to the IVC on the posterior liver surface — a distinct structure.",
+        },
+      ];
+    </script>
+    <script>
+/* === MEDICAL-BRAIN QUIZ ENGINE (inlined for standalone export) === */
+/* =============================================
+   MEDICAL-BRAIN QUIZ ENGINE
+   Extracted from Ky's RNS Anatomy Study Guide
+
+   Contract:
+   - Page defines `const questions = [...]` in an
+     inline <script> BEFORE this file is loaded.
+   - Page must include in its <body>:
+       <div id="quizContainer" class="quiz-container"></div>
+       <div id="scoreBar" class="score-bar">
+         <span class="score-stat">
+           <span class="stat-blue" id="statAnswered">0</span> answered
+         </span>
+         <span class="score-stat">
+           <span class="stat-green" id="statCorrect">0</span> correct
+         </span>
+         <span class="score-stat">
+           <span class="stat-red" id="statIncorrect">0</span> incorrect
+         </span>
+         <span class="score-stat">
+           <span class="stat-yellow" id="statPercent">0%</span>
+         </span>
+       </div>
+
+   Question shape:
+   {
+     question:    string,
+     options:     [string, string, string, string],
+     answer:      number,       // 0-indexed correct option
+     explanation: string
+   }
+   ============================================= */
+
+(function () {
+  var answered = 0;
+  var correct = 0;
+  var incorrect = 0;
+
+  function buildQuiz() {
+    var container = document.getElementById("quizContainer");
+    if (!container) return;
+    container.innerHTML = "";
+
+    questions.forEach(function (q, i) {
+      var card = document.createElement("div");
+      card.className = "question-card";
+      card.id = "card-" + i;
+
+      var numLabel = document.createElement("div");
+      numLabel.className = "question-number";
+      numLabel.textContent = "Question " + (i + 1) + " of " + questions.length;
+
+      var qText = document.createElement("div");
+      qText.className = "question-text";
+      qText.textContent = q.question;
+
+      var optGrid = document.createElement("div");
+      optGrid.className = "options-grid";
+
+      q.options.forEach(function (opt, j) {
+        var btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.textContent = String.fromCharCode(65 + j) + ". " + opt;
+        btn.addEventListener("click", function () {
+          handleAnswer(i, j, q.answer, q.explanation);
+        });
+        optGrid.appendChild(btn);
+      });
+
+      var explanation = document.createElement("div");
+      explanation.className = "explanation";
+      explanation.id = "explanation-" + i;
+
+      card.appendChild(numLabel);
+      card.appendChild(qText);
+      card.appendChild(optGrid);
+      card.appendChild(explanation);
+      container.appendChild(card);
+    });
+  }
+
+  function handleAnswer(questionIdx, selectedIdx, correctIdx, explanationText) {
+    var card = document.getElementById("card-" + questionIdx);
+    var buttons = card.querySelectorAll(".option-btn");
+    var explanationDiv = document.getElementById("explanation-" + questionIdx);
+
+    // Prevent re-answering
+    if (card.dataset.answered === "true") return;
+    card.dataset.answered = "true";
+
+    // Update button styles
+    buttons.forEach(function (btn, idx) {
+      btn.disabled = true;
+      if (idx === correctIdx) {
+        btn.classList.add("correct");
+      } else if (idx === selectedIdx && selectedIdx !== correctIdx) {
+        btn.classList.add("incorrect");
+      }
+    });
+
+    // Show explanation
+    var isCorrect = selectedIdx === correctIdx;
+    var resultEmoji = isCorrect ? "✅ Correct! " : "❌ Incorrect. ";
+    explanationDiv.innerHTML = "<strong>" + resultEmoji + "</strong>" + explanationText;
+    explanationDiv.style.display = "block";
+    explanationDiv.style.borderLeftColor = isCorrect ? "#16a34a" : "#dc2626";
+
+    // Update stats
+    answered++;
+    if (isCorrect) {
+      correct++;
+    } else {
+      incorrect++;
+    }
+
+    updateScoreBar();
+  }
+
+  function updateScoreBar() {
+    var scoreBar = document.getElementById("scoreBar");
+    if (!scoreBar) return;
+    document.getElementById("statAnswered").textContent = answered;
+    document.getElementById("statCorrect").textContent = correct;
+    document.getElementById("statIncorrect").textContent = incorrect;
+    var pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    document.getElementById("statPercent").textContent = pct + "%";
+    scoreBar.classList.add("visible");
+  }
+
+  // Auto-initialize if questions are defined and container exists
+  if (typeof questions !== "undefined" && Array.isArray(questions) && questions.length > 0) {
+    buildQuiz();
+  }
+})();
+
+</script>
+  </body>
+</html>
