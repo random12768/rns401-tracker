@@ -5847,7 +5847,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 110, built: '2026-10-26T23:26:17Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 111, built: '2026-10-27T00:15:08Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -6247,6 +6247,8 @@ function onSubCheck(cb) {
   const prow = document.querySelector('tr[data-id="' + tr.dataset.parent + '"]');
   if (prow) syncParentFromSubs(prow, state);
   saveState(state);
+  logDone([tr.dataset.sid].concat(prow && prow.querySelector('input[type="checkbox"]').checked ? [tr.dataset.parent] : []), cb.checked);
+  setTimeout(paintDoneStamps, 30);
   svRefreshCounts(tr.dataset.parent);
   updateProgress();
   if (document.getElementById('panel-planner')) renderPlanner();
@@ -7321,7 +7323,9 @@ function onCheck(cb) {
   state[row.dataset.id] = cb.checked;
   if (row.classList.contains('has-subs')) setSubsFromParent(row, cb.checked, state);
   saveState(state);
+  logDone([row.dataset.id].concat(row.classList.contains('has-subs') ? subRowsOf(row.dataset.id).map(r => r.dataset.sid) : []), cb.checked);
   updateProgress();
+  setTimeout(paintDoneStamps, 30);
   if (document.getElementById('panel-planner')) renderPlanner();
 }
 
@@ -7557,6 +7561,31 @@ const REVIEW_STATE_KEY = 'rns401_review_state_v1';
 const MANUAL_OVERRIDES_KEY = 'rns401_manual_overrides_v1';
 const PLAN_LOCK_KEY = 'rns401_plan_lock_v1';
 const PLAN_FROZEN_KEY = 'rns401_plan_frozen_v1';
+const DONE_LOG_KEY = 'rns401_done_log_v1';
+function loadDoneLog() { try { return JSON.parse(localStorage.getItem(pkey(DONE_LOG_KEY))) || {}; } catch (e) { return {}; } }
+/* remember WHEN you ticked each video (real clicks only): the planner counts today's work against today, and a stamp shows the date/time */
+function doneDay(v) { var d = new Date(v); return isNaN(d) ? String(v) : fmtDate(startOfDay(d)); }
+function fmtDoneStamp(v) { var d = new Date(v); if (isNaN(d)) return String(v); return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ', ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }); }
+function paintDoneStamps() {
+  try {
+    var log = loadDoneLog();
+    document.querySelectorAll('tr[data-id], tr.vid-sub').forEach(function (tr) {
+      var cb = tr.querySelector('input[type=checkbox]'); var cell = tr.children[1]; if (!cb || !cell) return;
+      var old = cell.querySelector('.done-stamp'), v = cb.checked && (log[tr.dataset.id || tr.dataset.sid]);
+      if (!v) { if (old) old.remove(); return; }
+      if (!old) { old = document.createElement('span'); old.className = 'done-stamp'; old.style.cssText = 'display:inline-block;margin-left:8px;font-size:11px;font-weight:600;color:#15803d;background:#dcfce7;border-radius:8px;padding:1px 7px;white-space:nowrap'; cell.appendChild(old); }
+      old.textContent = '\u2713 ' + fmtDoneStamp(v); old.title = 'Ticked off ' + new Date(v).toLocaleString();
+    });
+  } catch (e) {}
+}
+function logDone(ids, checked) {
+  try {
+    var log = loadDoneLog(), now = new Date().toISOString();
+    ids.filter(Boolean).forEach(function (id) { if (checked) { if (!log[id]) log[id] = now; } else delete log[id]; });
+    localStorage.setItem(pkey(DONE_LOG_KEY), JSON.stringify(log));
+  } catch (e) {}
+}
+window.addEventListener('load', function () { setTimeout(paintDoneStamps, 1500); setTimeout(paintDoneStamps, 5000); });
 function planIsFrozen() { try { return localStorage.getItem(pkey(PLAN_FROZEN_KEY)) === '1'; } catch (e) { return false; } }
 function updateFreezeBtn() {
   const b = document.getElementById('plan-freeze-btn'); if (!b) return;
@@ -8597,6 +8626,16 @@ function computePlan() {
   };
   dp.contentDates.forEach(d => ensureBucket(d));
   dp.reviewDates.forEach(d => ensureBucket(d));
+  // Work you already finished today counts against today's budget, so ticking something off does not pull a later video into today.
+  const todayKey = fmtDate(dp.today), doneLog = loadDoneLog();
+  const doneToday = completedPool.filter(i => (doneLog[i.id] && doneDay(doneLog[i.id]) === todayKey) || (i.lecId && doneLog[i.lecId] && doneDay(doneLog[i.lecId]) === todayKey));
+  if (assignments[todayKey] && doneToday.length) {
+    const tb = assignments[todayKey];
+    tb.preMin = doneToday.reduce((t, i) => t + i.min, 0);
+    tb.preCards = doneToday.reduce((t, i) => t + (i.cards || 0), 0);
+    tb.doneToday = doneToday;
+    tb.totalMin += tb.preMin;
+  }
 
   // Manually scheduled / dragged items are locked to their date first.
   manualItems.forEach(it => {
@@ -8611,7 +8650,7 @@ function computePlan() {
 
   const cap = settings.dailyCapacity;
   const cardCap = settings.newCards || 0;
-  const bucketCards = b => b.items.reduce((t, i) => t + (i.cards || 0), 0);
+  const bucketCards = b => (b.preCards || 0) + b.items.reduce((t, i) => t + (i.cards || 0), 0);
   const warnings = [];
   let lastAssignedDate = null;
 
@@ -8636,7 +8675,7 @@ function computePlan() {
       bucket.totalMin += it.min;
       lastAssignedDate = d;
     }
-    if (queue.length && bucket.items.filter(i => !i.isManual).length === 0) {
+    if (queue.length && !bucket.preMin && bucket.items.filter(i => !i.isManual).length === 0) {
       const it = queue.shift();
       const bs = bufferStatusFor(it.classDate, d, bufferDays);
       it.bufferStatus = bs ? bs.status : null;
@@ -8697,7 +8736,7 @@ function computePlan() {
   // (new ones) or whose saved day already passed get a fresh day; changing any planner setting rebuilds the plan.
   try {
     const todayStr0 = fmtDate(dp.today);
-    const sig = [settings.examDate, settings.reviewDays, settings.dailyCapacity, settings.bufferDays, settings.newCards || 0, plannerModule().mod.id, items.reduce((t, i) => t + (i.cards || 0), 0)].join('|');
+    const sig = [settings.examDate, settings.reviewDays, settings.dailyCapacity, settings.bufferDays, settings.newCards || 0, plannerModule().mod.id].join('|');
     let lock = null;
     try { lock = JSON.parse(localStorage.getItem(pkey(PLAN_LOCK_KEY))); } catch (e) { lock = null; }
     const frozen = planIsFrozen();
@@ -8913,7 +8952,8 @@ function renderCalendarDayCell(dateStr, plan) {
       onclick="openDayModal('${dateStr}')">
     <div class="cal-day-num">${d.getDate()}</div>
     ${examEvent ? `<div class="cal-exam-badge" title="${escAttr(examEvent.label)}">${examEvent.icon}</div>` : ''}
-    ${bucket && bucket.totalMin ? `<div class="cal-mins">${bucket.totalMin}m${(() => { const c = bucket.items.reduce((t, i) => t + (i.cards || 0), 0); return c ? ' · ' + c + '🃏' : ''; })()}</div>` : ''}
+    ${bucket && bucket.totalMin ? `<div class="cal-mins">${bucket.totalMin}m${(() => { const c = (bucket.preCards || 0) + bucket.items.reduce((t, i) => t + (i.cards || 0), 0); return c ? ' · ' + c + '🃏' : ''; })()}</div>` : ''}
+    ${bucket && bucket.doneToday && bucket.doneToday.length ? `<div class="cal-done-today" style="font-size:11px;color:#15803d;font-weight:600;margin:2px 0" title="${escAttr(bucket.doneToday.map(i => i.title).join(', '))}">✓ ${bucket.doneToday.length} done today (${bucket.preMin}m)</div>` : ''}
     ${schedTagsHtml}
     <div class="cal-items">${items.map(renderCalPill).join('')}${rev.length ? `<div class="cal-item review-pill">${rev.length} review</div>` : ''}</div>
     ${classIds.length ? `<div class="cal-class-tag">🏫 ${classIds.length} in class</div>` : ''}
