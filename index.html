@@ -448,6 +448,7 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .chip-micro { background: var(--micro); }
   .chip-pharm { background: var(--pharm); }
   .plan-item .title { flex: 1; font-size: 0.9em; }
+  .plan-item .title.plan-vid:hover { text-decoration: underline; }
   .plan-item .title .sub-video { color: var(--text-faint); font-size: 0.85em; }
   .plan-item .mins { font-size: 0.8em; color: var(--text-faint); white-space: nowrap; font-variant-numeric: tabular-nums; }
   .plan-item.done .title { text-decoration: line-through; opacity: 0.5; }
@@ -5962,7 +5963,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 121, built: '2026-10-27T17:19:29Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 122, built: '2026-10-27T17:27:16Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -9043,6 +9044,20 @@ function bufferBadge(it) {
   return '';
 }
 
+/* click a planner item (Today list or calendar card) to open its video, using the same link the lecture row uses (local file / Drive picker) */
+function planToastMsg(m) { let t = document.getElementById('lv-toast'); if (!t) { t = document.createElement('div'); t.id = 'lv-toast'; document.body.appendChild(t); } t.textContent = m; t.style.display = ''; clearTimeout(t._t); t._t = setTimeout(function () { t.style.display = 'none'; }, 2800); }
+function openPlanItemVideo(id) {
+  try {
+    const sub = String(id).indexOf('~') >= 0;
+    const row = sub ? document.querySelector('.vid-sub[data-sid="' + id + '"]') : document.querySelector('tr[data-id="' + id + '"]');
+    let a = null;
+    if (row) a = row.querySelector(sub ? '.sv-line a.video-link, .sv-line a.vid-link, .sv-line a.sketchy-path-link, .sv-line a.sk-btn:not(.sk-btn-notes)' : 'a.video-link, a.vid-link, a.sketchy-path-link, a.sk-btn:not(.sk-btn-notes), a[href*="drive.google.com/file"]');
+    if (!a && row && sub) a = row.querySelector('.sv-line a[href]:not(.sv-notes a):not([onclick*="openExtraPdf"])');
+    if (!a) { planToastMsg('No video link found for this item'); return; }
+    if (!a.getAttribute('href') && a.dataset.vhref) { planToastMsg('Video access is off for this account'); return; }
+    a.click();
+  } catch (e) { console.warn('openPlanItemVideo', e); }
+}
 function renderPlanItemRow(it, dateStr) {
   const overflowTag = it.overflow ? ' <span style="color:#e07a7a; font-size:0.68em;">⚠ overflow</span>' : '';
   const manualTag = it.isManual ? ' <span class="supp-tag" style="border-color:var(--planner); color:#9fd0ff;">manually scheduled</span>' : '';
@@ -9052,7 +9067,7 @@ function renderPlanItemRow(it, dateStr) {
   return `<div class="plan-item">
     <input type="checkbox" ${it.checked ? 'checked' : ''} onchange="toggleWatched('${it.id}')">
     <span class="chip chip-${it.subject}">${it.subject}</span>
-    <span class="title">${it.isSupp ? it.title + ' <span class="supp-tag">no video — slides/First Aid</span>' : it.video + ` <span class="sub-video" style="opacity:.65">· ${it.title}</span>`}${manualTag}${overflowTag}${bufferBadge(it)}</span>
+    <span class="title plan-vid" onclick="openPlanItemVideo('${it.id}')" title="Click to open this video" style="cursor:pointer">${it.isSupp ? it.title + ' <span class="supp-tag">no video — slides/First Aid</span>' : it.video + ` <span class="sub-video" style="opacity:.65">· ${it.title}</span>`}${manualTag}${overflowTag}${bufferBadge(it)}</span>
     <span class="mins">${it.min}m${it.cards ? ' · 🃏' + it.cards : ''}</span>
     ${moveInput}
     ${it.isManual ? `<button style="background:none;border:none;color:#e07a7a;cursor:pointer;font-size:0.9em;" onclick="removeManualOverride('${it.id}')" title="Remove manual schedule">✕</button>` : ''}
@@ -9098,7 +9113,7 @@ function renderCalPill(it) {
   const draggable = !it.checked;
   const dragAttrs = draggable ? `draggable="true" ondragstart="event.stopPropagation(); dragStart(event,'${it.id}')"` : '';
   const label = it.video || it.title;
-  return `<div class="${cls.join(' ')}" ${dragAttrs} title="${escAttr(label)} (${it.min}m${it.cards ? ', ' + it.cards + ' cards' : ''})">${escAttr(label)} <span style="opacity:0.7;font-weight:500;">(${it.min}m${it.cards ? ' · ' + it.cards + '🃏' : ''})</span></div>`;
+  return `<div class="${cls.join(' ')}" ${dragAttrs} onclick="openPlanItemVideo('${it.id}')" style="cursor:pointer" title="${escAttr(label)} (${it.min}m${it.cards ? ', ' + it.cards + ' cards' : ''}) — click to open the video">${escAttr(label)} <span style="opacity:0.7;font-weight:500;">(${it.min}m${it.cards ? ' · ' + it.cards + '🃏' : ''})</span></div>`;
 }
 
 function renderCalendarDayCell(dateStr, plan) {
