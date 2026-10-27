@@ -5847,7 +5847,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 112, built: '2026-10-27T00:22:43Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 113, built: '2026-10-27T00:25:49Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -7564,6 +7564,7 @@ const PLAN_FROZEN_KEY = 'rns401_plan_frozen_v1';
 const DONE_LOG_KEY = 'rns401_done_log_v1';
 function loadDoneLog() { try { return JSON.parse(localStorage.getItem(pkey(DONE_LOG_KEY))) || {}; } catch (e) { return {}; } }
 /* remember WHEN you ticked each video (real clicks only): the planner counts today's work against today, and a stamp shows the date/time */
+(function () { var st = document.createElement('style'); st.textContent = 'td[data-done]::after{content:attr(data-done);display:inline-block;margin-left:8px;font-size:11px;font-weight:600;color:#15803d;background:#dcfce7;border-radius:8px;padding:1px 7px;white-space:nowrap}'; document.head.appendChild(st); })();
 function doneDay(v) { var d = new Date(v); return isNaN(d) ? String(v) : fmtDate(startOfDay(d)); }
 function fmtDoneStamp(v) { var d = new Date(v); if (isNaN(d)) return String(v); return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ', ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }); }
 function paintDoneStamps() {
@@ -7571,10 +7572,9 @@ function paintDoneStamps() {
     var log = loadDoneLog();
     document.querySelectorAll('tr[data-id], tr.vid-sub').forEach(function (tr) {
       var cb = tr.querySelector('input[type=checkbox]'); var cell = tr.children[1]; if (!cb || !cell) return;
-      var old = cell.querySelector('.done-stamp'), v = cb.checked && (log[tr.dataset.id || tr.dataset.sid]);
-      if (!v) { if (old) old.remove(); return; }
-      if (!old) { old = document.createElement('span'); old.className = 'done-stamp'; old.style.cssText = 'display:inline-block;margin-left:8px;font-size:11px;font-weight:600;color:#15803d;background:#dcfce7;border-radius:8px;padding:1px 7px;white-space:nowrap'; cell.appendChild(old); }
-      old.textContent = '\u2713 ' + fmtDoneStamp(v); old.title = 'Ticked off ' + new Date(v).toLocaleString();
+      var v = cb.checked && log[tr.dataset.id || tr.dataset.sid];
+      if (!v) { cell.removeAttribute('data-done'); return; }
+      cell.setAttribute('data-done', '\u2713 ' + fmtDoneStamp(v)); cell.title = 'Ticked off ' + new Date(v).toLocaleString();
     });
   } catch (e) {}
 }
@@ -8891,7 +8891,7 @@ function renderPlanItemRow(it, dateStr) {
   return `<div class="plan-item">
     <input type="checkbox" ${it.checked ? 'checked' : ''} onchange="toggleWatched('${it.id}')">
     <span class="chip chip-${it.subject}">${it.subject}</span>
-    <span class="title">${it.title}${it.isSupp ? ' <span class="supp-tag">no video — slides/First Aid</span>' : ` <span class="sub-video">— ${it.video}</span>`}${manualTag}${overflowTag}${bufferBadge(it)}</span>
+    <span class="title">${it.isSupp ? it.title + ' <span class="supp-tag">no video — slides/First Aid</span>' : it.video + ` <span class="sub-video" style="opacity:.65">· ${it.title}</span>`}${manualTag}${overflowTag}${bufferBadge(it)}</span>
     <span class="mins">${it.min}m${it.cards ? ' · 🃏' + it.cards : ''}</span>
     ${moveInput}
     ${it.isManual ? `<button style="background:none;border:none;color:#e07a7a;cursor:pointer;font-size:0.9em;" onclick="removeManualOverride('${it.id}')" title="Remove manual schedule">✕</button>` : ''}
@@ -8920,7 +8920,7 @@ function renderDoneRow(d) {
   return `<div class="plan-item done-item" style="opacity:.8">
     <input type="checkbox" checked onchange="toggleWatched('${it.id}')" title="Untick to undo">
     <span class="chip chip-${it.subject}">${it.subject}</span>
-    <span class="title" style="text-decoration:line-through">${it.title}${it.isSupp ? '' : ` <span class="sub-video">— ${it.video}</span>`}</span>
+    <span class="title" style="text-decoration:line-through">${it.isSupp ? it.title : it.video}${it.isSupp ? '' : ` <span class="sub-video" style="text-decoration:none;display:inline-block;opacity:.65">· ${it.title}</span>`}</span>
     <span class="mins">${it.min}m${it.cards ? ' · 🃏' + it.cards : ''}</span>
     <span style="font-size:11px;font-weight:600;color:#15803d;background:#dcfce7;border-radius:8px;padding:1px 7px;white-space:nowrap" title="Ticked off ${escAttr(new Date(d.iso).toLocaleString())}">✓ ${fmtDoneStamp(d.iso)}</span>
   </div>`;
