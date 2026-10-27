@@ -5963,7 +5963,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 122, built: '2026-10-27T17:27:16Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 123, built: '2026-10-27T17:37:06Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -11103,6 +11103,9 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
 #lv-pl .lv-pbar{flex:1;height:10px;border-radius:6px;background:rgba(255,255,255,.18);cursor:pointer;position:relative;overflow:hidden}
 #lv-pl .lv-pbar i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#38bdf8,#818cf8);pointer-events:none}
 #lv-pl .lv-prog b{min-width:5.5ch;text-align:center}
+#lv-pl .lv-pb{background:rgba(255,255,255,.1);color:#f4f6fb;border:0;border-radius:8px;padding:7px 10px;font:700 .85rem/1 system-ui,sans-serif;cursor:pointer;min-width:2.4em}
+#lv-pl .lv-pb:hover{background:rgba(255,255,255,.22)}
+#lv-pl video{cursor:pointer}
 #lv-pl .lv-err{position:absolute;inset:60px 0 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#f4f6fb;text-align:center;padding:24px;background:rgba(0,0,0,.85)}
 #lv-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:100002;background:#0b0f19;color:#f4f6fb;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:10px 18px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:92vw}
 .no-video-access #set-video,.no-video-access a[data-set-video]{display:none!important}
@@ -11239,7 +11242,7 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
     var title = (MAN[id] ? MAN[id][0] : file.name).replace(/\.(mp4|mov|mkv|m4v|webm)$/i, '').replace(/ atf$/i, '');
     var rate = parseFloat(g('tracker_video_rate_v1')) || 1;
     plEl = document.createElement('div'); plEl.id = 'lv-pl';
-    plEl.innerHTML = '<div class="lv-top"><div class="lv-t">🎬 ' + esc(title) + '</div><select title="Speed">' + [.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(function (r) { return '<option value="' + r + '"' + (r === rate ? ' selected' : '') + '>' + r + '×</option>'; }).join('') + '</select>'+(window.lvAnkiHas&&lvAnkiHas(id)&&document.documentElement.classList.contains('anki-on')?'<button class="lv-btn" data-k="1">🧠 Anki</button>':'')+'<button class="lv-btn" data-fs="1" title="Fullscreen (F)">⛶</button><button class="lv-btn" data-x="1">✕ Close</button></div><video controls controlsList="nofullscreen" autoplay playsinline></video><div class="lv-prog"><b class="lv-cur">0:00</b><div class="lv-pbar" title="Click to jump"><i></i></div><b class="lv-dur">0:00</b><b class="lv-left"></b></div>';
+    plEl.innerHTML = '<div class="lv-top"><div class="lv-t">🎬 ' + esc(title) + '</div><select title="Speed">' + [.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(function (r) { return '<option value="' + r + '"' + (r === rate ? ' selected' : '') + '>' + r + '×</option>'; }).join('') + '</select>'+(window.lvAnkiHas&&lvAnkiHas(id)&&document.documentElement.classList.contains('anki-on')?'<button class="lv-btn" data-k="1">🧠 Anki</button>':'')+'<button class="lv-btn" data-fs="1" title="Fullscreen (F)">⛶</button><button class="lv-btn" data-x="1">✕ Close</button></div><video autoplay playsinline disablepictureinpicture controlsList="nodownload nofullscreen noremoteplayback"></video><div class="lv-prog"><button class="lv-pb" data-p="1" title="Play / pause (Space)">⏸</button><button class="lv-pb" data-b="1" title="Back 10 seconds (←)">⏪10</button><button class="lv-pb" data-n="1" title="Forward 10 seconds (→)">10⏩</button><b class="lv-cur">0:00</b><div class="lv-pbar" title="Click to jump"><i></i></div><b class="lv-dur">0:00</b><b class="lv-left"></b><button class="lv-pb" data-m="1" title="Mute / unmute">🔊</button></div>';
     document.body.appendChild(plEl);
     var v = plEl.querySelector('video'); curUrl = URL.createObjectURL(file); v.src = curUrl; v.playbackRate = rate;
     var pk = 'tracker_vpos_' + id, last = 0;
@@ -11254,10 +11257,17 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
       bar.addEventListener('click', function (e) { var r = bar.getBoundingClientRect(); if (v.duration) v.currentTime = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * v.duration; });
       upd();
     })();
+    (function () {
+      var pb = plEl.querySelector('[data-p]'), mb = plEl.querySelector('[data-m]');
+      function ic() { pb.textContent = v.paused ? '▶' : '⏸'; mb.textContent = (v.muted || v.volume === 0) ? '🔇' : '🔊'; }
+      ['play', 'pause', 'playing', 'volumechange', 'loadedmetadata'].forEach(function (ev) { v.addEventListener(ev, ic); }); ic();
+      v.addEventListener('click', function () { v.paused ? v.play() : v.pause(); });
+      v.addEventListener('dblclick', function () { lvFs(); });
+    })();
     v.addEventListener('error', function () {
       var e = document.createElement('div'); e.className = 'lv-err'; e.innerHTML = '<div style="font-size:1.1rem;font-weight:700">This file can’t be played in the browser</div><div style="color:#9aa4b8">It may use a format your browser doesn’t support.</div><button class="lv-btn pri" data-d="1">Open on Google Drive instead</button>'; plEl.appendChild(e);
     });
-    plEl.addEventListener('click', function (e) { if (e.target.closest('[data-fs]')) lvFs(); else if (e.target.closest('[data-x]')) closePlayer(); else if (e.target.closest('[data-k]')) window.lvAnki(id); else if (e.target.closest('[data-d]')) { window.open(href, '_blank', 'noopener'); closePlayer(); } });
+    plEl.addEventListener('click', function (e) { if (e.target.closest('[data-fs]')) lvFs(); else if (e.target.closest('[data-p]')) { var vv = plEl.querySelector('video'); vv.paused ? vv.play() : vv.pause(); } else if (e.target.closest('[data-b]')) { var v2 = plEl.querySelector('video'); v2.currentTime = Math.max(0, v2.currentTime - 10); } else if (e.target.closest('[data-n]')) { var v3 = plEl.querySelector('video'); v3.currentTime += 10; } else if (e.target.closest('[data-m]')) { var v4 = plEl.querySelector('video'); v4.muted = !v4.muted; } else if (e.target.closest('[data-x]')) closePlayer(); else if (e.target.closest('[data-k]')) window.lvAnki(id); else if (e.target.closest('[data-d]')) { window.open(href, '_blank', 'noopener'); closePlayer(); } });
     plEl.querySelector('select').addEventListener('change', function (e) { v.playbackRate = parseFloat(e.target.value); s('tracker_video_rate_v1', e.target.value); });
     document.addEventListener('keydown', plKey, true);
   }
@@ -11331,7 +11341,7 @@ html.viewing-as tr[data-id] input[type="checkbox"], html.viewing-as .vid-sub inp
   window.lvPick = async function () { try { await pickFolder(); } catch (e) { if (e && e.name !== 'AbortError') toast('Could not open that folder'); } status(); };
   window.lvRescan = async function () { try { if (!root) root = await idbGet(); if (!root) return window.lvPick(); if (await permission(root, true)) { index = null; await ensureIndex(); } } catch (e) { toast('Could not scan the folder'); } status(); };
   window.lvForget = async function () { root = null; index = null; await idbDel(); s(LS, null); status(); toast('Folder forgotten. You’ll be asked again on your next video click.'); };
-  window.__lvTest = { setRoot: async function (h) { root = h; index = null; await ensureIndex(); status(); }, find: function (id) { return findFile(id).then(function (h) { return h ? h.name : null; }); }, hasManifest: function (id) { return !!MAN[id]; }, count: function () { return Object.keys(MAN).length; } };
+  window.__lvTest = { setRoot: async function (h) { root = h; index = null; await ensureIndex(); status(); }, find: function (id) { return findFile(id).then(function (h) { return h ? h.name : null; }); }, hasManifest: function (id) { return !!MAN[id]; }, playFile: function (f, id, href) { play(f, id, href); }, count: function () { return Object.keys(MAN).length; } };
   idbGet().then(function (h) { if (h) { root = h; } status(); });
   document.addEventListener('DOMContentLoaded', status);
 })();
