@@ -3213,7 +3213,6 @@ tr.vid-group > td { padding-top: 2px !important; padding-bottom: 6px !important;
 <div id="planner-dashboard"></div>
 <div id="planner-subject-countdown"></div>
 <div id="planner-today"></div>
-<div id="planner-timer"></div>
 
 <h3 style="margin-bottom:8px; color:#ccc; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
   Calendar — today through exam day
@@ -5969,7 +5968,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 124, built: '2026-10-27T17:41:54Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 125, built: '2026-10-27T17:51:00Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -9101,43 +9100,7 @@ function shakyTodayHtml(todayStr) {
 }
 function shakyCalPill(dateStr) { const n = shakyDue(dateStr).length; return n ? `<div class="cal-item" style="background:#f59e0b;color:#1a1a1a" title="Shaky videos to re-review">🤔 ${n} re-review</div>` : ''; }
 
-/* --- Study timer: log real minutes per subject --- */
-const TIMER_KEY = 'tracker_timer_v1', STUDYLOG_KEY = 'tracker_studylog_v1';
-function tmGet() { return lsJson(pkey(TIMER_KEY), {}); }
-function tmSet(o) { try { localStorage.setItem(pkey(TIMER_KEY), JSON.stringify(o)); } catch (e) {} }
-function tmSecs(o) { return (o.acc || 0) + (o.running && o.start ? Math.floor((Date.now() - o.start) / 1000) : 0); }
 function fmtHMS(t) { t = Math.max(0, Math.floor(t)); const h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60; return (h ? h + ':' : '') + String(m).padStart(h ? 2 : 1, '0') + ':' + String(s).padStart(2, '0'); }
-function fmtHM(sec) { const m = Math.round(sec / 60); return m >= 60 ? Math.floor(m / 60) + 'h ' + (m % 60) + 'm' : m + 'm'; }
-function timerToggle() { const o = tmGet(); if (o.running) { o.acc = tmSecs(o); o.running = false; o.start = 0; } else { o.running = true; o.start = Date.now(); } tmSet(o); renderStudyTimer(); }
-function timerSub(v) { const o = tmGet(); o.sub = v; tmSet(o); }
-function timerDiscard() { tmSet({ sub: tmGet().sub }); renderStudyTimer(); }
-function timerSave() {
-  const o = tmGet(), sec = tmSecs(o); if (sec < 1) return;
-  const subs = plannerSubjects(), sub = o.sub || (subs[0] && subs[0].key) || 'study';
-  const log = lsJson(pkey(STUDYLOG_KEY), {}), d = fmtDate(startOfDay(new Date()));
-  log[d] = log[d] || {}; log[d][sub] = (log[d][sub] || 0) + sec;
-  try { localStorage.setItem(pkey(STUDYLOG_KEY), JSON.stringify(log)); } catch (e) {}
-  tmSet({ sub }); renderStudyTimer();
-}
-function renderStudyTimer() {
-  const el = document.getElementById('planner-timer'); if (!el) return;
-  const o = tmGet(), subs = plannerSubjects(), sub = o.sub || (subs[0] && subs[0].key) || '';
-  const log = lsJson(pkey(STUDYLOG_KEY), {}), today = startOfDay(new Date());
-  let todaySec = 0; const week = {}; let weekSec = 0;
-  for (let i = 0; i < 7; i++) { const d = fmtDate(addDays(today, -i)), e = log[d] || {}; Object.keys(e).forEach(k => { week[k] = (week[k] || 0) + e[k]; weekSec += e[k]; if (i === 0) todaySec += e[k]; }); }
-  const chips = Object.keys(week).map(k => `<span class="chip chip-${escH(k)}">${escH(k)}</span> ${fmtHM(week[k])}`).join(' &nbsp;·&nbsp; ');
-  el.innerHTML = `<div class="today-box" style="margin-top:14px"><h3>⏱ Study timer</h3>
-    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
-      <select onchange="timerSub(this.value)" title="Which subject are you studying?">${subs.map(s => `<option value="${escH(s.key)}"${s.key === sub ? ' selected' : ''}>${escH(s.label)}</option>`).join('')}</select>
-      <b id="timer-disp" style="font-size:1.4em;font-variant-numeric:tabular-nums;min-width:4.5ch">${fmtHMS(tmSecs(o))}</b>
-      <button class="plan-shaky-ok" onclick="timerToggle()">${o.running ? '⏸ Pause' : (tmSecs(o) ? '▶ Resume' : '▶ Start')}</button>
-      <button class="plan-shaky-ok" onclick="timerSave()" ${tmSecs(o) ? '' : 'disabled'} title="Add this time to today's log">💾 Save to log</button>
-      <button class="plan-shaky" onclick="timerDiscard()" title="Discard this session">✕</button>
-    </div>
-    <div class="subtext" style="margin-top:8px">Logged today: <b>${fmtHM(todaySec)}</b> &nbsp;·&nbsp; last 7 days: <b>${fmtHM(weekSec)}</b>${chips ? '<br>' + chips : ''}</div></div>`;
-}
-setInterval(function () { const d = document.getElementById('timer-disp'); if (d) d.textContent = fmtHMS(tmSecs(tmGet())); }, 1000);
-
 /* --- Continue watching card on the Overview --- */
 function renderContinueCard() {
   const host = document.getElementById('overview-continue'); if (!host) return;
@@ -9548,7 +9511,6 @@ function renderPlanner() {
     if (ad) todayHtml += `<div class="subtext" style="margin-top:10px">🧠 About <b>${ad}</b> Anki card${ad === 1 ? '' : 's'} due across your videos right now <span style="opacity:.7">(open Anki to review)</span></div>`; }
   todayHtml += `</div>`;
   todayEl.innerHTML = todayHtml;
-  try { renderStudyTimer(); } catch (e) { console.warn('timer', e); }
 
   renderCalendar(plan);
 
