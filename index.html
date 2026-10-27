@@ -5962,7 +5962,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 120, built: '2026-10-27T17:07:05Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 121, built: '2026-10-27T17:19:29Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -11520,7 +11520,14 @@ Object.assign(AK, {"1s_b3cX5zMsMKSvnEzdfltAxt-97YwYO5": "#FirstAid::15_Repro::02
   var lastPort = 0;
   function one(p, path, ms) { var c = new AbortController(), to = setTimeout(function () { c.abort(); }, ms); return fetch('http://127.0.0.1:' + p + path, { signal: c.signal }).then(function (r) { clearTimeout(to); return r; }, function (e) { clearTimeout(to); throw e; }); }
   /* ask the add-on: try the port that worked last time first, otherwise both ports at once */
-  async function hit(path, ms) {
+  /* remember once the add-on has answered, so a closed Anki is never mistaken for a missing add-on */
+  var SEEN = 'tracker_anki_seen_v1';
+  function addonSeen() { return !!(g(SEEN) || (g('tracker_anki_cache_v1') || '').length > 4 || g('tracker_anki_sync_v1') || g('tracker_anki_hist_v1')); }
+  function markSeen() { if (!g(SEEN)) s(SEEN, String(Date.now())); else if (Date.now() - (+g(SEEN) || 0) > 864e5) s(SEEN, String(Date.now())); }
+  function seenWhen() { var t = +g(SEEN); if (!t) return ''; try { return new Date(t).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); } catch (e) { return ''; } }
+  window.lvAnkiMarkSetUp = function () { s(SEEN, String(Date.now())); s('tracker_anki_chip_v1', String(Date.now())); var o = document.getElementById('lv-akm'); if (o) o.remove(); var c = document.getElementById('lv-akchip'); if (c) c.remove(); toast('Got it — I\u2019ll remember your add-on is set up \u2705', 3000); try { soonStatus(50); } catch (e) {} };
+  async function hit(path, ms) { var r = await hit0(path, ms); if (r) markSeen(); return r; }
+  async function hit0(path, ms) {
     if (lastPort) { try { var r0 = await one(lastPort, path, ms); if (r0.status !== 0) return r0; } catch (e) {} lastPort = 0; }
     return new Promise(function (res) {
       var n = 0; PORTS.forEach(function (p) { one(p, path, ms).then(function (r) { lastPort = p; res(r); }, function () { if (++n === PORTS.length) res(null); }); });
@@ -11549,15 +11556,29 @@ Object.assign(AK, {"1s_b3cX5zMsMKSvnEzdfltAxt-97YwYO5": "#FirstAid::15_Repro::02
     copy(q);
     var old = document.getElementById('lv-akm'); if (old) old.remove();
     var o = document.createElement('div'); o.id = 'lv-akm';
+    if (addonSeen()) {
+      o.innerHTML = '<div class="lv-card"><h3>\ud83e\udde0 Anki isn\u2019t open</h3>' +
+        '<div style="color:var(--text-dim);font-size:.92rem;line-height:1.5">Your add-on is set up \u2705' + (seenWhen() ? ' (last connected ' + seenWhen() + ')' : '') + ' \u2014 Anki just needs to be running. Open Anki, then tap <b>Try again</b>. I also copied this video\u2019s card search in case you\u2019d rather paste it into Browse.</div>' +
+        '<code style="display:block;background:rgba(127,127,127,.15);border-radius:10px;padding:10px 12px;font-size:.8rem;word-break:break-all;margin:8px 0;color:var(--text);font-family:ui-monospace,Menlo,Consolas,monospace">' + esc(q) + '</code>' +
+        '<div class="lv-row"><button class="lv-btn pri" data-a="retry">Try again</button><button class="lv-btn" data-a="x">Close</button></div>' +
+        '<div style="margin-top:10px;font-size:.8rem;color:var(--text-faint)">Anki is open but this keeps showing? <a href="#" data-a="wiz" style="color:var(--path);font-weight:700">Re-check the add-on</a></div></div>';
+      document.body.appendChild(o);
+      o.addEventListener('click', function (e) {
+        if (e.target === o || e.target.closest('[data-a=x]')) o.remove();
+        else if (e.target.closest('[data-a=wiz]')) { e.preventDefault(); window.lvAnkiSetup('new'); }
+        else if (e.target.closest('[data-a=retry]')) { send(q).then(function (ok) { if (ok) { o.remove(); toast('Opened in Anki \ud83e\udde0', 2200); } else toast('Still can\u2019t reach Anki \u2014 is it open?', 2600); }); }
+      });
+      return;
+    }
     o.innerHTML = '<div class="lv-card"><h3>\ud83e\udde0 Search copied for Anki</h3>' +
       '<div style="color:var(--text-dim);font-size:.92rem;line-height:1.5">The Anki add-on isn\u2019t connected, so I copied this video\u2019s card search to your clipboard.</div>' +
       '<ol><li>Open <b>Anki</b> and click <b>Browse</b></li><li>Click the search bar, paste (<b>Ctrl/\u2318 + V</b>) and press <b>Enter</b></li></ol>' +
       '<code style="display:block;background:rgba(127,127,127,.15);border-radius:10px;padding:10px 12px;font-size:.8rem;word-break:break-all;margin:8px 0;color:var(--text);font-family:ui-monospace,Menlo,Consolas,monospace">' + esc(q) + '</code>' +
-      '<div class="lv-row"><button class="lv-btn pri" data-a="wiz">\ud83e\udde0 Set up the add-on (1 min)</button><button class="lv-btn" data-a="copy">Copy again</button><button class="lv-btn" data-a="x">Close</button></div>' +
+      '<div class="lv-row"><button class="lv-btn pri" data-a="wiz">\ud83e\udde0 Set up the add-on (1 min)</button><button class="lv-btn" data-a="copy">Copy again</button><button class="lv-btn" data-a="set">It\u2019s already set up</button><button class="lv-btn" data-a="x">Close</button></div>' +
       '<details style="margin-top:12px;font-size:.9rem"><summary style="cursor:pointer;font-weight:700">Want it to open Anki automatically? (optional)</summary><ol style="color:var(--text-dim)"><li><a href="' + ADDON_FILE + '" download style="color:var(--path);font-weight:700">Download the add-on</a></li><li>In Anki: <b>Tools \u2192 Add-ons \u2192 Install from file\u2026</b>, pick the file, then restart Anki and keep it open</li></ol></details>' +
       '<div style="margin-top:10px;font-size:.8rem;color:var(--text-faint)">The cards come from the AnKing Step deck, found by each video\u2019s tag.</div></div>';
     document.body.appendChild(o);
-    o.addEventListener('click', function (e) { if (e.target === o || e.target.closest('[data-a=x]')) o.remove(); else if (e.target.closest('[data-a=wiz]')) window.lvAnkiSetup('new'); else if (e.target.closest('[data-a=copy]')) copy(q).then(function () { toast('Copied'); }); });
+    o.addEventListener('click', function (e) { if (e.target === o || e.target.closest('[data-a=x]')) o.remove(); else if (e.target.closest('[data-a=wiz]')) window.lvAnkiSetup('new'); else if (e.target.closest('[data-a=set]')) window.lvAnkiMarkSetUp(); else if (e.target.closest('[data-a=copy]')) copy(q).then(function () { toast('Copied'); }); });
   }
   window.lvAnkiHas = function (id) { return !!AK[id]; };
   window.lvAnki = async function (id) {
@@ -11580,7 +11601,7 @@ Object.assign(AK, {"1s_b3cX5zMsMKSvnEzdfltAxt-97YwYO5": "#FirstAid::15_Repro::02
     var el = document.getElementById('lv-anki-status'); if (el) el.textContent = 'Checking…';
     var ok = false, ver = 0;
     var r = await hit('/ping', 2000); ok = !!(r && r.ok); if (ok) { try { ver = (await r.json()).v || 0; } catch (e) {} }
-    if (el) el.innerHTML = !ok ? '⚠️ Couldn’t reach the add-on. Open Anki and make sure the add-on is installed.' : (ver < 2 ? '✅ Connected, but this is the older add-on. <a href="' + ADDON_FILE + '" download style="color:var(--path);font-weight:700">Download the new one</a> to see which cards are suspended, new or in your reviews (Anki: Tools → Add-ons → Install from file, then restart Anki).' : '✅ Connected. The add-on is running in Anki.');
+    if (el) el.innerHTML = !ok ? (addonSeen() ? '💤 Anki isn’t open right now. Your add-on is set up ✅' + (seenWhen() ? ' (last connected ' + seenWhen() + ')' : '') + ' — open Anki and test again.' : '⚠️ Couldn’t reach the add-on. Open Anki and make sure the add-on is installed. <a href="#" onclick="lvAnkiMarkSetUp();return false" style="color:var(--path);font-weight:700">It’s already set up</a>') : (ver < 2 ? '✅ Connected, but this is the older add-on. <a href="' + ADDON_FILE + '" download style="color:var(--path);font-weight:700">Download the new one</a> to see which cards are suspended, new or in your reviews (Anki: Tools → Add-ons → Install from file, then restart Anki).' : '✅ Connected. The add-on is running in Anki.');
   };
   apply();
   document.addEventListener('DOMContentLoaded', function () { apply(); var f = document.getElementById('lv-set-flags'); if (f) renderFlagPicker(f); });
@@ -11668,7 +11689,7 @@ Object.assign(AK, {"1s_b3cX5zMsMKSvnEzdfltAxt-97YwYO5": "#FirstAid::15_Repro::02
       statBusy = false;
       if (window.__lvAkDirty) { window.__lvAkDirty = false; setTimeout(function () { try { if (typeof renderPlanner === 'function' && document.getElementById('planner-calendar')) renderPlanner(); } catch (e) {} }, 60); }
       if (failed === 'old') pills.forEach(function (e) { if (/\bload\b|\bstale\b/.test(e.className)) { e.className = 'lv-aks on off fix'; e.dataset.fix = 'update'; e.textContent = 'Update the add-on (tap)'; e.title = 'Your Anki add-on is the old version, so it can only count green cards. Tap for the 1-minute update guide.'; } });
-      else if (failed) pills.forEach(function (e) { if (/\bload\b|\bstale\b/.test(e.className)) { e.className = 'lv-aks on off fix'; e.dataset.fix = 'new'; e.textContent = 'Anki not responding (tap)'; e.title = 'Couldn’t reach Anki. Make sure Anki is open and the add-on is installed.'; } });
+      else if (failed) pills.forEach(function (e) { if (/\bload\b|\bstale\b/.test(e.className)) { e.className = 'lv-aks on off fix'; if (addonSeen()) { e.dataset.fix = 'retry'; e.textContent = 'Anki closed (tap to retry)'; e.title = 'Anki isn’t open. Your add-on is set up — open Anki and tap to refresh.'; } else { e.dataset.fix = 'new'; e.textContent = 'Anki not responding (tap)'; e.title = 'Couldn’t reach Anki. Make sure Anki is open and the add-on is installed.'; } } });
     }
   }
   /* live count of cards (with your chosen flag colours) for a video — used by the Planner's cards/day balancing */
@@ -11790,7 +11811,7 @@ Object.assign(AK, {"1s_b3cX5zMsMKSvnEzdfltAxt-97YwYO5": "#FirstAid::15_Repro::02
     var fw = flagWords(), t = parseInt(jget(YK)[panel.id], 10) || 0, tm = t ? niceTime(t) : '';
     var msg = state === 'off' ? '📊 Showing every card. Turn on the Anki buttons in Settings to see your progress.'
       : state === 'wait' ? '⏳ Asking Anki for ' + (fw ? 'your <b>' + fw + '</b>-flagged cards' : 'your cards') + '…'
-      : state === 'err' ? '⚠️ Couldn’t reach Anki. Open Anki (with the Tracker add-on) and press Refresh.' + (tm ? ' Showing numbers saved at ' + tm + '.' : '')
+      : state === 'err' ? (addonSeen() ? '💤 Anki isn’t open. Your add-on is set up ✅ — open Anki and press Refresh.' : '⚠️ Couldn’t reach Anki. Open Anki (with the Tracker add-on) and press Refresh.') + (tm ? ' Showing numbers saved at ' + tm + '.' : '')
       : '✅ Live from Anki · counting only your <b>' + (fw || 'every') + '</b>' + (fw ? '-flagged' : '') + ' cards' + (tm ? ' · synced ' + tm : '');
     var warn = state === 'ok' && !T.dueKnown ? '<span class="akd-chip warn" title="Your Anki add-on is the old version. Download the new one in Settings → Anki button.">Update the add-on for due-today numbers</span>' : '';
     var sort = g(SK) === 'left' ? 'left' : 'order';
@@ -12061,6 +12082,7 @@ Object.assign(AK, {"1s_b3cX5zMsMKSvnEzdfltAxt-97YwYO5": "#FirstAid::15_Repro::02
     if (!document.documentElement.classList.contains('anki-on') || document.getElementById('lv-wiz') || document.getElementById('lv-akchip')) return;
     var t = +g(CKEY) || 0; if (Date.now() - t < 3 * 864e5) return;
     var c = await pingOnce(); if (c.ok && c.v >= 3) return;
+    if (!c.ok && addonSeen()) return;
     if (busy()) return;
     var el = document.createElement('div'); el.id = 'lv-akchip';
     el.innerHTML = '<span>' + (c.ok ? '🧠 New Anki add-on available' : '🧠 Anki add-on not connected') + '</span><button class="go" data-c="go">' + (c.ok ? 'Update' : 'Set up') + ' (1 min)</button><button class="no" data-c="no" aria-label="Dismiss">×</button>';
@@ -12068,7 +12090,7 @@ Object.assign(AK, {"1s_b3cX5zMsMKSvnEzdfltAxt-97YwYO5": "#FirstAid::15_Repro::02
     document.body.appendChild(el);
   }
   window.addEventListener('load', function () { setTimeout(chipCheck, 5000); });
-  document.addEventListener('click', function (e) { var p = e.target.closest && e.target.closest('.lv-aks.fix'); if (p) window.lvAnkiSetup(p.dataset.fix || 'new'); });
+  document.addEventListener('click', function (e) { var p = e.target.closest && e.target.closest('.lv-aks.fix'); if (p) { if (p.dataset.fix === 'retry') { p.textContent = 'checking…'; soonStatus(50); } else window.lvAnkiSetup(p.dataset.fix || 'new'); } });
 
   /* one-time "Do you use Anki?" prompt for everyone after this update */
   var PKEY = 'tracker_anki_prompt_v1';
@@ -12117,6 +12139,7 @@ Object.assign(AK, {"1s_b3cX5zMsMKSvnEzdfltAxt-97YwYO5": "#FirstAid::15_Repro::02
     clearInterval(st2);
     var c = await pingOnce();
     if (c.ok && c.v >= 3) { s(SKEY, '1'); return; }
+    if (!c.ok && addonSeen()) { s(SKEY, '1'); return; }
     if (busy()) { stries = 0; st2 = setInterval(setupTick, 2500); return; }
     s(SKEY, '1'); s(KEY, '1'); apply();
     window.lvAnkiSetup(c.ok ? 'update' : 'new');
