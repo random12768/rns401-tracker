@@ -4003,6 +4003,8 @@ tr.vid-group > td { padding-top: 2px !important; padding-bottom: 6px !important;
 </div>
 
 <div class="module-sub-panel active" id="sub-ers-path">
+<div class="summary msk">📘 ERS403 Pathology study guide (118 pages). <a href="ers403-pathology-guide.pdf" target="_blank" rel="noopener" class="slides-link">Open in a new tab ↗</a></div>
+<details style="margin:8px 0"><summary style="cursor:pointer;font-weight:700">Show the guide here</summary><iframe class="ghs2-embed" src="ers403-pathology-guide.pdf" title="ERS403 Pathology Study Guide" loading="lazy"></iframe></details>
 <div class="controls">
   <input type="text" class="search-box" placeholder="🔍 Search pathology topics..." oninput="filterTable('ers-path-table', this.value)">
   <button onclick="toggleGapsOnly('ers-path-table')">Show gaps only</button>
@@ -5971,7 +5973,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 130, built: '2026-10-29T17:39:57Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 131, built: '2026-10-29T22:43:15Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
