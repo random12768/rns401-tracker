@@ -448,6 +448,9 @@ if(!(t==='light'||t==='dark')&&window.matchMedia){window.matchMedia('(prefers-co
   .chip-micro { background: var(--micro); }
   .chip-pharm { background: var(--pharm); }
   .plan-item .title { flex: 1; font-size: 0.9em; }
+  .plan-ord { display: inline-flex; gap: 2px; margin: 0 4px; }
+  .plan-ord button { background: rgba(127,127,127,.18); color: inherit; border: 0; border-radius: 6px; width: 24px; height: 24px; cursor: pointer; font-size: .8em; line-height: 1; }
+  .plan-ord button:hover { background: rgba(79,140,255,.45); }
   .plan-shaky { background: none; border: 0; cursor: pointer; opacity: .35; font-size: 1em; padding: 2px 6px; color: inherit; }
   .plan-shaky:hover, .plan-shaky.on { opacity: 1; }
   .plan-shaky-ok { background: var(--planner, #4f8cff); color: #fff; border: 0; border-radius: 8px; padding: 6px 12px; font-weight: 700; font-size: .85em; cursor: pointer; }
@@ -5968,7 +5971,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 127, built: '2026-10-29T02:50:30Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 128, built: '2026-10-29T16:36:14Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -9058,6 +9061,14 @@ function computePlan() {
     };
   });
 
+  /* your own order within each day (set with the arrows / dragging) sticks, whatever the auto-planner does around it */
+  { const _ord = lsJson(pkey('tracker_day_order_v1'), {});
+    Object.keys(assignments).forEach(d => {
+      const o = _ord[d]; if (!o || !o.length || !assignments[d].items.length) return;
+      const idx = id => { const k = o.indexOf(id); return k < 0 ? 1e9 : k; };
+      assignments[d].items = assignments[d].items.map((it, i) => [it, i]).sort((a, b) => (idx(a[0].id) - idx(b[0].id)) || (a[1] - b[1])).map(x => x[0]);
+    }); }
+
   return {
     settings, dp, assignments, reviewSessions, autoPool, manualItems, reviewOnlyPool, completedPool, bySubject,
     stats: {
@@ -9145,6 +9156,26 @@ window.renderContinueCard = renderContinueCard;
 document.addEventListener('DOMContentLoaded', function () { setTimeout(renderContinueCard, 600); });
 window.addEventListener('load', function () { setTimeout(renderContinueCard, 1500); });
 
+/* --- order within a day --- */
+function dayOrderGet() { return lsJson(pkey('tracker_day_order_v1'), {}); }
+function dayOrderSave(o) { try { localStorage.setItem(pkey('tracker_day_order_v1'), JSON.stringify(o)); } catch (e) {} }
+function dayIdsNow(dateStr) { const plan = computePlan(), b = plan.assignments[dateStr]; if (!b) return []; const dn = new Set(doneItemsOn(plan, dateStr).map(d => d.it.id)); return b.items.filter(i => !dn.has(i.id)).map(i => i.id); }
+function afterOrderChange() { const ov = document.getElementById('modal-overlay'); const open = ov && ov.style.display === 'flex' ? ov.dataset.date : null; renderPlanner(); if (open) openDayModal(open); }
+function moveInDay(id, dateStr, dir) {
+  const ids = dayIdsNow(dateStr), k = ids.indexOf(id); if (k < 0) return;
+  ids.splice(k, 1); ids.splice(dir === 'top' ? 0 : Math.max(0, Math.min(ids.length, k + dir)), 0, id);
+  const o = dayOrderGet(); o[dateStr] = ids; dayOrderSave(o); afterOrderChange();
+}
+function dropOnPill(ev, targetId, dateStr) {
+  ev.preventDefault(); ev.stopPropagation(); try { ev.currentTarget.classList.remove('drag-over'); } catch (e) {}
+  const dragged = ev.dataTransfer.getData('text/plain'); if (!dragged || dragged === targetId) return;
+  let ids = dayIdsNow(dateStr);
+  if (ids.indexOf(dragged) < 0) { moveItemToDate(dragged, dateStr); ids = dayIdsNow(dateStr); }
+  const di = ids.indexOf(dragged); if (di >= 0) ids.splice(di, 1);
+  const ti = ids.indexOf(targetId); ids.splice(ti < 0 ? ids.length : ti, 0, dragged);
+  const o = dayOrderGet(); o[dateStr] = ids; dayOrderSave(o); afterOrderChange();
+}
+function ordBtns(id, dateStr) { return dateStr ? `<span class="plan-ord"><button onclick="event.stopPropagation();moveInDay('${id}','${dateStr}','top')" title="Do this one first today">⤒</button><button onclick="event.stopPropagation();moveInDay('${id}','${dateStr}',-1)" title="Move earlier">▲</button><button onclick="event.stopPropagation();moveInDay('${id}','${dateStr}',1)" title="Move later">▼</button></span>` : ''; }
 function renderPlanItemRow(it, dateStr) {
   const overflowTag = it.overflow ? ' <span style="color:#e07a7a; font-size:0.68em;">⚠ overflow</span>' : '';
   const manualTag = it.isManual ? ' <span class="supp-tag" style="border-color:var(--planner); color:#9fd0ff;">manually scheduled</span>' : '';
@@ -9157,6 +9188,7 @@ function renderPlanItemRow(it, dateStr) {
     <span class="title plan-vid" onclick="openPlanItemVideo('${it.id}')" title="Click to open this video" style="cursor:pointer">${it.isSupp ? it.title + ' <span class="supp-tag">no video — slides/First Aid</span>' : it.video + ` <span class="sub-video" style="opacity:.65">· ${it.title}</span>`}${manualTag}${overflowTag}${bufferBadge(it)}</span>
     <span class="mins">${it.min}m${it.cards ? ' · 🃏' + it.cards : ''}</span>
     ${shakyBtn(it.id)}
+    ${ordBtns(it.id, dateStr)}
     ${moveInput}
     ${it.isManual ? `<button style="background:none;border:none;color:#e07a7a;cursor:pointer;font-size:0.9em;" onclick="removeManualOverride('${it.id}')" title="Remove manual schedule">✕</button>` : ''}
   </div>`;
@@ -9194,15 +9226,16 @@ function renderDonePill(d) {
   const it = d.it, label = it.video || it.title;
   return `<div class="cal-item chip-${it.subject} cal-done-pill" style="opacity:.6;text-decoration:line-through" title="${escAttr(label)} — ticked off ${escAttr(new Date(d.iso).toLocaleString())}">✓ ${escAttr(label)} <span style="opacity:0.8;font-weight:500;text-decoration:none;display:inline-block">(${fmtDoneStamp(d.iso).replace(/^.*?, /, '')})</span></div>`;
 }
-function renderCalPill(it) {
+function renderCalPill(it, dateStr) {
   const cls = ['cal-item', 'chip-' + it.subject];
   if (it.bufferStatus === 'behind') cls.push('behind');
   else if (it.bufferStatus === 'tight') cls.push('tight');
   if (it.isManual) cls.push('manual');
   const draggable = !it.checked;
   const dragAttrs = draggable ? `draggable="true" ondragstart="event.stopPropagation(); dragStart(event,'${it.id}')"` : '';
+  const dropAttrs = dateStr ? `ondragover="event.preventDefault(); event.stopPropagation();" ondrop="dropOnPill(event,'${it.id}','${dateStr}')"` : '';
   const label = it.video || it.title;
-  return `<div class="${cls.join(' ')}" ${dragAttrs} onclick="openPlanItemVideo('${it.id}')" style="cursor:pointer" title="${escAttr(label)} (${it.min}m${it.cards ? ', ' + it.cards + ' cards' : ''}) — click to open the video">${escAttr(label)} <span style="opacity:0.7;font-weight:500;">(${it.min}m${it.cards ? ' · ' + it.cards + '🃏' : ''})</span></div>`;
+  return `<div class="${cls.join(' ')}" ${dragAttrs} ${dropAttrs} onclick="openPlanItemVideo('${it.id}')" style="cursor:pointer" title="${escAttr(label)} (${it.min}m${it.cards ? ', ' + it.cards + ' cards' : ''}) — click to open · drag onto another video to put it before that one">${escAttr(label)} <span style="opacity:0.7;font-weight:500;">(${it.min}m${it.cards ? ' · ' + it.cards + '🃏' : ''})</span></div>`;
 }
 
 function renderCalendarDayCell(dateStr, plan) {
@@ -9243,7 +9276,7 @@ function renderCalendarDayCell(dateStr, plan) {
     ${bucket && bucket.totalMin ? `<div class="cal-mins" title="Minutes of video, and 🃏 = the Anki cards that come with these videos (cards to learn, not reviews you did)">${bucket.totalMin}m${(() => { const c = (bucket.preCards || 0) + bucket.items.reduce((t, i) => t + (i.cards || 0), 0); return c ? ' · ' + c + '🃏' : ''; })()}</div>` : ''}
     ${bucket && bucket.doneToday && bucket.doneToday.length ? `<div class="cal-done-today" style="font-size:11px;color:#15803d;font-weight:600;margin:2px 0" title="${escAttr(bucket.doneToday.map(i => i.title).join(', '))}">✓ ${bucket.doneToday.length} done today (${bucket.preMin}m)</div>` : ''}
     ${schedTagsHtml}
-    <div class="cal-items">${doneOnDay.map(renderDonePill).join('')}${items.filter(i => !doneIdsOnDay.has(i.id)).map(renderCalPill).join('')}${rev.length ? `<div class="cal-item review-pill">${rev.length} review</div>` : ''}${shakyCalPill(dateStr)}</div>
+    <div class="cal-items">${doneOnDay.map(renderDonePill).join('')}${items.filter(i => !doneIdsOnDay.has(i.id)).map(i => renderCalPill(i, dateStr)).join('')}${rev.length ? `<div class="cal-item review-pill">${rev.length} review</div>` : ''}${shakyCalPill(dateStr)}</div>
     ${classIds.length ? `<div class="cal-class-tag">🏫 ${classIds.length} in class</div>` : ''}
   </div>`;
 }
