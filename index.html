@@ -5973,7 +5973,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 131, built: '2026-10-29T22:43:15Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 132, built: '2026-10-29T22:56:55Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -8768,6 +8768,7 @@ function computePlan() {
 
   items.forEach(it => {
     const ov = overrides[it.id] || (it.lecId && it.lecId !== it.id ? overrides[it.lecId] : null);
+    if (ov && it.checked && !it.reviewOnly) return; // already done: it lives in completedPool only, otherwise its minutes and cards are counted twice on its day
     if (ov) {
       manualItems.push(Object.assign({}, it, {
         min: (ov.min && ov.min > 0) ? ov.min : it.min,
