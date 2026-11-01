@@ -3218,7 +3218,7 @@ tr.vid-group > td { padding-top: 2px !important; padding-bottom: 6px !important;
 <div id="planner-today"></div>
 
 <h3 style="margin-bottom:8px; color:#ccc; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-  Calendar — today through exam day
+  Calendar — this module, start to exam day
   <button onclick="jumpToToday()" style="background:#333;color:#ccc;border:1px solid #555;border-radius:6px;padding:4px 10px;font-size:0.75em;cursor:pointer;">📍 Jump to today</button>
 </h3>
 <div class="cal-legend">
@@ -5973,7 +5973,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 132, built: '2026-10-29T22:56:55Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 133, built: '2026-11-01T17:57:16Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -9288,7 +9288,9 @@ function renderCalendar(plan) {
   const wrap = document.getElementById('planner-calendar');
   if (!wrap) return;
   const { dp } = plan;
-  const rangeStart = startOfWeek(dp.today);
+  // Start at the first week of THIS module (not this week) so past days, with what was done on them, stay visible.
+  let rangeStart = startOfWeek(dp.today);
+  try { const ms = parseDateStr(plannerModule().mod.start); if (ms && startOfWeek(ms) < rangeStart) rangeStart = startOfWeek(ms); } catch (e) {}
   const latestKeyDate = semesterExamEvents().reduce((max, e) => e.date > max ? e.date : max, fmtDate(dp.examDate));
   const rangeEndAnchor = parseDateStr(latestKeyDate) > dp.examDate ? parseDateStr(latestKeyDate) : dp.examDate;
   const rangeEnd = endOfWeek(rangeEndAnchor);
