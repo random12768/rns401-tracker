@@ -23,7 +23,8 @@ body{-webkit-font-smoothing:antialiased;letter-spacing:-.005em}
 
 @media (min-width:900px){
   html{zoom:1!important;--zf:1!important}
-  html body #app-content{display:block!important;padding:0 28px 60px 264px;max-width:none}
+  html body #app-content:not([style*="none"]){display:block!important}
+  html body #app-content{padding:0 28px 60px 264px;max-width:none}
   html body #app-content>*{grid-column:auto}
   /* sidebar */
   html body #app-content>.tabbar,html body #app-content.wide-tab-active>.tabbar{

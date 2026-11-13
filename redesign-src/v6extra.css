@@ -1,0 +1,67 @@
+/* ===== v6 layer: integration with the real tracker ===== */
+#w6{position:fixed;inset:0;z-index:20;overflow:hidden}
+html.w6-on body{overflow:hidden}
+/* the real tracker keeps running underneath, invisible (its pop-ups still show) */
+html.w6-on #app-content{position:fixed!important;inset:0!important;visibility:hidden;overflow:hidden!important;z-index:100;padding:0!important;margin:0!important}
+html.w6-on #app-content .md-modal-overlay,html.w6-on #app-content .modal-overlay,html.w6-on #app-content [id$="-overlay"]{visibility:visible}
+html.w6-on #app-content>.tabbar,html.w6-on #app-content>.page-head,html.w6-on #app-content>#exam-countdown,html.w6-on #app-content>#sync-bar,html.w6-on #boot-loader{display:none!important}
+/* pages v6 doesn't redesign (schedule, admin, Q bank, notes…) show inside the new shell */
+html.w6-on.w6-legacy body{overflow:auto}
+html.w6-on.w6-legacy #app-content{position:relative!important;inset:auto!important;visibility:visible;overflow:visible!important;z-index:auto;display:block!important;padding:86px 34px 70px 266px!important;max-width:none!important;min-height:100vh}
+html.w6-legacy #w6{pointer-events:none;background:transparent}
+html.w6-legacy #w6 .w6-app,html.w6-legacy #w6 .w6-main{background:transparent}
+html.w6-legacy #w6 .w6-scroll,html.w6-legacy #w6 .w6-amb{display:none}
+html.w6-legacy #w6 .w6-main{height:auto}
+html.w6-legacy #w6 .w6-side,html.w6-legacy #w6 .w6-top,html.w6-legacy #w6 .w6-pal,html.w6-legacy #w6 .w6-drawer,html.w6-legacy #w6 .w6-toast,html.w6-legacy #w6 .w6-scrim.w6-on{pointer-events:auto}
+html.w6-legacy #w6::after{display:none}
+html.w6-legacy #w6 .w6-side{height:100vh}
+html.w6-legacy #w6 .w6-top{position:relative}
+/* sidebar extras */
+#w6 .w6-brand span em{font-style:normal}
+#w6 .w6-sync{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--side-dim);flex:1;min-width:0;text-align:left;padding:0}
+#w6 .w6-sync span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#w6 .w6-sync:hover span{color:#f7e4a4}
+#w6 .w6-sync.w6-off i{background:#f2b84b;animation:none;box-shadow:none}
+#w6 .w6-classic{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--side-dim);padding:4px 2px;opacity:.8}
+#w6 .w6-classic:hover{color:#f7e4a4;opacity:1}
+#w6 .w6-classic svg{width:13px;height:13px}
+#w6 .w6-nav .w6-mod-pct:empty{display:none}
+/* lecture cards: real controls cloned from the tracker */
+#w6 .w6-sec-title em{font-style:normal;letter-spacing:.06em;text-transform:none;color:var(--faint);font-weight:600;font-size:11px;margin-left:-4px}
+#w6 .w6-lec.w6-open{overflow:visible}
+#w6 .w6-lec.w6-open .w6-lec-b>div{overflow:visible}
+#w6 .w6-lec-h{cursor:pointer}
+#w6 .w6-badges{display:inline-flex;gap:6px;flex-wrap:wrap}
+#w6 .w6-badges:empty{display:none}
+#w6 .w6-badges a,#w6 .w6x-acts a,#w6 .w6x-acts button.lv-ak{display:inline-flex!important;align-items:center;gap:4px;font:600 11.5px/1.2 Inter,system-ui,sans-serif!important;padding:3px 9px!important;margin:0!important;border-radius:999px!important;background:var(--chip)!important;border:1px solid var(--card-bd)!important;color:var(--dim)!important;text-decoration:none!important;white-space:nowrap;box-shadow:none!important;transition:border-color .18s,color .18s,transform .18s}
+#w6 .w6-badges a:hover,#w6 .w6x-acts a:hover,#w6 .w6x-acts button.lv-ak:hover{border-color:var(--gold)!important;color:var(--gold-ink)!important;transform:translateY(-1px)}
+#w6 .w6-acts2{display:none;flex:none}
+#w6 .w6-vid:hover .w6-acts2,#w6 .w6-novid .w6-acts2{display:flex;animation:w6k-rise .2s var(--ease)}
+#w6 .w6x-acts{position:relative;display:flex;align-items:center;gap:6px;background:none!important;border:0!important;padding:0!important;margin:0!important;box-shadow:none!important}
+#w6 .w6x-acts .sv-line{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;margin:0;padding:0;background:none;border:0}
+#w6 .w6x-acts .sk-group{display:inline-flex;gap:6px;align-items:center}
+#w6 .w6x-acts .sv-min,#w6 .w6x-acts .sv-src,#w6 .w6x-acts .sk-title,#w6 .w6x-acts .sv-notes:empty{display:none!important}
+#w6 .w6x-acts .lv-aks{font-size:11px;color:var(--faint)}
+html:not(.anki-on) #w6 .w6x-acts button.lv-ak{display:none!important}
+#w6 .w6x-acts .px-menu,#w6 .w6x-acts .sk-menu,#w6 .w6x-acts .pa-menu{z-index:30}
+#w6 .w6-novid{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+#w6 .w6-lec-h .w6-cb{flex:none}
+#w6 .w6-chip small.w6-ext,#w6 .w6-tabs small.w6-ext{opacity:.6}
+#w6 .w6-chip[data-classic]{margin-left:6px}
+#w6 .w6-linkish{color:var(--gold-ink);font-weight:700;font-size:12.5px;padding:0;text-decoration:underline;text-underline-offset:2px}
+#w6 .w6-dhint{color:var(--dim);font-size:13.5px;margin:0}
+#w6 .w6-drawer .w6-btn.w6-ghost{margin-top:auto}
+#w6 .w6-drawer .w6-btn.w6-ghost+.w6-btn{margin-top:0}
+#w6 .w6-empty .w6-btn{margin-top:12px}
+#w6 .w6-mt{align-items:center}
+#w6 .w6-q .w6-t{font-size:15px}
+#w6 .w6-tabs button small{white-space:nowrap}
+#w6 .w6-tabs{max-width:100%;overflow-x:auto;scrollbar-width:none}
+#w6 .w6-toolbar{flex-wrap:wrap}
+#w6 .w6-chips{flex-wrap:wrap}
+/* button to return from the classic layout */
+#w6-back{position:fixed;right:18px;bottom:18px;z-index:9000;padding:9px 16px;border-radius:999px;border:1px solid rgba(230,191,98,.5);background:linear-gradient(135deg,#f7e4a4,#c9962f);color:#1a1305;font:700 13px Inter,system-ui,sans-serif;cursor:pointer;box-shadow:0 10px 24px -12px #c9962f}
+#w6 h1,#w6 h2,#w6 h3,#w6 h4,#w6 h6{border:0!important;padding-bottom:0;text-shadow:none}
+#w6 h1::after,#w6 h2::after{display:none!important}
+#w6 .w6-cal-h,#w6 .w6-cal-g{grid-template-columns:repeat(7,minmax(0,1fr))!important}
+#w6 .w6-ev b{hyphens:manual;-webkit-hyphens:manual;overflow-wrap:anywhere;word-break:normal}
