@@ -1,0 +1,121 @@
+/* ===== REDESIGN SKIN (new.html only) — black + gold, sidebar shell, calm motion ===== */
+html[data-theme="dark"]{
+  --bg:#09090b; --bg-2:#0e0e12;
+  --surface:rgba(255,248,230,.035); --surface-2:rgba(255,248,230,.06); --surface-3:rgba(255,248,230,.10);
+  --border:rgba(255,236,190,.13); --border-soft:rgba(255,236,190,.07);
+  --text:#f4efe3; --text-dim:#b0a893; --text-faint:#9a9381;
+  --gold:#e0b84a; --gold-2:#f3d584; --gold-ink:#1a1405;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 18px 44px -22px rgba(0,0,0,.85);
+  --radius:14px; --radius-sm:9px;
+}
+html[data-theme="light"]{
+  --bg:#f5f1e8; --bg-2:#fffdf8;
+  --surface:#fffdf8; --surface-2:rgba(60,45,10,.045); --surface-3:rgba(60,45,10,.09);
+  --border:rgba(70,52,10,.16); --border-soft:rgba(70,52,10,.09);
+  --text:#1c1810; --text-dim:#5b5342; --text-faint:#6b634f;
+  --gold:#a77c10; --gold-2:#c79a22; --gold-ink:#fffaf0;
+  --shadow:0 1px 2px rgba(60,45,10,.08),0 14px 34px -18px rgba(60,45,10,.22);
+  --radius:14px; --radius-sm:9px;
+}
+html[data-theme="dark"] body{background:#09090b;background-image:radial-gradient(ellipse 70% 40% at 80% -8%,rgba(224,184,74,.07),transparent 60%),radial-gradient(ellipse 60% 40% at 0% 100%,rgba(224,184,74,.04),transparent 60%)}
+html[data-theme="light"] body{background:#f5f1e8;background-image:radial-gradient(ellipse 70% 40% at 80% -8%,rgba(199,154,34,.10),transparent 60%)}
+body{-webkit-font-smoothing:antialiased;letter-spacing:-.005em}
+
+@media (min-width:900px){
+  html{zoom:1!important;--zf:1!important}
+  html body #app-content{display:block!important;padding:0 28px 60px 264px;max-width:none}
+  html body #app-content>*{grid-column:auto}
+  /* sidebar */
+  html body #app-content>.tabbar,html body #app-content.wide-tab-active>.tabbar{
+    position:fixed;left:0;top:0;bottom:0;height:100vh;width:236px;margin:0;z-index:40;
+    flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:3px;
+    padding:18px 12px 14px;border-radius:0;border:0;border-right:1px solid var(--border);
+    background:var(--bg-2);box-shadow:none;overflow-y:auto;
+  }
+  html body #app-content>.tabbar .tab-btn,html body #app-content.wide-tab-active>.tabbar .tab-btn{
+    display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;text-align:left;
+    padding:10px 12px;border-radius:10px;font-size:14px;font-weight:600;color:var(--text-dim);
+    position:relative;transition:background .18s,color .18s,transform .18s;
+  }
+  html body #app-content>.tabbar .tab-btn .icon{margin:0;width:18px;height:18px;opacity:.85}
+  html body #app-content>.tabbar .tab-btn:hover{background:var(--surface-2);color:var(--text);transform:translateX(2px)}
+  html body #app-content>.tabbar .tab-btn.active{background:linear-gradient(90deg,rgba(224,184,74,.16),rgba(224,184,74,.04));color:var(--text);box-shadow:none}
+  html[data-theme="light"] body #app-content>.tabbar .tab-btn.active{background:linear-gradient(90deg,rgba(167,124,16,.16),rgba(167,124,16,.03))}
+  html body #app-content>.tabbar .tab-btn.active::before{content:"";position:absolute;left:-12px;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--gold);animation:rd-bar .35s cubic-bezier(.2,.8,.2,1)}
+  html body #app-content>.tabbar .tab-btn.active .icon{color:var(--gold);opacity:1}
+  .rd-brand{display:flex;align-items:center;gap:11px;padding:2px 6px 16px;margin-bottom:8px;border-bottom:1px solid var(--border-soft)}
+  .rd-brand img{width:42px;height:42px;border-radius:50%;box-shadow:0 0 0 1.5px var(--gold),0 6px 18px -6px rgba(224,184,74,.5)}
+  .rd-brand b{display:block;font-size:14.5px;line-height:1.15;color:var(--text);letter-spacing:-.01em}
+  .rd-brand small{display:block;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-top:3px}
+  .rd-lbl{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text-faint);padding:14px 12px 4px}
+  .rd-credit{margin-top:auto;padding:14px 8px 0;border-top:1px solid var(--border-soft);font-size:11.5px;color:var(--text-faint);line-height:1.45}
+  .rd-credit b{color:var(--gold);font-weight:700}
+  /* slim top bar replaces big banner */
+  html body #app-content>.page-head{
+    position:sticky;top:0;z-index:30;margin:0 -28px 0 -28px;padding:12px 28px;min-height:0;
+    display:flex;align-items:center;gap:14px;border:0;border-bottom:1px solid var(--border-soft);border-radius:0;
+    background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:none;
+  }
+  html body #app-content>.page-head::before,html body #app-content>.page-head::after{display:none}
+  html body #app-content>.page-head .wu-seal,html body #app-content>.page-head .wu-sub,html body #app-content>.page-head .wu-eyebrow{display:none}
+  html body #app-content>.page-head .wu-titles{min-width:0}
+  html body #app-content>.page-head h1{font-size:17px;margin:0;font-weight:700;letter-spacing:-.01em;color:var(--text)}
+  html body #app-content>.page-head h1 .icon{display:none}
+  html body .settings-hero{background:var(--surface-2)!important;border:1px solid var(--border)!important;color:var(--text)!important;box-shadow:none!important;padding:7px 12px!important;border-radius:10px!important}
+  html body .settings-hero small{display:none}
+  html body .settings-hero b{font-size:13px}
+  html body .theme-toggle{background:var(--surface-2);border:1px solid var(--border);color:var(--text);border-radius:10px}
+  html body #exam-countdown{margin:14px 0 0;font-size:13px;color:var(--text-dim)}
+  html body #sync-bar{margin:10px 0 18px;padding:7px 12px;font-size:12px;border-radius:10px;background:var(--surface);border:1px solid var(--border-soft);box-shadow:none}
+
+  /* collapsed rail */
+  html.rd-collapsed body #app-content{padding-left:96px}
+  html.rd-collapsed body #app-content>.tabbar,html.rd-collapsed body #app-content.wide-tab-active>.tabbar{width:68px;padding-left:8px;padding-right:8px}
+  html.rd-collapsed body #app-content>.tabbar .tab-btn{font-size:0;justify-content:center;padding:11px 0}
+  html.rd-collapsed body #app-content>.tabbar .tab-btn .icon{width:20px;height:20px}
+  html.rd-collapsed body #app-content>.tabbar .tab-btn.active::before{left:-8px}
+  html.rd-collapsed .rd-brand{justify-content:center;padding-left:0;padding-right:0}
+  html.rd-collapsed .rd-brand div,html.rd-collapsed .rd-lbl,html.rd-collapsed .rd-credit{display:none}
+  html.rd-collapsed .rd-collapse span{display:none}
+  .rd-collapse{margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:8px;border-radius:9px;border:1px solid var(--border-soft);background:transparent;color:var(--text-faint);font-size:12px;font-weight:600;cursor:pointer}
+  .rd-collapse:hover{background:var(--surface-2);color:var(--text)}
+  .rd-collapse svg{width:16px;height:16px;transition:transform .25s}
+  html.rd-collapsed .rd-collapse svg{transform:rotate(180deg)}
+  /* let table cells wrap so lecture tables fit a laptop without sideways scrolling */
+  html body .table-scroll table th,html body .table-scroll table td{white-space:normal!important}
+  html body .table-scroll table td.video-cell{max-width:178px}
+  html body .table-scroll table td.fa-cell{min-width:0}
+}
+
+/* panels: calm entrance */
+.tab-panel.active{animation:rd-in .42s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rd-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes rd-bar{from{transform:scaleY(.2);opacity:0}to{transform:none;opacity:1}}
+
+/* headings & cards */
+html body h1,html body h2{color:var(--text);letter-spacing:-.02em}
+html body .tab-panel>h1,html body .tab-panel>h2:first-child{font-size:26px;border-bottom:1px solid var(--border-soft)!important;padding-bottom:14px}
+html body .tab-panel>h1::after{display:none}
+
+/* sub-tabs (Pathology/Micro/Pharm...) */
+html body .module-subtab-btn{border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);font-weight:600;transition:all .18s}
+html body .module-subtab-btn:hover{background:var(--surface-2);color:var(--text)}
+html body .module-subtab-btn.active{background:var(--gold);color:var(--gold-ink);border-color:var(--gold);box-shadow:0 6px 18px -8px rgba(224,184,74,.7)}
+
+/* tables: quieter header, gold hairlines, readable rows */
+html body table.ghs-table thead th,html body table.path-table thead th,html body table.micro-table thead th,html body table.pharm-table thead th{
+  background:var(--surface-3)!important;color:var(--text)!important;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--gold)!important}
+html body table tbody tr{transition:background .15s}
+html body table tbody tr[data-id]:hover{background:var(--surface-2)}
+html body table tbody tr[data-id].done,html body table tbody tr.done{opacity:.62}
+
+/* buttons / inputs */
+html body button,html body .md-choice-btn{transition:transform .15s,background .15s,border-color .15s,box-shadow .15s}
+html body button:active{transform:scale(.97)}
+html body input[type=text],html body input[type=search],html body input[type=number],html body input[type=date],html body select{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:9px}
+html body input:focus,html body select:focus{outline:2px solid color-mix(in srgb,var(--gold) 55%,transparent);outline-offset:1px;border-color:var(--gold)}
+html body input[type=checkbox]{accent-color:var(--gold)}
+html body ::selection{background:color-mix(in srgb,var(--gold) 40%,transparent)}
+html body progress,html body .progress-fill,html body .bar-fill{accent-color:var(--gold)}
+
+@media (prefers-reduced-motion:reduce){.tab-panel.active,.tab-btn.active::before{animation:none}}
