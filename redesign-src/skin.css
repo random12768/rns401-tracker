@@ -120,3 +120,33 @@ html body ::selection{background:color-mix(in srgb,var(--gold) 40%,transparent)}
 html body progress,html body .progress-fill,html body .bar-fill{accent-color:var(--gold)}
 
 @media (prefers-reduced-motion:reduce){.tab-panel.active,.tab-btn.active::before{animation:none}}
+/* ===== settings modal gold theme ===== */
+#settings-modal-overlay{--sx-a:var(--gold);--sx-a2:var(--gold-2);--sx-ink:var(--gold-ink);--sched:var(--gold);--accent:var(--gold)}
+#settings-modal-overlay .md-modal-box{background:var(--bg-2)!important;border:1px solid var(--border)!important;border-radius:20px!important}
+html[data-theme="dark"] #settings-modal-overlay .md-modal-box{background:#0e0e12!important}
+#settings-modal-overlay .md-modal-title,#settings-modal-overlay .settings-sec-title,#settings-modal-overlay .sg-name{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;letter-spacing:0}
+#settings-modal-overlay .md-modal-title{font-size:1.5em;font-weight:700}
+#settings-modal-overlay .settings-head{border-bottom:1px solid var(--border)!important}
+#settings-modal-overlay .settings-x:hover{background:var(--surface-3)!important;color:var(--text)!important;border-color:var(--gold)!important}
+#settings-modal-overlay .settings-nav a{background:var(--surface-2)!important;color:var(--text-dim)!important;border:1px solid var(--border-soft)}
+#settings-modal-overlay .settings-nav a:hover{background:var(--surface-3)!important;color:var(--text)!important}
+#settings-modal-overlay .settings-nav a.active{background:var(--gold)!important;color:var(--gold-ink)!important;border-color:var(--gold)}
+#settings-modal-overlay .settings-nav a.needs{background:var(--gold-2)!important;color:var(--gold-ink)!important}
+#settings-modal-overlay .snav-l{color:var(--text-faint)}
+#settings-modal-overlay .settings-group-h{background:var(--surface-2)!important;border-bottom:1px solid var(--gold)!important}
+#settings-modal-overlay .settings-group-h .sg-name{color:var(--gold-2)}
+html[data-theme="light"] #settings-modal-overlay .settings-group-h .sg-name{color:var(--gold)}
+#settings-modal-overlay .settings-sec{border-color:var(--border-soft)!important}
+#settings-modal-overlay .settings-sec.needs-config{background:var(--surface-2)!important;box-shadow:inset 4px 0 0 var(--gold)!important}
+#settings-modal-overlay .needs-tag{background:var(--gold)!important;color:var(--gold-ink)!important}
+#settings-modal-overlay .md-choice-btn{background:var(--surface-2)!important;border:1px solid var(--border)!important;color:var(--text)!important}
+#settings-modal-overlay .md-choice-btn:hover{border-color:var(--gold)!important}
+#settings-modal-overlay .md-choice-btn.active,#settings-modal-overlay .md-choice-btn.settings-sem-btn.active,#settings-modal-overlay .settings-order-btn.active,#settings-modal-overlay .theme-opt.active{background:var(--gold)!important;color:var(--gold-ink)!important;border-color:var(--gold)!important;outline:0!important;box-shadow:0 0 18px -6px var(--gold)!important}
+#settings-modal-overlay .md-choice-btn.cp-primary,#settings-modal-overlay .todo-row button.todo-go{background:linear-gradient(135deg,var(--gold),var(--gold-2))!important;color:var(--gold-ink)!important;border-color:transparent!important}
+#settings-modal-overlay .todo-row.ok{background:var(--surface-2);border-color:var(--border)}
+#settings-modal-overlay .todo-row.need{background:var(--surface-2);border-color:var(--gold)}
+#settings-modal-overlay .theme-opt{background:var(--surface-2);border:1px solid var(--border)}
+#settings-modal-overlay a{color:var(--gold-2)}
+html[data-theme="light"] #settings-modal-overlay a{color:var(--gold)}
+#settings-modal-overlay input[type=range],#settings-modal-overlay input[type=checkbox],#settings-modal-overlay input[type=radio]{accent-color:var(--gold)}
+#settings-modal-overlay input:focus,#settings-modal-overlay select:focus{border-color:var(--gold)!important;outline:0;box-shadow:0 0 0 3px rgba(224,184,74,.2)}
