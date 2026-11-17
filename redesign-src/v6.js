@@ -348,7 +348,7 @@
     if (!cur || !cur.cards) cur = subs.filter(function (s) { return s.cards; })[0];
     if (!cur) { showLegacy(S.tab, null); return ''; }
     S.sub = cur.sub;
-    var mod = modFor(S.tab), table = cur.tables[0], lecs = lectures(table);
+    var mod = modFor(S.tab), table = cur.tables[0], lecs = lectures(table), lecsAll = lecs; var notes0 = lecs.notes, withVid = lecs.filter(function (L) { return L.vids.length > 0; }); if (withVid.length) { lecs = withVid; lecs.notes = notes0; }
     CUR = { lecs: {}, vids: {} }; lecs.forEach(function (L) { CUR.lecs[L.id] = L; L.vids.forEach(function (v) { CUR.vids[v.id] = v; }); });
     var shown = lecs.filter(function (L) { return S.filter === 'all' || (S.filter === 'todo' ? !lDone(L) : lDone(L)); });
     var html = '', sec = null, secs = [], i = 0;
