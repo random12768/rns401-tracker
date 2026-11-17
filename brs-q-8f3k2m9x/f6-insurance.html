@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>US health insurance: Medicare, Medicaid, and payment models — practice questions</title><style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1b1f2a;--dim:#5b6475;--bd:#d9dde8;--ac:#4f46e5;--ok:#15803d;--okb:#e7f6ec;--bad:#b91c1c;--badb:#fdecec;--hint:#fff7e0}
+@media(prefers-color-scheme:dark){:root{--bg:#12141b;--card:#1b1e28;--tx:#e8eaf2;--dim:#9aa3b8;--bd:#2c3140;--ac:#818cf8;--ok:#4ade80;--okb:#12301e;--bad:#f87171;--badb:#341818;--hint:#2f2a14}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:820px;margin:0 auto;padding:16px}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}
+.badge{background:var(--ac);color:#fff;border-radius:99px;padding:2px 10px;font-size:.78em;font-weight:700}
+.lock{font-size:.78em;color:var(--dim)}
+h1{font-size:1.45em;margin:.2em 0 .1em}
+.sub{color:var(--dim);font-size:.9em;margin-bottom:12px}
+.bar{position:sticky;top:0;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--bd);display:flex;gap:10px;align-items:center;flex-wrap:wrap;z-index:2}
+.bar .sc{font-weight:700}.bar button{margin-left:auto}
+button{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;padding:6px 12px}
+button.main{background:var(--ac);color:#fff;border-color:var(--ac)}button:disabled{opacity:.5;cursor:default}
+.q{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin:14px 0}
+.qn{font-weight:700;color:var(--ac);font-size:.85em;margin-bottom:4px}
+.stem{margin:0 0 10px}
+.opt{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--bd);border-radius:8px;padding:8px 10px;margin:6px 0;cursor:pointer}
+.opt:hover{border-color:var(--ac)}.opt input{margin-top:5px}.opt .l{font-weight:700;min-width:1.2em}
+.q.done .opt{cursor:default}
+.opt.right{background:var(--okb);border-color:var(--ok)}.opt.wrong{background:var(--badb);border-color:var(--bad)}
+.why{margin:4px 0 0 0;font-size:.88em;color:var(--dim)}
+.opt.right .why,.opt.wrong .why{color:var(--tx)}
+.res{display:none;margin-top:12px;border-top:1px dashed var(--bd);padding-top:10px}
+.q.done .res{display:block}
+.verdict{font-weight:700;margin-bottom:6px}.verdict.ok{color:var(--ok)}.verdict.no{color:var(--bad)}
+.box{border-radius:8px;padding:8px 10px;margin:8px 0;font-size:.92em}
+.obj{background:var(--okb)}.err{background:var(--hint)}
+.lbl{font-weight:700;font-size:.78em;text-transform:uppercase;letter-spacing:.04em;color:var(--dim);display:block}
+.flags{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 16px;margin:18px 0;font-size:.9em}
+.flags h2{font-size:1em;margin:0 0 6px}.flags li{margin:4px 0}
+.fin{display:none;background:var(--card);border:2px solid var(--ac);border-radius:12px;padding:14px;margin:14px 0;text-align:center;font-weight:700}
+</style></head><body><div class="wrap">
+<div class="top"><span class="badge">Final topic 6</span><span class="lock">Gap-topic practice</span></div>
+<h1>US health insurance: Medicare, Medicaid, and payment models</h1><div class="sub">US Health Care System · 5 NBME-style questions · pick an answer, then check it to see the full reasoning</div>
+<div class="bar"><span class="sc" id="sc"></span><button onclick="reset()">Restart</button></div>
+<div id="qs"></div><div class="fin" id="fin"></div></div><script>
+const Q=[{"stem": "A 68-year-old retired teacher has Medicare. He wants to know which part of Medicare pays for his visits to his primary care physician and for outpatient preventive services such as screening colonoscopy. Which of the following is correct?", "options": ["Part D", "Part A", "Part C", "Medicaid", "Part B"], "answer": 4, "wrong": {"A": "Part D covers prescription drugs.", "B": "Part A is hospital insurance, which covers inpatient care.", "C": "Part C is Medicare Advantage, a managed-care alternative to A and B.", "D": "Medicaid is a separate program for low-income individuals and does not cover him based on age."}, "explanation": "Medicare Part A covers inpatient hospital care, skilled nursing facility care after a qualifying stay, hospice, and some home health. Part B covers outpatient physician services, preventive services, and durable medical equipment. Part C (Medicare Advantage) is a private plan alternative that bundles A, B, and often D. Part D covers outpatient prescription drugs.", "objective": "Part A = inpatient; Part B = outpatient and physician services; Part C = Medicare Advantage; Part D = drugs.", "error_hint": "Students memorize letters without the content. A reliable cue: A is for admission (inpatient), B is for the doctor's office (outpatient).", "explanation_short": ""}, {"stem": "A 52-year-old man with end-stage renal disease requiring hemodialysis has worked and paid payroll taxes for 30 years. He is not yet old enough for retirement benefits. Which of the following forms of coverage is he most likely to be eligible for based on his diagnosis alone?", "options": ["Veterans Health Administration benefits", "Children's Health Insurance Program", "Medicare", "Individual market plan only", "Medicaid"], "answer": 2, "wrong": {"A": "Veterans benefits require military service and none is described.", "B": "CHIP covers children in families that earn too much for Medicaid.", "D": "The individual market is not his only option, because ESRD makes him eligible for Medicare.", "E": "Medicaid requires financial need and categorical eligibility, which are not given."}, "explanation": "Medicare eligibility includes people aged 65 and older, and also younger people who have received Social Security disability benefits for 24 months, or who have end-stage renal disease or amyotrophic lateral sclerosis, regardless of age. Medicaid is need-based and depends on income and other criteria.", "objective": "Medicare eligibility: age 65 or older, disability for 24 months, ESRD, or ALS.", "error_hint": "Students associate Medicare only with age. ESRD and ALS qualify regardless of age.", "explanation_short": ""}, {"stem": "A 29-year-old pregnant woman who works part-time has a very low income and is uninsured. She asks which program is most likely to cover her prenatal care. Which of the following is most appropriate?", "options": ["Medicare Advantage", "Medicaid", "Medicare Part A", "Medicare Part D", "Medicare Part B"], "answer": 1, "wrong": {"A": "Medicare Advantage is a private-plan version of Medicare.", "C": "Medicare Part A is hospital insurance for older or disabled people.", "D": "Part D covers drugs for Medicare beneficiaries.", "E": "Medicare Part B covers outpatient care for the same population."}, "explanation": "Medicaid is a joint federal and state program for low-income individuals, including pregnant women, children, people with disabilities, and (in many states) low-income adults. It is the largest payer for births in the United States. Medicare is for people 65 and older and certain disabled people.", "objective": "Medicaid covers low-income groups including pregnant women and children.", "error_hint": "Students confuse Medicare and Medicaid. Medicaid = medical aid for the poor.", "explanation_short": ""}, {"stem": "An 80-year-old man with advanced dementia needs round-the-clock custodial care in a nursing home for the foreseeable future. He has exhausted his savings. Which of the following is the most likely source of payment for his long-term custodial care?", "options": ["Medicare Part D", "Medicare Part B", "Private health insurance", "Medicaid", "Medicare Part A"], "answer": 3, "wrong": {"A": "Part D covers prescription drugs.", "B": "Part B covers outpatient services.", "C": "Private health insurance generally excludes custodial long-term care.", "E": "Part A covers short-term skilled nursing, not indefinite custodial care."}, "explanation": "Medicare covers only limited skilled nursing facility care (up to 100 days after a qualifying hospital stay) and does not cover long-term custodial care. Medicaid is the largest payer of long-term nursing home care, for people who have exhausted their assets and meet income requirements.", "objective": "Medicaid is the main payer of long-term custodial nursing home care.", "error_hint": "Students assume Medicare covers nursing homes. Medicare coverage is short-term and skilled only.", "explanation_short": ""}, {"stem": "A health plan pays a primary care group a fixed amount per enrolled patient per month, regardless of how many services each patient uses. Which of the following best describes the incentive this payment method creates?", "options": ["An incentive to limit the use of services", "No financial incentive", "An incentive to increase the number of services provided", "An incentive to avoid enrolling any patients", "An incentive to improve quality scores only"], "answer": 0, "wrong": {"B": "There is a financial incentive that is directly tied to utilization.", "C": "That describes fee-for-service, where each service is billed.", "D": "Capitation pays per enrolled patient, so avoiding enrollment would reduce income.", "E": "That describes pay-for-performance."}, "explanation": "This is capitation. The provider receives a fixed payment per patient regardless of utilization, so the provider bears the risk and has an incentive to limit services, which can encourage preventive care and efficiency but also underuse. Fee-for-service creates the opposite incentive to do more.", "objective": "Capitation rewards limiting services; fee-for-service rewards providing more.", "error_hint": "Students confuse the incentives of capitation and fee-for-service.", "explanation_short": ""}];let ans={},chk={};
+const L='ABCDE';
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function render(){const m=document.getElementById('qs');m.innerHTML='';Q.forEach((q,i)=>{const d=document.createElement('div');d.className='q';d.id='q'+i;
+let h='<div class="qn">Question '+(i+1)+' of '+Q.length+'</div><p class="stem">'+esc(q.stem)+'</p>';
+q.options.forEach((o,j)=>{h+='<label class="opt" id="o'+i+'_'+j+'"><input type="radio" name="q'+i+'" value="'+j+'" onchange="pick('+i+','+j+')"><span class="l">'+L[j]+'.</span><span class="t">'+esc(o)+'<div class="why" style="display:none"></div></span></label>'});
+h+='<div style="margin-top:8px"><button class="main" id="b'+i+'" onclick="check('+i+')" disabled>Check answer</button></div><div class="res" id="r'+i+'"></div>';
+d.innerHTML=h;m.appendChild(d)});upd()}
+function pick(i,j){if(chk[i])return;ans[i]=j;document.getElementById('b'+i).disabled=false}
+function check(i){const q=Q[i];if(chk[i]||ans[i]===undefined)return;chk[i]=1;const c=q.answer,a=ans[i];
+const d=document.getElementById('q'+i);d.classList.add('done');
+q.options.forEach((o,j)=>{const el=document.getElementById('o'+i+'_'+j);el.querySelector('input').disabled=true;
+const w=el.querySelector('.why');
+if(j===c){el.classList.add('right');w.textContent='Correct answer.';w.style.display='block'}
+else{const t=q.wrong[L[j]];if(t){w.textContent=t;w.style.display='block'}if(j===a)el.classList.add('wrong')}});
+let r='<div class="verdict '+(a===c?'ok':'no')+'">'+(a===c?'Correct':'Incorrect — the answer is '+L[c])+'</div>';
+r+='<div><span class="lbl">Full explanation of the reasoning</span>'+esc(q.explanation)+'</div>';
+r+='<div class="box obj"><span class="lbl">Educational objective</span>'+esc(q.objective)+'</div>';
+if(a!==c)r+='<div class="box err"><span class="lbl">Likely reasoning error</span>'+esc(q.error_hint)+'</div>';
+document.getElementById('r'+i).innerHTML=r;document.getElementById('b'+i).style.display='none';upd();
+if(Object.keys(chk).length===Q.length){const f=document.getElementById('fin');f.style.display='block';f.textContent='Finished: '+sc()+' / '+Q.length+' correct'}}
+function sc(){let s=0;for(const i in chk)if(ans[i]===Q[i].answer)s++;return s}
+function upd(){document.getElementById('sc').textContent='Answered '+Object.keys(chk).length+' / '+Q.length+' · Score '+sc()}
+function reset(){ans={};chk={};document.getElementById('fin').style.display='none';render();window.scrollTo(0,0)}
+render();
+</script></body></html>
