@@ -2440,6 +2440,12 @@ a.video-repeat span { font-style: italic; }
   .bsg-gap-note { font-size: .82em; color: var(--text-dim); line-height: 1.45; margin-top: 2px; }
   .bsg-det { margin: 14px 0; border: 1px solid var(--border-soft); border-radius: 12px; padding: 4px 14px 10px; }
   .bsg-det > summary { cursor: pointer; font-weight: 800; padding: 8px 0; list-style-position: inside; }
+  .ky-card.bsg-mid { border-color: color-mix(in srgb, #f59e0b 40%, var(--border-soft)); border-left-color: #f59e0b; background: color-mix(in srgb, #f59e0b 8%, var(--surface-2)); }
+  .ky-card.bsg-mid .ky-badge { background: #d97706; }
+  .ky-card.bsg-fin .ky-badge { background: #6366f1; }
+  .bhs-h3.bhs-sec { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; padding-bottom:6px; border-bottom:2px solid var(--border-soft); }
+  .bhs-h3.bhs-sec.sec-mid { border-bottom-color:#f59e0b; } .bhs-h3.bhs-sec.sec-fin { border-bottom-color:#6366f1; }
+  .exam-box[data-go] { cursor:pointer; } .exam-box[data-go]:hover { filter:brightness(1.12); }
   .bsg-det[open] > summary { border-bottom: 1px solid var(--border-soft); margin-bottom: 8px; }
   .bsg-count { font-weight: 700; font-size: .82em; color: var(--bhs, var(--text-dim)); margin-left: 6px; }
   .exam-pill { display:inline-block; margin-left:6px; padding:1px 7px; border-radius:999px; font-size:.62rem; font-weight:800; letter-spacing:.04em; vertical-align:middle; }
@@ -5456,18 +5462,18 @@ html:not(.anki-on) #w6 .w6x-acts button.lv-ak{display:none!important}
 <div class="tab-panel" id="panel-bhs">
 <h2 class="bhs">BS — Behavioral Sciences (MD4 · Sept 8 &ndash; Dec 7, 2026)</h2>
 <div class="summary" style="border-color: var(--bhs);">
-  <div class="bhs-big"><strong>Midterm: Wed Oct 14, 9:00 AM &middot; study from the 4 guides below</strong></div>
-  Dr. Sampath gave four study guides for the Block 1 exam. Each one is shown below with the Boards &amp; Beyond videos that match it, in the same order as before. Tick videos off as you watch them.
+  <div class="bhs-big"><strong>Two exams: Block 1 midterm (Wed Oct 14) and the cumulative final (Mon Dec 7)</strong></div>
+  Both exams are laid out the same way below: a card for each topic with the Boards &amp; Beyond videos to watch. Block 1 follows Dr. Sampath's four study guides; the final covers everything after Block 1, plus all of Block 1. Tick videos off as you watch them.
   <div class="exam-split">
-    <div class="exam-box exam-mid"><b>MIDTERM &middot; Block 1 exam, Wed Oct 14</b><span>8 videos &middot; 1h 53m total, all listed under the 4 guides</span><em id="bhs-mid-live"></em></div>
-    <div class="exam-box exam-fin"><b>FINAL &middot; Mon Dec 7</b><span>14 videos &middot; 3h 21m after the midterm &mdash; the final is cumulative, so everything from Block 1 is on it too</span><em id="bhs-fin-live"></em></div>
+    <div class="exam-box exam-mid" data-go="bhs-sec-mid" onclick="document.getElementById('bhs-sec-mid').scrollIntoView({behavior:'smooth'})"><b>BLOCK 1 &middot; Midterm, Wed Oct 14</b><span>8 videos &middot; 1h 53m &middot; 4 study guides</span><em id="bhs-mid-live"></em></div>
+    <div class="exam-box exam-fin" data-go="bhs-sec-fin" onclick="document.getElementById('bhs-sec-fin').scrollIntoView({behavior:'smooth'})"><b>AFTER BLOCK 1 &middot; Final, Mon Dec 7</b><span>14 videos &middot; 3h 21m &middot; 7 topic cards (the final also covers all of Block 1)</span><em id="bhs-fin-live"></em></div>
   </div>
   <div class="bhs-live"><strong id="bhs-progress"></strong></div>
 </div>
 
-<h3 class="bhs-h3">Midterm &mdash; the 4 guides <span class="sec-sub">(Block 1 exam, Oct 14)</span></h3>
+<h3 class="bhs-h3 bhs-sec sec-mid" id="bhs-sec-mid">Block 1 &middot; Midterm <span class="sec-sub">(Oct 14 &middot; 4 study guides &middot; 8 videos &middot; 1h 53m)</span></h3>
 <div id="bhs-guides">
-<div class="ky-card bsg-card" id="ky-bsg-life">
+<div class="ky-card bsg-card bsg-mid" id="ky-bsg-life">
   <div class="ky-top">
     <span class="ky-badge">📘 Midterm guide 1 of 4</span>
     <span class="ky-meta">25 practice Q&amp;As</span>
@@ -5503,7 +5509,7 @@ html:not(.anki-on) #w6 .w6x-acts button.lv-ak{display:none!important}
     <li><a href="brs-q-8f3k2m9x/g1-death-illness.html" target="_blank" rel="noopener noreferrer">Children's understanding of death and age-based illness reactions</a> <span>5 Qs</span></li>
     <li><a href="brs-q-8f3k2m9x/g1-aging.html" target="_blank" rel="noopener noreferrer">Normal and pathological aging</a> <span>5 Qs</span></li>
   </ul>
-</details><div class="ky-card bsg-card" id="ky-bsg-kids">
+</details><div class="ky-card bsg-card bsg-mid" id="ky-bsg-kids">
   <div class="ky-top">
     <span class="ky-badge">📘 Midterm guide 2 of 4</span>
     <span class="ky-meta">18 practice questions</span>
@@ -5538,7 +5544,7 @@ html:not(.anki-on) #w6 .w6x-acts button.lv-ak{display:none!important}
     <li><a href="brs-q-8f3k2m9x/g2-cos.html" target="_blank" rel="noopener noreferrer">Childhood-onset schizophrenia and psychosis in children</a> <span>5 Qs</span></li>
     <li><a href="brs-q-8f3k2m9x/g2-algorithms.html" target="_blank" rel="noopener noreferrer">Treatment ladders: ADHD, enuresis, Tourette and temper outbursts</a> <span>5 Qs</span></li>
   </ul>
-</details><div class="ky-card bsg-card" id="ky-bsg-schiz">
+</details><div class="ky-card bsg-card bsg-mid" id="ky-bsg-schiz">
   <div class="ky-top">
     <span class="ky-badge">📘 Midterm guide 3 of 4</span>
     <span class="ky-meta">10 practice questions</span>
@@ -5574,7 +5580,7 @@ html:not(.anki-on) #w6 .w6x-acts button.lv-ak{display:none!important}
     <li><a href="brs-q-8f3k2m9x/g3-nms-ss.html" target="_blank" rel="noopener noreferrer">Neuroleptic malignant syndrome vs serotonin syndrome vs malignant hyperthermia</a> <span>5 Qs</span></li>
     <li><a href="brs-q-8f3k2m9x/g3-newer.html" target="_blank" rel="noopener noreferrer">Atypical antipsychotics: individual drugs, QTc and newer agents</a> <span>5 Qs</span></li>
   </ul>
-</details><div class="ky-card bsg-card" id="ky-bsg-mood">
+</details><div class="ky-card bsg-card bsg-mid" id="ky-bsg-mood">
   <div class="ky-top">
     <span class="ky-badge">📘 Midterm guide 4 of 4</span>
     <span class="ky-meta">34 practice MCQs</span>
@@ -5612,14 +5618,79 @@ html:not(.anki-on) #w6 .w6x-acts button.lv-ak{display:none!important}
 </details>
 </div>
 
-<details class="bsg-det" id="bhs-later">
-  <summary>After the midterm &mdash; for the Dec 7 final <span class="sec-sub">(14 videos &middot; 3h 21m &middot; the final is cumulative: Block 1 guides above are on it too)</span> <span class="bsg-count" data-for="later"></span></summary>
-  <div class="bsg-vids-title">Personality, substance use &amp; eating disorders <span class="sec-sub">(lectures 10/27 – 11/4)</span></div>
-  <div class="bsg-vids" data-vids="Personality Disorders|Alcohol and CNS Depressants|Opioids|Stimulants|Other Drugs|Eating Disorders"></div>
-  <div class="bsg-vids-title">Student presentation topics <span class="sec-sub">(oral presentations Nov 23 – Dec 2)</span></div>
-  <div class="bsg-vids" data-vids="Sleep Physiology|Sleep Disorders|Sleep Apnea|Conditioning and Transference|Ego Defenses|Child Abuse and Neglect|Public Health|Quality and Safety"></div>
-  <p class="ky-desc" style="margin:8px 0 0"><b>Sleep videos are from Boards &amp; Beyond Neurology and Pulmonary; Public Health covers Medicare, Medicaid and private insurance.</b><br><b>Also on the final, no new video:</b> personality disorders by cluster (same Personality Disorders video).<br><b>No Boards &amp; Beyond video, use the class presentation and slides:</b> elder abuse &middot; family, culture &amp; illness behavior &middot; psychotherapy &amp; CBT. Sexual disorders, psychiatric assessment and suicide assessment also have no Boards video.</p>
-</details>
+<h3 class="bhs-h3 bhs-sec sec-fin" id="bhs-sec-fin">After Block 1 &middot; Final <span class="sec-sub">(Dec 7 &middot; 7 topics &middot; 14 videos &middot; 3h 21m &middot; the final also covers all of Block 1)</span></h3>
+<div id="bhs-final-cards">
+<div class="ky-card bsg-card bsg-fin" id="ky-bsf-1">
+  <div class="ky-top">
+    <span class="ky-badge">📗 Final topic 1 of 7</span>
+    <span class="ky-meta bsg-count" data-for="bsf-1"></span>
+  </div>
+  <div class="ky-title">Personality Disorders</div>
+  <p class="ky-desc"><b>Covers:</b> Personality Disorders (10/27) · Personality Disorders-1 (11/3) · SGD Personality Disorders-2 (11/4) · class presentations on Cluster A, Cluster B and Cluster C</p>
+  <div class="bsg-vids-title">Matching Boards &amp; Beyond videos</div>
+  <div class="bsg-vids" id="vids-bsf-1" data-vids="Personality Disorders"></div>
+</div>
+<div class="ky-card bsg-card bsg-fin" id="ky-bsf-2">
+  <div class="ky-top">
+    <span class="ky-badge">📗 Final topic 2 of 7</span>
+    <span class="ky-meta bsg-count" data-for="bsf-2"></span>
+  </div>
+  <div class="ky-title">Substance Use &amp; Eating Disorders</div>
+  <p class="ky-desc"><b>Covers:</b> Substance use disorders (10/29) · Eating Disorders (10/30) · Graded Quiz: Substance use disorders (11/19)</p>
+  <div class="bsg-vids-title">Matching Boards &amp; Beyond videos</div>
+  <div class="bsg-vids" id="vids-bsf-2" data-vids="Alcohol and CNS Depressants|Opioids|Stimulants|Other Drugs|Eating Disorders"></div>
+</div>
+<div class="ky-card bsg-card bsg-fin" id="ky-bsf-3">
+  <div class="ky-top">
+    <span class="ky-badge">📗 Final topic 3 of 7</span>
+    <span class="ky-meta bsg-count" data-for="bsf-3"></span>
+  </div>
+  <div class="ky-title">Sleep</div>
+  <p class="ky-desc"><b>Covers:</b> Class presentations: normal sleep physiology &amp; architecture · sleep disorders (insomnia, narcolepsy, obstructive sleep apnea, REM sleep behavior disorder, parasomnias)</p>
+  <div class="bsg-vids-title">Matching Boards &amp; Beyond videos</div>
+  <div class="bsg-vids" id="vids-bsf-3" data-vids="Sleep Physiology|Sleep Disorders|Sleep Apnea"></div>
+</div>
+<div class="ky-card bsg-card bsg-fin" id="ky-bsf-4">
+  <div class="ky-top">
+    <span class="ky-badge">📗 Final topic 4 of 7</span>
+    <span class="ky-meta bsg-count" data-for="bsf-4"></span>
+  </div>
+  <div class="ky-title">Learning Theories &amp; Defense Mechanisms</div>
+  <p class="ky-desc"><b>Covers:</b> Class presentations: classical conditioning · operant conditioning &amp; social learning · immature &amp; pathological defenses · mature defenses &amp; coping</p>
+  <div class="bsg-vids-title">Matching Boards &amp; Beyond videos</div>
+  <div class="bsg-vids" id="vids-bsf-4" data-vids="Conditioning and Transference|Ego Defenses"></div>
+</div>
+<div class="ky-card bsg-card bsg-fin" id="ky-bsf-5">
+  <div class="ky-top">
+    <span class="ky-badge">📗 Final topic 5 of 7</span>
+    <span class="ky-meta bsg-count" data-for="bsf-5"></span>
+  </div>
+  <div class="ky-title">Abuse &amp; Neglect</div>
+  <p class="ky-desc"><b>Covers:</b> Aggression and Abuse (11/17) · class presentations: child abuse and neglect · elder abuse and neglect</p>
+  <div class="bsg-vids-title">Matching Boards &amp; Beyond videos</div>
+  <div class="bsg-vids" id="vids-bsf-5" data-vids="Child Abuse and Neglect"></div>
+  <p class="ky-desc" style="margin-top:6px">Elder abuse has no Boards &amp; Beyond video: use the class presentation and lecture slides.</p>
+</div>
+<div class="ky-card bsg-card bsg-fin" id="ky-bsf-6">
+  <div class="ky-top">
+    <span class="ky-badge">📗 Final topic 6 of 7</span>
+    <span class="ky-meta bsg-count" data-for="bsf-6"></span>
+  </div>
+  <div class="ky-title">US Health Care System</div>
+  <p class="ky-desc"><b>Covers:</b> Class presentations: financing &amp; insurance (Medicare A–D, Medicaid, private insurance) · delivery models, quality improvement, patient safety, medical errors, disparities</p>
+  <div class="bsg-vids-title">Matching Boards &amp; Beyond videos</div>
+  <div class="bsg-vids" id="vids-bsf-6" data-vids="Public Health|Quality and Safety"></div>
+</div>
+<div class="ky-card bsg-card bsg-fin" id="ky-bsf-7">
+  <div class="ky-top">
+    <span class="ky-badge">📗 Final topic 7 of 7</span>
+    
+  </div>
+  <div class="ky-title">No Boards &amp; Beyond video for these</div>
+  <p class="ky-desc"><b>Covers:</b> Sexual Disorders &amp; Gender Dysphoria (11/2) · The Psychiatric Assessment: MSE, Testing &amp; Labs (11/5) · SGD Suicide Assessment (11/6) · class presentations: family dynamics, culture &amp; illness behavior · psychotherapy overview &amp; cognitive behavioral therapy (CBT)</p>
+  <p class="ky-desc" style="margin-top:6px">Use the lecture slides and the class presentations for these.</p>
+</div>
+</div>
 
 <details class="bsg-det" id="bhs-fullwrap">
   <summary>Full lecture-by-lecture schedule <span class="sec-sub">(every lecture with dates, repeats and gaps &mdash; nothing was removed)</span></summary>
@@ -6774,7 +6845,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 148, built: '2026-11-17T18:50:30Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 149, built: '2026-11-17T18:52:16Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
