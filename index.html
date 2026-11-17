@@ -6877,7 +6877,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 151, built: '2026-11-17T22:53:06Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 152, built: '2026-11-17T22:54:07Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -9760,6 +9760,10 @@ function computePlan() {
   let lastAssignedDate = null;
 
   const queue = autoPool.slice();
+  // Spread: never pack days to the limit while later days sit empty. Aim for an even load across the remaining content days (never above the daily limit).
+  const spreadDays = dp.contentDates.filter(d => d >= todayKey).length;
+  const spreadTotal = queue.reduce((t, i) => t + i.min, 0);
+  const spreadCap = spreadDays > 0 ? Math.min(cap, Math.max(20, Math.ceil(spreadTotal / spreadDays * 1.1))) : cap;
   dp.contentDates.forEach(d => {
     const bucket = assignments[d];
     while (queue.length && (() => {
@@ -9770,7 +9774,7 @@ function computePlan() {
         const cur = bucketCards(bucket);
         return cur + q0.cards <= cardCap || Math.abs(cur + q0.cards - cardCap) < Math.abs(cur - cardCap);
       }
-      return bucket.totalMin + q0.min <= cap && (!cardCap || !q0.cards);
+      return bucket.totalMin + q0.min <= spreadCap && (!cardCap || !q0.cards);
     })()) {
       const it = queue.shift();
       const bs = bufferStatusFor(it.classDate, d, bufferDays);
@@ -9841,7 +9845,7 @@ function computePlan() {
   // (new ones) or whose saved day already passed get a fresh day; changing any planner setting rebuilds the plan.
   try {
     const todayStr0 = fmtDate(dp.today);
-    const sig = [settings.examDate, settings.reviewDays, settings.dailyCapacity, settings.bufferDays, settings.newCards || 0, plannerModule().mod.id].join('|');
+    const sig = [settings.examDate, settings.reviewDays, settings.dailyCapacity, settings.bufferDays, settings.newCards || 0, plannerModule().mod.id, 'spread1'].join('|');
     let lock = null;
     try { lock = JSON.parse(localStorage.getItem(pkey(PLAN_LOCK_KEY))); } catch (e) { lock = null; }
     const frozen = planIsFrozen();
