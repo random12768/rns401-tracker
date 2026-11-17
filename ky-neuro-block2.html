@@ -1,0 +1,2849 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ky's Neuroscience Block 2 Study Guide</title>
+    <style>
+/* === MEDICAL-BRAIN DESIGN SYSTEM (inlined for standalone export) === */
+/* =============================================
+   MEDICAL-BRAIN DESIGN SYSTEM
+   Extracted from Ky's RNS Anatomy Study Guide
+   + hub/navigation extensions
+   ============================================= */
+
+/* =============================================
+   BASE & LAYOUT
+   ============================================= */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.55;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  padding-bottom: 6rem;
+  background: #f8fafc;
+  color: #111827;
+}
+
+h1 {
+  color: #0f172a;
+  border-bottom: 3px solid #0284c7;
+  padding-bottom: 0.4rem;
+  margin-top: 1.5rem;
+  font-size: 1.8rem;
+}
+
+h2 {
+  color: #0f172a;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.25rem;
+  margin-top: 2.5rem;
+  font-size: 1.35rem;
+}
+
+h3 {
+  color: #1e3a5f;
+  margin-top: 1.2rem;
+  font-size: 1.1rem;
+}
+
+h4 {
+  color: #374151;
+  margin-top: 0.9rem;
+  font-size: 1rem;
+}
+
+p {
+  margin: 0.5rem 0;
+}
+
+ul,
+ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.3rem;
+}
+
+a {
+  color: #0284c7;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* =============================================
+   TABLES
+   ============================================= */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.75rem 0 1.2rem 0;
+  font-size: 0.92rem;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+th,
+td {
+  border: 1px solid #d1d5db;
+  padding: 0.45rem 0.6rem;
+  vertical-align: top;
+}
+
+th {
+  background: #1e3a5f;
+  color: #ffffff;
+  font-weight: 600;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: #f1f5f9;
+}
+
+td strong {
+  color: #1e3a5f;
+}
+
+/* =============================================
+   COLORED BOXES
+   ============================================= */
+.box {
+  border-radius: 7px;
+  padding: 0.9rem 1.1rem;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* High Yield / Exam Emphasis – Yellow */
+.box.high-yield {
+  background: #fefce8;
+  border: 1.5px solid #fbbf24;
+  border-left: 5px solid #f59e0b;
+  color: #78350f;
+}
+
+.box.high-yield b,
+.box.high-yield strong {
+  color: #92400e;
+}
+
+/* Clinical – Green */
+.box.clinical {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  border-left: 5px solid #16a34a;
+  color: #14532d;
+}
+
+.box.clinical b,
+.box.clinical strong {
+  color: #166534;
+}
+
+/* Mnemonic – Purple */
+.box.mnemonic {
+  background: #faf5ff;
+  border: 1.5px solid #c4b5fd;
+  border-left: 5px solid #7c3aed;
+  color: #3b0764;
+}
+
+.box.mnemonic b,
+.box.mnemonic strong {
+  color: #5b21b6;
+}
+
+/* Reaction Schema – Blue */
+.box.reaction {
+  background: #eff6ff;
+  border: 1.5px solid #93c5fd;
+  border-left: 5px solid #2563eb;
+  color: #1e3a5f;
+}
+
+.box.reaction b,
+.box.reaction strong {
+  color: #1d4ed8;
+}
+
+.rxn-line {
+  display: block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.87rem;
+  background: #dbeafe;
+  border-radius: 4px;
+  padding: 0.4rem 0.75rem;
+  margin: 0.45rem 0;
+  color: #1e3a5f;
+  word-break: break-word;
+}
+
+.rxn-blocked {
+  display: block;
+  margin-top: 0.6rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #93c5fd;
+  font-size: 0.91rem;
+}
+
+/* =============================================
+   INLINE UTILITIES
+   ============================================= */
+.highlight {
+  background-color: #fef3c7;
+  padding: 0 3px;
+  border-radius: 2px;
+}
+
+.emoji-label {
+  font-size: 1.1em;
+  margin-right: 4px;
+}
+
+.tag-emergency {
+  display: inline-block;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 4px;
+  padding: 0 5px;
+  font-size: 0.8em;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+/* =============================================
+   TABLE OF CONTENTS
+   ============================================= */
+#toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.1rem 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#toc-grid li {
+  margin-bottom: 0.45rem;
+  padding-left: 0;
+  font-size: 0.93rem;
+  display: flex;
+  align-items: flex-start;
+}
+
+#toc-grid a {
+  color: #0284c7;
+  text-decoration: none;
+  font-size: 0.93rem;
+  line-height: 1.4;
+}
+
+#toc-grid a:hover {
+  text-decoration: underline;
+}
+
+#toc-grid a:visited {
+  color: #0284c7;
+}
+
+#toc-grid .toc-sub {
+  display: block;
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 0.1rem;
+}
+
+@media (max-width: 600px) {
+  #toc-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================
+   QUIZ STYLES
+   ============================================= */
+.quiz-section-title {
+  margin-top: 4rem;
+  text-align: center;
+  font-size: 1.8rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  border-bottom: 3px solid #0284c7;
+  padding-bottom: 0.4rem;
+}
+
+.quiz-subtitle {
+  text-align: center;
+  color: #475569;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.quiz-container {
+  display: grid;
+  gap: 2rem;
+}
+
+.question-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s;
+}
+
+.question-card:hover {
+  box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.08);
+}
+
+.question-number {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0284c7;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+}
+
+.question-section {
+  display: inline-block;
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  text-transform: none;
+  letter-spacing: 0;
+  vertical-align: middle;
+}
+
+.question-text {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 1.02rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.options-grid {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.option-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.7rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.93rem;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+.option-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.option-btn.selected {
+  border-width: 2px;
+  border-color: #3b82f6;
+}
+
+.option-btn.correct {
+  background-color: #dcfce7 !important;
+  border-color: #16a34a !important;
+  color: #14532d;
+  font-weight: 600;
+}
+
+.option-btn.incorrect {
+  background-color: #fee2e2 !important;
+  border-color: #dc2626 !important;
+  color: #7f1d1d;
+}
+
+.option-btn:disabled {
+  cursor: default;
+}
+
+.explanation {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  background: #f8fafc;
+  border-left: 4px solid #3b82f6;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #334155;
+  display: none;
+  line-height: 1.65;
+}
+
+/* =============================================
+   SCORE BAR
+   ============================================= */
+.score-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1e293b;
+  color: white;
+  padding: 0.85rem 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.15);
+  font-weight: 600;
+  font-size: 1.05rem;
+  z-index: 1000;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-out;
+  flex-wrap: wrap;
+}
+
+.score-bar.visible {
+  transform: translateY(0);
+}
+
+.score-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.stat-green  { color: #4ade80; }
+.stat-red    { color: #f87171; }
+.stat-blue   { color: #60a5fa; }
+.stat-yellow { color: #fbbf24; }
+
+/* =============================================
+   HUB / NAVIGATION EXTENSIONS
+   ============================================= */
+.breadcrumb {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 0.75rem;
+}
+
+.breadcrumb a {
+  color: #0284c7;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.module-badge {
+  display: inline-block;
+  background: #0284c7;
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.subject-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin: 2rem 0;
+}
+
+.subject-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.subject-card:hover {
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.12);
+  border-color: #0284c7;
+  text-decoration: none;
+}
+
+.subject-card h3 {
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.subject-card p {
+  color: #6b7280;
+  font-size: 0.88rem;
+  margin-bottom: 0.75rem;
+}
+
+.subject-card .card-meta {
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+.card-status {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+}
+
+.card-status.stub    { background: #fef3c7; color: #92400e; }
+.card-status.active  { background: #dcfce7; color: #14532d; }
+.card-status.planned { background: #f1f5f9; color: #64748b; }
+.card-status.paused  { background: #e0e7ff; color: #3730a3; }
+
+.stub-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  background: white;
+  margin: 2rem 0;
+}
+
+.stub-state .stub-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+.stub-state h2 {
+  border-bottom: none;
+  color: #374151;
+  margin: 0 0 0.5rem;
+}
+
+.stub-state p {
+  color: #6b7280;
+  max-width: 480px;
+  margin: 0 auto 0.5rem;
+}
+
+.source-note {
+  display: inline-block;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.82rem;
+  color: #475569;
+  font-family: monospace;
+  margin-top: 0.5rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin: 1.25rem 0 2rem;
+}
+
+.nav-links a {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid #0284c7;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  color: #0284c7;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-links a:hover {
+  background: #0284c7;
+  color: white;
+  text-decoration: none;
+}
+
+.site-footer {
+  margin-top: 4rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  text-align: center;
+}
+
+/* =============================================
+   PATHWAY BLOCKS
+   ============================================= */
+.pathway {
+  background: #f0f9ff;
+  border: 1.5px solid #7dd3fc;
+  border-left: 5px solid #0284c7;
+  border-radius: 7px;
+  padding: 0.85rem 1.1rem;
+  margin: 1rem 0;
+}
+
+.pathway-title {
+  font-size: 0.79rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #0369a1;
+  margin-bottom: 0.65rem;
+}
+
+.pathway-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.45rem;
+}
+
+.pathway-flow:last-of-type {
+  margin-bottom: 0;
+}
+
+.pathway-node {
+  background: #0284c7;
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.32rem 0.65rem;
+  font-size: 0.83rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.35;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.pathway-node small {
+  font-weight: 400;
+  font-size: 0.71rem;
+  opacity: 0.88;
+  margin-top: 0.1rem;
+}
+
+.pathway-node.key {
+  background: #1e3a5f;
+}
+
+.pathway-node.output {
+  background: #0f766e;
+}
+
+.pathway-arrow {
+  display: inline-flex;
+  align-items: center;
+  color: #0369a1;
+  font-size: 1.15rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.pathway-note {
+  font-size: 0.8rem;
+  color: #0c4a6e;
+  margin-top: 0.5rem;
+  font-style: italic;
+  margin-bottom: 0;
+}
+
+/* Branching pathway support */
+.pathway-split {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+  padding-left: 0.8rem;
+  border-left: 3px solid #7dd3fc;
+  margin-left: 0.5rem;
+}
+
+.pathway-branch {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.pathway-branch-label {
+  font-size: 0.73rem;
+  font-weight: 700;
+  color: #0369a1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  min-width: 6rem;
+}
+
+</style>
+  </head>
+  <body>
+<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:0.5rem 1rem;font-size:0.82rem;color:#0369a1;margin-bottom:1rem;">
+  📤 <strong>Shared export</strong> — Windsor University School of Medicine · Neuroscience Block 2 · Medical Brain study guide
+</div>
+    <p class="breadcrumb">
+      <span>Medical Brain</span> /
+      <span>Neuroscience</span> /
+      Block 2
+    </p>
+    <h1>Ky's Neuroscience Block 2 Study Guide</h1>
+    <p>
+      High-yield study guide for the Block 2 neuroscience frontier course exam.
+      Covers brainstem (medulla, pons, midbrain), reticular formation, cranial
+      nerve nuclei, cerebellum, and basal ganglia. Content is organized by
+      topic and filtered to testable mechanisms, pathways, and clinical
+      correlations only.
+    </p>
+
+    <div id="scoreBar" class="score-bar">
+      <span class="score-stat"><span class="stat-blue" id="statAnswered">0</span> answered</span>
+      <span class="score-stat"><span class="stat-green" id="statCorrect">0</span> correct</span>
+      <span class="score-stat"><span class="stat-red" id="statIncorrect">0</span> incorrect</span>
+      <span class="score-stat"><span class="stat-yellow" id="statPercent">0%</span></span>
+    </div>
+
+    <div id="toc">
+      <h2>📋 Table of Contents</h2>
+      <ul id="toc-grid">
+        <li>
+          <a href="#s1">1. Brainstem Overview
+            <span class="toc-sub">CN levels, Rule of 4's, descending sympathetics, aminergic nuclei</span>
+          </a>
+        </li>
+        <li>
+          <a href="#s2">2. Medulla Oblongata
+            <span class="toc-sub">Decussations, nuclei, medial &amp; lateral syndromes</span>
+          </a>
+        </li>
+        <li>
+          <a href="#s3">3. Pons
+            <span class="toc-sub">PPRF, facial colliculus, INO, 1½ syndrome, locked-in</span>
+          </a>
+        </li>
+        <li>
+          <a href="#s4">4. Midbrain
+            <span class="toc-sub">Tectum, tegmentum, Weber's, Claude's, Benedikt's, posturing</span>
+          </a>
+        </li>
+        <li>
+          <a href="#syndromes">★ Brainstem Syndromes Master Table
+            <span class="toc-sub">All named syndromes — level, vessel, CN, long-tract signs</span>
+          </a>
+        </li>
+        <li>
+          <a href="#s5">5. Reticular Formation
+            <span class="toc-sub">RAS, reticulospinal tracts, locus ceruleus, raphe</span>
+          </a>
+        </li>
+        <li>
+          <a href="#s6">6. Cranial Nerve Nuclei
+            <span class="toc-sub">Functional columns, auditory/vestibular, CN lesion patterns</span>
+          </a>
+        </li>
+        <li>
+          <a href="#s7">7. Cerebellum
+            <span class="toc-sub">Spinocerebellar tracts, peduncles, cortex, deep nuclei, Friedreich's</span>
+          </a>
+        </li>
+        <li>
+          <a href="#s8">8. Basal Ganglia
+            <span class="toc-sub">Direct/indirect pathways, Parkinson's, Huntington's, Wilson's</span>
+          </a>
+        </li>
+        <li>
+          <a href="#quiz">🧪 Practice Quiz
+            <span class="toc-sub">50 board-style MCQs with explanations</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         1. BRAINSTEM OVERVIEW
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- NEW SECTION -->
+    <h2 id="s1">1. Brainstem Overview</h2>
+    <p>
+      The brainstem consists of three levels — medulla oblongata, pons, and
+      midbrain — each identifiable by its cranial nerve attachments, internal
+      landmarks, and cross-sectional pattern. Understanding which structures
+      cross (decussate) at each level is the single most important skill for
+      localizing brainstem lesions. The general rule: motor tracts cross in the
+      lower medulla; sensory tracts cross at their respective nuclei.
+    </p>
+
+    <div class="box high-yield">
+      <strong>Cranial nerve levels:</strong> Midbrain = CN III–IV &nbsp;|&nbsp;
+      Pons = CN V–VIII &nbsp;|&nbsp; Medulla = CN IX–XII.
+      CN IV is the only cranial nerve to exit <em>dorsally</em> and the only
+      one to decussate before exiting. CN VI is the most common false
+      localizing sign with raised ICP (stretches over the petrous ridge).
+    </div>
+
+    <p>
+      The <strong>descending sympathetic tract</strong> runs ipsilaterally
+      through the entire lateral tegmentum of the brainstem from hypothalamus
+      to the ciliospinal center (C8–T2). A lesion anywhere along this tract
+      produces ipsilateral Horner's syndrome (ptosis, miosis, anhidrosis) —
+      a key localizing finding in lateral brainstem strokes.
+    </p>
+
+    <p>
+      Two aminergic nuclei in the brainstem are high-yield: the
+      <strong>locus ceruleus</strong> (rostral pons) is the primary source of
+      norepinephrine for the entire CNS, and the <strong>raphe nuclei</strong>
+      (distributed throughout the brainstem midline) are the primary source of
+      serotonin. Both modulate arousal, mood, and pain.
+    </p>
+
+    <!-- NEW SECTION -->
+    <h3 id="s1-the-rule-of-4-s-rapid-stroke">The Rule of 4's — Rapid Stroke Localization</h3>
+    <p>
+      The Rule of 4's is the primary clinical heuristic for rapidly localizing
+      brainstem strokes. It categorizes structures into midline (<strong>M</strong>)
+      and lateral (<strong>S</strong>) groups that correspond to the medial
+      and lateral vascular territories respectively. A crossed deficit — ipsilateral
+      cranial nerve palsy plus contralateral long-tract signs — is the
+      hallmark of a brainstem lesion.
+    </p>
+
+    <div class="box high-yield">
+      <strong>4 Medial (M) structures</strong> — supplied by paramedian
+      arteries (ASA or basilar perforators):<br />
+      Motor pathway (CST) &nbsp;|&nbsp; Medial lemniscus (proprioception/vibration)
+      &nbsp;|&nbsp; MLF (conjugate gaze) &nbsp;|&nbsp; Medial CN XII (hypoglossal)<br /><br />
+      <strong>4 Lateral (S) structures</strong> — supplied by circumferential
+      arteries (PICA, AICA, SCA):<br />
+      Spinocerebellar tract (ipsilateral ataxia) &nbsp;|&nbsp;
+      Spinothalamic tract (contralateral pain/temp body) &nbsp;|&nbsp;
+      Spinal trigeminal (ipsilateral face pain/temp) &nbsp;|&nbsp;
+      Sympathetic tract (ipsilateral Horner's)<br /><br />
+      <strong>Medial lesion</strong> → hemiparesis + DCML loss + CN XII palsy<br />
+      <strong>Lateral lesion</strong> → ataxia + alternating hemianesthesia + Horner's
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         2. MEDULLA OBLONGATA
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- NEW SECTION -->
+    <h2 id="s2">2. Medulla Oblongata</h2>
+    <p>
+      The medulla is the most caudal brainstem segment, beginning at the
+      <strong>spinomedullary junction</strong> — defined by a horizontal line
+      just above the first pair of cervical nerves, approximately at the level
+      of the middle of the odontoid process (dens of C2). Its superior boundary
+      is the pontomedullary junction. It contains the vital respiratory and
+      cardiovascular centers, and is the site of the two major decussations
+      that define contralateral motor and sensory control.
+    </p>
+
+    <!-- NEW -->
+    <table>
+      <thead>
+        <tr>
+          <th>Center</th>
+          <th>Function</th>
+          <th>Clinical Impact if Destroyed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Cardiovascular center</strong></td>
+          <td>Cardioinhibitory + cardioacceleratory centers; vasomotor center controls vascular tone</td>
+          <td>Fatal fluctuations in heart rate and blood pressure</td>
+        </tr>
+        <tr>
+          <td><strong>Respiratory center</strong></td>
+          <td>Controls rate and depth of breathing; rhythmicity (receives input from pons)</td>
+          <td>Immediate respiratory arrest</td>
+        </tr>
+        <tr>
+          <td><strong>Reflex centers</strong></td>
+          <td>Emesis, deglutition, coughing, hiccupping, sneezing</td>
+          <td>Dysphagia; loss of protective airway reflexes</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 id="s2-external-features">External Features</h3>
+    <p>
+      The ventral surface shows the <strong>pyramids</strong> flanking the
+      ventral median fissure — these are the corticospinal tracts before they
+      cross. The <strong>olives</strong> bulge laterally and overlie the
+      inferior olivary nuclei. Dorsally, the <strong>gracile and cuneate
+      tubercles</strong> mark the underlying nuclei of the dorsal column
+      system; the caudal medulla forms the floor of the fourth ventricle.
+      The <strong>inferior cerebellar peduncle</strong> (restiform body)
+      connects the medulla to the cerebellum on each side. CN XII emerges
+      from the <strong>pre-olivary sulcus</strong> (anterolateral sulcus,
+      between the pyramid and olive); CNs IX, X, and XI emerge from the
+      <strong>post-olivary sulcus</strong> (retro-olivary sulcus, lateral to
+      the olive). At the pontomedullary junction, the
+      <strong>striae medullares</strong> mark the division between pons and
+      medulla on the posterior (floor of fourth ventricle) surface. CNs VI,
+      VII, and VIII emerge at this junction in medial-to-lateral order: VI
+      is most medial, VII between the olive and lower pons, and VIII most
+      lateral.
+    </p>
+
+    <h3 id="s2-internal-features-by-level">Internal Features by Level</h3>
+
+    <p>
+      The medulla is conventionally described at three cross-sectional levels,
+      each defined by a key internal landmark.
+    </p>
+
+    <h4 id="s2-caudal-medulla-level-of-the-">Caudal Medulla — Level of the Motor (Pyramidal) Decussation</h4>
+    <p>
+      At this level the corticospinal tract fibers cross the midline
+      (approximately 85–90% of fibers), producing the
+      <strong>pyramidal decussation</strong> visible on the ventral surface.
+      This is why upper motor neuron lesions above this level cause
+      contralateral weakness. The <strong>spinal trigeminal nucleus</strong>
+      (carrying pain and temperature from the ipsilateral face) is present
+      throughout the medulla and continues down to C2.
+    </p>
+
+    <div class="box high-yield">
+      Motor decussation = caudal medulla (pyramidal fibers cross).
+      Sensory decussation = mid medulla (internal arcuate fibers — DCML system
+      crosses after synapsing in gracile/cuneate nuclei).
+      These two decussations occur at <em>different levels</em>.
+    </div>
+
+    <h4 id="s2-mid-medulla-level-of-the-sen">Mid Medulla — Level of the Sensory (Arcuate) Decussation</h4>
+    <p>
+      The dorsal column fibers — <strong>fasciculus gracilis</strong> (lower
+      limb) and <strong>fasciculus cuneatus</strong> (upper limb and trunk) —
+      synapse in the gracile and cuneate nuclei of the dorsal medulla. Their
+      second-order axons sweep ventrally as the
+      <strong>internal arcuate fibers</strong>, decussate at the mid-medulla,
+      and ascend as the <strong>medial lemniscus</strong>, carrying vibration,
+      proprioception, and discriminative touch to the contralateral cortex.
+    </p>
+    <div class="pathway">
+      <div class="pathway-title">DCML Pathway (Dorsal Column — Medial Lemniscal System)</div>
+      <div class="pathway-flow">
+        <div class="pathway-node">Fasciculus gracilis<small>lower limb — ipsilateral</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">Gracile nucleus<small>caudal medulla</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node key">Internal arcuate fibers<small>DECUSSATE — mid-medulla</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">Medial lemniscus<small>contralateral, near midline</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">VPL thalamus</div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node output">S1 cortex<small>postcentral gyrus</small></div>
+      </div>
+      <div class="pathway-flow">
+        <div class="pathway-node">Fasciculus cuneatus<small>upper limb/trunk — ipsilateral</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">Cuneate nucleus<small>caudal medulla</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node key">Internal arcuate fibers<small>DECUSSATE — mid-medulla</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">Medial lemniscus</div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">VPL thalamus</div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node output">S1 cortex</div>
+      </div>
+      <p class="pathway-note">Modalities: vibration, proprioception, discriminative touch. Decussation at mid-medulla means lesions above this level cause contralateral DCML loss.</p>
+    </div>
+
+    <h4 id="s2-rostral-medulla-level-of-the">Rostral Medulla — Level of the Olive</h4>
+    <p>
+      The rostral medulla contains the greatest density of functionally
+      important nuclei. The <strong>inferior olivary nucleus</strong> is the
+      exclusive source of climbing fiber afferents to the cerebellum
+      (olivocerebellar pathway via the inferior cerebellar peduncle).
+      The <strong>nucleus solitarius</strong> receives all visceral afferents
+      (CN VII, IX, X) — its rostral portion is the gustatory nucleus. The
+      <strong>nucleus ambiguus</strong> provides branchiomotor (SVE) output for
+      CN IX, X, and the cranial root of XI, controlling the pharynx, larynx,
+      and soft palate. The <strong>hypoglossal nucleus</strong> (CN XII) lies
+      beneath the hypoglossal triangle in the floor of the fourth ventricle.
+      The <strong>dorsal motor nucleus of vagus</strong> is the preganglionic
+      parasympathetic source for thoracic and abdominal viscera.
+      The <strong>area postrema</strong> on the floor of the fourth ventricle
+      lacks a blood-brain barrier — this is the chemoreceptor trigger zone for
+      vomiting. Vestibular nuclei and the dorsal/ventral cochlear nuclei also
+      appear at this level. The <strong>medial longitudinal fasciculus
+      (MLF)</strong> runs close to the midline, coordinating gaze across all
+      brainstem levels.
+    </p>
+
+    <div class="box high-yield">
+      <strong>Inferior olivary nucleus:</strong> only structure that sends
+      climbing fibers to the cerebellum. Each climbing fiber contacts one
+      Purkinje cell with high-frequency, powerful excitation. Projects via the
+      inferior cerebellar peduncle (contralateral after decussation in the
+      medulla).
+    </div>
+
+    <h3 id="s2-clinical-syndromes">Clinical Syndromes</h3>
+
+    <p>
+      Medullary vascular syndromes follow a reliable pattern based on which
+      vessel is occluded and which structures lie in that vascular territory.
+      The two classic syndromes are medial and lateral.
+    </p>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Medial Medullary Syndrome</strong> (Dejerine Syndrome /
+      Inferior Alternating Hemiplegia / Crossed Hypoglossal Hemiplegia)<br />
+      <em>Vessel:</em> Anterior spinal artery or vertebral artery branch.<br />
+      <em>Structures hit:</em> Pyramids (CST), medial lemniscus, CN XII nucleus
+      or fascicles.<br />
+      <em>Signs:</em> Contralateral hemiplegia; contralateral loss of
+      vibration and proprioception (medial lemniscus crosses at mid medulla,
+      so already crossed); ipsilateral tongue weakness with deviation
+      toward the lesion (LMN CN XII — tongue goes toward the weak side).
+    </div>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Lateral Medullary Syndrome — Wallenberg's Syndrome</strong>
+      (Alternating Hemianesthesia)<br />
+      <em>Vessel:</em> Posterior inferior cerebellar artery (PICA) or
+      vertebral artery.<br />
+      <em>Structures hit:</em> Spinal trigeminal nucleus, spinothalamic tract,
+      descending sympathetic tract, inferior cerebellar peduncle,
+      nucleus ambiguus, vestibular nuclei.<br />
+      <em>Signs:</em> Ipsilateral face pain/temp loss (spinal trigeminal
+      nucleus); contralateral body pain/temp loss (spinothalamic tract,
+      already crossed); ipsilateral Horner's syndrome; dysphagia and
+      hoarseness (nucleus ambiguus — CN IX, X); ipsilateral limb ataxia
+      (inferior cerebellar peduncle); vertigo, nausea, and nystagmus
+      (vestibular nuclei). Note: vibration/proprioception is SPARED
+      (medial lemniscus is intact).
+    </div>
+
+    <div class="box mnemonic">
+      <strong>Wallenberg's = PICA territory = lateral structures:</strong>
+      Pain and temperature on the face (ipsilateral) and body (contralateral)
+      are split — this crossed sensory pattern combined with Horner's and
+      dysphagia is pathognomonic for lateral medullary syndrome.<br /><br />
+      <strong>Horner's syndrome — full sign set:</strong>
+      Miosis (iris dilator paralysis) | Ptosis (superior tarsal muscle) |
+      Anhidrosis (ipsilateral facial sweating loss) |
+      <strong>Enophthalmos</strong> (sunken eye — orbital fat loculi lose
+      sympathetic supply) | <strong>Vasodilation</strong> (flushing of
+      ipsilateral face/neck — loss of vasomotor tone).
+      Exam tip: Horner's = small pupil; CN III palsy = large pupil.
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         3. PONS
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- NEW SECTION -->
+    <h2 id="s3">3. Pons</h2>
+    <p>
+      The pons lies between the medulla and midbrain. It is divided into a
+      ventral <strong>basilar part</strong> (motor and cerebellar relay) and a
+      dorsal <strong>tegmentum</strong> (cranial nerve nuclei, ascending
+      sensory tracts). It contains CN V–VIII nuclei and is the site of
+      conjugate horizontal gaze control.
+    </p>
+
+    <h3 id="s3-external-features">External Features</h3>
+    <p>
+      The ventral surface shows the prominent basilar groove housing the
+      basilar artery, flanked by the massive
+      <strong>middle cerebellar peduncles</strong> (brachium pontis) — the
+      largest peduncles, carrying mainly afferent signals from pontine nuclei
+      to the contralateral cerebellum. Transverse pontine fibers cross the
+      ventral surface. CN V attaches at the mid-pons; CNs VI, VII, and VIII
+      attach at the pontomedullary junction.
+    </p>
+
+    <h3 id="s3-internal-features">Internal Features</h3>
+
+    <h4 id="s3-basilar-ventral-part">Basilar (Ventral) Part</h4>
+    <p>
+      The basilar pons contains scattered <strong>corticospinal fibers</strong>
+      (which become the organized pyramids in the medulla),
+      <strong>pontine nuclei</strong>, and transverse pontocerebellar fibers.
+      Cortical signals reach the pontine nuclei via the
+      corticopontine pathway (frontal, parietal, temporal, occipital cortex),
+      which relay to the contralateral cerebellum via the middle cerebellar
+      peduncle. This corticopontocerebellar pathway carries voluntary motor
+      planning signals to the lateral cerebellar hemisphere.
+    </p>
+
+    <h4 id="s3-tegmentum-caudal-pons-level-">Tegmentum — Caudal Pons (Level of CN VI and VII)</h4>
+    <p>
+      The <strong>abducens nucleus</strong> (CN VI) lies beneath the facial
+      colliculus in the floor of the fourth ventricle. The facial nerve
+      fascicles loop dorsally around the abducens nucleus, forming the
+      <strong>internal genu of the facial nerve</strong> — this is why a
+      lesion at the facial colliculus produces both CN VI and CN VII palsies.
+      The <strong>facial motor nucleus</strong> itself lies ventrolaterally.
+      The trapezoid body (second-order auditory fibers crossing the midline)
+      is also visible at this level. Importantly, at this level the
+      <strong>medial lemniscus rotates 90°</strong> from a vertical to a
+      horizontal orientation, now lying ventral to the trapezoid body and
+      dorsal to the basilar pontine fibers — this rotation marks the
+      tegmental-basilar boundary and is a key landmark in cross-sectional
+      identification.
+    </p>
+
+    <div class="box high-yield">
+      A lesion at the <strong>facial colliculus</strong> hits the abducens
+      nucleus + genu of facial nerve → ipsilateral CN VI palsy + ipsilateral
+      complete (LMN) facial palsy. This combination localizes the lesion to
+      the caudal pons floor of the fourth ventricle.
+    </div>
+
+    <h4 id="s3-tegmentum-rostral-pons-level">Tegmentum — Rostral Pons (Level of CN V)</h4>
+    <p>
+      The trigeminal nerve has three sensory nuclei in the brainstem:
+      the <strong>chief (principal) sensory nucleus</strong> in the rostral
+      pons processes discriminative (fine) touch from the face; the
+      <strong>spinal trigeminal nucleus</strong> (pons to C2) processes pain
+      and temperature; and the <strong>mesencephalic nucleus</strong> in the
+      midbrain handles proprioception from the jaw muscles — notably, this is
+      the only sensory nucleus in the CNS whose primary afferent cell bodies
+      reside within the CNS (rather than in a ganglion). The jaw-jerk reflex
+      depends on this nucleus. The <strong>motor nucleus of V</strong> provides
+      branchiomotor output to muscles of mastication.
+    </p>
+
+    <p>
+      The CN V motor nucleus provides SVE output to the
+      <strong>muscles of mastication</strong> (1st pharyngeal arch derivatives):
+      masseter, temporalis, medial and lateral pterygoids, tensor tympani,
+      tensor veli palatini, and anterior belly of digastric. A CN V motor
+      lesion causes weakness of jaw clenching and side-to-side jaw movement
+      with deviation toward the side of the lesion on opening.
+    </p>
+    <p>
+      The <strong>paramedian pontine reticular formation (PPRF)</strong>
+      in the rostral-to-mid pons controls ipsilateral horizontal gaze. The
+      <strong>superior cerebellar peduncles</strong> are visible in the lateral
+      walls of the fourth ventricle at this level; the
+      superior medullary velum spans between them to form the roof of the
+      fourth ventricle.
+    </p>
+
+    <h3 id="s3-ocular-pathways-and-gaze">Ocular Pathways and Gaze</h3>
+    <p>
+      Conjugate horizontal gaze requires coordinated activation of the PPRF,
+      abducens nucleus, and MLF. The contralateral frontal eye field (FEF)
+      initiates the movement by driving the PPRF, which simultaneously
+      activates the ipsilateral lateral rectus and — via the ascending MLF —
+      the contralateral medial rectus.
+    </p>
+    <div class="pathway">
+      <div class="pathway-title">Conjugate Horizontal Gaze — Right Gaze</div>
+      <div class="pathway-flow">
+        <div class="pathway-node">Left FEF<small>frontal eye field</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node key">Right PPRF<small>gaze center</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node key">Right CN VI nucleus<small>↓ two outputs</small></div>
+      </div>
+      <div class="pathway-split">
+        <div class="pathway-branch">
+          <span class="pathway-branch-label">Direct →</span>
+          <div class="pathway-node output">Right lateral rectus<small>abducts right eye</small></div>
+        </div>
+        <div class="pathway-branch">
+          <span class="pathway-branch-label">Via MLF →</span>
+          <div class="pathway-node key">Right MLF<small>ascending</small></div>
+          <div class="pathway-arrow">→</div>
+          <div class="pathway-node">Left CN III nucleus</div>
+          <div class="pathway-arrow">→</div>
+          <div class="pathway-node output">Left medial rectus<small>adducts left eye</small></div>
+        </div>
+      </div>
+      <p class="pathway-note">INO: MLF lesion severs the "Via MLF" branch — ipsilateral eye cannot adduct on contralateral gaze; convergence preserved (different pathway). PPRF lesion abolishes both branches — all ipsilateral conjugate gaze fails.</p>
+    </div>
+
+    <div class="box high-yield">
+      <strong>Internuclear ophthalmoplegia (INO):</strong> MLF lesion between
+      CN VI and CN III nuclei. On attempted lateral gaze toward the lesion
+      side: the ipsilateral eye cannot adduct (medial rectus fails); the
+      abducting contralateral eye shows nystagmus. Adduction on convergence is
+      preserved (because convergence uses a different pathway). Bilateral INO
+      = multiple sclerosis until proven otherwise.
+    </div>
+
+    <!-- NEW -->
+    <div class="box high-yield">
+      <strong>One-and-a-half syndrome:</strong> Combined lesion of the PPRF
+      (or abducens nucleus) AND the ipsilateral MLF on the same side. Result:
+      the ipsilateral eye cannot move horizontally at all (both abduction via
+      PPRF/VI and adduction via MLF are lost); the contralateral eye can only
+      abduct. The only remaining horizontal movement is abduction of the
+      contralateral eye — a "one-and-a-half" loss of horizontal gaze.<br /><br />
+      <strong>8-and-a-half syndrome:</strong> One-and-a-half syndrome plus
+      ipsilateral CN VII fascicular palsy → adds ipsilateral LMN facial
+      paralysis. The "half" is borrowed from the VII nerve (1.5 + 7 = 8.5).
+      Both localize to a unilateral caudal pontine tegmentum lesion.
+    </div>
+
+    <p>
+      The <strong>vestibuloocular reflex (VOR)</strong> stabilizes gaze during
+      head movement. The doll's eye maneuver tests this reflex; intact doll's
+      eyes (eyes move opposite to head) confirm a structurally intact brainstem
+      from medulla to midbrain. The <strong>pupillary light reflex</strong>
+      projects bilaterally at the pretectal level — this bilateral projection
+      explains the consensual light response.
+    </p>
+    <div class="pathway">
+      <div class="pathway-title">Vestibuloocular Reflex (VOR)</div>
+      <div class="pathway-flow">
+        <div class="pathway-node">Semicircular canals<small>head rotation detected</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">CN VIII<small>vestibular branch</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node key">Vestibular nuclei<small>pons / medulla</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node key">MLF</div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node output">CN III / IV / VI nuclei<small>compensatory eye movement</small></div>
+      </div>
+    </div>
+    <div class="pathway">
+      <div class="pathway-title">Pupillary Light Reflex</div>
+      <div class="pathway-flow">
+        <div class="pathway-node">Retina → CN II<small>afferent</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node key">Pretectal nucleus<small>midbrain — projects bilaterally</small></div>
+      </div>
+      <div class="pathway-split">
+        <div class="pathway-branch">
+          <span class="pathway-branch-label">Direct →</span>
+          <div class="pathway-node">Ipsilateral EW nucleus</div>
+          <div class="pathway-arrow">→</div>
+          <div class="pathway-node">CN III → ciliary ganglion</div>
+          <div class="pathway-arrow">→</div>
+          <div class="pathway-node output">Ipsilateral miosis<small>direct reflex</small></div>
+        </div>
+        <div class="pathway-branch">
+          <span class="pathway-branch-label">Consensual →</span>
+          <div class="pathway-node">Contralateral EW nucleus<small>via posterior commissure</small></div>
+          <div class="pathway-arrow">→</div>
+          <div class="pathway-node">CN III → ciliary ganglion</div>
+          <div class="pathway-arrow">→</div>
+          <div class="pathway-node output">Contralateral miosis<small>consensual reflex</small></div>
+        </div>
+      </div>
+      <p class="pathway-note">CN II lesion: afferent cut → no direct AND no consensual from that eye. CN III lesion: efferent cut → no direct from that eye only; the other eye still constricts consensually when light is shone in the affected eye.</p>
+    </div>
+
+    <h3 id="s3-clinical-syndromes">Clinical Syndromes</h3>
+
+    <p>
+      Pontine vascular syndromes follow the same medial/lateral principle as
+      the medulla, based on basilar artery or its branches.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Syndrome</th>
+          <th>Location / Vessel</th>
+          <th>Key Signs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Raymond's</strong> (Alternating Abducent Hemiplegia)</td>
+          <td>Ventral medial mid-pons; basilar perforator</td>
+          <td>Ipsilateral CN VI palsy + contralateral hemiplegia</td>
+        </tr>
+        <tr>
+          <td><strong>Millard-Gubler</strong> (Alternating Facial Hemiplegia)</td>
+          <td>Ventral caudal pons; basilar perforator</td>
+          <td>Ipsilateral CN VI + LMN CN VII palsy + contralateral hemiplegia</td>
+        </tr>
+        <tr>
+          <td><strong>Marie-Foix</strong></td>
+          <td>Lateral pons; long circumferential</td>
+          <td>Contralateral hemiplegia; contralateral pain/temp loss; ipsilateral limb ataxia; ipsilateral facial palsy; hearing loss</td>
+        </tr>
+        <tr>
+          <td><strong>Gasperini</strong></td>
+          <td>Lateral caudal pons</td>
+          <td>Ipsilateral CN VI + CN VII palsy; hypacusis (CN VIII); ipsilateral face pain/temp loss; contralateral body pain/temp loss</td>
+        </tr>
+        <tr>
+          <td><strong>Brissaud-Sicard</strong></td>
+          <td>Anterolateral pons</td>
+          <td>Ipsilateral facial hemispasm (CN VII irritation) + contralateral hemiparesis</td>
+        </tr>
+        <tr>
+          <td><strong>Facial Colliculus Syndrome</strong></td>
+          <td>Dorsal caudal pons</td>
+          <td>Ipsilateral LMN facial palsy + ipsilateral lateral rectus palsy + conjugate gaze palsy</td>
+        </tr>
+        <tr>
+          <td><strong>Locked-in Syndrome</strong></td>
+          <td>Ventral pons bilateral; basilar artery</td>
+          <td>Quadriplegia + anarthria; consciousness fully preserved; only vertical eye movements and blinking remain</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         4. MIDBRAIN
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- NEW SECTION -->
+    <h2 id="s4">4. Midbrain</h2>
+    <p>
+      The midbrain is the most rostral brainstem segment, continuous with the
+      diencephalon above. It is divided into the dorsal
+      <strong>tectum</strong>, the <strong>tegmentum</strong>, the
+      <strong>substantia nigra</strong>, and the ventral
+      <strong>crus cerebri</strong> (basis pedunculi). It contains CN III and
+      CN IV nuclei and houses the periaqueductal gray matter — a key pain
+      modulation center.
+    </p>
+
+    <h3 id="s4-external-features">External Features</h3>
+    <p>
+      The dorsal surface shows the <strong>superior and inferior
+      colliculi</strong> (corpora quadrigemina) flanked by the superior
+      cerebellar peduncles. The ventral surface shows the paired
+      <strong>crura cerebri</strong> separated by the
+      <strong>interpeduncular fossa</strong>, where CN III exits and where
+      the <strong>mammillary bodies</strong> of the hypothalamus are visible.
+      The <strong>cerebral aqueduct of Sylvius</strong> runs through the
+      center of the midbrain, connecting the third ventricle to the fourth
+      ventricle — obstruction here causes obstructive hydrocephalus. CN IV
+      exits dorsally and decussates immediately — the only cranial nerve with
+      both of these properties.
+    </p>
+
+    <!-- NEW -->
+    <div class="box mnemonic">
+      <strong>"Mickey Mouse" cross-section of the midbrain:</strong> The two
+      crura cerebri form the large "ears"; the red nuclei are the "eyes" in
+      the tegmentum; the substantia nigra forms the dark "grin" between
+      the tegmentum and the crus cerebri. The cerebral aqueduct is the
+      central midline landmark (the "head"). Use this to orient any midbrain
+      cross-section: ventral = big ears (crus cerebri); dorsal = tectum
+      (colliculi).
+    </div>
+
+    <h3 id="s4-internal-features">Internal Features</h3>
+
+    <h4 id="s4-tectum-dorsal-midbrain">Tectum (Dorsal Midbrain)</h4>
+    <p>
+      The <strong>superior colliculi</strong> are visual reflex and orienting
+      centers — they receive retinal input and drive the
+      <strong>tectospinal tract</strong> (crosses in the dorsal tegmental
+      decussation, descends to cervical cord) to orient the head toward visual,
+      auditory, and tactile stimuli. The
+      <strong>inferior colliculi</strong> are auditory relay nuclei in the
+      ascending auditory pathway (lateral lemniscus → inferior colliculus →
+      medial geniculate body → primary auditory cortex). The
+      <strong>pretectal nuclei</strong> mediate the pupillary light reflex —
+      they project bilaterally to the Edinger-Westphal nuclei, explaining the
+      consensual light reflex.
+    </p>
+
+    <h4 id="s4-tegmentum">Tegmentum</h4>
+    <p>
+      The <strong>periaqueductal gray matter (PAG)</strong> surrounds the
+      cerebral aqueduct and is the primary site of endogenous opioid-mediated
+      pain modulation. Opioids and stress activate the PAG, which relays via
+      the raphe nuclei and reticulospinal tracts to inhibit pain signals at
+      the dorsal horn — the anatomical basis of opioid analgesia.
+    </p>
+    <div class="pathway">
+      <div class="pathway-title">PAG Descending Pain Modulation</div>
+      <div class="pathway-flow">
+        <div class="pathway-node">Opioids / Stress</div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node key">PAG activation<small>midbrain</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">Raphe nuclei<small>serotonin</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">Reticulospinal tract<small>dorsolateral funiculus</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node output">Dorsal horn inhibition<small>analgesia</small></div>
+      </div>
+    </div>
+    <p>
+      The <strong>red nucleus</strong> in the rostral
+      midbrain tegmentum receives input from the contralateral dentate nucleus
+      (via superior cerebellar peduncle) and gives rise to the
+      <strong>rubrospinal tract</strong>, which crosses in the ventral
+      tegmental decussation. The <strong>oculomotor nucleus</strong> (CN III)
+      lies in the rostral midbrain near the midline; the
+      <strong>Edinger-Westphal nucleus</strong> is its parasympathetic
+      component (pupillary constriction and lens accommodation via the ciliary
+      ganglion). The <strong>trochlear nucleus</strong> (CN IV) is in the
+      caudal midbrain; its fibers decussate in the superior medullary velum.
+    </p>
+
+    <div class="box high-yield">
+      <strong>Crus cerebri fiber arrangement (medial → lateral):</strong>
+      Corticobulbar (medial 1/5) → Corticospinal (middle 3/5) →
+      Corticopontine (lateral 1/5). A Weber's lesion hits the crus cerebri
+      and the CN III fascicles passing through it.
+    </div>
+
+    <h4 id="s4-substantia-nigra">Substantia Nigra</h4>
+    <p>
+      The substantia nigra has two parts: the
+      <strong>pars compacta</strong> contains dopaminergic neurons that project
+      to the striatum (nigrostriatal pathway), modulating basal ganglia
+      circuitry. The <strong>pars reticulata</strong> contains GABAergic
+      neurons and is functionally part of the basal ganglia output (similar to
+      the internal globus pallidus). Loss of pars compacta neurons causes
+      Parkinson's disease.
+    </p>
+
+    <p>
+      The <strong>decussation of the superior cerebellar peduncles</strong>
+      (brachium conjunctivum) occurs in the caudal midbrain tegmentum — after
+      this crossing, fibers from the dentate nucleus ascend to the
+      contralateral VA/VL thalamus. This is why cerebellar lesions cause
+      ipsilateral ataxia (the cerebellum already accounts for the double
+      crossing via the thalamus and descending motor pathways).
+    </p>
+
+    <!-- NEW SECTION -->
+    <h3 id="s4-corticobulbar-corticonuclear">Corticobulbar (Corticonuclear) Pathway</h3>
+    <p>
+      The corticobulbar tract carries voluntary motor commands from the motor
+      cortex to cranial nerve nuclei. It is clinically important because some
+      nuclei receive direct (monosynaptic) cortical drive while others are
+      indirectly innervated — this determines whether a UMN lesion causes
+      contralateral weakness or bilateral sparing.
+    </p>
+
+    <div class="box high-yield">
+      <strong>Direct corticobulbar innervation</strong> (contralateral UMN
+      control): CN V motor (jaw) and CN XII (tongue) nuclei receive direct
+      corticobulbar fibers → a unilateral cortical lesion causes contralateral
+      jaw and tongue weakness.<br /><br />
+      <strong>Indirect/bilateral innervation</strong> (bilateral UMN control):
+      CN III, IV, VI (extraocular) and most CN VII (forehead only) are
+      bilaterally represented → unilateral cortical lesions spare these
+      muscles. Exception: lower face (CN VII) is contralaterally dominant,
+      hence spared forehead in UMN lesions.<br /><br />
+      Purely sensory nerves (I, II, VIII) have no LMN component — cannot be
+      classified as UMN vs LMN.
+    </div>
+
+    <!-- NEW SECTION -->
+    <h3 id="s4-pathological-posturing">Pathological Posturing</h3>
+    <p>
+      Pathological posturing is the involuntary position the limbs assume in
+      response to noxious stimuli in a patient with severe brainstem or
+      cortical injury. The key distinction is whether the red nucleus (and
+      therefore the rubrospinal tract) is intact or damaged.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Posture</th>
+          <th>Upper Limbs</th>
+          <th>Lower Limbs</th>
+          <th>Lesion Level</th>
+          <th>Prognosis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Decorticate</strong></td>
+          <td>Flexed toward chest</td>
+          <td>Extended, feet plantarflexed</td>
+          <td>Above the red nucleus (cortex, internal capsule, thalamus) — rubrospinal tract intact</td>
+          <td>Better; indicates cortical/subcortical injury</td>
+        </tr>
+        <tr>
+          <td><strong>Decerebrate</strong></td>
+          <td>Extended, wrists pronated</td>
+          <td>Extended, rigid, feet plantarflexed</td>
+          <td>Below the red nucleus (midbrain/upper pons tegmentum) — rubrospinal tract disrupted; vestibulospinal and reticulospinal extensors dominate</td>
+          <td>Worse; indicates severe brainstem injury</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="box high-yield">
+      <strong>Memory rule:</strong> Decorticate = "De-cortex" = cortex out of
+      the picture but brainstem intact → arms CURLed (flexion toward core).
+      Decerebrate = brainstem severely damaged below red nucleus →
+      arms EXtended (extension = extensor dominance). Decerebrate is the
+      worse prognostic sign of the two.
+    </div>
+
+    <h3 id="s4-clinical-syndromes">Clinical Syndromes</h3>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Weber's Syndrome</strong> (Ventral Midbrain)<br />
+      <em>Lesion:</em> Crus cerebri + CN III fascicles (posterior cerebral
+      artery or posterior communicating artery territory).<br />
+      <em>Signs:</em> Ipsilateral CN III palsy — ptosis, eye deviated "down
+      and out," fixed dilated pupil (compression of parasympathetic
+      fibers on the outside of CN III); contralateral hemiplegia (CST in
+      crus cerebri, not yet decussated at this level).
+    </div>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Claude's Syndrome</strong> (Midbrain Tegmentum)<br />
+      <em>Lesion:</em> Red nucleus + CN III fascicles.<br />
+      <em>Signs:</em> Ipsilateral CN III palsy + contralateral ataxia and
+      tremor (red nucleus, dentate nucleus pathway). Distinguished from
+      Weber's by the ataxia rather than hemiplegia.
+    </div>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Benedikt's Syndrome</strong> (Paracentral Tegmentum)<br />
+      <em>Lesion:</em> Red nucleus + subthalamic nucleus + CN III fascicles
+      (paramedian perforators of basilar or interpeduncular branches of PCA).<br />
+      <em>Signs:</em> Ipsilateral CN III palsy + contralateral
+      <em>hemichorea</em> (subthalamic nucleus involvement) + contralateral
+      ataxia and tremor (red nucleus). Distinguished from Claude's by
+      the addition of hemichorea/hemiathetosis due to subthalamic nucleus damage.
+    </div>
+
+    <!-- NEW -->
+    <div class="box high-yield">
+      <strong>Midbrain syndrome comparison:</strong><br />
+      Weber's = CN III + contralateral <em>hemiplegia</em> (crus cerebri / CST)<br />
+      Claude's = CN III + contralateral <em>ataxia</em> (red nucleus only)<br />
+      Benedikt's = CN III + contralateral <em>hemichorea + ataxia</em>
+      (red nucleus + subthalamic nucleus)
+    </div>
+
+    <!-- NEW SECTION -->
+    <h3 id="syndromes">Brainstem Vascular Syndromes — Master Summary</h3>
+    <p>
+      All named brainstem vascular syndromes follow the crossed-deficit rule:
+      cranial nerve signs ipsilateral to the lesion, long-tract signs
+      contralateral. Use this table to rapidly distinguish syndromes by their
+      CN involvement and location.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Syndrome</th>
+          <th>Level</th>
+          <th>Vessel</th>
+          <th>CN Sign (ipsilateral)</th>
+          <th>Long-tract Sign (contralateral)</th>
+          <th>Other Key Signs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Medial Medullary</strong> (Dejerine)</td>
+          <td>Medulla (medial)</td>
+          <td>ASA / vertebral</td>
+          <td>CN XII palsy → tongue deviates toward lesion</td>
+          <td>Hemiplegia (CST) + DCML loss (medial lemniscus)</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>Lateral Medullary</strong> (Wallenberg)</td>
+          <td>Medulla (lateral)</td>
+          <td>PICA / vertebral</td>
+          <td>Face pain/temp loss (spinal V nucleus); CN IX/X → dysphagia, hoarseness</td>
+          <td>Body pain/temp loss (spinothalamic)</td>
+          <td>Ipsilateral Horner's; ipsilateral ataxia; vertigo; DCML spared</td>
+        </tr>
+        <tr>
+          <td><strong>Raymond's</strong></td>
+          <td>Pons (medial)</td>
+          <td>Basilar perforator</td>
+          <td>CN VI palsy</td>
+          <td>Hemiplegia (CST)</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>Millard-Gubler</strong></td>
+          <td>Pons (ventral caudal)</td>
+          <td>Basilar perforator</td>
+          <td>CN VI + CN VII (LMN) palsy</td>
+          <td>Hemiplegia (CST)</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>Lateral Pontine</strong> (Marie-Foix)</td>
+          <td>Pons (lateral)</td>
+          <td>AICA</td>
+          <td>CN VII; CN VIII (hearing loss); face pain/temp loss</td>
+          <td>Body pain/temp loss; hemiplegia</td>
+          <td>Ipsilateral Horner's; ipsilateral ataxia</td>
+        </tr>
+        <tr>
+          <td><strong>Locked-in</strong></td>
+          <td>Pons (ventral bilateral)</td>
+          <td>Basilar artery</td>
+          <td>Bilateral CN VII/XII (anarthria)</td>
+          <td>Bilateral hemiplegia (quadriplegia)</td>
+          <td>Consciousness preserved; vertical gaze intact</td>
+        </tr>
+        <tr>
+          <td><strong>Weber's</strong></td>
+          <td>Midbrain (ventral)</td>
+          <td>PCA / PCom perforator</td>
+          <td>CN III palsy (down+out, fixed dilated pupil)</td>
+          <td>Hemiplegia (CST in crus cerebri)</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>Claude's</strong></td>
+          <td>Midbrain (tegmentum)</td>
+          <td>PCA interpeduncular</td>
+          <td>CN III palsy</td>
+          <td>Ataxia + tremor (red nucleus)</td>
+          <td>No hemiplegia</td>
+        </tr>
+        <tr>
+          <td><strong>Benedikt's</strong></td>
+          <td>Midbrain (paracentral tegmentum)</td>
+          <td>Basilar / PCA perforator</td>
+          <td>CN III palsy</td>
+          <td>Hemichorea + ataxia (red nucleus + STN)</td>
+          <td>No hemiplegia</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         5. RETICULAR FORMATION
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- NEW SECTION -->
+    <h2 id="s5">5. Reticular Formation</h2>
+    <p>
+      The reticular formation is a diffuse network of neurons extending
+      throughout the brainstem tegmentum from medulla to midbrain. It
+      integrates sensory input with autonomic, motor, and arousal outputs.
+      Rather than forming discrete nuclei (except for the raphe and locus
+      ceruleus), it forms a matrix with both ascending and descending
+      projections.
+    </p>
+
+    <p>
+      The <strong>reticulospinal tracts</strong> modulate spinal cord motor
+      neurons: the pontine (medial) reticulospinal tract facilitates extensor
+      tone; the medullary (lateral) reticulospinal tract facilitates flexor
+      tone and inhibits extensors. The
+      <strong>ascending reticular activating system (RAS)</strong> projects
+      from the midbrain reticular formation diffusely to the thalamus and
+      cortex, maintaining wakefulness and modulating the sleep-wake cycle.
+      Bilateral RAS disruption causes coma.
+    </p>
+
+    <div class="box high-yield">
+      <strong>Reticular formation functions:</strong> Respiratory and
+      cardiovascular control (medullary RF) | Horizontal gaze (PPRF) |
+      Sleep-wake (RAS) | Pain modulation (via raphe → PAG circuit) |
+      Cortical arousal (ascending RAS).<br />
+      <strong>Locus ceruleus</strong> (rostral pons) = norepinephrine.
+      <strong>Raphe nuclei</strong> (midline throughout) = serotonin.
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         6. CRANIAL NERVE NUCLEI
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- NEW SECTION -->
+    <h2 id="s6">6. Cranial Nerve Nuclei</h2>
+    <p>
+      Cranial nerve nuclei are organized in columns running longitudinally
+      through the brainstem. Understanding the functional column organization
+      tells you which nucleus a given fiber type belongs to and, when injured,
+      what deficits to expect.
+    </p>
+
+    <h3 id="s6-functional-components">Functional Components</h3>
+    <p>
+      The seven functional fiber types are organized from medial to lateral in
+      the brainstem tegmentum (sulcus limitans divides efferent from afferent
+      columns). The general somatic efferent (GSE) column is the most
+      medial; the special somatic afferent (SSA) column is the most lateral.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Column</th>
+          <th>Type</th>
+          <th>Nuclei</th>
+          <th>CNs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GSE (somatic motor)</td>
+          <td>Efferent</td>
+          <td>Oculomotor, trochlear, abducens, hypoglossal</td>
+          <td>III, IV, VI, XII</td>
+        </tr>
+        <tr>
+          <td>SVE (branchiomotor)</td>
+          <td>Efferent</td>
+          <td>Trigeminal motor, facial motor, nucleus ambiguus</td>
+          <td>V, VII, IX, X, XI</td>
+        </tr>
+        <tr>
+          <td>GVE (parasympathetic)</td>
+          <td>Efferent</td>
+          <td>Edinger-Westphal, superior/inferior salivatory, dorsal motor nucleus of vagus</td>
+          <td>III, VII, IX, X</td>
+        </tr>
+        <tr>
+          <td>GVA + SVA (visceral &amp; taste afferents)</td>
+          <td>Afferent</td>
+          <td>Nucleus solitarius (caudal = GVA; rostral = taste)</td>
+          <td>VII, IX, X</td>
+        </tr>
+        <tr>
+          <td>GSA (somatic sensory)</td>
+          <td>Afferent</td>
+          <td>Trigeminal sensory nuclei (mesencephalic, chief, spinal)</td>
+          <td>V, VII, IX, X</td>
+        </tr>
+        <tr>
+          <td>SSA (special somatic — hearing/balance)</td>
+          <td>Afferent</td>
+          <td>Cochlear nuclei, vestibular nuclei</td>
+          <td>VIII</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 id="s6-afferent-nuclei-in-detail">Afferent Nuclei in Detail</h3>
+
+    <h4 id="s6-trigeminal-sensory-nuclei">Trigeminal Sensory Nuclei</h4>
+    <p>
+      The trigeminal system has three sensory nuclei for different modalities.
+      The <strong>mesencephalic nucleus</strong> is unique: it contains primary
+      afferent cell bodies within the CNS (not in the trigeminal ganglion),
+      carrying proprioceptive signals from the muscles of mastication and the
+      periodontal ligament. It is the afferent limb of the jaw-jerk reflex.
+      The <strong>chief (principal) sensory nucleus</strong> in the pons
+      processes discriminative touch from the face — its second-order axons
+      cross and ascend in the trigeminal-thalamic tract (ventral trigeminothalamic
+      tract) to VPM of the thalamus. The <strong>spinal trigeminal nucleus</strong>
+      processes pain and temperature from the face, extending from the pons
+      to C2 of the spinal cord — it can be damaged by syringobulbia or herpes
+      zoster infections.
+    </p>
+
+    <h4 id="s6-auditory-pathway">Auditory Pathway</h4>
+    <p>
+      The ascending auditory pathway crosses and re-crosses multiple times,
+      ensuring bilateral cortical representation. No unilateral cortical lesion
+      can cause complete deafness in one ear.
+    </p>
+    <div class="pathway">
+      <div class="pathway-title">Ascending Auditory Pathway</div>
+      <div class="pathway-flow">
+        <div class="pathway-node">Cochlea<small>hair cells → spiral ganglion</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">CN VIII<small>cochlear division</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node key">Cochlear nuclei<small>caudal pons — 1st relay</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node key">Trapezoid body<small>crosses midline</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">Superior olive<small>1st binaural relay</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">Lateral lemniscus</div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node key">Inferior colliculus<small>midbrain — auditory relay</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">Medial geniculate body<small>thalamus (MGB)</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node output">Heschl's gyrus<small>primary auditory cortex</small></div>
+      </div>
+    </div>
+
+    <h4 id="s6-vestibular-pathways">Vestibular Pathways</h4>
+    <p>
+      Vestibular primary afferents from the semicircular canals and otolith
+      organs travel in CN VIII to the four <strong>vestibular nuclei</strong>
+      (superior, inferior, medial, lateral) at the pons/medulla junction.
+      Four distinct output pathways distribute vestibular signals to their targets:
+    </p>
+    <div class="pathway">
+      <div class="pathway-title">Vestibular Nuclei — Output Pathways</div>
+      <div class="pathway-flow">
+        <div class="pathway-node key">Vestibular nuclei</div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">Inferior cerebellar peduncle</div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node output">Cerebellum<small>VOR coordination, balance</small></div>
+      </div>
+      <div class="pathway-flow">
+        <div class="pathway-node key">Vestibular nuclei</div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">Lateral vestibulospinal tract<small>(Deiters' nucleus)</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node output">Spinal cord<small>extensor muscle tone</small></div>
+      </div>
+      <div class="pathway-flow">
+        <div class="pathway-node key">Vestibular nuclei</div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">MLF<small>ascending</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node output">CN III / IV / VI nuclei<small>VOR — gaze stabilization</small></div>
+      </div>
+      <div class="pathway-flow">
+        <div class="pathway-node key">Vestibular nuclei</div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node">Thalamocortical relay<small>VPL → parietal cortex</small></div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node output">Conscious position sense</div>
+      </div>
+    </div>
+
+    <h3 id="s6-efferent-nuclei-and-parasymp">Efferent Nuclei and Parasympathetic Targets</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nucleus</th>
+          <th>CN</th>
+          <th>Ganglion</th>
+          <th>Target</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Edinger-Westphal</td>
+          <td>III</td>
+          <td>Ciliary ganglion</td>
+          <td>Pupillary sphincter (miosis); ciliary muscle (accommodation)</td>
+        </tr>
+        <tr>
+          <td>Superior salivatory</td>
+          <td>VII</td>
+          <td>Pterygopalatine + submandibular ganglia</td>
+          <td>Lacrimal gland; submandibular + sublingual salivary glands</td>
+        </tr>
+        <tr>
+          <td>Inferior salivatory</td>
+          <td>IX</td>
+          <td>Otic ganglion</td>
+          <td>Parotid gland</td>
+        </tr>
+        <tr>
+          <td>Dorsal motor nucleus of vagus</td>
+          <td>X</td>
+          <td>Intramural ganglia</td>
+          <td>Thoracic and abdominal viscera to left colic flexure</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 id="s6-cranial-nerve-lesions-high-y">Cranial Nerve Lesions — High-Yield Patterns</h3>
+
+    <p>
+      The most tested cranial nerve lesion scenarios all hinge on localizing
+      whether damage is at the nucleus, the fascicle within the brainstem, the
+      nerve as it exits, or distally. For most purposes, nuclear and
+      fascicular lesions produce the same ipsilateral deficit.
+    </p>
+
+    <div class="box high-yield">
+      <strong>CN III palsy:</strong> Ptosis + eye "down and out"
+      (unopposed SO and LR) + fixed dilated pupil (parasympathetic fibers
+      run on the outside of CN III — compressed first by aneurysm or
+      uncal herniation). Contrast with Horner's: ptosis + miosis (small
+      pupil) — no eye movement deficit.
+    </div>
+
+    <div class="box high-yield">
+      <strong>CN IV palsy:</strong> Hypertropia (affected eye elevated) and
+      extorsion; patient tilts head to opposite side to compensate. The only
+      CN that exits dorsally and decussates — a dorsal midbrain trauma
+      (e.g., shearing) is the most common cause.
+    </div>
+
+    <div class="box high-yield">
+      <strong>CN VI palsy:</strong> Ipsilateral esotropia (medial deviation);
+      patient cannot abduct the eye. Most common false localizing sign in
+      raised ICP — the nerve has a long intracranial course and is
+      stretched over the petrous ridge before it even reaches the pons.
+    </div>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Bell's Palsy</strong> (CN VII LMN lesion)<br />
+      <em>Mechanism:</em> Inflammation / compression of CN VII in the facial
+      canal (often viral — HSV-1 reactivation).<br />
+      <em>Signs:</em> Ipsilateral complete facial paralysis including the
+      forehead (LMN). This distinguishes it from a UMN (cortical) lesion,
+      where the forehead is SPARED because the forehead muscles receive
+      bilateral cortical representation. May have associated hyperacusis
+      (stapedius branch) and loss of taste (chorda tympani branch).
+    </div>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Ramsay Hunt Syndrome</strong> (Herpes zoster CN VII)<br />
+      <em>Mechanism:</em> VZV reactivation in the geniculate ganglion.<br />
+      <em>Signs:</em> Ipsilateral LMN facial paralysis + painful vesicles
+      in the external auditory canal and auricle + ipsilateral sensorineural
+      hearing loss ± vertigo (CN VIII involvement).
+    </div>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Acoustic Neuroma</strong> (Vestibular Schwannoma, CN VIII)<br />
+      <em>Site:</em> Schwann cells at the cerebellopontine angle (usually
+      superior vestibular nerve).<br />
+      <em>Signs:</em> Progressive unilateral sensorineural hearing loss +
+      tinnitus. As tumor grows: ipsilateral CN VII palsy, then CN V involvement
+      (trigeminal pain/numbness), then cerebellar signs (compresses middle
+      cerebellar peduncle).
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         7. CEREBELLUM
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- NEW SECTION -->
+    <h2 id="s7">7. Cerebellum</h2>
+    <p>
+      The cerebellum coordinates the timing and accuracy of movement; it does
+      not initiate movement. Cerebellar lesions cause ipsilateral deficits
+      because the cerebellum connects to the contralateral cortex via two
+      decussations (superior cerebellar peduncle crosses in midbrain; CST
+      crosses in medulla), which cancel each other out.
+    </p>
+
+    <h3 id="s7-external-features-and-lobes">External Features and Lobes</h3>
+    <p>
+      The cerebellum is divided into three lobes by two key fissures: the
+      <strong>primary fissure</strong> separates the anterior from the
+      posterior (middle) lobe; the <strong>posterolateral fissure</strong>
+      separates the posterior lobe from the flocculonodular lobe. The vermis
+      runs along the midline; the cerebellar hemispheres are lateral. The
+      superior, middle, and inferior cerebellar peduncles connect to the
+      midbrain, pons, and medulla respectively.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Peduncle</th>
+          <th>Also Called</th>
+          <th>Primary Direction</th>
+          <th>Key Fiber Types</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Superior (SCP)</td>
+          <td>Brachium conjunctivum</td>
+          <td>Efferent (mainly)</td>
+          <td>Dentate → contralateral VA/VL thalamus; decussates in caudal midbrain</td>
+        </tr>
+        <tr>
+          <td>Middle (MCP)</td>
+          <td>Brachium pontis</td>
+          <td>Afferent (almost exclusively)</td>
+          <td>Pontocerebellar (contralateral cortex relay)</td>
+        </tr>
+        <tr>
+          <td>Inferior (ICP)</td>
+          <td>Restiform body</td>
+          <td>Mixed</td>
+          <td>Afferent: olivocerebellar, spinocerebellar, vestibular; efferent: to vestibular nuclei</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      Blood supply: the <strong>PICA</strong> (posterior inferior cerebellar
+      artery) supplies the inferior vermis and hemisphere; the
+      <strong>AICA</strong> (anterior inferior cerebellar artery) supplies
+      the flocculus and caudal pons; the <strong>SCA</strong> (superior
+      cerebellar artery) supplies the superior hemisphere. PICA territory
+      = Wallenberg's syndrome (see medulla section).
+    </p>
+
+    <!-- NEW SECTION -->
+    <h3 id="s7-spinocerebellar-tracts">Spinocerebellar Tracts</h3>
+    <p>
+      The spinocerebellar tracts carry unconscious proprioception (muscle and
+      joint position) from the limbs to the cerebellum. They are critical for
+      coordination of ongoing movement and represent a key clinical pathway —
+      damage produces ipsilateral ataxia without sensory loss to consciousness.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tract</th>
+          <th>Crosses?</th>
+          <th>Enters Cerebellum Via</th>
+          <th>Carries Info From</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Dorsal (posterior) spinocerebellar</strong></td>
+          <td>Does NOT cross — ipsilateral throughout</td>
+          <td>Inferior cerebellar peduncle</td>
+          <td>Lower limb and trunk unconscious proprioception (Clark's column, T1–L2)</td>
+        </tr>
+        <tr>
+          <td><strong>Ventral (anterior) spinocerebellar</strong></td>
+          <td>Crosses in spinal cord, then crosses again entering cerebellum → net ipsilateral</td>
+          <td>Superior cerebellar peduncle</td>
+          <td>Lower limb proprioception; also carries efference copy signals</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="box high-yield">
+      The dorsal spinocerebellar tract enters the cerebellum via the
+      <strong>inferior cerebellar peduncle</strong> without crossing (ipsilateral
+      all the way). The ventral tract crosses twice — once in the spinal cord,
+      once in the brainstem entering via the <strong>superior cerebellar
+      peduncle</strong> — ending up ipsilateral. Both tracts deliver to the
+      spinocerebellum (vermis/paravermis). Clinically, a lesion of either
+      tract causes <em>ipsilateral</em> limb ataxia.
+    </div>
+
+    <h3 id="s7-cortical-layers-and-cell-typ">Cortical Layers and Cell Types</h3>
+    <p>
+      The cerebellar cortex has three layers from superficial to deep. The
+      <strong>molecular layer</strong> contains stellate and basket cells
+      (inhibitory) and the parallel fibers (axons of granule cells running
+      longitudinally). The <strong>Purkinje cell layer</strong> contains a
+      single row of Purkinje cells — the sole output of the cerebellar cortex,
+      projecting to the deep nuclei with inhibitory (GABAergic) signals. The
+      <strong>granular layer</strong> contains granule cells (the only
+      excitatory cells in the cortex) and Golgi cells.
+    </p>
+
+    <p>
+      Cerebellar afferents arrive as two types: <strong>mossy fibers</strong>
+      from all sources except the inferior olive (spino-, vestibulo-,
+      pontocerebellar pathways) excite granule cells, whose parallel fibers
+      then excite Purkinje cells. <strong>Climbing fibers</strong> arise
+      exclusively from the <strong>inferior olive</strong> and synapse
+      directly on Purkinje cells in a powerful 1:1 excitatory connection
+      (each climbing fiber contacts exactly one Purkinje cell).
+    </p>
+
+    <div class="box high-yield">
+      Purkinje cells are the ONLY output of the cerebellar cortex → they
+      are GABAergic and INHIBIT the deep cerebellar nuclei. Disease of the
+      cerebellar cortex therefore disinhibits the deep nuclei. Climbing
+      fibers come ONLY from the inferior olive — the only 1:1 excitatory
+      connection in the cerebellar cortex.
+    </div>
+
+    <h3 id="s7-deep-cerebellar-nuclei-and-f">Deep Cerebellar Nuclei and Functional Zones</h3>
+
+    <p>
+      The deep nuclei are the final output of the cerebellum. From medial to
+      lateral: <strong>Fastigial</strong>, Globose, Emboliform, and
+      <strong>Dentate</strong>. The globose and emboliform together form the
+      interposed nucleus.
+    </p>
+
+    <div class="box mnemonic">
+      <strong>Medial → Lateral deep nuclei:</strong> "Fat Girls Eat
+      Doughnuts" = Fastigial, Globose, Emboliform, Dentate.
+      Dentate is the largest and most lateral; Fastigial is the most medial
+      (and most phylogenetically old).
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Functional Zone</th>
+          <th>Phylogenetic Name</th>
+          <th>Anatomical Region</th>
+          <th>Deep Nucleus</th>
+          <th>Function</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Vestibulocerebellum</td>
+          <td>Archicerebellum (oldest)</td>
+          <td>Flocculonodular lobe</td>
+          <td>Fastigial → vestibular nuclei</td>
+          <td>Balance, eye movement stabilization (VOR), truncal tone</td>
+        </tr>
+        <tr>
+          <td>Spinocerebellum</td>
+          <td>Paleocerebellum</td>
+          <td>Vermis + paravermis</td>
+          <td>Fastigial, Globose, Emboliform</td>
+          <td>Axial and proximal limb coordination; gait</td>
+        </tr>
+        <tr>
+          <td>Cerebrocerebellum</td>
+          <td>Neocerebellum (newest)</td>
+          <td>Lateral hemispheres</td>
+          <td>Dentate</td>
+          <td>Fine motor planning; timing of distal limb movements</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 id="s7-clinical-signs-and-lesion-pa">Clinical Signs and Lesion Patterns</h3>
+
+    <p>
+      Cerebellar disease produces a characteristic constellation of findings
+      that are all ipsilateral. It is critical to distinguish the Romberg test
+      (dorsal column/proprioception) from true cerebellar ataxia — a patient
+      with cerebellar disease is equally unsteady with eyes open and closed
+      (cannot use visual compensation); a patient with a positive Romberg test
+      is unsteady with eyes CLOSED only, and can stand with eyes open.
+    </p>
+
+    <div class="box high-yield">
+      <strong>Charcot's Triad of Cerebellar Disease:</strong> Nystagmus +
+      Intention tremor + Scanning (staccato) dysarthria.<br />
+      <strong>Cerebellar vs. Parkinson's tremor:</strong> Intention tremor
+      (worsens approaching target) = cerebellar. Resting tremor (present
+      at rest, suppressed by movement) = Parkinson's.
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Sign</th>
+          <th>Description</th>
+          <th>Localizing Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dysmetria</td>
+          <td>Overshoot/undershoot on finger-nose test</td>
+          <td>Ipsilateral hemisphere</td>
+        </tr>
+        <tr>
+          <td>Dysdiadochokinesia</td>
+          <td>Inability to rapidly alternate movements</td>
+          <td>Ipsilateral hemisphere</td>
+        </tr>
+        <tr>
+          <td>Rebound phenomenon</td>
+          <td>Loss of check response — arm overshoots when resistance released</td>
+          <td>Ipsilateral hemisphere</td>
+        </tr>
+        <tr>
+          <td>Truncal ataxia</td>
+          <td>Wide-based gait, cannot tandem walk, falls without limb ataxia</td>
+          <td>Vermis (midline)</td>
+        </tr>
+        <tr>
+          <td>Nystagmus</td>
+          <td>Rhythmic eye oscillation; fast phase toward side of lesion</td>
+          <td>Ipsilateral hemisphere or flocculonodular lobe</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Friedreich's Ataxia</strong> (Most Common Hereditary Ataxia)<br />
+      <em>Mechanism:</em> Autosomal recessive; GAA trinucleotide repeat
+      expansion in the <em>FXN</em> gene (chromosome 9) → frataxin protein
+      deficiency → mitochondrial iron accumulation → degeneration of
+      spinocerebellar tracts, dorsal columns, corticospinal tract, and
+      dorsal root ganglia.<br />
+      <em>Signs (onset &lt;25 years):</em> Progressive gait and limb ataxia;
+      dysarthria; loss of vibration and proprioception (dorsal column); absent
+      deep tendon reflexes (DRG degeneration); positive Babinski (CST damage);
+      hypertrophic cardiomyopathy (most common cause of death); pes cavus
+      (high-arched foot) and kyphoscoliosis. Notable: ataxia + absent
+      reflexes + extensor plantar response = Friedreich's until proven
+      otherwise.
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         8. BASAL GANGLIA
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- NEW SECTION -->
+    <h2 id="s8">8. Basal Ganglia</h2>
+    <p>
+      The basal ganglia are a group of subcortical nuclei that modulate
+      voluntary movement by filtering and gating cortical motor plans. Unlike
+      the cerebellum (which fine-tunes ongoing movement), the basal ganglia
+      primarily select which movements to execute and suppress unwanted ones.
+      They do not send direct output to the spinal cord — all output goes
+      via the thalamus back to the cortex.
+    </p>
+
+    <h3 id="s8-components-and-anatomy">Components and Anatomy</h3>
+    <p>
+      The <strong>corpus striatum</strong> is the largest component of the
+      basal ganglia and comprises the caudate nucleus, putamen, and globus
+      pallidus. The <strong>caudate nucleus</strong> is a C-shaped structure
+      whose head bulges into the frontal horn of the lateral ventricle, body
+      runs along the lateral wall of the lateral ventricle, and slender
+      tail courses along the roof of the temporal horn — terminating at the
+      <strong>amygdaloid nucleus</strong>. The caudate and
+      <strong>putamen</strong> together form the <strong>striatum</strong>
+      (neostriatum) — the primary input station, rich in GABA. The putamen
+      and <strong>globus pallidus</strong> together form the
+      <strong>lentiform nucleus</strong>.
+    </p>
+    <p>
+      The globus pallidus is divided by two medullary laminae of white matter:
+      the <strong>external medullary lamina</strong> separates the GP from
+      the putamen; the <strong>medial medullary lamina</strong> bisects the GP
+      into the external (GPe) and internal (GPi) segments. GPi is the
+      primary output nucleus. The <strong>subthalamic nucleus</strong> (STN)
+      in the diencephalon is an excitatory relay in the indirect pathway.
+      The <strong>nucleus accumbens</strong> (limbic striatum) connects
+      limbic input to motor output. The <strong>substantia nigra pars
+      compacta</strong> provides dopaminergic input to the striatum via the
+      nigrostriatal pathway.
+    </p>
+
+    <h3 id="s8-direct-and-indirect-pathways">Direct and Indirect Pathways</h3>
+    <p>
+      Cortical motor signals enter the striatum (caudate + putamen) and
+      travel via two competing circuits. Both ultimately modulate the GPi
+      (and SNr), which tonically inhibits the thalamus via GABAergic
+      projections. The thalamic target for both basal ganglia and cerebellar
+      output is the <strong>VA/VL complex</strong> of the thalamus.
+    </p>
+
+    <div class="pathway">
+      <div class="pathway-title">Basal Ganglia: Direct vs. Indirect Pathway</div>
+      <div class="pathway-flow">
+        <div class="pathway-node">Cortex</div>
+        <div class="pathway-arrow">→</div>
+        <div class="pathway-node key">Striatum<small>dopamine modulates both branches</small></div>
+      </div>
+      <div class="pathway-split">
+        <div class="pathway-branch">
+          <span class="pathway-branch-label">Direct (D1) →</span>
+          <div class="pathway-node">↓ GPi / SNr<small>striatum inhibits</small></div>
+          <div class="pathway-arrow">→</div>
+          <div class="pathway-node output">↑ VA/VL thalamus<small>disinhibited → more movement</small></div>
+        </div>
+        <div class="pathway-branch">
+          <span class="pathway-branch-label">Indirect (D2) →</span>
+          <div class="pathway-node">↓ GPe<small>striatum inhibits</small></div>
+          <div class="pathway-arrow">→</div>
+          <div class="pathway-node key">↑ STN<small>disinhibited</small></div>
+          <div class="pathway-arrow">→</div>
+          <div class="pathway-node">↑ GPi / SNr<small>STN excites</small></div>
+          <div class="pathway-arrow">→</div>
+          <div class="pathway-node output">↓ VA/VL thalamus<small>inhibited → less movement</small></div>
+        </div>
+      </div>
+      <p class="pathway-note">Both branches compete at the GPi → VA/VL thalamus → Cortex axis. Dopamine D1 activates direct (more movement); D2 inhibits indirect (also more movement). Parkinson's: dopamine loss → direct ↓ + indirect ↑ → GPi over-active → thalamus over-inhibited → hypokinesia. Hemiballismus: STN destroyed → indirect branch severed → GPi under-active → thalamus uninhibited → wild flinging movements.</p>
+    </div>
+    <div class="box high-yield">
+      <strong>Dopamine facilitates movement via BOTH pathways:</strong> D1 (direct) activates the facilitatory path; D2 (indirect) inhibits the inhibitory path. Net effect: more thalamic drive to cortex → more movement.<br /><br />
+      <strong>Loss of dopamine (Parkinson's):</strong> Direct ↓ + Indirect ↑ → excessive GPi inhibition of VA/VL thalamus → hypokinesia and bradykinesia.
+    </div>
+
+    <h3 id="s8-clinical-disorders">Clinical Disorders</h3>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Parkinson's Disease</strong><br />
+      <em>Mechanism:</em> Degeneration of substantia nigra pars compacta
+      dopaminergic neurons → loss of nigrostriatal dopamine → decreased
+      direct pathway + increased indirect pathway → excessive GPi inhibition
+      of VA/VL thalamus → hypokinesia.<br />
+      <em>Signs (TRAP):</em> Tremor (resting, pill-rolling, 4–6 Hz, improved
+      by movement), Rigidity (cogwheel — passive movement meets repeated
+      "catches"), Akinesia/bradykinesia, Postural instability. Expressionless
+      (masked) facies, micrographia (handwriting shrinks progressively —
+      hallmark of sustained motor control failure), shuffling gait with
+      festination, drooling, soft monotonous speech.<br />
+      <em>Drug-induced parkinsonism:</em> Antipsychotics (dopamine D2
+      blockers) and metoclopramide can block nigrostriatal dopaminergic
+      transmission → drug-induced parkinsonism or tardive dyskinesia.
+    </div>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Huntington's Disease</strong><br />
+      <em>Mechanism:</em> CAG trinucleotide repeat expansion in the
+      <em>HTT</em> gene (chromosome 4) → mutant huntingtin protein →
+      preferential degeneration of striatal neurons projecting via the
+      INDIRECT pathway (GABA/enkephalin neurons) → indirect pathway
+      underactive → GPi disinhibited → thalamus released → hyperkinesia
+      (chorea).<br />
+      <em>Signs:</em> Chorea (brief, random, involuntary movements), cognitive
+      decline, psychiatric symptoms (depression, personality change). Caudate
+      atrophy on imaging ("box-car" lateral ventricles). Autosomal dominant,
+      anticipation with paternal inheritance.
+    </div>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Hemiballismus</strong><br />
+      <em>Mechanism:</em> Contralateral subthalamic nucleus (STN) lesion
+      (most commonly lacunar stroke). Loss of STN excitation of GPi →
+      GPi underactive → thalamus disinhibited → wild, flinging movements
+      of the contralateral proximal limbs.<br />
+      <em>Signs:</em> Sudden onset, violent flinging movements of the
+      arm/leg contralateral to the lesion. Unlike chorea, movements are
+      large amplitude and proximal. Movements <strong>cease during sleep</strong>
+      and can be physically exhausting (potentially fatal from exhaustion if
+      untreated). Treated with phenothiazines or haloperidol.
+    </div>
+
+    <!-- NEW -->
+    <div class="box clinical">
+      <strong>Wilson's Disease</strong> (Hepatolenticular Degeneration)<br />
+      <em>Mechanism:</em> Autosomal recessive defect in ATP7B (copper
+      transporter) → copper accumulates in liver, basal ganglia (putamen
+      > caudate), and Descemet's membrane of the cornea.<br />
+      <em>Signs:</em> Kayser-Fleischer rings (gold-brown corneal deposits,
+      nearly pathognomonic), liver disease (cirrhosis), neuropsychiatric
+      symptoms, dysarthria, dyskinesia, tremor (wing-beating). Onset
+      typically in young adults. Treatable with copper chelation.
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Disorder</th>
+          <th>Movement Type</th>
+          <th>Lesion / Mechanism</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Parkinson's</td>
+          <td>Hypokinesia, resting tremor, rigidity</td>
+          <td>Loss of SNc dopamine → ↑GPi → ↓thalamus</td>
+        </tr>
+        <tr>
+          <td>Huntington's</td>
+          <td>Chorea, hyperkinesia</td>
+          <td>Loss of indirect pathway striatal neurons → ↓GPi → ↑thalamus</td>
+        </tr>
+        <tr>
+          <td>Hemiballismus</td>
+          <td>Violent proximal flinging (contralateral)</td>
+          <td>Contralateral STN lesion → ↓GPi → ↑thalamus</td>
+        </tr>
+        <tr>
+          <td>Wilson's</td>
+          <td>Dyskinesia, tremor (wing-beating)</td>
+          <td>Copper in putamen; ATP7B mutation (AR)</td>
+        </tr>
+        <tr>
+          <td>Sydenham's chorea</td>
+          <td>Chorea, hypotonia, exaggerated associated movements</td>
+          <td>Post-streptococcal (rheumatic fever); autoimmune antibodies targeting <strong>putamen</strong>; self-limited (resolves in 1–4 months) in children</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         QUIZ
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <h2 id="quiz">Practice Questions</h2>
+    <p>
+      50 board-style questions covering all Block 2 topics. Attempt each
+      question before revealing the explanation.
+    </p>
+
+    <div id="quizContainer" class="quiz-container"></div>
+
+    <script>
+      const questions = [
+        {
+          question: "A 58-year-old man develops sudden onset of vertigo, left-sided facial numbness, right-sided body numbness to pain and temperature, hoarseness, and difficulty swallowing. Imaging shows a lateral medullary infarct. Which artery is most likely occluded?",
+          options: ["Anterior spinal artery", "Posterior inferior cerebellar artery", "Anterior inferior cerebellar artery", "Superior cerebellar artery"],
+          answer: 1,
+          explanation: "<strong>[Section 2: Medulla Oblongata]</strong> — Lateral medullary (Wallenberg's) syndrome is caused by PICA or vertebral artery occlusion. The crossed sensory pattern (ipsilateral face, contralateral body pain/temp loss), dysarthria/dysphagia (nucleus ambiguus), and vertigo (vestibular nuclei) are classic. The anterior spinal artery causes medial medullary syndrome, not lateral."
+        },
+        {
+          question: "A patient with a medial medullary infarct has ipsilateral hypoglossal nerve involvement. Which direction does the tongue deviate on protrusion?",
+          options: ["No deviation", "Away from the side of the lesion", "Toward the side of the lesion", "Upward on the lesion side"],
+          answer: 2,
+          explanation: "<strong>[Section 2: Medulla Oblongata]</strong> — LMN CN XII palsy causes the tongue to deviate TOWARD the lesion side (toward the weak genioglossus). The intact contralateral genioglossus pushes the tongue to the weak side. A UMN XII lesion deviates the tongue away from the cortical lesion — the opposite direction."
+        },
+        {
+          question: "The fasciculus gracilis and fasciculus cuneatus terminate in the gracile and cuneate nuclei. Their second-order axons sweep ventrally and decussate. What structure do they form after crossing?",
+          options: ["Medial lemniscus", "Spinothalamic tract", "Lateral lemniscus", "Superior cerebellar peduncle"],
+          answer: 0,
+          explanation: "<strong>[Section 2: Medulla Oblongata]</strong> — Second-order axons from the gracile and cuneate nuclei decussate as the internal arcuate fibers at the mid-medulla, then ascend as the medial lemniscus carrying discriminative touch, vibration, and proprioception from the contralateral body. The spinothalamic tract carries pain/temperature and crosses in the spinal cord, not the medulla."
+        },
+        {
+          question: "A 35-year-old woman has diplopia. On left gaze, her right eye cannot adduct while her left eye abducts and shows nystagmus. Convergence is intact. Where is the lesion?",
+          options: ["Right CN III nucleus", "Right abducens nucleus", "Left paramedian pontine reticular formation", "Right medial longitudinal fasciculus"],
+          answer: 3,
+          explanation: "<strong>[Section 3: Pons]</strong> — This is right INO. Failure of right eye adduction on left gaze with intact convergence localizes to the right MLF (which carries signals from the left CN VI nucleus to the right CN III nucleus). A PPRF lesion would abolish all left conjugate gaze. Bilateral INO in a young woman = MS until proven otherwise."
+        },
+        {
+          question: "During rightward conjugate gaze, which brainstem structure serves as the horizontal gaze center that drives the right lateral rectus and, via the MLF, the left medial rectus?",
+          options: ["Right abducens nucleus", "Right paramedian pontine reticular formation", "Left frontal eye field", "Left abducens nucleus"],
+          answer: 1,
+          explanation: "<strong>[Section 3: Pons]</strong> — The right PPRF is the ipsilateral horizontal gaze center driving rightward conjugate gaze. It activates the right CN VI nucleus (right LR) and via ascending MLF fibers drives the left CN III nucleus (left MR). The left FEF also projects to the right PPRF, but the immediate pons-level driver is the ipsilateral PPRF."
+        },
+        {
+          question: "A patient has ipsilateral CN III palsy and contralateral limb ataxia without hemiplegia. Which brainstem syndrome is this?",
+          options: ["Weber's syndrome", "Millard-Gubler syndrome", "Claude's syndrome", "Wallenberg's syndrome"],
+          answer: 2,
+          explanation: "<strong>[Section 4: Midbrain]</strong> — Claude's syndrome is caused by a tegmental midbrain lesion involving CN III fascicles and the red nucleus. It produces ipsilateral CN III palsy plus contralateral ataxia (dentate-rubro-thalamic pathway disrupted). Weber's gives ipsilateral CN III palsy plus contralateral HEMIPLEGIA (crus cerebri). Wallenberg's is a medullary syndrome without CN III involvement."
+        },
+        {
+          question: "A patient suffers a left ventral midbrain infarct. Examination shows left ptosis, left eye deviated down and out with a fixed dilated pupil, and right-sided arm and leg weakness. What is the diagnosis?",
+          options: ["Claude's syndrome", "Raymond's syndrome", "Millard-Gubler syndrome", "Weber's syndrome"],
+          answer: 3,
+          explanation: "<strong>[Section 4: Midbrain]</strong> — Weber's syndrome results from infarction of the crus cerebri and CN III fascicles. The ipsilateral CN III palsy (ptosis, down-and-out eye, fixed dilated pupil) occurs because parasympathetics run on the outside of CN III. Contralateral hemiplegia occurs because the CST has not yet decussated at this level. Claude's has ataxia, not hemiplegia."
+        },
+        {
+          question: "Which cranial nerve is the only one to exit the brainstem dorsally and to decussate completely before exiting?",
+          options: ["CN IV (trochlear)", "CN III (oculomotor)", "CN VI (abducens)", "CN XII (hypoglossal)"],
+          answer: 0,
+          explanation: "<strong>[Section 1: Brainstem Overview]</strong> — CN IV exits the dorsal midbrain just below the inferior colliculus and immediately decussates in the superior medullary velum. It is the thinnest cranial nerve. Dorsal midbrain shearing injury is the most common cause of CN IV palsy, presenting as hypertropia with head tilt to the opposite side."
+        },
+        {
+          question: "A patient has right-sided facial nerve palsy involving the forehead and inability to abduct the right eye. Where is the lesion?",
+          options: ["Right facial nerve in the parotid gland", "Right cortex", "Right nucleus ambiguus", "Right facial colliculus in the caudal pons"],
+          answer: 3,
+          explanation: "<strong>[Section 3: Pons]</strong> — The facial colliculus in the floor of the fourth ventricle is where CN VII fascicles loop around the abducens nucleus. A lesion causes ipsilateral LMN CN VII palsy (forehead involved) AND ipsilateral CN VI palsy. A parotid lesion spares gaze; a cortical UMN lesion spares the forehead. Nucleus ambiguus controls pharynx/larynx, not the face."
+        },
+        {
+          question: "The mesencephalic nucleus of the trigeminal nerve is unique — it contains primary afferent cell bodies within the CNS itself. Which reflex depends on this nucleus?",
+          options: ["Corneal reflex", "Jaw-jerk reflex", "Gag reflex", "Pupillary light reflex"],
+          answer: 1,
+          explanation: "<strong>[Section 6: Cranial Nerve Nuclei]</strong> — The mesencephalic nucleus carries proprioceptive afferents from the muscles of mastication and periodontal ligament. It is the afferent limb of the jaw-jerk reflex (CN V afferent and efferent). It is the only sensory nucleus whose primary afferent neurons reside within the CNS rather than in a peripheral ganglion. A brisk jaw jerk suggests UMN lesion above the pons."
+        },
+        {
+          question: "Climbing fibers provide the most powerful excitatory input to Purkinje cells in the cerebellar cortex. Where do climbing fibers exclusively originate?",
+          options: ["Pontine nuclei", "Dentate nucleus", "Inferior olivary nucleus", "Vestibular nuclei"],
+          answer: 2,
+          explanation: "<strong>[Section 7: Cerebellum]</strong> — All climbing fibers originate exclusively from the contralateral inferior olivary nucleus in the medulla, reaching the cerebellum via the inferior cerebellar peduncle. Each climbing fiber contacts exactly one Purkinje cell in a 1:1 high-frequency excitatory synapse. All other cerebellar afferents (spinocerebellar, pontocerebellar, vestibular) arrive as mossy fibers, which synapse on granule cells."
+        },
+        {
+          question: "A patient can stand steadily with eyes open but falls immediately when closing their eyes. Gait with eyes open is normal. Which structure is most likely damaged?",
+          options: ["Cerebellar hemisphere", "Reticular formation", "Cerebellar vermis", "Dorsal columns / proprioceptive pathways"],
+          answer: 3,
+          explanation: "<strong>[Section 7: Cerebellum]</strong> — A positive Romberg test (stable with eyes open, falls with eyes closed) indicates dorsal column/proprioceptive loss, NOT cerebellar disease. In cerebellar ataxia, the patient is equally unsteady with eyes open or closed because the timing deficit cannot be compensated by vision. Cerebellar disease = eyes-open ataxia equals eyes-closed ataxia."
+        },
+        {
+          question: "Charcot's triad of cerebellar disease includes which combination of findings?",
+          options: ["Resting tremor, rigidity, bradykinesia", "Dysmetria, dysdiadochokinesia, hypotonia", "Vertigo, nausea, hearing loss", "Nystagmus, intention tremor, scanning dysarthria"],
+          answer: 3,
+          explanation: "<strong>[Section 7: Cerebellum]</strong> — Charcot's triad of cerebellar disease is nystagmus + intention tremor + scanning (staccato) dysarthria. Dysmetria and dysdiadochokinesia are cerebellar signs but not Charcot's triad. Resting tremor + rigidity + bradykinesia is Parkinson's. The cerebellar intention tremor worsens as the finger approaches its target."
+        },
+        {
+          question: "A midline cerebellar tumor (medulloblastoma, vermian location) in a child causes which predominant clinical finding?",
+          options: ["Truncal ataxia and wide-based gait", "Ipsilateral limb dysmetria and intention tremor", "Bilateral arm incoordination", "Ipsilateral hypotonia and nystagmus"],
+          answer: 0,
+          explanation: "<strong>[Section 7: Cerebellum]</strong> — Vermian (midline) cerebellar lesions impair the spinocerebellum, which controls axial and proximal limb coordination, producing truncal ataxia and a wide-based gait without prominent limb dysmetria. Lateral hemispheric lesions cause ipsilateral limb dysmetria. Medulloblastoma in children classically arises in the vermis, causing truncal ataxia and hydrocephalus."
+        },
+        {
+          question: "The dentate nucleus is the output of the cerebrocerebellum. Via which route does it project, and to what destination?",
+          options: ["Ipsilateral red nucleus via inferior cerebellar peduncle", "Contralateral VA/VL thalamus via superior cerebellar peduncle", "Vestibular nuclei via inferior cerebellar peduncle", "Ipsilateral motor cortex directly"],
+          answer: 1,
+          explanation: "<strong>[Section 7: Cerebellum]</strong> — The dentate nucleus projects via the superior cerebellar peduncle, which decussates in the caudal midbrain, to the contralateral VA/VL thalamus, then to the motor cortex. This double crossing (SCP decussation + CST decussation) explains why cerebellar lesions produce ipsilateral deficits. The ICP carries mainly afferents and efferents to vestibular nuclei."
+        },
+        {
+          question: "In Parkinson's disease, loss of substantia nigra pars compacta neurons disrupts both the direct and indirect pathways. What is the net effect on the VA/VL thalamus?",
+          options: ["Thalamus overactivated", "Thalamus unaffected by dopamine loss", "Thalamus excessively inhibited", "Thalamus affected only via the indirect pathway"],
+          answer: 2,
+          explanation: "<strong>[Section 8: Basal Ganglia]</strong> — Loss of dopamine decreases direct pathway activity (less GPi inhibition) and increases indirect pathway activity (more GPi excitation via STN). Both changes increase GPi activity, which increases tonic GABAergic inhibition of VA/VL thalamus, reducing thalamocortical drive → hypokinesia and bradykinesia."
+        },
+        {
+          question: "A patient develops violent flinging movements of the right arm and leg shortly after a small stroke. MRI shows a lacunar infarct. Which structure is damaged?",
+          options: ["Right caudate nucleus", "Left subthalamic nucleus", "Right globus pallidus internus", "Left striatum"],
+          answer: 1,
+          explanation: "<strong>[Section 8: Basal Ganglia]</strong> — Hemiballismus is caused by a contralateral STN lesion. Loss of STN excitatory drive to GPi reduces GPi inhibitory output → thalamus released → involuntary large-amplitude proximal limb movements contralateral to the lesion. Left STN lesion = right hemiballismus. Movements cease during sleep and can be exhausting if untreated."
+        },
+        {
+          question: "Huntington's disease preferentially destroys which striatal neurons, and what movement disorder results?",
+          options: ["Direct pathway GABA neurons; hypokinesia", "Both pathway neurons equally; mixed disorder", "Nigrostriatal dopamine neurons; resting tremor", "Indirect pathway GABA/enkephalin neurons; chorea"],
+          answer: 3,
+          explanation: "<strong>[Section 8: Basal Ganglia]</strong> — HD preferentially destroys GABAergic/enkephalinergic striatal neurons of the INDIRECT pathway. Loss of indirect pathway → GPe not inhibited → GPe inhibits STN → STN less excites GPi → GPi underactive → thalamus disinhibited → excess thalamocortical drive → chorea. This is the opposite of Parkinson's, where dopamine loss ultimately increases GPi activity."
+        },
+        {
+          question: "A young adult presents with liver disease, neuropsychiatric symptoms, and gold-brown rings at the periphery of both corneas. Genetic testing reveals an autosomal recessive mutation. What is the diagnosis?",
+          options: ["Huntington's disease", "Friedreich's ataxia", "Wilson's disease", "Sydenham's chorea"],
+          answer: 2,
+          explanation: "<strong>[Section 8: Basal Ganglia]</strong> — Wilson's disease (hepatolenticular degeneration) is caused by AR mutations in ATP7B (copper transporter). Copper accumulates in the liver, putamen, and Descemet's membrane (Kayser-Fleischer rings). Neurological features include dyskinesia, wing-beating tremor, and dysarthria. Treatable with copper chelation. Friedreich's is also AR but presents with ataxia + absent reflexes, not liver disease or corneal rings."
+        },
+        {
+          question: "A patient has dysphagia, hoarseness, and absent gag reflex. The uvula deviates to the left on phonation. Which nucleus is most likely damaged on the right?",
+          options: ["Nucleus ambiguus", "Hypoglossal nucleus", "Dorsal motor nucleus of vagus", "Nucleus solitarius"],
+          answer: 0,
+          explanation: "<strong>[Section 6: Cranial Nerve Nuclei]</strong> — The nucleus ambiguus (SVE) supplies CN IX, X, and cranial root of XI — controlling pharynx, larynx, and soft palate. Damage produces ipsilateral dysphagia, hoarseness, absent gag, and uvular deviation AWAY from the lesion (uvula deviates toward the intact side). The hypoglossal nucleus controls tongue movements; dorsal motor nucleus of vagus provides parasympathetic output to viscera."
+        },
+        {
+          question: "Which cranial nerve palsy is the most common false localizing sign in raised intracranial pressure?",
+          options: ["CN III (oculomotor)", "CN IV (trochlear)", "CN VII (facial)", "CN VI (abducens)"],
+          answer: 3,
+          explanation: "<strong>[Section 1: Brainstem Overview]</strong> — CN VI has the longest intracranial course and is stretched over the petrous apex when ICP rises, producing ipsilateral lateral gaze palsy that does NOT localize to a pontine lesion. CN III palsy with a blown pupil localizes to uncal herniation or a PComm aneurysm — those are true localizing signs."
+        },
+        {
+          question: "A patient with a right-sided cortical stroke has weakness of the right lower face only. Why is the right forehead spared?",
+          options: ["Forehead muscles receive no cortical UMN input", "UMN fibers for the forehead cross twice and cancel out", "Forehead muscles have bilateral cortical representation", "The facial nerve splits before the forehead branch at the pons"],
+          answer: 2,
+          explanation: "<strong>[Section 6: Cranial Nerve Nuclei]</strong> — The frontalis (forehead) receives bilateral cortical input. A unilateral cortical or internal capsule lesion leaves forehead innervation partially intact via the contralateral cortex. Lower face muscles have predominantly contralateral representation, so they are paralyzed by a contralateral UMN lesion. LMN lesions (Bell's palsy) affect ALL ipsilateral facial muscles including the forehead."
+        },
+        {
+          question: "The pupillary light reflex has an afferent arc via CN II to the pretectal nuclei. Which structure provides the efferent drive to constrict the pupil?",
+          options: ["Edinger-Westphal nucleus → ciliary ganglion", "Superior cervical ganglion → iris dilator muscle", "Superior salivatory nucleus → pterygopalatine ganglion", "Facial motor nucleus → orbicularis oculi"],
+          answer: 0,
+          explanation: "<strong>[Section 3: Pons]</strong> — The efferent arc: pretectal nuclei → bilateral Edinger-Westphal nuclei → CN III → ciliary ganglion → short ciliary nerves → pupillary sphincter (miosis). Bilateral pretectal projection explains the consensual light reflex. The superior cervical ganglion mediates sympathetic dilation; damage causes Horner's (miosis), not mydriasis."
+        },
+        {
+          question: "Ramsay Hunt syndrome differs from Bell's palsy by the presence of which additional findings?",
+          options: ["Bilateral facial weakness and hyperreflexia", "Parotid swelling and trismus", "Vesicles in the ear canal and sensorineural hearing loss", "Forehead sparing and contralateral arm weakness"],
+          answer: 2,
+          explanation: "<strong>[Section 6: Cranial Nerve Nuclei]</strong> — Ramsay Hunt syndrome = VZV reactivation in the geniculate ganglion → ipsilateral LMN facial palsy + painful vesicles in the external auditory canal/auricle + sensorineural hearing loss and/or vertigo (CN VIII involvement). Bell's palsy is HSV-1 reactivation without vesicles or hearing loss. Both affect the forehead (LMN pattern)."
+        },
+        {
+          question: "The inferior cerebellar peduncle carries olivocerebellar, spinocerebellar, and vestibulocerebellar afferents. Damage to this peduncle produces which predominant cerebellar sign?",
+          options: ["Contralateral limb dysmetria", "Bilateral truncal ataxia", "Contralateral resting tremor", "Ipsilateral ataxia and gait instability"],
+          answer: 3,
+          explanation: "<strong>[Section 7: Cerebellum]</strong> — The inferior cerebellar peduncle carries major afferents: climbing fibers from the inferior olive, dorsal spinocerebellar tract, and vestibular input. Damage causes ipsilateral cerebellar deficits (ataxia, dysmetria), consistent with the rule that cerebellar signs are ipsilateral. This is the peduncle damaged in Wallenberg's syndrome."
+        },
+        {
+          question: "The locus ceruleus and raphe nuclei are the two key aminergic nuclei of the reticular formation. Which neurotransmitters do they respectively release?",
+          options: ["Locus ceruleus = norepinephrine; Raphe nuclei = serotonin", "Locus ceruleus = serotonin; Raphe nuclei = dopamine", "Locus ceruleus = dopamine; Raphe nuclei = norepinephrine", "Locus ceruleus = acetylcholine; Raphe nuclei = GABA"],
+          answer: 0,
+          explanation: "<strong>[Section 5: Reticular Formation]</strong> — Locus ceruleus (rostral pons) = main CNS source of norepinephrine, involved in arousal and stress response. Raphe nuclei (brainstem midline) = main CNS source of serotonin, involved in mood, sleep, and pain modulation. SSRIs target raphe-derived serotonin; SNRIs target both NE and serotonin systems."
+        },
+        {
+          question: "A child develops brief involuntary limb movements several weeks after a streptococcal throat infection. The movements resolve spontaneously over weeks without treatment. What is the diagnosis?",
+          options: ["Huntington's disease", "Sydenham's chorea", "Wilson's disease", "Hemiballismus"],
+          answer: 1,
+          explanation: "<strong>[Section 8: Basal Ganglia]</strong> — Sydenham's chorea is a complication of rheumatic fever — autoimmune cross-reaction between anti-streptococcal antibodies and basal ganglia neurons (putamen). It is self-limited, resolving over weeks to months, and is the most common cause of acquired chorea in children. Huntington's is hereditary and progressive; Wilson's has liver disease and Kayser-Fleischer rings."
+        },
+        {
+          question: "The periaqueductal gray matter is the primary site of endogenous opioid-mediated pain modulation. Its descending output inhibits pain transmission via which pathway?",
+          options: ["Corticospinal tract → anterior horn", "Rubrospinal tract → lateral funiculus", "Raphe nuclei → reticulospinal tract → dorsal horn", "Tectospinal tract → cervical cord"],
+          answer: 2,
+          explanation: "<strong>[Section 4: Midbrain]</strong> — PAG activation projects to the raphe nuclei (serotonin) and nucleus reticularis paragigantocellularis (norepinephrine), which send descending fibers via the dorsolateral funiculus to inhibit pain at the dorsal horn (gate control mechanism). This is the anatomical basis of opioid analgesia."
+        },
+        {
+          question: "A descending sympathetic tract lesion in the lateral brainstem produces ipsilateral Horner's syndrome. Which three findings constitute the classic Horner's triad?",
+          options: ["Ptosis, mydriasis, exophthalmos", "Miosis, proptosis, hyperhidrosis", "Ptosis, cyclotropia, loss of accommodation", "Ptosis, miosis, anhidrosis"],
+          answer: 3,
+          explanation: "<strong>[Section 1: Brainstem Overview]</strong> — Horner's syndrome = ptosis (superior tarsal muscle paresis), miosis (loss of iris dilator sympathetic drive), and anhidrosis (loss of ipsilateral facial sweating if pre-ganglionic). Key distinction: Horner's has a SMALL pupil (miosis); CN III palsy has a LARGE fixed pupil (mydriasis). Lateral brainstem lesions (Wallenberg's) are a classic cause."
+        },
+        {
+          question: "The nucleus solitarius receives afferents from CN VII, IX, and X. Its rostral portion has a specific functional name — what is it, and what modality does it process?",
+          options: ["Nucleus ambiguus — branchiomotor to pharynx and larynx", "Dorsal cochlear nucleus — first-order auditory relay", "Edinger-Westphal nucleus — preganglionic parasympathetic", "Gustatory nucleus — taste via CN VII, IX, and X"],
+          answer: 3,
+          explanation: "<strong>[Section 6: Cranial Nerve Nuclei]</strong> — The rostral nucleus solitarius is the gustatory nucleus, receiving taste via chorda tympani (CN VII, anterior 2/3 tongue), CN IX (posterior 1/3 tongue), and CN X (epiglottis/pharynx). The caudal solitarius receives general visceral afferents. It is the only nucleus receiving taste afferents from three cranial nerves."
+        },
+        {
+          question: "A patient after a brainstem stroke has ipsilateral Horner's syndrome and ipsilateral limb ataxia. According to the Rule of 4's, which vascular territory is affected?",
+          options: ["Lateral territory", "Medial territory", "Bilateral territory", "Anterior territory"],
+          answer: 0,
+          explanation: "<strong>[Section 1: Brainstem Overview]</strong> — The descending sympathetic tract and spinocerebellar tract are LATERAL structures supplied by circumferential arteries (PICA, AICA, SCA). Lateral lesions produce Horner's, ipsilateral ataxia, and alternating hemianesthesia. Medial territory lesions produce hemiplegia, DCML loss, and CN XII palsy. Bilateral basilar artery occlusion causes locked-in syndrome."
+        },
+        {
+          question: "In Wallenberg's syndrome, which sensory modality is characteristically SPARED on the contralateral body, distinguishing it from medial medullary syndrome?",
+          options: ["Pain and temperature sensation", "Vibration and proprioception", "Discriminative touch only", "All sensation is equally impaired"],
+          answer: 1,
+          explanation: "<strong>[Section 2: Medulla Oblongata]</strong> — In Wallenberg's (lateral medullary) syndrome, the medial lemniscus is INTACT because it lies in the medial territory. Vibration and proprioception (DCML) are therefore SPARED. Pain and temperature on the contralateral body are LOST (spinothalamic is in the lateral territory). Medial medullary syndrome damages the medial lemniscus, producing DCML loss."
+        },
+        {
+          question: "The area postrema on the floor of the fourth ventricle lacks a blood-brain barrier. What is its functional role?",
+          options: ["Regulating CSF production in the choroid plexus", "Monitoring blood glucose for hypothalamic regulation", "Serving as the chemoreceptor trigger zone for vomiting", "Controlling sympathetic outflow to the heart"],
+          answer: 2,
+          explanation: "<strong>[Section 2: Medulla Oblongata]</strong> — The area postrema lacks a blood-brain barrier, allowing it to detect emetic substances in the bloodstream. It is the chemoreceptor trigger zone (CTZ) — the primary target of antiemetics such as ondansetron (5-HT3 antagonist) and metoclopramide (D2 antagonist). This is why drugs that do not cross the BBB can still trigger vomiting via the CTZ."
+        },
+        {
+          question: "A lesion at the caudal medulla destroys the pyramidal decussation but spares the arcuate (sensory) decussation. Which pattern of deficits results?",
+          options: ["Ipsilateral weakness; ipsilateral DCML loss", "Contralateral weakness; contralateral pain and temperature loss", "Bilateral weakness; preserved sensation", "Contralateral weakness; ipsilateral vibration and proprioception loss"],
+          answer: 3,
+          explanation: "<strong>[Section 2: Medulla Oblongata]</strong> — The motor (pyramidal) decussation is at the CAUDAL medulla; the sensory (arcuate) decussation is at the MID medulla. A caudal medullary lesion destroys crossing CST → contralateral hemiplegia. The DCML has not yet decussated → vibration/proprioception loss is IPSILATERAL. This unusual crossed pattern distinguishes caudal from mid-medullary lesions."
+        },
+        {
+          question: "A patient with a left caudal pontine tegmentum lesion cannot move the left eye horizontally at all. The right eye can only abduct. What is this syndrome?",
+          options: ["One-and-a-half syndrome", "Internuclear ophthalmoplegia", "Locked-in syndrome", "Raymond's syndrome"],
+          answer: 0,
+          explanation: "<strong>[Section 3: Pons]</strong> — One-and-a-half syndrome results from combined destruction of the ipsilateral PPRF (or abducens nucleus) AND the ipsilateral MLF. The ipsilateral eye loses all horizontal movement (PPRF/VI = no abduction; MLF = no adduction). The contralateral eye can only abduct. Pure INO affects only adduction; PPRF lesion alone affects all ipsilateral gaze."
+        },
+        {
+          question: "A patient with a ventral caudal pons basilar perforator infarct has ipsilateral lateral rectus palsy, ipsilateral LMN facial palsy, and contralateral hemiplegia. What is this syndrome?",
+          options: ["Raymond's syndrome", "Millard-Gubler syndrome", "Gasperini syndrome", "Marie-Foix syndrome"],
+          answer: 1,
+          explanation: "<strong>[Section 3: Pons]</strong> — Millard-Gubler syndrome hits the abducens fascicles (CN VI palsy), facial nerve fascicles (LMN CN VII palsy with forehead involvement), and CST (contralateral hemiplegia). Raymond's syndrome has only CN VI + hemiplegia without CN VII. The LMN CN VII palsy with forehead involvement distinguishes Millard-Gubler from a cortical lesion."
+        },
+        {
+          question: "A patient with bilateral ventral pons infarction is quadriplegic and cannot speak, yet appears alert, blinks on command, and can move his eyes vertically. What is this condition?",
+          options: ["Vegetative state", "Akinetic mutism", "Locked-in syndrome", "Coma"],
+          answer: 2,
+          explanation: "<strong>[Section 3: Pons]</strong> — Locked-in syndrome results from bilateral ventral pons destruction (usually basilar artery occlusion), destroying corticospinal and corticobulbar tracts. Consciousness and vertical gaze are preserved because the RAS and midbrain vertical gaze centers are intact. Distinguished from vegetative state by full preserved awareness."
+        },
+        {
+          question: "A patient has ipsilateral CN III palsy, contralateral ataxia, and contralateral involuntary flinging movements of the arm. Which syndrome is this, and what additional structure is damaged compared to Claude's syndrome?",
+          options: ["Benedikt's syndrome — subthalamic nucleus also damaged", "Claude's syndrome — red nucleus is the only structure damaged", "Weber's syndrome — crus cerebri is damaged", "Millard-Gubler syndrome — CN VI and VII are also affected"],
+          answer: 0,
+          explanation: "<strong>[Section 4: Midbrain]</strong> — Benedikt's syndrome = CN III palsy + contralateral hemichorea/hemiathetosis + contralateral ataxia. It differs from Claude's (CN III + ataxia only) by the addition of hemichorea due to subthalamic nucleus involvement. Weber's has hemiplegia, not ataxia or chorea. The subthalamic nucleus damage is what adds the involuntary movements to the red-nucleus cerebellar findings."
+        },
+        {
+          question: "A comatose patient responds to pain by flexing the arms toward the chest with leg extension. Which posture is this, and what does it indicate?",
+          options: ["Decerebrate posturing — lesion below the red nucleus with extensor dominance", "Decorticate posturing — lesion above the red nucleus with rubrospinal tract intact", "Decerebrate posturing — lesion above the red nucleus with intact brainstem", "Decorticate posturing — lesion at the level of the spinal cord"],
+          answer: 1,
+          explanation: "<strong>[Section 4: Midbrain]</strong> — Decorticate posturing (arms flexed, legs extended) indicates a lesion ABOVE the red nucleus (cortex, internal capsule, thalamus). The rubrospinal tract remains intact, driving arm flexion. Decerebrate posturing (all limbs extended) indicates a lesion BELOW the red nucleus — rubrospinal output is disrupted and vestibulospinal/reticulospinal extensor drives dominate. Decerebrate is the worse prognostic sign."
+        },
+        {
+          question: "A patient sustains a dorsal midbrain (tectum) lesion involving the superior colliculi. Which deficit would most directly result?",
+          options: ["Loss of conscious vision in the contralateral visual field", "Loss of high-frequency hearing", "Impaired reflex orienting of the head toward unexpected stimuli", "Loss of the pupillary light reflex"],
+          answer: 2,
+          explanation: "<strong>[Section 4: Midbrain]</strong> — The superior colliculi are visual reflex and orienting centers. They drive the tectospinal tract to orient the head and eyes toward novel stimuli. Conscious vision depends on the geniculostriate pathway, not the superior colliculus. The pupillary light reflex depends on the pretectal nuclei. The inferior colliculi (not superior) relay auditory signals."
+        },
+        {
+          question: "A unilateral cortical lesion causes contralateral lower face weakness but spares the extraocular muscles. Why are the extraocular muscles spared?",
+          options: ["CN III, IV, and VI nuclei receive bilateral corticobulbar innervation", "CN XII nucleus is the only one with direct cortical drive", "CN V motor nucleus is bilaterally represented and dominates gaze", "Extraocular muscles are innervated by the cerebellum, not the cortex"],
+          answer: 0,
+          explanation: "<strong>[Section 4: Midbrain]</strong> — CN III, IV, and VI nuclei (and the forehead subdivision of CN VII) receive bilateral cortical representation and are therefore spared by unilateral UMN lesions. CN XII and CN V motor nuclei receive predominantly contralateral drive, so unilateral lesions cause contralateral tongue deviation and jaw weakness. The lower face CN VII is also contralaterally dominant."
+        },
+        {
+          question: "A patient is deeply unconscious following a bilateral midbrain lesion. Which structure's disruption most directly explains the loss of consciousness?",
+          options: ["Bilateral superior colliculus destruction", "Bilateral ascending reticular activating system disruption", "Bilateral red nucleus destruction", "Bilateral inferior colliculus destruction"],
+          answer: 1,
+          explanation: "<strong>[Section 5: Reticular Formation]</strong> — The ascending RAS projects from the midbrain reticular formation diffusely to the thalamus and cortex, maintaining wakefulness. Bilateral RAS disruption causes coma. Unilateral RAS damage does not cause coma because the contralateral projection can maintain partial arousal. Superior and inferior colliculus destruction does not cause loss of consciousness."
+        },
+        {
+          question: "The pontine (medial) and medullary (lateral) reticulospinal tracts have opposing effects on spinal cord tone. Which statement correctly describes their actions?",
+          options: ["Pontine facilitates extensor; medullary facilitates flexor", "Pontine facilitates flexor; medullary facilitates extensor", "Both tracts facilitate extensor tone equally", "Both tracts inhibit spinal motor neurons equally"],
+          answer: 0,
+          explanation: "<strong>[Section 5: Reticular Formation]</strong> — The pontine (medial) reticulospinal tract facilitates extensor (antigravity) tone. The medullary (lateral) reticulospinal tract facilitates flexor tone and inhibits extensors. In decerebrate posturing, the medullary reticulospinal tract is disrupted below the red nucleus, leaving pontine reticulospinal and vestibulospinal extensor drives unopposed — producing rigid limb extension."
+        },
+        {
+          question: "An acoustic neuroma (vestibular schwannoma) begins at the cerebellopontine angle and grows progressively. In what order do cranial nerve deficits typically appear as the tumor enlarges?",
+          options: ["CN VII palsy → CN VIII hearing loss → CN V numbness", "CN V numbness → CN VII palsy → CN VIII hearing loss", "CN VIII hearing loss → CN VII palsy → CN V numbness", "CN VIII hearing loss → CN V numbness → CN III palsy"],
+          answer: 2,
+          explanation: "<strong>[Section 6: Cranial Nerve Nuclei]</strong> — Acoustic neuromas arise from vestibular CN VIII Schwann cells. Early signs are progressive unilateral SNHL and tinnitus (CN VIII is compressed first as the tumor arises from it). As the tumor grows into the cerebellopontine angle, CN VII is next compressed (facial palsy), then CN V (facial numbness, corneal reflex loss). Further growth may compress the middle cerebellar peduncle."
+        },
+        {
+          question: "A 16-year-old presents with progressive gait ataxia, dysarthria, absent deep tendon reflexes, and an extensor plantar response. Echocardiogram shows hypertrophic cardiomyopathy. What is the genetic mechanism?",
+          options: ["Autosomal dominant CAG repeat expansion in chromosome 4", "Autosomal dominant trinucleotide repeat in the frataxin gene", "Autosomal recessive point mutation in ATP7B on chromosome 13", "Autosomal recessive GAA repeat expansion in FXN on chromosome 9"],
+          answer: 3,
+          explanation: "<strong>[Section 7: Cerebellum]</strong> — Friedreich's ataxia is caused by an autosomal recessive GAA trinucleotide repeat expansion in FXN (chromosome 9) → frataxin deficiency → mitochondrial iron accumulation → degeneration of spinocerebellar tracts, dorsal columns, CST, and DRG. Ataxia + absent DTRs + extensor plantar (Babinski) is pathognomonic. Hypertrophic cardiomyopathy is the most common cause of death. CAG repeat in chromosome 4 = Huntington's."
+        },
+        {
+          question: "The globus pallidus internus (GPi) is the primary output nucleus of the basal ganglia. What is its projection and what neurotransmitter does it use?",
+          options: ["Excitatory (glutamatergic) projection to the striatum", "Inhibitory (GABAergic) projection to the VA/VL thalamus", "Inhibitory (GABAergic) projection to the subthalamic nucleus", "Excitatory (glutamatergic) projection to the motor cortex"],
+          answer: 1,
+          explanation: "<strong>[Section 8: Basal Ganglia]</strong> — The GPi provides tonic inhibitory (GABAergic) output to the VA/VL thalamus. When GPi activity increases (e.g., dopamine loss in Parkinson's), the thalamus is more inhibited → less thalamocortical drive → hypokinesia. When GPi activity decreases (e.g., STN lesion in hemiballismus, indirect pathway failure in Huntington's), the thalamus is released → hyperkinesia."
+        },
+        {
+          question: "The Edinger-Westphal nucleus supplies CN III. Which functional column does it belong to, and what is its target?",
+          options: ["General visceral efferent (GVE) — preganglionic to the ciliary ganglion", "General somatic efferent (GSE) — motor to extraocular muscles", "Special visceral efferent (SVE) — branchiomotor to muscles of mastication", "Special somatic afferent (SSA) — sensory input from the orbit"],
+          answer: 0,
+          explanation: "<strong>[Section 6: Cranial Nerve Nuclei]</strong> — The Edinger-Westphal nucleus is GVE — preganglionic parasympathetic fibers travel with CN III to the ciliary ganglion, which innervates the pupillary sphincter (miosis) and ciliary muscle (accommodation). The GSE column (CN III, IV, VI, XII) innervates extraocular muscles and the tongue. SVE (CN V, VII, IX, X) innervates pharyngeal arch derivatives."
+        },
+        {
+          question: "The trigeminal nerve has three sensory nuclei for different modalities. Which nucleus processes pain and temperature from the ipsilateral face?",
+          options: ["Mesencephalic nucleus — proprioception from jaw muscles, located in midbrain", "Chief sensory nucleus — discriminative touch, located in rostral pons", "Spinal trigeminal nucleus — pain and temperature, extending from pons to C2", "Gustatory nucleus — taste from anterior tongue, located in rostral medulla"],
+          answer: 2,
+          explanation: "<strong>[Section 3: Pons]</strong> — The spinal trigeminal nucleus processes pain and temperature from the ipsilateral face, extending from the lower pons to C2. It can be damaged by syringobulbia or lateral medullary infarcts. The chief sensory nucleus (pons) handles discriminative touch; the mesencephalic nucleus (midbrain) handles jaw proprioception and the jaw-jerk reflex."
+        },
+        {
+          question: "The ventral (anterior) spinocerebellar tract crosses twice before reaching the cerebellum. What is the net result of this double crossing?",
+          options: ["Contralateral delivery", "Ipsilateral delivery", "Bilateral delivery", "No net delivery — signal is lost"],
+          answer: 1,
+          explanation: "<strong>[Section 7: Cerebellum]</strong> — The ventral spinocerebellar tract crosses once in the spinal cord, then crosses again entering the cerebellum via the superior cerebellar peduncle, producing a net ipsilateral projection. The dorsal spinocerebellar tract does not cross at all (ipsilateral via ICP). Both deliver proprioceptive signals to the same side of the cerebellum as the originating limb — which is why cerebellar lesions cause IPSILATERAL limb ataxia."
+        },
+        {
+          question: "The dorsal motor nucleus of vagus (CN X) provides preganglionic parasympathetic innervation to which territory?",
+          options: ["Head and neck glands", "Thoracic viscera only", "Pelvic viscera only", "Thoracic and abdominal viscera to the left colic flexure"],
+          answer: 3,
+          explanation: "<strong>[Section 2: Medulla Oblongata]</strong> — The dorsal motor nucleus of the vagus provides preganglionic parasympathetic output via CN X to intramural ganglia in thoracic and abdominal viscera, down to the left (splenic) colic flexure. Bilateral damage impairs gut motility, secretion, and parasympathetic cardiac rate regulation. Head and neck glands are served by CN VII (superior salivatory) and CN IX (inferior salivatory), not CN X."
+        },
+      ];
+    </script>
+    <script>
+/* === MEDICAL-BRAIN QUIZ ENGINE (inlined for standalone export) === */
+/* =============================================
+   MEDICAL-BRAIN QUIZ ENGINE
+   Extracted from Ky's RNS Anatomy Study Guide
+
+   Contract:
+   - Page defines `const questions = [...]` in an
+     inline <script> BEFORE this file is loaded.
+   - Page must include in its <body>:
+       <div id="quizContainer" class="quiz-container"></div>
+       <div id="scoreBar" class="score-bar">
+         <span class="score-stat">
+           <span class="stat-blue" id="statAnswered">0</span> answered
+         </span>
+         <span class="score-stat">
+           <span class="stat-green" id="statCorrect">0</span> correct
+         </span>
+         <span class="score-stat">
+           <span class="stat-red" id="statIncorrect">0</span> incorrect
+         </span>
+         <span class="score-stat">
+           <span class="stat-yellow" id="statPercent">0%</span>
+         </span>
+       </div>
+
+   Question shape:
+   {
+     question:    string,
+     options:     [string, string, string, string],
+     answer:      number,       // 0-indexed correct option
+     explanation: string,
+     section:     string        // optional — e.g. "§2.4 Galactose Metabolism"
+   }
+   ============================================= */
+
+(function () {
+  var answered = 0;
+  var correct = 0;
+  var incorrect = 0;
+
+  function buildQuiz() {
+    var container = document.getElementById("quizContainer");
+    if (!container) return;
+    container.innerHTML = "";
+
+    questions.forEach(function (q, i) {
+      var card = document.createElement("div");
+      card.className = "question-card";
+      card.id = "card-" + i;
+
+      var numLabel = document.createElement("div");
+      numLabel.className = "question-number";
+      numLabel.textContent = "Question " + (i + 1) + " of " + questions.length;
+      if (q.section) {
+        var sectionBadge = document.createElement("span");
+        sectionBadge.className = "question-section";
+        sectionBadge.textContent = q.section;
+        numLabel.appendChild(sectionBadge);
+      }
+
+      var qText = document.createElement("div");
+      qText.className = "question-text";
+      qText.textContent = q.question;
+
+      var optGrid = document.createElement("div");
+      optGrid.className = "options-grid";
+
+      q.options.forEach(function (opt, j) {
+        var btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.textContent = String.fromCharCode(65 + j) + ". " + opt;
+        btn.addEventListener("click", function () {
+          handleAnswer(i, j, q.answer, q.explanation);
+        });
+        optGrid.appendChild(btn);
+      });
+
+      var explanation = document.createElement("div");
+      explanation.className = "explanation";
+      explanation.id = "explanation-" + i;
+
+      card.appendChild(numLabel);
+      card.appendChild(qText);
+      card.appendChild(optGrid);
+      card.appendChild(explanation);
+      container.appendChild(card);
+    });
+  }
+
+  function handleAnswer(questionIdx, selectedIdx, correctIdx, explanationText) {
+    var card = document.getElementById("card-" + questionIdx);
+    var buttons = card.querySelectorAll(".option-btn");
+    var explanationDiv = document.getElementById("explanation-" + questionIdx);
+
+    // Prevent re-answering
+    if (card.dataset.answered === "true") return;
+    card.dataset.answered = "true";
+
+    // Update button styles
+    buttons.forEach(function (btn, idx) {
+      btn.disabled = true;
+      if (idx === correctIdx) {
+        btn.classList.add("correct");
+      } else if (idx === selectedIdx && selectedIdx !== correctIdx) {
+        btn.classList.add("incorrect");
+      }
+    });
+
+    // Show explanation
+    var isCorrect = selectedIdx === correctIdx;
+    var resultEmoji = isCorrect ? "✅ Correct! " : "❌ Incorrect. ";
+    explanationDiv.innerHTML = "<strong>" + resultEmoji + "</strong>" + explanationText;
+    explanationDiv.style.display = "block";
+    explanationDiv.style.borderLeftColor = isCorrect ? "#16a34a" : "#dc2626";
+
+    // Update stats
+    answered++;
+    if (isCorrect) {
+      correct++;
+    } else {
+      incorrect++;
+    }
+
+    updateScoreBar();
+  }
+
+  function updateScoreBar() {
+    var scoreBar = document.getElementById("scoreBar");
+    if (!scoreBar) return;
+    document.getElementById("statAnswered").textContent = answered;
+    document.getElementById("statCorrect").textContent = correct;
+    document.getElementById("statIncorrect").textContent = incorrect;
+    var pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+    document.getElementById("statPercent").textContent = pct + "%";
+    scoreBar.classList.add("visible");
+  }
+
+  // Auto-initialize if questions are defined and container exists
+  if (typeof questions !== "undefined" && Array.isArray(questions) && questions.length > 0) {
+    buildQuiz();
+  }
+})();
+
+</script>
+
+    <footer class="site-footer">
+      Neuroscience Block 2 &mdash; Medical Brain
+    </footer>
+  </body>
+</html>
