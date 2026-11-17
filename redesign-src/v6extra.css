@@ -65,3 +65,7 @@ html:not(.anki-on) #w6 .w6x-acts button.lv-ak{display:none!important}
 #w6 h1::after,#w6 h2::after{display:none!important}
 #w6 .w6-cal-h,#w6 .w6-cal-g{grid-template-columns:repeat(7,minmax(0,1fr))!important}
 #w6 .w6-ev b{hyphens:manual;-webkit-hyphens:manual;overflow-wrap:anywhere;word-break:normal}
+/* videos reused by a later class session: one quiet line instead of a second card */
+#w6 .w6-also{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:10px 22px 14px;padding-top:10px;border-top:1px dashed var(--card-bd);font-size:12px;color:var(--faint)}
+#w6 .w6-also b{font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:10.5px;margin-right:4px}
+#w6 .w6-also span{padding:2px 9px;border-radius:999px;background:var(--chip);border:1px solid var(--card-bd);color:var(--dim)}

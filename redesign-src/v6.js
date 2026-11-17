@@ -105,10 +105,28 @@
         if (min > 0 || va) L.vids.push({ id: row.dataset.id, el: row, cb: cb, title: label || L.title, src: vc ? (vc.dataset.label || '').replace(/ Video$/, '') : '', min: min, cards: lc2 !== null ? lc2 : L.cards, line: null, self: true, link: va, L: L });
         else L.gap = vc ? txt(vc) : '';
       }
+      var tcell = row.querySelector('td.time'), vcell = row.querySelector('td[data-label="Pathoma Video"], td[data-label="Sketchy Video"], td[data-label="Bootcamp Video"], td[data-label="Video"], td.video-cell');
+      L.rep = /already counted/i.test(tcell ? tcell.textContent : '') || /same videos?\b/i.test(vcell ? vcell.textContent : '');
+      L.repLabel = vcell ? txt(vcell).replace(/\s*\(same videos?[^)]*\)/i, '').replace(/^[^\w(]+/, '').replace(/\s*above\s*$/i, '').replace(/^Same videos? as\s*/i, '').trim() : '';
       out.push(L);
     });
-    out.notes = notes;
-    return out;
+    /* a row that only repeats videos already listed above (cont'd, "same video as row above", SGD re-use) folds into that card as a one-line note, so each video shows once */
+    var kept = [];
+    function norm(x) { return String(x || '').toLowerCase().replace(/^sgd\.?\s*/, '').replace(/\(cont.?d\)/, '').replace(/[^a-z0-9]+/g, ' ').trim(); }
+    out.forEach(function (L) {
+      if (!L.rep || !kept.length) { kept.push(L); return; }
+      var parent = null, keys = String(L.repLabel || '').split(/\s*\/\s*|\s*\+\s*/).map(norm).filter(Boolean);
+      if (!keys.length) keys = [norm(L.title)];
+      for (var i = kept.length - 1; i >= 0 && !parent; i--) {
+        var K = kept[i], hay = [norm(K.title)].concat(K.vids.map(function (v) { return norm(v.title); }));
+        if (K.vids.some(function (v) { return v.min > 0; }) && keys.some(function (k) { return hay.some(function (h) { return h && (h.indexOf(k) >= 0 || k.indexOf(h) >= 0); }); })) parent = K;
+      }
+      if (!parent) for (var j = kept.length - 1; j >= 0 && !parent; j--) if (kept[j].vids.some(function (v) { return v.min > 0; })) parent = kept[j];
+      if (!parent) { kept.push(L); return; }
+      (parent.also = parent.also || []).push({ title: L.title.replace(/\s*\(cont.?d\)/i, '').replace(/^SGD\.?\s*/i, 'SGD · '), cont: /cont.?d/i.test(L.title), when: L.when, id: L.id, row: L.row, cb: L.cb });
+    });
+    kept.notes = notes;
+    return kept;
   }
   function vDone(v) { return !!(v.cb && v.cb.checked); }
   function lDone(L) { return L.vids.length ? L.vids.every(vDone) : !!L.cb.checked; }
@@ -319,6 +337,7 @@
     var body = L.vids.length ? '<div class="vids">' + L.vids.map(function (v) {
       return '<div class="vid ' + (vDone(v) ? 'ck' : '') + '" data-v="' + esc(v.id) + '"><button class="cb" data-ck="' + esc(v.id) + '">' + CHECK + '</button><span class="nm">' + esc(v.title) + '</span><span class="acts2" data-acts="' + esc(v.id) + '"></span><span class="src">' + esc(v.src) + '</span>' + (v.cards ? '<span class="cards">' + Math.round(v.cards) + ' cards</span>' : '') + '<span class="mins">' + Math.round(v.min || 0) + ' min</span></div>';
     }).join('') + '</div>' : '<div class="novid">' + esc(L.gap || 'Class session — nothing to watch for this one.') + '<span class="acts2" data-acts="' + esc(L.id) + '#row"></span></div>';
+    if (L.also && L.also.length) body += '<div class="also"><b>Same videos also used in class</b>' + L.also.map(function (a) { return '<span>' + (a.when ? esc(a.when.dow + ' ' + (a.when.date ? (a.when.date.getMonth() + 1) + '/' + a.when.day : a.when.day)) + ' · ' : '') + esc(a.title) + (a.cont ? ' (continued)' : '') + '</span>'; }).join('') + '</div>';
     var date = L.when ? '<span class="date"><small>' + L.when.dow + '</small><b>' + L.when.day + '</b></span>' : '<span class="date"><small>&nbsp;</small><b>–</b></span>';
     var right = L.vids.length ? '<span class="mini">' + ring(p, 34, 14) + '<span class="tick">' + TICKSVG + '</span></span>' : '<button class="cb ' + (L.cb.checked ? 'on' : '') + '" data-ck="' + esc(L.id) + '" title="Mark done">' + CHECK + '</button>';
     return '<div class="card lec ' + (d ? 'done' : '') + ' ' + (open ? 'open' : '') + '" id="w6-L-' + esc(L.id) + '" style="--i:' + Math.min(i, 12) + '"><div class="lec-h" data-toggle="' + esc(L.id) + '">' + date + '<span class="grow"><div class="tt">' + esc(L.title) + '</div><div class="mt">' + meta + '</div></span>' + right + '<span class="chev">' + ICON.chev + '</span></div><div class="lec-b"><div>' + body + '</div></div></div>';
