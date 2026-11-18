@@ -144,10 +144,40 @@
     var oc = a.getAttribute('onclick'); if (oc) a.removeAttribute('onclick');
     try { a.click(); } finally { if (oc) a.setAttribute('onclick', oc); }
   }
+
+  /* ---- planner card options: watch, Anki cards, mark done ---- */
+  function popRow(id) { var el = itemEl(id); if (!el) return null; return el.classList.contains('vid-sub') ? D.querySelector('#app-content tr[data-id="' + cssEsc(el.dataset.parent) + '"]') : el; }
+  function popAk(id) { var r = popRow(id); if (!r) return null; var b = $$('.lv-ak', r).filter(function (x) { return !x.closest('td.video-cell') && !(x.previousElementSibling && x.previousElementSibling.classList.contains('sketchy-path-link')); })[0]; return b || null; }
+  function closePop() { var p = D.getElementById('w6-pop'); if (p) p.remove(); }
+  function openPop(evEl) {
+    closePop();
+    var id = evEl.dataset.drag, it = (typeof LAST_ITEMS_BY_ID !== 'undefined' && LAST_ITEMS_BY_ID[id]) || null; if (!it) return;
+    var ak = popAk(id), hasVid = !!primaryLink(itemEl(id)), cards = Math.round(it.cards || 0);
+    var p = D.createElement('div'); p.id = 'w6-pop'; p.className = 'w6-pop'; p.style.setProperty('--acc', subjCol(it));
+    p.innerHTML = '<div class="w6-pop-h"><i></i><div><b>' + esc(cleanVid(it)) + '</b><small>' + esc(subjLabelForItem(it)) + ' · ' + esc(it.title || '') + '</small></div><button class="w6-pop-x" aria-label="Close">✕</button></div>' +
+      '<div class="w6-pop-m">' + Math.round(it.min) + ' min · ' + (cards ? cards + ' Anki cards' : 'no Anki cards for this one') + '</div>' +
+      '<div class="w6-pop-a">' +
+      '<button data-pa="watch"' + (hasVid ? '' : ' disabled') + '>▶ Watch video</button>' +
+      '<button data-pa="anki"' + (ak ? '' : ' disabled') + '>🃏 ' + (cards ? 'Open ' + cards + ' Anki cards' : 'Anki cards') + '</button>' +
+      '<button data-pa="done" class="w6-pop-ok">✓ Mark as done</button></div>';
+    root.appendChild(p);
+    var r = evEl.getBoundingClientRect(), pw = 280, ph = p.offsetHeight || 190;
+    var left = Math.min(Math.max(8, r.left), window.innerWidth - pw - 8), top = r.bottom + 6; if (top + ph > window.innerHeight - 8) top = Math.max(8, r.top - ph - 6);
+    p.style.left = left + 'px'; p.style.top = top + 'px';
+    p.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return; e.stopPropagation();
+      if (b.classList.contains('w6-pop-x')) { closePop(); return; }
+      var a = b.dataset.pa;
+      if (a === 'watch') { playEl(itemEl(id)); }
+      else if (a === 'anki') { if (ak && typeof window.lvAnki === 'function') window.lvAnki(ak.dataset.akid); else toast('Anki is not connected'); }
+      else if (a === 'done') { closePop(); toggleItem(id, b); }
+    });
+  }
   function plan() { try { return computePlan(); } catch (e) { console.warn('w6 plan', e); return null; } }
   function pm() { try { return plannerModule(); } catch (e) { return null; } }
   function tabOfTable(t) { var p = t.closest('.tab-panel'); return p ? p.id.replace(/^panel-/, '') : null; }
   function subOfTable(t) { var p = t.closest('.module-sub-panel'); return p ? p.id.replace(/^sub-/, '') : null; }
+  function subjCol(it) { try { var info = PLANNER_SUBJECT_INFO[it.subject]; return info && info.color ? 'var(' + info.color + ')' : 'var(--acc)'; } catch (e) { return 'var(--acc)'; } }
   function subjLabelForItem(it) { try { var info = PLANNER_SUBJECT_INFO[it.subject]; return info ? info.label : it.subject; } catch (e) { return it.subject || ''; } }
   function nextExam() {
     try {
@@ -314,7 +344,7 @@
       heat += '<i class="' + c + ' ' + (kk >= tk && mm && c !== 'x' ? 'p' : 'l' + lv) + ' ' + (kk === tk ? 't' : '') + '" style="animation-delay:' + j * 18 + 'ms" title="' + MON[dd.getMonth()] + ' ' + dd.getDate() + (mm ? ' · ' + Math.round(mm) + ' min' : '') + '">' + (c === 'x' ? 'EXAM' : dd.getDate()) + '</i>';
     }
     var qhtml = q.length ? q.map(function (it, i) {
-      return '<div class="q" style="--i:' + i + '" data-v="' + esc(it.id) + '"><button class="play" data-play="' + esc(it.id) + '" title="Play">' + PLAY + '</button><div class="grow"><div class="t">' + esc(cleanVid(it)) + '</div><div class="m"><i class="sd"></i>' + esc(subjLabelForItem(it)) + ' · ' + esc(it.title) + '</div></div><span class="mins">' + Math.round(it.min) + ' min' + (it.cards ? '<small>' + it.cards + ' cards</small>' : '') + '</span><button class="cb" data-ck="' + esc(it.id) + '" title="Mark watched">' + CHECK + '</button></div>';
+      return '<div class="q" style="--i:' + i + '" data-v="' + esc(it.id) + '"><button class="play" data-play="' + esc(it.id) + '" title="Play">' + PLAY + '</button><div class="grow"><div class="t">' + esc(cleanVid(it)) + '</div><div class="m"><i class="sd" style="background:' + subjCol(it) + '"></i>' + esc(subjLabelForItem(it)) + ' · ' + esc(it.title) + '</div></div><span class="mins">' + Math.round(it.min) + ' min' + (it.cards ? '<small>' + it.cards + ' cards</small>' : '') + '</span><button class="cb" data-ck="' + esc(it.id) + '" title="Mark watched">' + CHECK + '</button></div>';
     }).join('') : '<div class="empty"><b>' + (doneToday ? 'Today\'s list is done' : 'Nothing planned today') + '</b>' + (doneToday ? 'Start tomorrow\'s list early, or go do some Anki.' : 'Open the planner to see what\'s next.') + '</div>';
     var qMin = q.reduce(function (x, i) { return x + i.min; }, 0), qCards = q.reduce(function (x, i) { return x + (i.cards || 0); }, 0);
     return '<div class="view"><h1 class="greet">Good <span class="shine">' + greet + '</span></h1>' +
@@ -404,7 +434,7 @@
         min = its.reduce(function (a, x) { return a + x.min; }, 0) + dn.reduce(function (a, x) { return a + x.min; }, 0);
         cards = its.reduce(function (a, x) { return a + (x.cards || 0); }, 0) + dn.reduce(function (a, x) { return a + (x.cards || 0); }, 0);
         ev = dn.map(function (x) { return '<div class="ev d" title="Done: ' + esc(cleanVid(x)) + '"><b>✓ ' + esc(cleanVid(x)) + '</b><span>' + Math.round(x.min) + ' min' + (x.cards ? ' · ' + x.cards + ' cards' : '') + '</span></div>'; })
-          .concat(its.map(function (x, j) { return '<div class="ev ' + (ov[x.id] ? 'moved' : '') + '" draggable="true" data-drag="' + esc(x.id) + '" title="' + esc(cleanVid(x)) + ' — drag to another day" style="animation-delay:' + j * 40 + 'ms"><b>' + esc(cleanVid(x)) + '</b><span>' + Math.round(x.min) + ' min' + (x.cards ? ' · ' + x.cards + ' cards' : '') + '</span></div>'; }));
+          .concat(its.map(function (x, j) { return '<div class="ev ' + (ov[x.id] ? 'moved' : '') + '" draggable="true" data-drag="' + esc(x.id) + '" title="' + esc(cleanVid(x)) + ' — click for options, drag to move" style="--acc:' + subjCol(x) + ';animation-delay:' + j * 40 + 'ms"><b>' + esc(cleanVid(x)) + '</b><span>' + esc(subjLabelForItem(x)) + ' · ' + Math.round(x.min) + ' min' + (x.cards ? ' · ' + x.cards + ' cards' : '') + '</span></div>'; }));
         if (A.type === 'review') { cls = 'rev'; if (!ev.length) ev = ['<div style="font-size:12px;font-weight:700;color:var(--warn);margin-top:6px">Review day</div>']; }
       }
       else if (dp.reviewDates.indexOf(k) >= 0) { cls = 'rev'; ev = ['<div style="font-size:12px;font-weight:700;color:var(--warn);margin-top:6px">Review day</div>']; }
@@ -596,6 +626,9 @@
     });
     // planner drag & drop -> the tracker's own moveItemToDate()
     var dragId = null;
+    V.addEventListener('click', function (e) { var ev = e.target.closest && e.target.closest('.w6-ev[data-drag]'); if (ev) { e.stopPropagation(); openPop(ev); } });
+    D.addEventListener('click', function (e) { if (!e.target.closest('#w6-pop') && !e.target.closest('.w6-ev[data-drag]')) closePop(); });
+    D.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePop(); });
     V.addEventListener('dragstart', function (e) { var t = e.target.closest && e.target.closest('[data-drag]'); if (!t) return; dragId = t.dataset.drag; e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', dragId); } catch (_) {} setTimeout(function () { t.classList.add('w6-dragging'); }, 0); });
     V.addEventListener('dragend', function () { dragId = null; $$('#w6 .w6-dragging, #w6 .w6-drop').forEach(function (x) { x.classList.remove('w6-dragging', 'w6-drop'); }); });
     V.addEventListener('dragover', function (e) { var d = e.target.closest && e.target.closest('.w6-day[data-day]'); if (!d || !dragId) return; e.preventDefault(); $$('#w6 .w6-day.w6-drop').forEach(function (x) { if (x !== d) x.classList.remove('w6-drop'); }); d.classList.add('w6-drop'); });
