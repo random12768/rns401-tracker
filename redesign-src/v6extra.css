@@ -84,3 +84,6 @@ html:not(.anki-on) #w6 .w6x-acts button.lv-ak{display:none!important}
 #w6 .w6-pop-a button:hover:not(:disabled){border-color:var(--acc)}
 #w6 .w6-pop-a button:disabled{opacity:.45;cursor:not-allowed}
 #w6 .w6-pop-a button.w6-pop-ok{background:var(--acc);border-color:var(--acc);color:#111}
+/* fix: hover actions (Watch / Anki / pill) size to their content and never overlap the source label */
+#w6 .w6x-acts .sv-line>.video-link,#w6 .w6x-acts .sv-line>.sv-nolink{flex:none;min-width:0;width:auto}
+#w6 .w6-acts2,#w6 .w6x-acts,#w6 .w6x-acts .sv-line{flex:none;width:max-content;max-width:none}

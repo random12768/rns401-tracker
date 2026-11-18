@@ -3571,6 +3571,9 @@ html:not(.anki-on) #w6 .w6x-acts button.lv-ak{display:none!important}
 #w6 .w6-pop-a button:hover:not(:disabled){border-color:var(--acc)}
 #w6 .w6-pop-a button:disabled{opacity:.45;cursor:not-allowed}
 #w6 .w6-pop-a button.w6-pop-ok{background:var(--acc);border-color:var(--acc);color:#111}
+/* fix: hover actions (Watch / Anki / pill) size to their content and never overlap the source label */
+#w6 .w6x-acts .sv-line>.video-link,#w6 .w6x-acts .sv-line>.sv-nolink{flex:none;min-width:0;width:auto}
+#w6 .w6-acts2,#w6 .w6x-acts,#w6 .w6x-acts .sv-line{flex:none;width:max-content;max-width:none}
 
 </style>
 </head>
@@ -6965,7 +6968,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 156, built: '2026-11-18T22:09:24Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 157, built: '2026-11-18T22:19:24Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -7142,7 +7145,7 @@ function splitMultiVideoRows(onlyRow) {
       if (col === 'Watch') {
         const pv = row.querySelector('td[data-label="Pathoma Video"]');
         const sv = row.querySelector('td[data-label="Sketchy Video"]');
-        if (pv) src = /^\s*Bootcamp/i.test(pv.textContent) ? 'Bootcamp' : 'Pathoma'; else if (sv) { const idm = (a.getAttribute('href') || '').match(/file\/d\/([\w-]+)/); src = (window.SRC_FIX && idm && window.SRC_FIX[idm[1]]) || (/^\s*pixorize/i.test(sv.textContent) ? 'Pixorize' : ((/bootcamp/i.test(t) || /^\s*bootcamp/i.test(sv.textContent)) ? 'Bootcamp' : 'Sketchy')); }
+        if (pv) { const idp = (a.getAttribute('href') || '').match(/file\/d\/([\w-]+)/); src = (window.SRC_FIX && idp && window.SRC_FIX[idp[1]]) || ((/^\s*Bootcamp/i.test(pv.textContent) || /bootcamp/i.test(t)) ? 'Bootcamp' : 'Pathoma'); } else if (sv) { const idm = (a.getAttribute('href') || '').match(/file\/d\/([\w-]+)/); src = (window.SRC_FIX && idm && window.SRC_FIX[idm[1]]) || (/^\s*pixorize/i.test(sv.textContent) ? 'Pixorize' : ((/bootcamp/i.test(t) || /^\s*bootcamp/i.test(sv.textContent)) ? 'Bootcamp' : 'Sketchy')); }
         if (/^\W*watch\W*$/i.test(t) && (pv || sv)) { label = (pv || sv).textContent.replace(/\s*\(same video[^)]*\)/i, '').replace(/\s+/g, ' ').trim(); a.dataset.svLabel = '🎬 ' + label; }
       }
       if (mm && col === 'Watch' && !a.dataset.svLabel) { label = t.replace(/\s*\(\d+m\)\s*$/, ''); a.dataset.svLabel = label; }
