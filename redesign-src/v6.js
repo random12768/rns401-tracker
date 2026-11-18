@@ -5,7 +5,7 @@
 (function () {
   'use strict';
   var D = document, R = D.documentElement;
-  var OFF = false; try { OFF = localStorage.getItem('w6_off') === '1'; } catch (e) {}
+  var OFF = true; try { OFF = localStorage.getItem('w6_on') !== '1'; } catch (e) {} /* classic is the default; the new layout is opt-in */
   if (OFF || (window.matchMedia && matchMedia('(max-width: 820px)').matches)) { addBackButton(); return; }
 
   function $(s, r) { return (r || D).querySelector(s); }
@@ -602,7 +602,7 @@
     $('#w6-palIn').onkeydown = function (e) { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (!res.length) return; sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + res.length) % res.length; $$('#w6-palList > button').forEach(function (b, i) { b.classList.toggle('w6-sel', i === sel); }); } else if (e.key === 'Enter') pick(sel); };
     $('#w6-settings').onclick = openSettings;
     $('#w6-sync').onclick = function () { var st = $('#sync-status'); if (st && /signed in/i.test(st.textContent)) openSettings(); else { try { signInWithGoogle(); } catch (e) {} } };
-    $('#w6-classic').onclick = function () { try { localStorage.setItem('w6_off', '1'); } catch (e) {} location.reload(); };
+    $('#w6-classic').onclick = function () { try { localStorage.removeItem('w6_on'); localStorage.removeItem('w6_off'); } catch (e) {} location.reload(); };
     $('#w6-theme').onclick = function (e) {
       var apply = function () { try { toggleTheme(); } catch (er) {} };
       if (!D.startViewTransition || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) { apply(); return; }
@@ -680,11 +680,12 @@
   function addBackButton() {
     var mk = function () {
       if (D.getElementById('w6-back')) return;
-      var b = D.createElement('button'); b.id = 'w6-back'; b.type = 'button'; b.textContent = '✨ New layout';
-      b.title = 'Switch back to the new design';
-      b.onclick = function () { try { localStorage.removeItem('w6_off'); } catch (e) {} location.reload(); };
+      var b = D.createElement('button'); b.id = 'w6-back'; b.type = 'button'; b.textContent = '✨ Try the new layout (beta)';
+      b.title = 'Switch to the new design. You can come back to the classic layout any time.';
+      b.onclick = function () { try { localStorage.setItem('w6_on', '1'); localStorage.removeItem('w6_off'); } catch (e) {} location.reload(); };
       D.body.appendChild(b);
     };
-    if (OFF) { if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', mk); else mk(); }
+    var phone = window.matchMedia && matchMedia('(max-width: 820px)').matches;
+    if (OFF && !phone) { if (D.readyState === 'loading') D.addEventListener('DOMContentLoaded', mk); else mk(); }
   }
 })();
