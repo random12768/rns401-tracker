@@ -6963,7 +6963,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 159, built: '2026-11-18T22:39:00Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 160, built: '2026-11-18T22:43:51Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -9884,9 +9884,11 @@ function computePlan() {
   let overflowMin = 0, overflowCount = 0;
   // Review days stay free of new videos: anything left over is added to the lightest study days instead.
   if (queue.length && dp.contentDates.length) {
+    // Leftovers are the LAST topics in class order, so they go on the lightest of the final study days, never on an early day (that put eye/HIV videos on day one).
+    const tailDates = dp.contentDates.slice(-Math.min(5, dp.contentDates.length));
     queue.splice(0).forEach(it => {
-      let best = dp.contentDates[0];
-      dp.contentDates.forEach(d => { if (assignments[d].totalMin < assignments[best].totalMin) best = d; });
+      let best = tailDates[tailDates.length - 1];
+      tailDates.forEach(d => { if (assignments[d].totalMin <= assignments[best].totalMin) best = d; });
       const bucket = assignments[best];
       const bs = bufferStatusFor(it.classDate, best, bufferDays);
       it.bufferStatus = bs ? bs.status : null;
@@ -9945,7 +9947,7 @@ function computePlan() {
   // (new ones) or whose saved day already passed get a fresh day; changing any planner setting rebuilds the plan.
   try {
     const todayStr0 = fmtDate(dp.today);
-    const sig = [settings.examDate, settings.reviewDays, settings.dailyCapacity, settings.bufferDays, settings.newCards || 0, plannerModule().mod.id, 'spread1', 'noreview1'].join('|');
+    const sig = [settings.examDate, settings.reviewDays, settings.dailyCapacity, settings.bufferDays, settings.newCards || 0, plannerModule().mod.id, 'spread2', 'noreview1'].join('|');
     let lock = null;
     try { lock = JSON.parse(localStorage.getItem(pkey(PLAN_LOCK_KEY))); } catch (e) { lock = null; }
     const frozen = planIsFrozen();
