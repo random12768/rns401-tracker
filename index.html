@@ -6969,7 +6969,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 163, built: '2026-11-19T01:47:32Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 164, built: '2026-11-23T23:29:51Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -12892,8 +12892,10 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
   async function refreshStatus() {
     if (statBusy || !document.documentElement.classList.contains('anki-on')) return;
     document.documentElement.classList.add('anki-stat');
-    var pills = Array.prototype.filter.call(document.querySelectorAll('.lv-aks'), function (e) { var bt = e.previousElementSibling; return bt && bt.offsetParent !== null; });
-    if (!pills.length) { if ((refreshStatus.tries = (refreshStatus.tries || 0) + 1) < 8) soonStatus(700); return; }
+    var pills = Array.prototype.filter.call(document.querySelectorAll('.lv-aks'), function (e) { var bt = e.previousElementSibling; return !!bt && !!e.dataset.akid; });
+    var _vis = pills.filter(function (e) { return e.previousElementSibling.offsetParent !== null; });
+    if (_vis.length) refreshStatus.tries = 0;
+    if (!_vis.length) { if ((refreshStatus.tries = (refreshStatus.tries || 0) + 1) < 8) soonStatus(700); return; }
     var byQ = {}, vh = window.innerHeight || 800;
     pills.forEach(function (e) {
       var q = query(e.dataset.akid); if (!q) return;
@@ -12904,14 +12906,14 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
     });
     /* rows on screen first, so they fill in first */
     var qs = Object.keys(byQ).sort(function (a, b) {
-      function y(q) { var r = byQ[q][0].getBoundingClientRect(); return (r.bottom < -50 || r.top > vh + 50) ? 1e6 + Math.abs(r.top) : Math.abs(r.top); }
+      function y(q) { var el = byQ[q].filter(function (e) { return e.previousElementSibling.offsetParent !== null; })[0]; if (!el) return 2e6; var r = el.getBoundingClientRect(); return (r.bottom < -50 || r.top > vh + 50) ? 1e6 + Math.abs(r.top) : Math.abs(r.top); }
       return y(a) - y(b);
     });
     statBusy = true;
     var failed = false;
     try {
       for (var i = 0; i < qs.length;) {
-        var sz = i === 0 ? 3 : 10, chunk = qs.slice(i, i + sz), res = await getStatus(chunk);
+        var sz = i === 0 ? 6 : 12, chunk = qs.slice(i, i + sz), res = await getStatus(chunk);
         i += sz;
         if (!res) { failed = getStatus.ver === 1 ? 'old' : true; break; }
         if (getFlags().join() !== '3' && (getStatus.ver || 0) < 3) { failed = 'old'; break; }
@@ -13172,6 +13174,8 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
   function soonStatus(ms) { clearTimeout(statTimer); statTimer = setTimeout(function () { refreshStatus(); refreshAnk(); }, ms || 800); }
   window.lvAnkiRefresh = function () { soonStatus(50); };
   window.addEventListener('load', function () { soonStatus(300); });
+  /* the new layout builds its rows after a click: fetch the numbers as soon as new Anki buttons appear */
+  (function () { try { var mt = null; new MutationObserver(function (ms) { for (var i = 0; i < ms.length; i++) { var ad = ms[i].addedNodes; for (var j = 0; j < ad.length; j++) { var n = ad[j]; if (n.nodeType === 1 && !(n.closest && n.closest('.lv-aks')) && (n.matches && (n.matches('.lv-ak, .w6x-acts, .w6-acts2') || n.querySelector('.lv-ak')))) { clearTimeout(mt); mt = setTimeout(function () { soonStatus(80); }, 120); return; } } } }).observe(document.body, { childList: true, subtree: true }); } catch (e) {} })();
   window.addEventListener('focus', function () { soonStatus(600); });
   document.addEventListener('visibilitychange', function () { if (!document.hidden) soonStatus(600); });
   setInterval(function () { if (!document.hidden) { refreshStatus(); refreshAnk(); } }, 120000);
@@ -13448,6 +13452,8 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
   document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.tab-btn,.module-subtab-btn')) restoring = false; }, true);
 })();
 </script>
+<script id="n2-plan-js">(function(){function upd(){try{var t=document.getElementById('n2-table');if(!t)return;var by={};t.querySelectorAll('tr[data-id]').forEach(function(r){var pd=r.querySelector('.n2-planday');if(!pd)return;var d=pd.getAttribute('data-pd');var cb=r.querySelector('input[type=checkbox]');var o=by[d]||(by[d]={n:0,c:0});o.n++;if(cb&&cb.checked)o.c++;});var m={'Wed 11/18':'n2-pd-w','Thu 11/19':'n2-pd-t','Fri 11/20':'n2-pd-f'};Object.keys(m).forEach(function(d){var e=document.getElementById(m[d]);if(e&&by[d])e.textContent=by[d].c+' / '+by[d].n+' sections ticked'+(by[d].c===by[d].n?' \u2705':'');});}catch(e){}}
+document.addEventListener('change',function(){setTimeout(upd,50)});document.addEventListener('click',function(){setTimeout(upd,300)});setTimeout(upd,1500);setTimeout(upd,4000);})();</script>
 <script id="redesign-js">
 (function(){
   // New-design shell: sidebar brand, section labels, credit line. Pure DOM additions — no app logic touched.
@@ -13488,7 +13494,7 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
 (function () {
   'use strict';
   var D = document, R = D.documentElement;
-  var OFF = true; try { OFF = localStorage.getItem('w6_on') !== '1'; } catch (e) {} /* classic is the default; the new layout is opt-in */
+  var OFF = false; try { OFF = localStorage.getItem('w6_classic') === '1'; } catch (e) {} /* new layout is the default; module pages (the lecture lists) show the classic table */
   if (OFF || (window.matchMedia && matchMedia('(max-width: 820px)').matches)) { addBackButton(); return; }
 
   function $(s, r) { return (r || D).querySelector(s); }
@@ -13519,6 +13525,7 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
   /* ---------------- state ---------------- */
   var S = { view: 'today', tab: null, sub: null, filter: 'all', open: {}, closed: {}, exp: {}, anim: 0, legacyTab: null, legacySub: null };
   try { var sv = JSON.parse(localStorage.getItem('w6_nav') || '{}'); if (sv && sv.view) { S.view = sv.view; S.tab = sv.tab || null; S.sub = sv.sub || null; S.legacyTab = sv.legacyTab || null; S.legacySub = sv.legacySub || null; } } catch (e) {}
+  if (S.view === 'module') { S.view = 'legacy'; S.legacyTab = S.tab; S.legacySub = S.sub; }
   function saveNav() { try { localStorage.setItem('w6_nav', JSON.stringify({ view: S.view, tab: S.tab, sub: S.sub, legacyTab: S.legacyTab, legacySub: S.legacySub })); } catch (e) {} }
 
   /* ---------------- tracker data ---------------- */
@@ -13958,6 +13965,7 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
   function schedule() { clearTimeout(schedT); schedT = setTimeout(function () { if (S.anim > 0 || !V || !shown) { if (S.anim > 0) schedule(); return; } if (S.view === 'legacy') { renderSide(); return; } render(true); }, 260); }
   function moveInd() { var on = $('#w6-tabs button.w6-on'), ind = $('#w6-ind'); if (on && ind) { ind.style.left = on.offsetLeft + 'px'; ind.style.width = on.offsetWidth + 'px'; } }
   function go(v, tab, sub) {
+    if (v === 'module') { showLegacy(tab !== undefined ? tab : S.tab, sub, true); return; }
     if (S.view === 'legacy') leaveLegacy();
     S.view = v; if (tab !== undefined) S.tab = tab; if (sub !== undefined) S.sub = sub; render();
   }
@@ -14056,7 +14064,7 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
       if (!t || !root.contains(t)) return;
       if (t.closest('.w6x-acts') || (e.target.closest('a, button.lv-ak') && e.target.closest('.w6-badges, .w6x-acts'))) return;
       if (t.dataset.go) go(t.dataset.go);
-      else if (t.dataset.mod) { var subs = subsOf(t.dataset.mod); if (subs.some(function (s) { return s.cards; })) go('module', t.dataset.mod, S.tab === t.dataset.mod ? S.sub : null); else showLegacy(t.dataset.mod, null); }
+      else if (t.dataset.mod) { showLegacy(t.dataset.mod, null, true); }
       else if (t.dataset.legacy) showLegacy(t.dataset.legacy, null);
       else if (t.dataset.ck) { e.stopPropagation(); toggleItem(t.dataset.ck, t); }
       else if (t.dataset.play) playEl(itemEl(t.dataset.play));
@@ -14085,7 +14093,7 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
     $('#w6-palIn').onkeydown = function (e) { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (!res.length) return; sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + res.length) % res.length; $$('#w6-palList > button').forEach(function (b, i) { b.classList.toggle('w6-sel', i === sel); }); } else if (e.key === 'Enter') pick(sel); };
     $('#w6-settings').onclick = openSettings;
     $('#w6-sync').onclick = function () { var st = $('#sync-status'); if (st && /signed in/i.test(st.textContent)) openSettings(); else { try { signInWithGoogle(); } catch (e) {} } };
-    $('#w6-classic').onclick = function () { try { localStorage.removeItem('w6_on'); localStorage.removeItem('w6_off'); } catch (e) {} location.reload(); };
+    $('#w6-classic').onclick = function () { try { localStorage.setItem('w6_classic', '1'); } catch (e) {} location.reload(); };
     $('#w6-theme').onclick = function (e) {
       var apply = function () { try { toggleTheme(); } catch (er) {} };
       if (!D.startViewTransition || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) { apply(); return; }
@@ -14129,7 +14137,7 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
       if (!shown || S.view !== 'legacy' || S.legacyClassic) return;
       var b = e.target.closest && e.target.closest('#app-content .module-subtab-btn'); if (!b) return;
       var s2 = subsOf(S.legacyTab).filter(function (x) { return x.sub === b.dataset.sub; })[0];
-      if (s2 && s2.cards) { e.preventDefault(); e.stopPropagation(); S.filter = 'all'; go('module', S.legacyTab, s2.sub); }
+      
     }, true);
   }
 
@@ -14165,7 +14173,7 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
       if (D.getElementById('w6-back')) return;
       var b = D.createElement('button'); b.id = 'w6-back'; b.type = 'button'; b.textContent = '✨ Try the new layout (beta)';
       b.title = 'Switch to the new design. You can come back to the classic layout any time.';
-      b.onclick = function () { try { localStorage.setItem('w6_on', '1'); localStorage.removeItem('w6_off'); } catch (e) {} location.reload(); };
+      b.onclick = function () { try { localStorage.removeItem('w6_classic'); } catch (e) {} location.reload(); };
       D.body.appendChild(b);
     };
     var phone = window.matchMedia && matchMedia('(max-width: 820px)').matches;
@@ -14174,7 +14182,5 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
 })();
 
 </script>
-<script id="n2-plan-js">(function(){function upd(){try{var t=document.getElementById('n2-table');if(!t)return;var by={};t.querySelectorAll('tr[data-id]').forEach(function(r){var pd=r.querySelector('.n2-planday');if(!pd)return;var d=pd.getAttribute('data-pd');var cb=r.querySelector('input[type=checkbox]');var o=by[d]||(by[d]={n:0,c:0});o.n++;if(cb&&cb.checked)o.c++;});var m={'Wed 11/18':'n2-pd-w','Thu 11/19':'n2-pd-t','Fri 11/20':'n2-pd-f'};Object.keys(m).forEach(function(d){var e=document.getElementById(m[d]);if(e&&by[d])e.textContent=by[d].c+' / '+by[d].n+' sections ticked'+(by[d].c===by[d].n?' \u2705':'');});}catch(e){}}
-document.addEventListener('change',function(){setTimeout(upd,50)});document.addEventListener('click',function(){setTimeout(upd,300)});setTimeout(upd,1500);setTimeout(upd,4000);})();</script>
 </body>
 </html>

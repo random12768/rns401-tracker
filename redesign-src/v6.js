@@ -5,7 +5,7 @@
 (function () {
   'use strict';
   var D = document, R = D.documentElement;
-  var OFF = true; try { OFF = localStorage.getItem('w6_on') !== '1'; } catch (e) {} /* classic is the default; the new layout is opt-in */
+  var OFF = false; try { OFF = localStorage.getItem('w6_classic') === '1'; } catch (e) {} /* new layout is the default; module pages (the lecture lists) show the classic table */
   if (OFF || (window.matchMedia && matchMedia('(max-width: 820px)').matches)) { addBackButton(); return; }
 
   function $(s, r) { return (r || D).querySelector(s); }
@@ -36,6 +36,7 @@
   /* ---------------- state ---------------- */
   var S = { view: 'today', tab: null, sub: null, filter: 'all', open: {}, closed: {}, exp: {}, anim: 0, legacyTab: null, legacySub: null };
   try { var sv = JSON.parse(localStorage.getItem('w6_nav') || '{}'); if (sv && sv.view) { S.view = sv.view; S.tab = sv.tab || null; S.sub = sv.sub || null; S.legacyTab = sv.legacyTab || null; S.legacySub = sv.legacySub || null; } } catch (e) {}
+  if (S.view === 'module') { S.view = 'legacy'; S.legacyTab = S.tab; S.legacySub = S.sub; }
   function saveNav() { try { localStorage.setItem('w6_nav', JSON.stringify({ view: S.view, tab: S.tab, sub: S.sub, legacyTab: S.legacyTab, legacySub: S.legacySub })); } catch (e) {} }
 
   /* ---------------- tracker data ---------------- */
@@ -475,6 +476,7 @@
   function schedule() { clearTimeout(schedT); schedT = setTimeout(function () { if (S.anim > 0 || !V || !shown) { if (S.anim > 0) schedule(); return; } if (S.view === 'legacy') { renderSide(); return; } render(true); }, 260); }
   function moveInd() { var on = $('#w6-tabs button.w6-on'), ind = $('#w6-ind'); if (on && ind) { ind.style.left = on.offsetLeft + 'px'; ind.style.width = on.offsetWidth + 'px'; } }
   function go(v, tab, sub) {
+    if (v === 'module') { showLegacy(tab !== undefined ? tab : S.tab, sub, true); return; }
     if (S.view === 'legacy') leaveLegacy();
     S.view = v; if (tab !== undefined) S.tab = tab; if (sub !== undefined) S.sub = sub; render();
   }
@@ -573,7 +575,7 @@
       if (!t || !root.contains(t)) return;
       if (t.closest('.w6x-acts') || (e.target.closest('a, button.lv-ak') && e.target.closest('.w6-badges, .w6x-acts'))) return;
       if (t.dataset.go) go(t.dataset.go);
-      else if (t.dataset.mod) { var subs = subsOf(t.dataset.mod); if (subs.some(function (s) { return s.cards; })) go('module', t.dataset.mod, S.tab === t.dataset.mod ? S.sub : null); else showLegacy(t.dataset.mod, null); }
+      else if (t.dataset.mod) { showLegacy(t.dataset.mod, null, true); }
       else if (t.dataset.legacy) showLegacy(t.dataset.legacy, null);
       else if (t.dataset.ck) { e.stopPropagation(); toggleItem(t.dataset.ck, t); }
       else if (t.dataset.play) playEl(itemEl(t.dataset.play));
@@ -602,7 +604,7 @@
     $('#w6-palIn').onkeydown = function (e) { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (!res.length) return; sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + res.length) % res.length; $$('#w6-palList > button').forEach(function (b, i) { b.classList.toggle('w6-sel', i === sel); }); } else if (e.key === 'Enter') pick(sel); };
     $('#w6-settings').onclick = openSettings;
     $('#w6-sync').onclick = function () { var st = $('#sync-status'); if (st && /signed in/i.test(st.textContent)) openSettings(); else { try { signInWithGoogle(); } catch (e) {} } };
-    $('#w6-classic').onclick = function () { try { localStorage.removeItem('w6_on'); localStorage.removeItem('w6_off'); } catch (e) {} location.reload(); };
+    $('#w6-classic').onclick = function () { try { localStorage.setItem('w6_classic', '1'); } catch (e) {} location.reload(); };
     $('#w6-theme').onclick = function (e) {
       var apply = function () { try { toggleTheme(); } catch (er) {} };
       if (!D.startViewTransition || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) { apply(); return; }
@@ -646,7 +648,7 @@
       if (!shown || S.view !== 'legacy' || S.legacyClassic) return;
       var b = e.target.closest && e.target.closest('#app-content .module-subtab-btn'); if (!b) return;
       var s2 = subsOf(S.legacyTab).filter(function (x) { return x.sub === b.dataset.sub; })[0];
-      if (s2 && s2.cards) { e.preventDefault(); e.stopPropagation(); S.filter = 'all'; go('module', S.legacyTab, s2.sub); }
+      
     }, true);
   }
 
@@ -682,7 +684,7 @@
       if (D.getElementById('w6-back')) return;
       var b = D.createElement('button'); b.id = 'w6-back'; b.type = 'button'; b.textContent = '✨ Try the new layout (beta)';
       b.title = 'Switch to the new design. You can come back to the classic layout any time.';
-      b.onclick = function () { try { localStorage.setItem('w6_on', '1'); localStorage.removeItem('w6_off'); } catch (e) {} location.reload(); };
+      b.onclick = function () { try { localStorage.removeItem('w6_classic'); } catch (e) {} location.reload(); };
       D.body.appendChild(b);
     };
     var phone = window.matchMedia && matchMedia('(max-width: 820px)').matches;
