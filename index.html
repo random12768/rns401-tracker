@@ -6969,7 +6969,7 @@ document.addEventListener('click', ev => {
   if (g && g.classList.contains('vid-group') && g.style.display === 'none' && tr.classList.contains('has-subs')) tr.click();
   setTimeout(() => { tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); tr.classList.add('sv-flash'); setTimeout(() => tr.classList.remove('sv-flash'), 1800); }, 60);
 });
-/*APPVER*/const APP_VERSION = {major: 2, minor: 164, built: '2026-11-23T23:29:51Z'};/*ENDVER*/
+/*APPVER*/const APP_VERSION = {major: 2, minor: 165, built: '2026-11-24T16:14:23Z'};/*ENDVER*/
 function verLabel(v) {
   try {
     const d = new Date(v.built);
@@ -12855,7 +12855,7 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
       var b = document.createElement('button'); b.type = 'button'; b.className = 'lv-ak'; b.dataset.akid = m[1];
       b.title = 'Open this video’s Anki cards'; b.textContent = '🧠 Anki';
       a.insertAdjacentElement('afterend', b);
-      var sp = document.createElement('span'); sp.className = 'lv-aks'; sp.dataset.akid = m[1]; b.insertAdjacentElement('afterend', sp);
+      var sp = document.createElement('span'); sp.className = 'lv-aks'; sp.dataset.akid = m[1]; b.insertAdjacentElement('afterend', sp); watchPill(b);
     });
   }
   document.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.lv-ak'); if (b) { e.preventDefault(); e.stopPropagation(); window.lvAnki(b.dataset.akid); } }, true);
@@ -12877,23 +12877,49 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
     return { c: c, t: t, h: r.g + ' ' + fadj + 'cards of ' + r.t + ' total. Suspended: ' + r.gs + ' · New (unsuspended, not studied yet): ' + r.gn + ' · Studied (in your reviews): ' + r.gr };
   }
   var statBusy = false, statTimer = null;
-  async function getStatus(qs) {
-    getStatus.ver = 0;
-    var r = await hit('/status?f=' + fkey() + '&' + qs.map(function (q) { return 'q=' + encodeURIComponent(q); }).join('&'), 25000);
-    if (!r) return null;
-    if (r.ok) { try { var j = await r.json(); getStatus.ver = (j && j.v) || 0; if (j && j.r) return j.r; } catch (e) {} }
-    else if (r.status === 404 || r.status === 400) getStatus.ver = 1;
+  /* every request to Anki goes through here: one at a time, answers under a minute old are reused,
+     and when Anki is closed or busy we back off instead of hammering it */
+  var statAt = {}, failUntil = 0, failN = 0, gate = Promise.resolve(), lastPassAt = 0, lastGen = null, retryT = null;
+  /* add-on v8+ tells us when your collection changed ("gen"), so answers can be reused for 10 min; older add-ons: 2 min */
+  function freshMs() { return lastGen != null ? 600000 : 120000; }
+  /* cheap check (never touches Anki's collection): did anything change since we last asked? */
+  async function checkGen() {
+    try { var r = await hit('/ping', 1500); if (!r || !r.ok) return null; var j = await r.json(); if (j && j.gen != null) { var ch = lastGen != null && j.gen !== lastGen; if (ch) statAt = {}; lastGen = j.gen; return ch; } } catch (e) {}
     return null;
+  }
+  function getStatus(qs) {
+    var run = gate.then(function () { return getStatus0(qs); }, function () { return getStatus0(qs); });
+    gate = run.catch(function () {});
+    return run;
+  }
+  async function getStatus0(qs) {
+    var f = fkey(), now = Date.now(), out = new Array(qs.length), need = [], idx = [];
+    qs.forEach(function (q, i) { var k = q + '|' + f, c = statCache[k]; if (c && statAt[k] && now - statAt[k] < freshMs()) out[i] = c; else { need.push(q); idx.push(i); } });
+    if (!need.length) return out;
+    if (now < failUntil) return null;
+    getStatus.ver = 0;
+    var r = await hit('/status?f=' + f + '&' + need.map(function (q) { return 'q=' + encodeURIComponent(q); }).join('&'), 25000), res = null;
+    if (r) {
+      if (r.ok) { try { var j = await r.json(); getStatus.ver = (j && j.v) || 0; if (j && j.gen != null) lastGen = j.gen; if (j && j.r) res = j.r; } catch (e) {} }
+      else if (r.status === 404 || r.status === 400) getStatus.ver = 1;
+    }
+    if (res && !res.some(function (x) { return !!x; })) res = null; /* Anki busy or asleep: back off */
+    if (!res) { failN = Math.min(failN + 1, 7); failUntil = Date.now() + Math.min(4000 * Math.pow(2, failN - 1), 240000); clearTimeout(retryT); retryT = setTimeout(function () { if (!document.hidden) soonStatus(50); }, failUntil - Date.now() + 200); return null; }
+    failN = 0; failUntil = 0;
+    var t = Date.now();
+    need.forEach(function (q, k) { out[idx[k]] = res[k]; if (res[k]) statAt[q + '|' + f] = t; });
+    return out;
   }
   var statCache = {};
   var SCK = 'tracker_anki_cache_v1', scT = null;
   try { statCache = JSON.parse(g(SCK) || '{}') || {}; } catch (e) { statCache = {}; }
   function saveCache() { clearTimeout(scT); scT = setTimeout(function () { try { var k = Object.keys(statCache); if (k.length > 700) k.slice(0, k.length - 700).forEach(function (x) { delete statCache[x]; }); s(SCK, JSON.stringify(statCache)); } catch (e) {} }, 400); }
   async function refreshStatus() {
-    if (statBusy || !document.documentElement.classList.contains('anki-on')) return;
+    if (statBusy) { refreshStatus.again = true; return; }
+    if (!document.documentElement.classList.contains('anki-on')) return;
     document.documentElement.classList.add('anki-stat');
-    var pills = Array.prototype.filter.call(document.querySelectorAll('.lv-aks'), function (e) { var bt = e.previousElementSibling; return !!bt && !!e.dataset.akid; });
-    var _vis = pills.filter(function (e) { return e.previousElementSibling.offsetParent !== null; });
+    var pills = Array.prototype.filter.call(document.querySelectorAll('.lv-aks'), function (e) { var bt = e.previousElementSibling; return !!bt && !!e.dataset.akid && bt.offsetParent !== null; });
+    var _vis = pills; lastPassAt = Date.now();
     if (_vis.length) refreshStatus.tries = 0;
     if (!_vis.length) { if ((refreshStatus.tries = (refreshStatus.tries || 0) + 1) < 8) soonStatus(700); return; }
     var byQ = {}, vh = window.innerHeight || 800;
@@ -12909,6 +12935,7 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
       function y(q) { var el = byQ[q].filter(function (e) { return e.previousElementSibling.offsetParent !== null; })[0]; if (!el) return 2e6; var r = el.getBoundingClientRect(); return (r.bottom < -50 || r.top > vh + 50) ? 1e6 + Math.abs(r.top) : Math.abs(r.top); }
       return y(a) - y(b);
     });
+    qs = qs.slice(0, 60);
     statBusy = true;
     var failed = false;
     try {
@@ -12926,9 +12953,10 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
       }
     } finally {
       statBusy = false;
+      if (refreshStatus.again) { refreshStatus.again = false; soonStatus(150); }
       if (window.__lvAkDirty) { window.__lvAkDirty = false; setTimeout(function () { try { if (typeof renderPlanner === 'function' && document.getElementById('planner-calendar')) renderPlanner(); } catch (e) {} }, 60); }
       if (failed === 'old') pills.forEach(function (e) { if (/\bload\b|\bstale\b/.test(e.className)) { e.className = 'lv-aks on off fix'; e.dataset.fix = 'update'; e.textContent = 'Update the add-on (tap)'; e.title = 'Your Anki add-on is the old version, so it can only count green cards. Tap for the 1-minute update guide.'; } });
-      else if (failed) pills.forEach(function (e) { if (/\bload\b|\bstale\b/.test(e.className)) { e.className = 'lv-aks on off fix'; if (addonSeen()) { e.dataset.fix = 'retry'; e.textContent = 'Anki closed (tap to retry)'; e.title = 'Anki isn’t open. Your add-on is set up — open Anki and tap to refresh.'; } else { e.dataset.fix = 'new'; e.textContent = 'Anki not responding (tap)'; e.title = 'Couldn’t reach Anki. Make sure Anki is open and the add-on is installed.'; } } });
+      else if (failed) pills.forEach(function (e) { if (/\bload\b/.test(e.className)) { e.className = 'lv-aks on off fix'; if (addonSeen()) { e.dataset.fix = 'retry'; e.textContent = 'Anki closed or busy (tap to retry)'; e.title = 'Anki isn’t open, or it was busy (syncing / asleep in the background). It will retry by itself; you can also tap.'; } else { e.dataset.fix = 'new'; e.textContent = 'Anki not responding (tap)'; e.title = 'Couldn’t reach Anki. Make sure Anki is open and the add-on is installed.'; } } });
     }
   }
   /* live count of cards (with your chosen flag colours) for a video — used by the Planner's cards/day balancing */
@@ -13172,13 +13200,20 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
   function repaintAnk() { try { Array.prototype.forEach.call(document.querySelectorAll('.module-sub-panel[id$="-anki"]'), function (p) { if (p.offsetParent !== null && p.querySelector('.akd')) paint(p, p._st || 'ok'); }); paintOverview('ok'); } catch (e) {} }
   document.addEventListener('change', function (e) { if (e.target && e.target.matches && e.target.matches('input[type=checkbox]') && !e.target.closest('.module-sub-panel[id$="-anki"]')) setTimeout(repaintAnk, 120); });
   function soonStatus(ms) { clearTimeout(statTimer); statTimer = setTimeout(function () { refreshStatus(); refreshAnk(); }, ms || 800); }
-  window.lvAnkiRefresh = function () { soonStatus(50); };
+  window.lvAnkiRefresh = function () { failUntil = 0; failN = 0; soonStatus(50); };
   window.addEventListener('load', function () { soonStatus(300); });
+  /* any Anki button that comes into view (switching tabs, the new layout, scrolling) asks for its numbers */
+  var io = null;
+  try { io = new IntersectionObserver(function (es) { for (var i = 0; i < es.length; i++) if (es[i].isIntersecting) { soonStatus(150); return; } }); } catch (e) { io = null; }
+  function watchPill(el) { if (io && el && !el._lvw) { el._lvw = 1; try { io.observe(el); } catch (e) {} } }
+  Array.prototype.forEach.call(document.querySelectorAll('.lv-ak'), watchPill);
   /* the new layout builds its rows after a click: fetch the numbers as soon as new Anki buttons appear */
-  (function () { try { var mt = null; new MutationObserver(function (ms) { for (var i = 0; i < ms.length; i++) { var ad = ms[i].addedNodes; for (var j = 0; j < ad.length; j++) { var n = ad[j]; if (n.nodeType === 1 && !(n.closest && n.closest('.lv-aks')) && (n.matches && (n.matches('.lv-ak, .w6x-acts, .w6-acts2') || n.querySelector('.lv-ak')))) { clearTimeout(mt); mt = setTimeout(function () { soonStatus(80); }, 120); return; } } } }).observe(document.body, { childList: true, subtree: true }); } catch (e) {} })();
-  window.addEventListener('focus', function () { soonStatus(600); });
-  document.addEventListener('visibilitychange', function () { if (!document.hidden) soonStatus(600); });
-  setInterval(function () { if (!document.hidden) { refreshStatus(); refreshAnk(); } }, 120000);
+  (function () { try { var mt = null; new MutationObserver(function (ms) { for (var i = 0; i < ms.length; i++) { var ad = ms[i].addedNodes; for (var j = 0; j < ad.length; j++) { var n = ad[j]; if (n.nodeType === 1 && !(n.closest && n.closest('.lv-aks')) && (n.matches && (n.matches('.lv-ak, .w6x-acts, .w6-acts2') || n.querySelector('.lv-ak')))) { if (n.matches('.lv-ak')) watchPill(n); if (n.querySelectorAll) Array.prototype.forEach.call(n.querySelectorAll('.lv-ak'), watchPill); clearTimeout(mt); mt = setTimeout(function () { soonStatus(80); }, 300); return; } } } }).observe(document.body, { childList: true, subtree: true }); } catch (e) {} })();
+  function wake() { failUntil = 0; checkGen().then(function (ch) { if (ch || (ch === null && Date.now() - lastPassAt > 60000) || Date.now() - lastPassAt > freshMs()) soonStatus(300); }); }
+  var wakeT = null; function wakeSoon() { clearTimeout(wakeT); wakeT = setTimeout(wake, 400); }
+  window.addEventListener('focus', wakeSoon);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) wakeSoon(); });
+  setInterval(function () { if (document.hidden) return; checkGen().then(function (ch) { if (ch || Date.now() - lastPassAt > freshMs()) { refreshStatus(); refreshAnk(); } }); }, 180000);
   document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.lv-ak, #lv-anki-toggle, summary, .nav-item, [data-panel], .module-subtab-btn, .tab-btn')) { soonStatus(250); setTimeout(repaintAnk, 350); } }, true);
 
   /* ===== Anki setup guide (interactive) ===== */
@@ -13278,7 +13313,7 @@ Object.assign(AK, {"1zzBp9xMp3L0Ijf6Js6Bvp3tINQ0K2O0Z": "#Pathoma::16_Breast::01
       title = 'All set! Here’s what you’ll see';
       body = P('Next to each video’s <b>🧠 Anki</b> button there is now a small status tag. Click the button to open that video’s cards in Anki.') + mockRows() +
         P('<b>Green</b> = your cards for that video are basically all in your reviews (a couple of leftovers still count as done). <b>Orange</b> = some are still suspended or new — it shows how many. <b>Red</b> = all suspended, so unsuspend them when you reach that video. “new” means unsuspended but not studied yet; “rev” means already in your reviews.') +
-        '<div class="wz-note">Tags refresh by themselves every couple of minutes and when you come back to this tab. Keep Anki open.</div>';
+        '<div class="wz-note">Tags update by themselves when you come back to this tab after studying. Keep Anki open.</div>';
     }
     var pct = st.map(function (x, k) { return '<i class="' + (k < W.i ? 'done' : k === W.i ? 'cur' : '') + '"></i>'; }).join('');
     o.innerHTML = '<div class="wz-card" role="dialog" aria-modal="true" aria-label="Anki setup"><div class="wz-hd"><div class="wz-top"><h3>🧠 Anki setup guide</h3><button class="wz-x" data-w="x" aria-label="Close">×</button></div>' +
